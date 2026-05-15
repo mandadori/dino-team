@@ -1,8 +1,9 @@
 # Copy: {tema}
 
+**Formato:** carrossel
 **Data:** YYYY-MM-DD
 **Ângulo central:** {ângulo escolhido da pesquisa}
-**Objetivo:** {objetivo estratégico do carrossel}
+**Objetivo:** {objetivo estratégico}
 **Total de slides:** {N}
 
 ---
@@ -59,6 +60,7 @@
 
 ## Notas para o Designer
 
-- Slide X tem dado que merece destaque visual
-- Slide Y é conceitual — pode ser tipográfico
-- {outras observações}
+- Slide X tem dado que merece destaque visual (uso de `.corpo` com numeral grande, por exemplo)
+- Slide Y é conceitual — pode ser tipográfico puro (`.capa` ou `.corpo` minimalista)
+- Slide do CTA quebra padrão (use `.cta` com inversão preto/branco)
+- {outras observações específicas dos slides}
