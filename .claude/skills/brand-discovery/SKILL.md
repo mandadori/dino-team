@@ -9,12 +9,12 @@ Conduz uma entrevista estruturada para preencher o brand book da Dino Team de fo
 
 ## Quando usar
 - Início do projeto (primeira vez configurando a marca)
-- Quando o Diretor de Marca aponta que o brand book está incompleto
+- Quando outra skill (ex: `/novo-post`) detecta que o brand book está incompleto e pausa o pipeline
 - Quando o usuário quer revisar/atualizar definições de marca
 
 ## Como rodar
 
-Invoque o **diretor-marca** como condutor da entrevista, com o seguinte fluxo:
+A skill conduz a entrevista diretamente — sem delegar a agente. O fluxo é conversacional com o usuário, em blocos curtos:
 
 ### Passo 0 — Diagnóstico
 Leia cada arquivo em `brand/` e identifique:

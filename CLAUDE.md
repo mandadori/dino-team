@@ -1,97 +1,84 @@
-# Dino Team — Sistema de Geração de Conteúdo
+# Dino Team
 
-Projeto exclusivo para gerenciamento da marca **Dino Team**. Sistema multi-agente que gera posts para Instagram em múltiplos formatos.
+> Documento mestre da marca Dino Team
+> Sistema multi-agente orientado por skills.
 
-## Formatos suportados
+---
 
-| Tipo | Aspect ratio | Dimensão PNG | Pasta destino |
-|---|---|---|---|
-| `carrossel` | 4:5 | 1080×1350 | `conteudos/carrosseis/` |
-| `stories` | 9:16 | 1080×1920 | `conteudos/stories/` |
+## O que é o Dino Team
 
-Reels e feed 1:1 podem entrar em fases futuras.
+Consultoria de treinamento e dieta personalizada + comunidade da marca pessoal de **Ramon Dino** — primeiro brasileiro campeão do maior campeonato do mundo de fisiculturismo.
 
-## Arquitetura
+Entrega ao público comum o método validado por Ramon, que saiu do zero absoluto ao topo mundial. Branding, história, propósito, palavras-chave e mensagens centrais estão em [`brand/brand-book.md`](brand/brand-book.md).
 
-Sistema multi-agente com um supervisor principal e quatro subagentes especializados:
+### O que a Dino Team **não** é
+- Não é consultoria fitness genérica.
+- Não promete resultados irreais nem atalhos.
+- Não se baseia em teoria ou achismo.
+- Não usa motivação vazia nem vitimismo.
+- Não vende velocidade — vende direção.
 
-| Agente | Papel |
-|---|---|
-| **Diretor de Marca** | Recebe `tipo + tema`, adapta a identidade ao formato, orquestra pipeline e revisa qualidade |
-| **Pesquisa & Tendências** | Pesquisa estratégica direcionada por formato (carrossel ≠ stories) |
-| **Copywriter** | Copy persuasiva multi-formato (carrossel: 7-10 slides; stories: 3-5 frames) |
-| **Designer** | Gera `slide-N.html` standalone nas dimensões corretas, prontos para edição no Claude Design web |
-| **Curadoria & Exportação** | Valida + roda export PNG via Puppeteer + monta briefing final |
+---
 
-Todos os agentes ficam em `.claude/agents/`.
+## Princípios centrais
 
-## Como usar
+- **Direção > esforço.**
+- **Disciplina é fazer mesmo sem vontade.**
+- **Consistência vence intensidade.**
+- **Resultado vem de execução, não de motivação.**
 
-### Primeira execução — descoberta de marca
-Antes de gerar qualquer post, complete o brand book:
-```
-/brand-discovery
-```
-O Diretor de Marca conduz uma entrevista e preenche incrementalmente os arquivos em `brand/`.
+---
 
-### Criar um post
-```
-/novo-post <tipo> <tema>
-```
-Exemplos:
-- `/novo-post carrossel filosofia estoica no treino`
-- `/novo-post stories antes e depois 12 semanas`
+## Como o sistema é organizado
 
-Pipeline completo: pesquisa → copy → design (HTML) → curadoria + export PNG → briefing.
+Este repositório é o **sistema operacional de marca completo** do Dino Team.
 
-### Gerar lote (agendável)
-```
-/lote-posts <tipo> <N> <tema-base>
-```
-Útil em combinação com `/schedule` para cadência semanal/mensal. Lote sempre é de um único formato.
+### 1. Branding da marca (`brand/`)
 
-## Estrutura de pastas
+Documentos institucionais que **toda decisão da marca consulta**. São lidos por todos os agentes antes de produzir qualquer coisa:
 
-```
-brand/                            ← Brand book (via /brand-discovery)
-conteudos/
-  pesquisa/                       ← Output do Agente de Pesquisa (reaproveitável entre posts)
-  carrosseis/{YYYY-MM-DD}-{slug}/ ← Posts formato carrossel
-  stories/{YYYY-MM-DD}-{slug}/    ← Posts formato stories
-       ├── pesquisa-base.md       ← snapshot da pesquisa
-       ├── copy.md                ← copy final
-       ├── design/slide-N.html    ← HTML+CSS standalone (edite no Claude Design web)
-       ├── export/slide-N.png     ← imagens finais para Instagram
-       └── briefing.md            ← briefing consolidado
-templates/                        ← Templates HTML e markdown
-scripts/
-  export-png.js                   ← Puppeteer: HTML → PNG
-.claude/
-  agents/                         ← 5 agentes
-  skills/                         ← Skills/comandos rápidos
-```
+- [`brand/brand-book.md`](brand/brand-book.md) — essência, propósito, mensagens centrais.
+- [`brand/tom-de-voz.md`](brand/tom-de-voz.md) — como a marca fala.
+- [`brand/publico-alvo.md`](brand/publico-alvo.md) — quem é o leitor.
+- [`brand/pilares-conteudo.md`](brand/pilares-conteudo.md) — eixos temáticos válidos.
+- [`brand/referencias-visuais.md`](brand/referencias-visuais.md) — paleta, tipografia, mood.
 
-## Pipeline de export
+### 2. Skills — fluxos orquestrados (`.claude/skills/`)
 
-1. Designer produz `design/slide-N.html` em 1080×1350 (carrossel) ou 1080×1920 (stories).
-2. Curador roda `node scripts/export-png.js <pasta-do-post>` — Puppeteer renderiza cada HTML e gera PNG em `export/`.
-3. Briefing final consolida tudo em `briefing.md`.
+Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestra**: define a ordem das etapas, qual agente é acionado em cada uma, como o output de um vira input do próximo, onde pausa para confirmação do usuário, e qual é o formato do entregável final.
 
-Requer Node 20+ e `npm install` na raiz para instalar Puppeteer.
+**Skills disponíveis:**
+- [`/brand-discovery`](.claude/skills/brand-discovery/SKILL.md) — entrevista para construir/atualizar o brand book.
+- [`/novo-post`](.claude/skills/novo-post/SKILL.md) — criar um post completo (carrossel ou stories).
+- [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — gerar N posts em sequência, agendável.
 
-## Princípios
+### 3. Agentes — especialistas isolados (`.claude/agents/`)
 
-- **Brand book é fonte da verdade.** Todo agente lê `brand/*.md` antes de produzir.
-- **Formato dita a forma.** Carrossel não é stories esticado; stories não é carrossel resumido. Cada um pede estratégia, estrutura e tom diferentes.
-- **Cada post vive em sua própria pasta datada.** Histórico organizado.
-- **HTML standalone como fonte editável.** Permite ajuste fino no Claude Design web antes do export.
-- **PNG é o entregável final.** Pronto para upload no Instagram.
-- **Português é a língua padrão.**
+Cada agente é um **especialista em uma função**. Conhece profundamente sua área, mas **não conhece o fluxo nem outros agentes** — não decide o que vem antes ou depois dele, não chama ninguém. Recebe input num formato declarado, entrega output num formato declarado.
 
-## Convenções de naming
+**Agentes:**
+- [`diretor-marca`](.claude/agents/diretor-marca.md) — briefing estratégico de post e curadoria editorial final.
+- [`pesquisa-tendencias`](.claude/agents/pesquisa-tendencias.md) — pesquisa de conteúdo (modo `scouting` ou `deep`).
+- [`copywriter`](.claude/agents/copywriter.md) — copy persuasiva multi-formato.
+- [`designer`](.claude/agents/designer.md) — HTML+CSS standalone por slide/frame.
+- [`curador-export`](.claude/agents/curador-export.md) — validação técnica e export PNG.
+- [`treinador`](.claude/agents/treinador.md) — decisões técnicas de treino (séries, reps, divisão, progressão).
 
-- Slug: `kebab-case` em português sem acentos
-- Pasta do post: `YYYY-MM-DD-{slug}` dentro de `conteudos/{carrosseis|stories}/`
-- Arquivo de pesquisa: `YYYY-MM-DD-tendencias-{slug}.md`
-- Slide/frame HTML: `slide-N.html` (numeração sequencial)
-- PNG correspondente: `slide-N.png`
+---
+
+## Regras operacionais
+
+- **Skills orquestram o fluxo principal.** A skill define ordem das etapas, pausas de confirmação, critérios entre elas e formato do entregável final. Toda execução começa numa skill.
+- **Agentes são especialistas com autonomia em runtime.** Cada um domina uma função. Dentro de uma ordem dada pela skill, o agente pode trocar informações com outros agentes ou delegar parte do trabalho a outro especialista quando a tarefa exigir — sem precisar que a skill pré-orquestre cada interação.
+- **Brand é o eixo comum.** Agentes podem consultar os arquivos de `brand/` quando o trabalho exigir contexto da marca (tom de voz, público, pilares, identidade visual). Coerência vem daí.
+- **Erros estruturais voltam para a skill.** Quando um agente devolve erro de fluxo (`BRAND_BOOK_INCOMPLETO`, `ESTILO_INVALIDO`, etc.), a skill decide o próximo passo.
+
+---
+
+## Funções do sistema
+
+Cada função é executada por skills. Outputs ficam em `export/`, organizados por formato e data.
+
+- **Criação de conteúdo** — produzir posts prontos para publicação. Skills: `/novo-post` (individual), `/lote-posts` (em lote).
+- **Descoberta de marca** — entrevista estruturada para preencher ou atualizar o brand book. Skill: `/brand-discovery`.
+

@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Preview — Faça Esse Treino e Não Ande Mais — Dino Team</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* ============================================================
+       PREVIEW CONSOLIDADO — 8 slides do carrossel treino-dino
+       Cada <section data-slide="N"> é um slide independente.
+       O script Puppeteer extrai cada section pelo seletor [data-slide].
+       Edite aqui diretamente no Claude Design web e salve —
+       o export-png.js lerá a versão salva.
+    ============================================================ */
+
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #7f7f7f;
+      --color-chroma: #00b140;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --pad: 80px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background: #111; }
+
+    body {
+      background: #111;
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      align-items: center;
+    }
+
+    /* Label de número do slide no preview */
+    .slide-label {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: #888;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      align-self: flex-start;
+      width: 1080px;
+    }
+
+    /* Container de cada slide — mantém 1080x1350 */
+    section[data-slide] {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      color: var(--color-fg);
+      flex-shrink: 0;
+    }
+
+    /* ---- Backgrounds ---- */
+    .slide-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background-size: cover; background-position: center top;
+      background-color: #1a1a1a;
+    }
+    .slide-bg.placeholder {
+      background-image: repeating-linear-gradient(45deg, #1a1a1a 0 24px, #222 24px 48px);
+    }
+    .img-overlay {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    }
+    .overlay-capa {
+      background: linear-gradient(to bottom, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 28%, rgba(0,0,0,0) 45%, rgba(0,0,0,.80) 100%);
+    }
+    .overlay-lista {
+      background: linear-gradient(to bottom, rgba(0,0,0,.65) 0%, rgba(0,0,0,.55) 100%);
+    }
+    .overlay-cta {
+      background: linear-gradient(to bottom, rgba(0,0,0,.6) 0%, rgba(0,0,0,.45) 40%, rgba(0,0,0,.75) 100%);
+    }
+    .chroma-bg {
+      position: absolute; inset: 0; z-index: 0; background: var(--color-chroma);
+    }
+
+    /* ---- Topbar ---- */
+    .topbar {
+      position: absolute; top: var(--pad); left: var(--pad); right: var(--pad);
+      height: 40px; display: flex; justify-content: space-between; align-items: center; z-index: 4;
+    }
+    .logo-img { height: 32px; width: auto; display: block; }
+    .logo-shadow { filter: drop-shadow(0 2px 5px rgba(0,0,0,.5)); opacity: 0.98; }
+    .topic {
+      font-family: var(--font-body); font-size: 14px; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,.92);
+    }
+    .topic-shadow { text-shadow: 0 2px 5px rgba(0,0,0,.5); }
+
+    /* ---- Barra de progresso ---- */
+    .progress {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 80px 56px; z-index: 5;
+    }
+    .progress .track { width: 100%; height: 3px; border-radius: 2px; overflow: hidden; }
+    .track-dark { background: rgba(255,255,255,.22); }
+    .track-chroma { background: rgba(255,255,255,.30); }
+    .progress .fill { height: 100%; background: #ffffff; border-radius: 2px; }
+
+    /* ---- CAPA ---- */
+    .title-block {
+      position: absolute; left: var(--pad); right: var(--pad); bottom: 110px; z-index: 3;
+    }
+    .big-title-capa {
+      font-family: var(--font-display); font-weight: 400;
+      font-size: 148px; line-height: 0.92; letter-spacing: 0.5px;
+      text-transform: uppercase; color: #fff; text-shadow: 0 4px 28px rgba(0,0,0,.45);
+    }
+    .swipe-cue {
+      margin-top: 22px; display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--font-body); font-size: 26px; font-weight: 300;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,.92); text-shadow: 0 2px 5px rgba(0,0,0,.4);
+    }
+    .swipe-cue svg { width: 26px; height: 26px; }
+
+    /* ---- LISTA ---- */
+    .lista-content {
+      position: absolute; inset: 0; z-index: 3;
+      padding: 180px var(--pad) 120px;
+      display: flex; flex-direction: column; justify-content: center; overflow: hidden;
+    }
+    .ex-list { display: flex; flex-direction: column; gap: 30px; }
+    .ex-item { display: flex; flex-direction: column; gap: 6px; }
+    .ex-name-lista {
+      font-family: var(--font-body); font-weight: 700; font-size: 30px;
+      letter-spacing: 0.04em; text-transform: uppercase; color: #fff;
+      line-height: 1.1; text-shadow: 0 2px 8px rgba(0,0,0,.5);
+    }
+    .code-dim { margin-right: 10px; color: rgba(255,255,255,.7); }
+    .ex-reps-lista {
+      font-family: var(--font-body); font-weight: 300; font-size: 24px;
+      letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,.85);
+      text-shadow: 0 2px 5px rgba(0,0,0,.4); display: flex; align-items: baseline; gap: 24px;
+    }
+    .sets-lista { min-width: 140px; font-weight: 600; color: rgba(255,255,255,.95); }
+    .reps-lista { display: flex; gap: 14px; }
+    .divider { width: 100%; height: 1px; background: rgba(255,255,255,.15); margin: 4px 0 2px; }
+
+    /* ---- EXERCÍCIO (chroma) ---- */
+    .exercise-corner {
+      position: absolute; left: var(--pad); bottom: 110px;
+      z-index: 3; display: flex; flex-direction: column; gap: 8px; max-width: 880px;
+    }
+    .ex-name-chroma {
+      font-family: var(--font-body); font-weight: 700; font-size: 38px;
+      letter-spacing: 0.04em; text-transform: uppercase; color: #fff; line-height: 1.1;
+      filter: none; text-shadow: none;
+    }
+    .ex-reps-chroma {
+      font-family: var(--font-body); font-weight: 300; font-size: 30px;
+      letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,.95);
+      display: flex; align-items: baseline; gap: 28px; filter: none; text-shadow: none;
+    }
+    .sets-chroma { min-width: 150px; font-weight: 600; }
+    .reps-chroma { display: flex; gap: 16px; }
+
+    /* ---- CTA ---- */
+    .cta-block {
+      position: absolute; left: var(--pad); right: var(--pad); top: 0; bottom: 0;
+      z-index: 3; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 0 20px; gap: 32px;
+    }
+    .big-title-cta {
+      font-family: var(--font-display); font-weight: 400;
+      font-size: 130px; line-height: 0.95; letter-spacing: 0.5px;
+      text-transform: uppercase; color: #fff; text-shadow: 0 4px 28px rgba(0,0,0,.5);
+    }
+    .cta-sub {
+      font-family: var(--font-body); font-weight: 600;
+      font-size: 22px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255,255,255,.85); text-shadow: 0 2px 8px rgba(0,0,0,.5);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================================
+       SLIDE 1 — CAPA
+  ====================================================== -->
+  <div class="slide-label">Slide 1 / 8 — Capa</div>
+  <section data-slide="1">
+    <div class="slide-bg placeholder"></div>
+    <div class="img-overlay overlay-capa"></div>
+
+    <div class="topbar">
+      <img src="/Users/unstudio/Documents/Projetos/dino team/brand/assets/logo.png" alt="DINO" class="logo-img logo-shadow" />
+      <span class="topic topic-shadow">LEG DAY</span>
+    </div>
+
+    <div class="title-block">
+      <h1 class="big-title-capa">FAÇA ESSE<br />TREINO E<br />NÃO ANDE<br />MAIS</h1>
+      <div class="swipe-cue">
+        <span>Arraste</span>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4"
+                stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track track-dark"><div class="fill" style="width:12.5%"></div></div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       SLIDE 2 — LISTA DO TREINO
+  ====================================================== -->
+  <div class="slide-label">Slide 2 / 8 — O Treino (lista)</div>
+  <section data-slide="2">
+    <div class="slide-bg placeholder"></div>
+    <div class="img-overlay overlay-lista"></div>
+
+    <div class="topbar">
+      <img src="/Users/unstudio/Documents/Projetos/dino team/brand/assets/logo.png" alt="DINO" class="logo-img logo-shadow" />
+      <span class="topic topic-shadow">O TREINO</span>
+    </div>
+
+    <div class="lista-content">
+      <div class="ex-list">
+        <div class="ex-item">
+          <div class="ex-name-lista"><span class="code-dim">A1.</span>ABDUTORA NA MÁQUINA</div>
+          <div class="ex-reps-lista">
+            <span class="sets-lista">4 SÉRIES</span>
+            <span class="reps-lista"><span>15</span><span>·</span><span>12</span><span>·</span><span>Ⓕ</span><span>·</span><span>Ⓕ</span></span>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="ex-item">
+          <div class="ex-name-lista"><span class="code-dim">B1.</span>AGACHAMENTO LIVRE</div>
+          <div class="ex-reps-lista">
+            <span class="sets-lista">4 SÉRIES</span>
+            <span class="reps-lista"><span>10</span><span>·</span><span>8</span><span>·</span><span>8</span><span>·</span><span>Ⓕ</span></span>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="ex-item">
+          <div class="ex-name-lista"><span class="code-dim">C1.</span>LEG PRESS 45</div>
+          <div class="ex-reps-lista">
+            <span class="sets-lista">4 SÉRIES</span>
+            <span class="reps-lista"><span>12</span><span>·</span><span>10</span><span>·</span><span>Ⓕ</span><span>·</span><span>Ⓕ</span></span>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="ex-item">
+          <div class="ex-name-lista"><span class="code-dim">D1.</span>CADEIRA EXTENSORA</div>
+          <div class="ex-reps-lista">
+            <span class="sets-lista">3 SÉRIES</span>
+            <span class="reps-lista"><span>15</span><span>·</span><span>12</span><span>·</span><span>Ⓕ</span></span>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="ex-item">
+          <div class="ex-name-lista"><span class="code-dim">E1.</span>CADEIRA FLEXORA</div>
+          <div class="ex-reps-lista">
+            <span class="sets-lista">3 SÉRIES</span>
+            <span class="reps-lista"><span>12</span><span>·</span><span>10</span><span>·</span><span>Ⓕ</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track track-dark"><div class="fill" style="width:25%"></div></div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       SLIDE 3 — PRIMEIRO EXERCÍCIO (chroma)
+  ====================================================== -->
+  <div class="slide-label">Slide 3 / 8 — Primeiro Exercício (chroma)</div>
+  <section data-slide="3">
+    <div class="chroma-bg"></div>
+
+    <div class="topbar">
+      <img src="/Users/unstudio/Documents/Projetos/dino team/brand/assets/logo.png" alt="DINO" class="logo-img" />
+      <span class="topic">PRIMEIRO EXERCÍCIO</span>
+    </div>
+
+    <div class="exercise-corner">
+      <div class="ex-name-chroma"><span class="code-dim">A1.</span>ABDUTORA NA MÁQUINA</div>
+      <div class="ex-reps-chroma">
+        <span class="sets-chroma">4 SÉRIES</span>
+        <span class="reps-chroma"><span>15</span><span>·</span><span>12</span><span>·</span><span>Ⓕ</span><span>·</span><span>Ⓕ</span></span>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track track-chroma"><div class="fill" style="width:37.5%"></div></div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       SLIDE 4 — SEGUNDO EXERCÍCIO (chroma)
+  ====================================================== -->
+  <div class="slide-label">Slide 4 / 8 — Segundo Exercício (chroma)</div>
+  <section data-slide="4">
+    <div class="chroma-bg"></div>
+
+    <div class="topbar">
+      <img src="/Users/unstudio/Documents/Projetos/dino team/brand/assets/logo.png" alt="DINO" class="logo-img" />
+      <span class="topic">SEGUNDO EXERCÍCIO</span>
+    </div>
+
+    <div class="exercise-corner">
+      <div class="ex-name-chroma"><span class="code-dim">B1.</span>AGACHAMENTO LIVRE</div>
+      <div class="ex-reps-chroma">
+        <span class="sets-chroma">4 SÉRIES</span>
+        <span class="reps-chroma"><span>10</span><span>·</span><span>8</span><span>·</span><span>8</span><span>·</span><span>Ⓕ</span></span>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track track-chroma"><div class="fill" style="width:50%"></div></div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       SLIDE 5 — TERCEIRO EXERCÍCIO (chroma)
+  ====================================================== -->
+  <div class="slide-label">Slide 5 / 8 — Terceiro Exercício (chroma)</div>
+  <section data-slide="5">
+    <div class="chroma-bg"></div>
+
+    <div class="topbar">
+      <img src="/Users/unstudio/Documents/Projetos/dino team/brand/assets/logo.png" alt="DINO" class="logo-img" />
+      <span class="topic">TERCEIRO EXERCÍCIO</span>
+    </div>
+
+    <div class="exercise-corner">
+      <div class="ex-name-chroma"><span class="code-dim">C1.</span>LEG PRESS 45</div>
+      <div class="ex-reps-chroma">
+        <span class="sets-chroma">4 SÉRIES</span>
+        <span class="reps-chroma"><span>12</span><span>·</span><span>10</span><span>·</span><span>Ⓕ</span><span>·</span><span>Ⓕ</span></span>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track track-chroma"><div class="fill" style="width:62.5%"></div></div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       SLIDE 6 — QUARTO EXERCÍCIO (chroma)
+  ====================================================== -->
+  <div class="slide-label">Slide 6 / 8 — Quarto Exercício (chroma)</div>
+  <section data-slide="6">
+    <div class="chroma-bg"></div>
+
+    <div class="topbar">
+      <img src="/Users/unstudio/Documents/Projetos/dino team/brand/assets/logo.png" alt="DINO" class="logo-img" />
+      <span class="topic">QUARTO EXERCÍCIO</span>
+    </div>
+
+    <div class="exercise-corner">
+      <div class="ex-name-chroma"><span class="code-dim">D1.</span>CADEIRA EXTENSORA</div>
+      <div class="ex-reps-chroma">
+        <span class="sets-chroma">3 SÉRIES</span>
+        <span class="reps-chroma"><span>15</span><span>·</span><span>12</span><span>·</span><span>Ⓕ</span></span>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track track-chroma"><div class="fill" style="width:75%"></div></div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       SLIDE 7 — QUINTO EXERCÍCIO (chroma)
+  ====================================================== -->
+  <div class="slide-label">Slide 7 / 8 — Quinto Exercício (chroma)</div>
+  <section data-slide="7">
+    <div class="chroma-bg"></div>
+
+    <div class="topbar">
+      <img src="/Users/unstudio/Documents/Projetos/dino team/brand/assets/logo.png" alt="DINO" class="logo-img" />
+      <span class="topic">QUINTO EXERCÍCIO</span>
+    </div>
+
+    <div class="exercise-corner">
+      <div class="ex-name-chroma"><span class="code-dim">E1.</span>CADEIRA FLEXORA</div>
+      <div class="ex-reps-chroma">
+        <span class="sets-chroma">3 SÉRIES</span>
+        <span class="reps-chroma"><span>12</span><span>·</span><span>10</span><span>·</span><span>Ⓕ</span></span>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track track-chroma"><div class="fill" style="width:87.5%"></div></div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       SLIDE 8 — CTA FINAL
+  ====================================================== -->
+  <div class="slide-label">Slide 8 / 8 — CTA Final</div>
+  <section data-slide="8">
+    <div class="slide-bg placeholder"></div>
+    <div class="img-overlay overlay-cta"></div>
+
+    <div class="topbar">
+      <img src="/Users/unstudio/Documents/Projetos/dino team/brand/assets/logo.png" alt="DINO" class="logo-img logo-shadow" />
+      <span class="topic topic-shadow">DIRECIONE SEU ESFORÇO</span>
+    </div>
+
+    <div class="cta-block">
+      <h1 class="big-title-cta">SEU TREINO<br />TEM MÉTODO<br />OU TEM<br />SORTE?</h1>
+      <p class="cta-sub">ENTRE PARA A DINO TEAM. LINK NA BIO.</p>
+    </div>
+
+    <div class="progress">
+      <div class="track track-dark"><div class="fill" style="width:100%"></div></div>
+    </div>
+  </section>
+
+</body>
+</html>

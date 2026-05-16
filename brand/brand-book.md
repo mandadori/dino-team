@@ -11,7 +11,7 @@ Consultoria de treinamento e dieta personalizada que aplica ao público comum o 
 Resolve o problema de quem **treina mas não evolui** — pessoas frustradas pela falta de progresso, com dificuldade de manter consistência, sem conhecimento técnico suficiente, e que se sentem sozinhas no processo. A Dino Team entrega direção, método e ambiente para que a transformação aconteça com clareza e sem desperdício de tempo.
 
 **Por que ela existe (propósito além do produto)?**
-Nasceu da vontade de Ramon Dino de **inspirar e dar o exemplo** — mostrar que é possível atingir qualquer objetivo independente das condições e circunstâncias. Ramon começou treinando calistenia em praças no Acre, sem dinheiro para academia, sem patrocínio e sem suplementos. A Dino Team é a tradução dessa trajetória em método replicável para qualquer pessoa disposta a aplicar disciplina e direção.
+Nasceu da vontade de Ramon Dino de **inspirar e dar o exemplo** — mostrar que é possível atingir qualquer objetivo independente das condições e circunstâncias. Ramon começou treinando calistenia em praças no Acre — um dos estados mais improváveis do Brasil em termos de visibilidade no esporte — sem dinheiro para academia, sem patrocínio e sem suplementos. Evoluiu por anos errando, ajustando e se adaptando à própria realidade. A Dino Team é a tradução dessa trajetória em método replicável para qualquer pessoa disposta a aplicar disciplina e direção.
 
 **O que ela NÃO é?**
 - **Não é** mais uma consultoria fitness comum
@@ -47,6 +47,7 @@ A comunicação reforça consistentemente:
 - **O processo exige disciplina e sacrifício.**
 - **O diferencial não é genética, é consistência aplicada.**
 - **Você é o resultado do ambiente em que convive.**
+- **Você não está sozinho — existe um ambiente de pessoas com o mesmo objetivo.**
 - **Fugir do desconforto te mantém estagnado.**
 - **O preço de adiar é maior que o esforço de fazer.**
 - **Não é sobre fazer mais, é sobre fazer o correto.**
@@ -84,4 +85,5 @@ Método · Evolução · Resultado · Transformação física · Disciplina · C
 
 ## Última atualização
 
-2026-05-14 — preenchimento inicial via `/brand-discovery`
+2026-05-16 — migração de fragmentos únicos do CLAUDE.md (enquadramento Acre/adaptação à realidade; máxima sobre ambiente coletivo).
+2026-05-14 — preenchimento inicial via `/brand-discovery`.

@@ -40,8 +40,8 @@ function parseArgs(argv) {
 
 function detectFormat(folderPath) {
   const normalized = folderPath.replace(/\\/g, "/");
-  if (normalized.includes("/carrosseis/")) return "carrossel";
-  if (normalized.includes("/stories/")) return "stories";
+  if (normalized.includes("/conteudos/carrossel/")) return "carrossel";
+  if (normalized.includes("/conteudos/stories/")) return "stories";
   return null;
 }
 
@@ -72,9 +72,14 @@ async function exportFromPreview(browser, previewPath, exportDir, width, height)
   for (let i = 1; i <= slideCount; i++) {
     // Mostra apenas o slide i, reseta o body para posição 0,0
     await page.evaluate((slideN) => {
+      // Oculta todas as sections e labels de slide
       document.querySelectorAll("section[data-slide]").forEach((s) => {
         s.style.display = "none";
       });
+      document.querySelectorAll(".slide-label").forEach((l) => {
+        l.style.display = "none";
+      });
+      // Exibe apenas o slide alvo
       const target = document.querySelector(`section[data-slide="${slideN}"]`);
       if (target) target.style.display = "";
       document.body.style.cssText = "margin:0;padding:0;overflow:hidden;";
@@ -141,7 +146,7 @@ async function main() {
   if (!format || !FORMATS[format]) {
     console.error(
       "erro: formato indefinido. use --format=carrossel ou --format=stories, " +
-        "ou coloque a pasta dentro de conteudos/carrosseis/ ou conteudos/stories/"
+        "ou coloque a pasta dentro de export/conteudos/carrossel/ ou export/conteudos/stories/"
     );
     process.exit(1);
   }
