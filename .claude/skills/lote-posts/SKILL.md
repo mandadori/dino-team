@@ -3,11 +3,13 @@ name: lote-posts
 description: Gera N variações de post sobre um tema-base, no formato e estilo escolhidos. Sintaxe livre — formato é obrigatório; N, estilo e tema-base são opcionais. Útil para encher pauta semanal/mensal. Agendável via /schedule. Uso - /lote-posts <formato> [N] [estilo] [tema-base].
 ---
 
-# /lote-posts — Dino Team
+# /lote-posts
 
 ## Objetivo
 
 Gerar múltiplos posts em sequência no mesmo formato e mesmo estilo. Útil para encher pauta semanal/mensal. Suporta execução interativa ou agendada (via `/schedule`).
+
+Esta skill **reusa o pipeline de `/novo-post`** para cada post do lote — ela carrega o domínio "post" e descreve tarefas autocontidas aos agentes especialistas, exatamente como `/novo-post` faz. As diferenças são: scouting de tema é distribuição em N subtemas em vez de 1; sem pausa de preview por post; política de falha contínua.
 
 ## Sintaxe
 
@@ -15,50 +17,25 @@ Gerar múltiplos posts em sequência no mesmo formato e mesmo estilo. Útil para
 /lote-posts <formato> [N] [estilo] [tema-base...]
 ```
 
-- **`<formato>`** — obrigatório. `carrossel` ou `stories`.
+- **`<formato>`** — obrigatório. Slug de um diretório em `templates/formatos/` (descoberto em runtime).
 - **`[N]`** — opcional. Número de posts. Default: **5**.
 - **`[estilo]`** — opcional. Slug em `templates/formatos/<formato>/estilos/`. Se omitido, scouting de estilo único para o lote inteiro.
-- **`[tema-base...]`** — opcional, texto livre. Se omitido, scouting distribui temas pelos pilares.
+- **`[tema-base...]`** — opcional, texto livre. Se omitido, scouting distribui N temas pelos pilares.
 
 **Ordem é livre.** N é o token numérico; estilo bate com pasta existente; o resto é tema-base.
 
-### Exemplos
-
-```
-/lote-posts carrossel 5 treino-dino braço
-/lote-posts carrossel 7 mindset de elite           ← sem estilo → scouting
-/lote-posts stories 3                               ← sem estilo nem tema → ambos auto
-/lote-posts carrossel                               ← N=5 default, estilo+tema auto
-/lote-posts stories foco                            ← N=5, sem estilo → auto, tema=foco
-```
-
-## Inputs esperados do usuário
-
-| Input | Obrigatório | Origem |
-|---|---|---|
-| Formato | Sim | Argumento da skill |
-| N | Não | Argumento (default 5) |
-| Estilo | Não | Argumento ou scouting (com confirmação) |
-| Tema-base | Não | Argumento ou scouting |
-| Aprovação da lista de subtemas | Sim (modo interativo) | Pausa de confirmação após o Passo 3 |
-
 ## Pré-requisitos
 
-- Brand book preenchido em `brand/`.
-- Pilares de conteúdo definidos (essencial quando tema-base é livre).
-- Pelo menos o estilo `padrao` em `templates/formatos/<formato>/estilos/`.
-- Puppeteer instalado (`npm install` na raiz).
+- Brand book preenchido em `brand/`. Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, oriente o usuário a rodar `/brand-discovery`.
+- Pelo menos um formato e um estilo em `templates/formatos/`.
+- Puppeteer/Chromium instalado para o export.
 
 ## Pipeline
 
-### Passo 0 — Validar brand book
+### Passo 1 — Descobrir formatos e parsear input
 
-Leia os 5 arquivos de `brand/`. Se algum estiver incompleto, **pare** e oriente o usuário a rodar `/brand-discovery`.
-
-### Passo 1 — Parsear input
-
-1. **Identifique o formato** (`carrossel` ou `stories`). Se ausente ou inválido, pergunte e pare.
-2. **Liste estilos disponíveis** para o formato.
+1. **Liste formatos disponíveis**: `ls templates/formatos/` (filtre diretórios).
+2. **Liste estilos do formato escolhido**: `ls templates/formatos/<formato>/estilos/`.
 3. **Para cada token restante:**
    - Numérico → `N` (quantidade).
    - Bate com slug de estilo → `estilo`.
@@ -67,71 +44,93 @@ Leia os 5 arquivos de `brand/`. Se algum estiver incompleto, **pare** e oriente 
 
 ### Passo 2 — Scouting (só se faltar estilo)
 
-Lote é **um único estilo** para todos os N posts (variar estilo = rodar lotes separados).
-
-Se o estilo foi informado, pule para Passo 3. Senão, acione `pesquisa-tendencias`:
+Lote é **um único estilo** para todos os N posts (variar estilo = rodar lotes separados). Se o estilo foi informado, pule para Passo 3. Senão, acione `pesquisa-tendencias`:
 
 ```
-MODO: scouting
+Tarefa: sugerir 1 estilo para um lote de N posts no mesmo formato.
 
-Formato: {carrossel | stories}
-Estilos disponíveis: {lista de slugs}
-Estilo já definido: auto-selecionar
-Tema já definido: {tema-base se houver, senão "auto-selecionar"}
+Inputs:
+- Formato: <formato>
+- Estilos disponíveis: <lista de slugs>
+- Tema-base já definido: <texto ou "nenhum">
+- Quantidade de posts no lote: <N>
 
-Observação: este é um lote de {N} posts no mesmo estilo. Escolha um estilo que acomode bem múltiplos subtemas relacionados.
+Profundidade esperada: rápido / decisório.
+
+Observação: o estilo escolhido precisa acomodar múltiplos subtemas
+relacionados, não apenas um.
+
+Saída: inline, 2-3 linhas — estilo sugerido + 1 linha de justificativa.
 ```
 
-Receba sugestão de estilo. Guarde — apresentação ao usuário é no Passo 3 junto com os subtemas.
+Guarde a sugestão; apresentação ao usuário é no Passo 3 junto com os subtemas.
 
-### Passo 3 — Gerar lista de N subtemas
+### Passo 3 — Distribuir N subtemas
 
-Decida internamente N ângulos/subtemas distintos:
+Acione `pesquisa-tendencias` para distribuir os subtemas em pilares:
 
-- **Se tema-base foi informado:** derive N variações coerentes a partir dele (cada uma um ângulo distinto do mesmo tema).
-- **Se tema-base é livre:** distribua os N entre os pilares de `brand/pilares-conteudo.md`. Não concentre todos no mesmo pilar.
+```
+Tarefa: gerar uma lista de N subtemas distintos para um lote de posts.
+
+Inputs:
+- Formato: <formato>
+- Estilo: <slug>
+- Tema-base: <texto livre ou "nenhum — distribuir entre pilares">
+- N: <número>
+
+Profundidade esperada: rápido / decisório.
+
+Regras:
+- Se tema-base é livre, distribua os N entre os pilares (não concentre todos
+  no mesmo pilar).
+- Se tema-base é dado, derive N ângulos distintos a partir dele (cada subtema
+  com recorte específico).
+
+Saída: inline, lista numerada de N subtemas com o pilar de cada um, no formato:
+1. <subtema> — pilar <pilar>
+2. <subtema> — pilar <pilar>
+...
+```
 
 Apresente ao usuário (modo interativo):
 
 ```
-Lote: {N} posts em {formato}, estilo {slug}
-
-Estilo {slug} — {motivo do scouting, se aplicável}
+Lote: <N> posts em <formato>, estilo <slug>
 
 Subtemas planejados:
 1. {subtema 1} — pilar {pilar}
 2. {subtema 2} — pilar {pilar}
-3. ...
-N. {subtema N} — pilar {pilar}
+...
 
 Posso seguir com isso? (responda "sim" / "ok" para começar, ou diga o que ajustar)
 ```
 
-**Aguarde confirmação explícita.** Se o usuário pedir ajuste em algum subtema, refaça localmente e reapresente.
+**Aguarde confirmação explícita.**
 
 **Modo agendado (sem usuário presente):** pule a confirmação. Prossiga com a lista gerada. Registre no entregável final que o lote foi gerado automaticamente.
 
 ### Passo 4 — Para cada subtema, executar pipeline de post
 
-Itere sobre os N subtemas. Para cada um, execute os passos do `/novo-post` **a partir do Passo 3 (briefing)**, pulando:
-- Passo 1 (parse — já temos formato, estilo, tema).
-- Passo 2 (scouting — já decidido).
-- **Passo 9 (pausa de preview)** — em modo lote, **NÃO pausa para revisão** de cada post. Lote é massa, ajuste fino é feito post a post via `/novo-post`.
+Itere sobre os N subtemas. Para cada um, execute as etapas do `/novo-post` **a partir do briefing**, com estas adaptações:
 
-Para cada subtema, execute na ordem:
+- **Pular o parse inicial** (formato/estilo/tema já definidos).
+- **Pular o scouting** (já decidido).
+- **Pular a pausa de revisão do preview** — em modo lote, **não pausa por post**. Quem quiser ajuste fino abre o `preview.html` específico depois e re-roda o export.
 
-1. **Briefing estratégico** — acione `diretor-marca` com `Tarefa: briefing-estrategico` (formato, estilo, tema=subtema, data).
-2. **Verificar inputs obrigatórios do estilo** — leia `estilo.md`. Se exigir prescrição técnica (ex: treino-dino):
-   - Modo interativo: pergunte ao usuário pela lista de exercícios deste subtema antes de continuar (uma pergunta por subtema, na hora).
+Para cada subtema, na ordem:
+
+1. **Briefing estratégico** (`/novo-post` Passo 3) — acione `diretor-marca` com o esqueleto de briefing embutido. Extraia `slug-do-post`.
+2. **Criar pasta do post** (`/novo-post` Passo 4).
+3. **Verificar inputs obrigatórios do estilo** (`/novo-post` Passo 5):
+   - Modo interativo: pergunte ao usuário pela lista de exercícios deste subtema antes de continuar.
    - Modo agendado: **pule este subtema** (registre `SKIPPED — input técnico obrigatório`) e siga para o próximo. Não invente.
-3. **Criar pasta** `export/conteudos/{tipo}/{data}-{slug-do-post}/`.
-4. **Pesquisa deep** — acione `pesquisa-tendencias` (modo deep) salvando em `export/pesquisa/`.
-5. **Copywriter** — gera `copy.md`.
-6. **Designer** — gera `design/slide-N.html` + `preview.html`.
-7. **Curador-Exportador** — valida e exporta PNGs.
-8. **Curadoria editorial (Diretor de Marca)** — `Tarefa: curadoria-editorial`.
+4. **Pesquisa profunda** (`/novo-post` Passo 6).
+5. **Copy** (`/novo-post` Passo 7).
+6. **Design — gerar assets + consolidar preview** (`/novo-post` Passo 8). Sem pausa de revisão.
+7. **Pacote técnico** (`/novo-post` Passo 10 — snapshot da pesquisa + validação + export).
+8. **Curadoria editorial** (`/novo-post` Passo 11).
    - Se APROVADO → marca como concluído.
-   - Se REPROVADO → registre o parecer e **pule este post** (não tente refazer no lote — refazer é função do `/novo-post`). Siga para o próximo.
+   - Se REPROVADO → registre o parecer e **pule este post** (no lote não tentamos refazer; refazer é responsabilidade do `/novo-post`). Siga para o próximo.
 
 **Política de falha:** se um post falhar em qualquer etapa técnica (export, validação), registre o erro e continue os demais. Lote não para por causa de 1 post quebrado.
 
@@ -140,27 +139,31 @@ Para cada subtema, execute na ordem:
 Apresente ao usuário:
 
 ```
-Lote concluído: {N} posts solicitados
+Lote concluído: <N> posts solicitados
 
-Formato: {carrossel | stories}
-Estilo: {slug}
+Formato: <formato>
+Estilo: <slug>
 
 Sucessos ({M} de {N}):
-1. export/conteudos/{tipo}/{data}-{slug-1}/ — APROVADO
-2. export/conteudos/{tipo}/{data}-{slug-2}/ — APROVADO
+1. export/conteudos/<formato>/<data>-<slug-1>/ — APROVADO
+2. export/conteudos/<formato>/<data>-<slug-2>/ — APROVADO
 ...
 
 Pulados/falhos ({N-M}):
-- {slug-x}: {motivo — ex: "REPROVADO na curadoria editorial, ver briefing.md", "SKIPPED — input técnico obrigatório", "EXPORT_FALHOU_SLIDE_3"}
+- <slug-x>: <motivo — ex: "REPROVADO na curadoria editorial, ver briefing.md", "SKIPPED — input técnico obrigatório", "EXPORT_FALHOU">
 
-PNGs em cada pasta `export/`. Briefings institucionais em cada `briefing.md`.
+Imagens em cada pasta export/. Briefings institucionais em cada briefing.md.
 ```
+
+## Tratamento de erros propagados pelos agentes
+
+Mesma tabela do `/novo-post`. Diferença: no lote, erros que no `/novo-post` parariam o pipeline aqui apenas **pulam o post atual** e seguem para o próximo. Apenas `BRAND_BOOK_INCOMPLETO` para o lote inteiro (sem brand book, nenhum post sai).
 
 ## Critérios de aprovação entre etapas
 
 | Etapa | Como aprovar |
 |---|---|
-| Scouting de estilo (Passo 2) | Aceita junto com a lista no Passo 3 |
+| Scouting de estilo (Passo 2) | Aceito junto com a lista no Passo 3 |
 | Lista de subtemas (Passo 3) | Usuário confirma (interativo) ou auto-aprovada (agendado) |
 | Cada post no Passo 4 | Mesmos critérios do `/novo-post`, exceto a pausa de preview que é pulada |
 
@@ -169,38 +172,38 @@ PNGs em cada pasta `export/`. Briefings institucionais em cada `briefing.md`.
 Por post (idêntico ao `/novo-post`):
 
 ```
-export/conteudos/{tipo}/{data}-{slug-do-post}/
+export/conteudos/<formato>/<data>-<slug-do-post>/
 ├── pesquisa-base.md
 ├── copy.md
 ├── treino.md           ← quando aplicável
 ├── design/
-│   ├── slide-N.html
+│   ├── <assets HTML>
 │   └── preview.html
 ├── export/
-│   └── slide-N.png
+│   └── <imagens PNG>
 └── briefing.md
 ```
 
-Para o lote como um todo: relatório consolidado no chat (Passo 5) com sucessos, falhas e motivos.
+Para o lote como um todo: relatório consolidado no chat (Passo 5).
 
 ## Modo agendado (`/schedule`)
 
 Combine com `/schedule` para gerar lotes em cadência (ex: toda segunda 9h). No modo agendado:
 - Pula a confirmação da lista (Passo 3).
-- Em estilos que exigem input técnico do usuário, pula os subtemas afetados (não invente exercícios).
+- Em estilos que exigem input técnico do usuário, pula os subtemas afetados (não invente).
 - Reporta o resumo no canal de notificação configurado.
 
 ## Princípios
 
 - **Variedade dentro de coerência.** Os N posts soam como família — mesmo estilo visual, ângulos diferentes.
 - **Um estilo por lote.** Lote misto de estilos não é suportado — rode 2 lotes separados.
-- **Mesmo formato em todo o lote.** Lote misto (carrossel + stories) não é suportado.
-- **Distribuir entre pilares quando tema é livre.** Não concentre todos no mesmo pilar.
-- **Falhar um, seguir os outros.** Erro em 1 post não para o lote.
+- **Mesmo formato em todo o lote.**
+- **Distribuir entre pilares quando tema é livre.**
+- **Falhar um, seguir os outros.**
 
 ## O que esta skill NÃO faz
 
 - Não publica os posts.
-- Não faz pausa de preview por post (use `/novo-post` para ajuste fino).
-- Não inventa exercícios quando o estilo exige prescrição técnica e o usuário não forneceu.
+- Não pausa para preview por post (use `/novo-post` para ajuste fino).
+- Não inventa inputs técnicos quando o estilo exige prescrição.
 - Não suporta lote com formatos ou estilos misturados.
