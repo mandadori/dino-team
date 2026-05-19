@@ -124,8 +124,11 @@
     2. Edite o conteúdo. Mantenha 1 ideia por slide.
     3. Capa: máx 12 palavras. Corpo: máx 40 palavras.
     4. Não altere o width/height — Puppeteer espera 1080x1350.
+    5. data-bg-drop="full": permite que o preview.html aceite drop de imagem
+       como fundo do slide inteiro (e reposicionamento por arraste depois).
+       Esse estilo é tipográfico, mas dá ao usuário a opção de colar uma foto.
   -->
-  <section class="slide capa">
+  <section class="slide capa" data-bg-drop="full">
     <div class="eyebrow">Pilar / categoria</div>
     <h1 class="title">Hook<br />em até<br />12 palavras</h1>
 

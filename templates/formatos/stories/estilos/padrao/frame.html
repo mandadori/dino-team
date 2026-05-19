@@ -135,8 +135,11 @@
     2. Respeite a safe area (250px top/bottom) — UI do Instagram sobrepõe.
     3. Stories pede mensagem direta, alta densidade visual.
     4. Não altere o width/height — Puppeteer espera 1080x1920.
+    5. data-bg-drop:
+       - "hook" e "cta" → marque a raiz .frame com data-bg-drop="full".
+       - "antes-depois" → cada .half recebe data-bg-drop="half" (são duas zonas).
   -->
-  <section class="frame hook">
+  <section class="frame hook" data-bg-drop="full">
     <div class="brand-tag">DINO TEAM</div>
     <h1 class="title">Hook<br />direto</h1>
     <p class="body muted">Linha de apoio curta — máximo 12 palavras.</p>

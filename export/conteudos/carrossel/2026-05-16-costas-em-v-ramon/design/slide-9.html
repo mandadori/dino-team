@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Slide 9 — CTA Final</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+    /* ESTILO: treino-dino | CONCEITO DESTE SLIDE: CTA centralizador — frase de fechamento Anton sobre foto Ramon, call to action corpo menor */
+
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #7f7f7f;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --pad: 80px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      color: var(--color-fg);
+    }
+
+    /* Background fotográfico */
+    .slide-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-color: #000000;
+      background-size: cover;
+      background-position: center;
+    }
+    .img-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,.60) 0%,
+        rgba(0,0,0,.30) 35%,
+        rgba(0,0,0,.50) 65%,
+        rgba(0,0,0,.85) 100%
+      );
+    }
+
+    /* Topbar */
+    .topbar {
+      position: absolute;
+      top: var(--pad);
+      left: var(--pad);
+      right: var(--pad);
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 4;
+    }
+    .topbar .logo-img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+    }
+    .topbar .topic {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      
+      color: rgba(255,255,255,.92);
+      text-shadow: 0 2px 5px rgba(0,0,0,.5);
+    }
+
+    /* Barra de progresso */
+    .progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 36px 80px 56px;
+      z-index: 5;
+    }
+    .progress .track {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,.22);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress .fill {
+      height: 100%;
+      background: #ffffff;
+      border-radius: 2px;
+    }
+
+    /* Variante CTA */
+    .slide.cta .cta-block {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      bottom: 110px;
+      top: 160px;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 28px;
+    }
+    .slide.cta .big-title {
+      height: 32px;
+      
+      font-size: 128px;
+      line-height: 0.93;
+      letter-spacing: 0.5px;
+      
+      color: #fff;
+      text-shadow: 0 4px 28px rgba(0,0,0,.5);
+    }
+    .slide.cta .cta-body {
+      font-family: var(--font-body);
+      
+      font-size: 28px;
+      letter-spacing: 0.06em;
+      
+      color: rgba(255,255,255,.80);
+      line-height: 1.45;
+      text-shadow: 0 2px 8px rgba(0,0,0,.4);
+      max-width: 760px;
+    }
+    .slide.cta .cta-divider {
+      width: 64px;
+      height: 3px;
+      background: #ffffff;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <section class="slide cta">
+    <div class="slide-bg" data-bg-drop="full"></div>
+    <div class="img-overlay"></div>
+
+    <div class="topbar">
+      <img src="../../../../brand/assets/logo.png" class="logo-img" alt="DINO" />
+      <span class="topic">DIRECIONE SEU ESFORÇO</span>
+    </div>
+
+    <div class="cta-block">
+      <h1 class="big-title">O MÉTODO<br />ESTÁ AQUI.<br />FALTA<br />EXECUTAR.</h1>
+      <div class="cta-divider"></div>
+      <p class="cta-body">SALVA ESSE TREINO E EXECUTA<br />COM O MESMO NÍVEL DE EXIGÊNCIA<br />QUE O RAMON USA.</p>
+    </div>
+
+    <div class="progress">
+      <div class="track"><div class="fill" style="width: 100%"></div></div>
+    </div>
+  </section>
+</body>
+</html>

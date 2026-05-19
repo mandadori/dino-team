@@ -73,8 +73,7 @@
       pointer-events: none;
       background: linear-gradient(
         to bottom,
-        rgba(0,0,0,.55) 0%,
-        rgba(0,0,0,0) 28%,
+        rgba(0,0,0,0) 0%,
         rgba(0,0,0,0) 55%,
         rgba(0,0,0,.7) 100%
       );
@@ -104,7 +103,6 @@
       height: 32px;
       width: auto;
       display: block;
-      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
       opacity: 0.98;
     }
     .topbar .topic {
@@ -114,7 +112,6 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: rgba(255,255,255,.92);
-      text-shadow: 0 2px 5px rgba(0,0,0,.5);
     }
 
     /* Em chroma, sem drop-shadow / text-shadow para não vazar verde */
@@ -150,37 +147,50 @@
     /* ============ VARIANTE: capa ============ */
     .slide.capa .title-block {
       position: absolute;
-      left: var(--pad);
-      right: var(--pad);
-      bottom: 110px;
+      inset: 0;
       z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 var(--pad);
+    }
+    /* Modificadores opcionais de posicionamento */
+    .slide.capa .title-block.align-left {
+      align-items: flex-start;
+      text-align: left;
+    }
+    .slide.capa .title-block.v-bottom {
+      justify-content: flex-end;
+      padding-bottom: 110px;
     }
     .slide.capa .big-title {
       font-family: var(--font-display);
       font-weight: 400;
       font-size: 160px;
       line-height: 0.92;
-      letter-spacing: 0.5px;
+      letter-spacing: 0;
       text-transform: uppercase;
       color: #fff;
       text-shadow: 0 4px 28px rgba(0,0,0,.45);
     }
     .slide.capa .swipe-cue {
-      margin-top: 18px;
+      margin-top: 22px;
       display: inline-flex;
       align-items: center;
       gap: 10px;
       font-family: var(--font-body);
       font-size: 26px;
       font-weight: 300;
-      letter-spacing: 0.18em;
+      letter-spacing: 0;
       text-transform: uppercase;
       color: rgba(255,255,255,.92);
-      text-shadow: 0 2px 5px rgba(0,0,0,.4);
     }
     .slide.capa .swipe-cue svg {
-      width: 26px;
-      height: 26px;
+      height: 0.72em;
+      width: auto;
+      display: block;
     }
 
     /* ============ VARIANTE: lista ============ */
@@ -205,25 +215,24 @@
       gap: 20px;
     }
     .slide.lista .ex-item { display: flex; flex-direction: column; gap: 6px; }
+    .slide.lista .img-overlay { display: none; }
     .slide.lista .ex-name {
       font-family: var(--font-body);
       font-weight: 700;
       font-size: 32px;
-      letter-spacing: 0.04em;
+      letter-spacing: 0;
       text-transform: uppercase;
       color: #fff;
       line-height: 1.1;
-      text-shadow: 0 2px 8px rgba(0,0,0,.5);
     }
     .slide.lista .ex-name .code { margin-right: 10px; }
     .slide.lista .ex-reps {
       font-family: var(--font-body);
       font-weight: 300;
       font-size: 26px;
-      letter-spacing: 0.06em;
+      letter-spacing: 0;
       text-transform: uppercase;
       color: rgba(255,255,255,.92);
-      text-shadow: 0 2px 5px rgba(0,0,0,.4);
       display: flex;
       align-items: baseline;
       gap: 36px;
@@ -246,7 +255,7 @@
       font-family: var(--font-body);
       font-weight: 700;
       font-size: 38px;
-      letter-spacing: 0.04em;
+      letter-spacing: 0;
       text-transform: uppercase;
       color: #fff;
       line-height: 1.1;
@@ -256,7 +265,7 @@
       font-family: var(--font-body);
       font-weight: 300;
       font-size: 30px;
-      letter-spacing: 0.06em;
+      letter-spacing: 0;
       text-transform: uppercase;
       color: rgba(255,255,255,.95);
       display: flex;
@@ -309,18 +318,30 @@
        - exercicio 1, 2, 3...: "PRIMEIRO EXERCÍCIO", "SEGUNDO EXERCÍCIO"...
        - cta: frase de fechamento curta (ex: "DIRECIONE SEU ESFORÇO")
 
-    4. Reps separadas por <span> dentro de .reps. Use Ⓕ (U+24BB) para falha.
+    4. Numeração dos exercícios: usar 1., 2., 3., ... (não A1., B1., C1.)
+       Tanto no slide .lista quanto nos slides .exercicio.
+
+    5. Reps separadas por <span> dentro de .reps. Use Ⓕ (U+24BB) para falha.
 
     5. Backgrounds com foto: aplicar style inline `background-image: url(...)`
        no .slide-bg correspondente. Por enquanto, manter .placeholder.
+       O .slide-bg leva data-bg-drop="photo" para que o preview.html aceite
+       drop de imagem e reposicionamento por arraste no Claude Design.
+       Slides exercicio (chroma) NÃO marcam .chroma-bg — não recebem foto.
 
-    6. Logo: img src deve apontar para brand/assets/logo.png (path relativo
+    6. Posicionamento do título na .capa: padrão é centralizado (horizontal + vertical).
+       Modificadores opcionais na .title-block:
+       - .align-left → alinha texto à esquerda
+       - .v-bottom   → posiciona no rodapé (padding-bottom: 110px)
+       Título e subtítulo ficam sempre juntos no mesmo bloco.
+
+    7. Logo: img src deve apontar para brand/assets/logo.png (path relativo
        à pasta do post). Em preview standalone, pode usar caminho absoluto.
 
     Exemplo abaixo: variante .capa (apague e troque pela variante do slide).
   -->
   <section class="slide capa">
-    <div class="slide-bg placeholder"></div>
+    <div class="slide-bg placeholder" data-bg-drop="photo"></div>
     <div class="img-overlay"></div>
 
     <div class="topbar">
@@ -333,7 +354,7 @@
       <div class="swipe-cue">
         <span>Arraste</span>
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4"
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.4"
                 stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </div>
@@ -347,7 +368,7 @@
   <!--
     ============ EXEMPLO: variante .lista ============
     <section class="slide lista">
-      <div class="slide-bg placeholder"></div>
+      <div class="slide-bg placeholder" data-bg-drop="photo"></div>
       <div class="img-overlay"></div>
       <div class="topbar">
         <img src="..." alt="DINO" class="logo-img" />
@@ -357,7 +378,7 @@
         <div class="ex-list">
           <div class="ex-group">
             <div class="ex-item">
-              <div class="ex-name"><span class="code">A1.</span>SUPINO INCLINADO NA MÁQUINA</div>
+              <div class="ex-name"><span class="code">1.</span>SUPINO INCLINADO NA MÁQUINA</div>
               <div class="ex-reps">
                 <span class="sets">4 SÉRIES</span>
                 <span class="reps"><span>12</span><span>10</span><span>Ⓕ</span><span>Ⓕ</span></span>
@@ -377,7 +398,7 @@
         <span class="topic">PRIMEIRO EXERCÍCIO</span>
       </div>
       <div class="exercise-corner">
-        <div class="ex-name"><span class="code">A1.</span>SUPINO INCLINADO NA MÁQUINA</div>
+        <div class="ex-name"><span class="code">1.</span>SUPINO INCLINADO NA MÁQUINA</div>
         <div class="ex-reps">
           <span class="sets">4 SÉRIES</span>
           <span class="reps"><span>12</span><span>10</span><span>Ⓕ</span><span>Ⓕ</span></span>
@@ -388,7 +409,7 @@
 
     ============ EXEMPLO: variante .cta ============
     <section class="slide cta">
-      <div class="slide-bg placeholder"></div>
+      <div class="slide-bg placeholder" data-bg-drop="photo"></div>
       <div class="img-overlay"></div>
       <div class="topbar">
         <img src="..." alt="DINO" class="logo-img" />

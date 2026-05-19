@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Preview — Treino de Costas Ramon Dino (treino-dino)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Wrapper Dino Team: carrossel arrastável + drop de imagem + reposicionamento */
+    html, body { margin: 0; padding: 0; background: #111; overscroll-behavior: none; }
+
+    .dt-carousel {
+      display: flex; align-items: center; gap: 40px; padding: 0 40px;
+      overflow-x: auto; overflow-y: hidden; height: 100vh;
+      scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .dt-carousel::-webkit-scrollbar { display: none; }
+
+    section[data-slide] {
+      flex-shrink: 0; scroll-snap-align: center; position: relative;
+      overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,.6);
+    }
+
+    [data-bg-drop].dt-drop-active { outline: 6px dashed #00b140; outline-offset: -6px; }
+    [data-bg-drop][data-has-bg] { cursor: grab; }
+    [data-bg-drop][data-has-bg].dt-grabbing { cursor: grabbing; }
+
+    .dt-controls {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 14px; padding: 10px 18px;
+      background: rgba(0,0,0,.72); backdrop-filter: blur(10px);
+      border-radius: 999px; font-family: "Montserrat", sans-serif;
+      color: #fff; z-index: 9999; user-select: none;
+    }
+    .dt-controls button {
+      background: transparent; border: 1px solid rgba(255,255,255,.28);
+      color: #fff; width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; font-size: 20px; 
+      display: flex; align-items: center; justify-content: center; padding: 0;
+      transition: background .15s, opacity .15s;
+    }
+    .dt-controls button:hover { background: rgba(255,255,255,.12); }
+    .dt-controls button:disabled { opacity: 0.25; cursor: default; }
+    .dt-controls .dt-dots { display: flex; gap: 6px; }
+    .dt-controls .dt-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,.32); cursor: pointer;
+      transition: background .15s, transform .15s;
+    }
+    .dt-controls .dt-dot.is-active { background: #fff; transform: scale(1.15); }
+    .dt-controls .dt-counter {
+      font-size: 12px; letter-spacing: 0.14em; font-weight: 600;
+      min-width: 48px; text-align: center;
+    }
+
+    body.export-mode .dt-controls { display: none !important; }
+    body.export-mode .dt-carousel {
+      display: block; padding: 0; gap: 0; overflow: visible;
+      height: auto; scroll-snap-type: none;
+    }
+    body.export-mode section[data-slide] { box-shadow: none; }
+  </style>
+</head>
+<body>
+  <div class="dt-carousel" id="dt-carousel">
+
+    <!-- SLIDE 1: CAPA -->
+    <section data-slide="1" style="width:1080px;height:1350px;">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        /* ESTILO: treino-dino | CONCEITO DESTE SLIDE: capa impactante — título fragmentado em 3 linhas com peso visual máximo */
+        :root { --color-bg: #000000; --color-fg: #ffffff; --color-muted: #7f7f7f; --color-chroma: #00b140; --font-display: "Anton", "Impact", sans-serif; --font-body: "Montserrat", "Helvetica Neue", sans-serif; --pad: 80px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 1080px; height: 1350px; }
+        body { background: var(--color-bg); color: var(--color-fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow: hidden; }
+        .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--color-fg); }
+        .slide-bg { position: absolute; inset: 0; z-index: 0; background-color: #000000; background-size: cover; background-position: center; }
+        .img-overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 28%, rgba(0,0,0,0) 45%, rgba(0,0,0,.82) 100%); }
+        .topbar { position: absolute; top: var(--pad); left: var(--pad); right: var(--pad); height: 40px; display: flex; justify-content: space-between; align-items: center; z-index: 4; }
+        .topbar .logo-img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+    }
+        .topbar .topic { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;  color: rgba(255,255,255,.92); text-shadow: 0 2px 5px rgba(0,0,0,.5); }
+        .progress { position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 80px 56px; z-index: 5; }
+        .progress .track { width: 100%; height: 3px; background: rgba(255,255,255,.22); border-radius: 2px; overflow: hidden; }
+        .progress .fill { height: 100%; background: #ffffff; border-radius: 2px; }
+        .slide.capa .title-block { position: absolute; left: var(--pad); right: var(--pad); bottom: 110px; z-index: 3; }
+        .slide.capa .big-title { height: 32px;  font-size: 148px; line-height: 0.92; letter-spacing: 0.5px;  color: #fff; text-shadow: 0 4px 28px rgba(0,0,0,.45); }
+        .slide.capa .swipe-cue { margin-top: 22px; display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-body); font-size: 24px; font-weight: 300; letter-spacing: 0.18em;  color: rgba(255,255,255,.85); text-shadow: 0 2px 5px rgba(0,0,0,.4); }
+        .slide.capa .swipe-cue svg { width: 24px; height: 24px; }
+      </style>
+      <section class="slide capa">
+        <div class="slide-bg" data-bg-drop="full"></div>
+        <div class="img-overlay"></div>
+        <div class="topbar">
+          <img src="../../../../brand/assets/logo.png" class="logo-img" alt="DINO" />
+          <span class="topic">BACK DAY</span>
+        </div>
+        <div class="title-block">
+          <h1 class="big-title">COSTAS<br />EM V NÃO<br />É GENÉTICA</h1>
+          <div class="swipe-cue">
+            <span>Arraste</span>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+        <div class="progress">
+          <div class="track"><div class="fill" style="width: 11.11%"></div></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SLIDE 2: LISTA -->
+    <section data-slide="2" style="width:1080px;height:1350px;">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        /* ESTILO: treino-dino | CONCEITO DESTE SLIDE: lista editorial completa do treino sobre fundo foto Ramon */
+        :root { --color-bg: #000000; --color-fg: #ffffff; --color-muted: #7f7f7f; --font-display: "Anton", "Impact", sans-serif; --font-body: "Montserrat", "Helvetica Neue", sans-serif; --pad: 80px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 1080px; height: 1350px; }
+        body { background: var(--color-bg); color: var(--color-fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow: hidden; }
+        .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--color-fg); }
+        .slide-bg { position: absolute; inset: 0; z-index: 0; background-color: #000000; background-size: cover; background-position: center; }
+        .img-overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, rgba(0,0,0,.72) 0%, rgba(0,0,0,.60) 40%, rgba(0,0,0,.78) 100%); }
+        .topbar { position: absolute; top: var(--pad); left: var(--pad); right: var(--pad); height: 40px; display: flex; justify-content: space-between; align-items: center; z-index: 4; }
+        .topbar .logo-img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+    }
+        .topbar .topic { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;  color: rgba(255,255,255,.92); text-shadow: 0 2px 5px rgba(0,0,0,.5); }
+        .progress { position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 80px 56px; z-index: 5; }
+        .progress .track { width: 100%; height: 3px; background: rgba(255,255,255,.22); border-radius: 2px; overflow: hidden; }
+        .progress .fill { height: 100%; background: #ffffff; border-radius: 2px; }
+        .slide.lista .lista-content { position: absolute; inset: 0; z-index: 3; padding: 200px var(--pad) 120px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+        .slide.lista .ex-list { display: flex; flex-direction: column; gap: 28px; }
+        .slide.lista .ex-item { display: flex; flex-direction: column; gap: 6px; }
+        .slide.lista .ex-name { font-family: var(--font-body); font-weight: 700; font-size: 28px; letter-spacing: 0.04em;  color: #fff; line-height: 1.15; text-shadow: 0 2px 8px rgba(0,0,0,.5); }
+        .slide.lista .ex-name .code { margin-right: 10px; color: rgba(255,255,255,.6); }
+        .slide.lista .ex-reps { font-family: var(--font-body); font-weight: 300; font-size: 22px; letter-spacing: 0.06em;  color: rgba(255,255,255,.80); text-shadow: 0 2px 5px rgba(0,0,0,.4); display: flex; align-items: baseline; gap: 24px; }
+        .slide.lista .ex-reps .sets { min-width: 120px; font-weight: 500; color: rgba(255,255,255,.92); }
+        .slide.lista .ex-reps .reps { display: flex; gap: 14px; }
+        .slide.lista .divider { width: 100%; height: 1px; background: rgba(255,255,255,.15); }
+      </style>
+      <section class="slide lista">
+        <div class="slide-bg" data-bg-drop="full"></div>
+        <div class="img-overlay"></div>
+        <div class="topbar">
+          <img src="../../../../brand/assets/logo.png" class="logo-img" alt="DINO" />
+          <span class="topic">O TREINO</span>
+        </div>
+        <div class="lista-content">
+          <div class="ex-list">
+            <div class="ex-item">
+              <div class="ex-name"><span class="code">A1.</span>PUXADA ABERTA NA POLIA ALTA<br /><span style="font-weight:400; font-size:22px; color:rgba(255,255,255,.65);">(PEGADA PRONADA)</span></div>
+              <div class="ex-reps"><span class="sets">4 SÉRIES</span><span class="reps"><span>10</span><span>/</span><span>8</span><span>/</span><span>8</span><span>/</span><span>Ⓕ</span></span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="ex-item">
+              <div class="ex-name"><span class="code">B1.</span>REMADA CURVADA COM BARRA<br /><span style="font-weight:400; font-size:22px; color:rgba(255,255,255,.65);">(PEGADA SUPINADA, COTOVELOS FECHADOS)</span></div>
+              <div class="ex-reps"><span class="sets">4 SÉRIES</span><span class="reps"><span>10</span><span>/</span><span>8</span><span>/</span><span>8</span><span>/</span><span>Ⓕ</span></span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="ex-item">
+              <div class="ex-name"><span class="code">C1.</span>PUXADA FECHADA NA POLIA ALTA<br /><span style="font-weight:400; font-size:22px; color:rgba(255,255,255,.65);">(TRIÂNGULO)</span></div>
+              <div class="ex-reps"><span class="sets">3 SÉRIES</span><span class="reps"><span>12</span><span>/</span><span>10</span><span>/</span><span>Ⓕ</span></span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="ex-item">
+              <div class="ex-name"><span class="code">D1.</span>REMADA SERROTE COM HALTER</div>
+              <div class="ex-reps"><span class="sets">3 SÉRIES</span><span class="reps"><span>12</span><span>/</span><span>10</span><span>/</span><span>Ⓕ</span></span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="ex-item">
+              <div class="ex-name"><span class="code">E1.</span>PUXADA UNILATERAL NA POLIA BAIXA<br /><span style="font-weight:400; font-size:22px; color:rgba(255,255,255,.65);">(COTOVELO ALTO, FOCO DORSAL)</span></div>
+              <div class="ex-reps"><span class="sets">3 SÉRIES</span><span class="reps"><span>15</span><span>/</span><span>12</span><span>/</span><span>Ⓕ</span></span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="ex-item">
+              <div class="ex-name"><span class="code">F1.</span>PULLOVER NA POLIA ALTA<br /><span style="font-weight:400; font-size:22px; color:rgba(255,255,255,.65);">(CORDA OU BARRA RETA)</span></div>
+              <div class="ex-reps"><span class="sets">3 SÉRIES</span><span class="reps"><span>15</span><span>/</span><span>12</span><span>/</span><span>Ⓕ</span></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="progress">
+          <div class="track"><div class="fill" style="width: 22.22%"></div></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SLIDE 3: EXERCÍCIO A1 -->
+    <section data-slide="3" style="width:1080px;height:1350px;">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        /* ESTILO: treino-dino | CONCEITO DESTE SLIDE: chroma verde A1 — área central livre para vídeo do Ramon */
+        :root { --color-chroma: #00b140; --color-fg: #ffffff; --font-display: "Anton", "Impact", sans-serif; --font-body: "Montserrat", "Helvetica Neue", sans-serif; --pad: 80px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 1080px; height: 1350px; }
+        body { background: var(--color-chroma); color: var(--color-fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow: hidden; }
+        .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--color-fg); }
+        .chroma-bg { position: absolute; inset: 0; z-index: 0; background: var(--color-chroma); }
+        .topbar { position: absolute; top: var(--pad); left: var(--pad); right: var(--pad); height: 40px; display: flex; justify-content: space-between; align-items: center; z-index: 4; }
+        .topbar .logo-img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+    }
+        .topbar .topic { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;  color: rgba(255,255,255,.92); filter: none; text-shadow: none; }
+        .progress { position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 80px 56px; z-index: 5; }
+        .progress .track { width: 100%; height: 3px; background: rgba(255,255,255,.30); border-radius: 2px; overflow: hidden; }
+        .progress .fill { height: 100%; background: #ffffff; border-radius: 2px; }
+        .slide.exercicio .exercise-corner { position: absolute; left: var(--pad); bottom: 110px; z-index: 3; display: flex; flex-direction: column; gap: 8px; max-width: 880px; }
+        .slide.exercicio .ex-code { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.20em;  color: rgba(255,255,255,.70); filter: none; text-shadow: none; }
+        .slide.exercicio .ex-name { font-family: var(--font-body); font-weight: 700; font-size: 38px; letter-spacing: 0.03em;  color: #fff; line-height: 1.1; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-detail { font-family: var(--font-body);  font-size: 24px; letter-spacing: 0.06em;  color: rgba(255,255,255,.70); line-height: 1.2; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-reps { font-family: var(--font-body); font-weight: 300; font-size: 30px; letter-spacing: 0.06em;  color: rgba(255,255,255,.95); display: flex; align-items: baseline; gap: 28px; margin-top: 4px; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-reps .sets { min-width: 150px; font-weight: 600; }
+        .slide.exercicio .ex-reps .reps { display: flex; gap: 16px; font-weight: 300; }
+      </style>
+      <section class="slide exercicio">
+        <div class="chroma-bg"></div>
+        <div class="topbar">
+          <img src="../../../../brand/assets/logo.png" class="logo-img" alt="DINO" />
+          <span class="topic">PRIMEIRO EXERCÍCIO</span>
+        </div>
+        <div class="exercise-corner">
+          <div class="ex-code">A1.</div>
+          <div class="ex-name">PUXADA ABERTA<br />NA POLIA ALTA</div>
+          <div class="ex-detail">PEGADA PRONADA</div>
+          <div class="ex-reps">
+            <span class="sets">4 SÉRIES</span>
+            <span class="reps"><span>10</span><span>/</span><span>8</span><span>/</span><span>8</span><span>/</span><span>Ⓕ</span></span>
+          </div>
+        </div>
+        <div class="progress">
+          <div class="track"><div class="fill" style="width: 33.33%"></div></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SLIDE 4: EXERCÍCIO B1 -->
+    <section data-slide="4" style="width:1080px;height:1350px;">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        /* ESTILO: treino-dino | CONCEITO DESTE SLIDE: chroma verde B1 — área central livre para vídeo do Ramon */
+        :root { --color-chroma: #00b140; --color-fg: #ffffff; --font-display: "Anton", "Impact", sans-serif; --font-body: "Montserrat", "Helvetica Neue", sans-serif; --pad: 80px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 1080px; height: 1350px; }
+        body { background: var(--color-chroma); color: var(--color-fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow: hidden; }
+        .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--color-fg); }
+        .chroma-bg { position: absolute; inset: 0; z-index: 0; background: var(--color-chroma); }
+        .topbar { position: absolute; top: var(--pad); left: var(--pad); right: var(--pad); height: 40px; display: flex; justify-content: space-between; align-items: center; z-index: 4; }
+        .topbar .logo-img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+    }
+        .topbar .topic { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;  color: rgba(255,255,255,.92); filter: none; text-shadow: none; }
+        .progress { position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 80px 56px; z-index: 5; }
+        .progress .track { width: 100%; height: 3px; background: rgba(255,255,255,.30); border-radius: 2px; overflow: hidden; }
+        .progress .fill { height: 100%; background: #ffffff; border-radius: 2px; }
+        .slide.exercicio .exercise-corner { position: absolute; left: var(--pad); bottom: 110px; z-index: 3; display: flex; flex-direction: column; gap: 8px; max-width: 880px; }
+        .slide.exercicio .ex-code { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.20em;  color: rgba(255,255,255,.70); filter: none; text-shadow: none; }
+        .slide.exercicio .ex-name { font-family: var(--font-body); font-weight: 700; font-size: 38px; letter-spacing: 0.03em;  color: #fff; line-height: 1.1; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-detail { font-family: var(--font-body);  font-size: 22px; letter-spacing: 0.06em;  color: rgba(255,255,255,.70); line-height: 1.2; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-reps { font-family: var(--font-body); font-weight: 300; font-size: 30px; letter-spacing: 0.06em;  color: rgba(255,255,255,.95); display: flex; align-items: baseline; gap: 28px; margin-top: 4px; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-reps .sets { min-width: 150px; font-weight: 600; }
+        .slide.exercicio .ex-reps .reps { display: flex; gap: 16px; font-weight: 300; }
+      </style>
+      <section class="slide exercicio">
+        <div class="chroma-bg"></div>
+        <div class="topbar">
+          <img src="../../../../brand/assets/logo.png" class="logo-img" alt="DINO" />
+          <span class="topic">SEGUNDO EXERCÍCIO</span>
+        </div>
+        <div class="exercise-corner">
+          <div class="ex-code">B1.</div>
+          <div class="ex-name">REMADA CURVADA<br />COM BARRA</div>
+          <div class="ex-detail">PEGADA SUPINADA · COTOVELOS FECHADOS</div>
+          <div class="ex-reps">
+            <span class="sets">4 SÉRIES</span>
+            <span class="reps"><span>10</span><span>/</span><span>8</span><span>/</span><span>8</span><span>/</span><span>Ⓕ</span></span>
+          </div>
+        </div>
+        <div class="progress">
+          <div class="track"><div class="fill" style="width: 44.44%"></div></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SLIDE 5: EXERCÍCIO C1 -->
+    <section data-slide="5" style="width:1080px;height:1350px;">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        /* ESTILO: treino-dino | CONCEITO DESTE SLIDE: chroma verde C1 — área central livre para vídeo do Ramon */
+        :root { --color-chroma: #00b140; --color-fg: #ffffff; --font-display: "Anton", "Impact", sans-serif; --font-body: "Montserrat", "Helvetica Neue", sans-serif; --pad: 80px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 1080px; height: 1350px; }
+        body { background: var(--color-chroma); color: var(--color-fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow: hidden; }
+        .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--color-fg); }
+        .chroma-bg { position: absolute; inset: 0; z-index: 0; background: var(--color-chroma); }
+        .topbar { position: absolute; top: var(--pad); left: var(--pad); right: var(--pad); height: 40px; display: flex; justify-content: space-between; align-items: center; z-index: 4; }
+        .topbar .logo-img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+    }
+        .topbar .topic { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;  color: rgba(255,255,255,.92); filter: none; text-shadow: none; }
+        .progress { position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 80px 56px; z-index: 5; }
+        .progress .track { width: 100%; height: 3px; background: rgba(255,255,255,.30); border-radius: 2px; overflow: hidden; }
+        .progress .fill { height: 100%; background: #ffffff; border-radius: 2px; }
+        .slide.exercicio .exercise-corner { position: absolute; left: var(--pad); bottom: 110px; z-index: 3; display: flex; flex-direction: column; gap: 8px; max-width: 880px; }
+        .slide.exercicio .ex-code { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.20em;  color: rgba(255,255,255,.70); filter: none; text-shadow: none; }
+        .slide.exercicio .ex-name { font-family: var(--font-body); font-weight: 700; font-size: 38px; letter-spacing: 0.03em;  color: #fff; line-height: 1.1; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-detail { font-family: var(--font-body);  font-size: 24px; letter-spacing: 0.06em;  color: rgba(255,255,255,.70); line-height: 1.2; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-reps { font-family: var(--font-body); font-weight: 300; font-size: 30px; letter-spacing: 0.06em;  color: rgba(255,255,255,.95); display: flex; align-items: baseline; gap: 28px; margin-top: 4px; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-reps .sets { min-width: 150px; font-weight: 600; }
+        .slide.exercicio .ex-reps .reps { display: flex; gap: 16px; font-weight: 300; }
+      </style>
+      <section class="slide exercicio">
+        <div class="chroma-bg"></div>
+        <div class="topbar">
+          <img src="../../../../brand/assets/logo.png" class="logo-img" alt="DINO" />
+          <span class="topic">TERCEIRO EXERCÍCIO</span>
+        </div>
+        <div class="exercise-corner">
+          <div class="ex-code">C1.</div>
+          <div class="ex-name">PUXADA FECHADA<br />NA POLIA ALTA</div>
+          <div class="ex-detail">TRIÂNGULO</div>
+          <div class="ex-reps">
+            <span class="sets">3 SÉRIES</span>
+            <span class="reps"><span>12</span><span>/</span><span>10</span><span>/</span><span>Ⓕ</span></span>
+          </div>
+        </div>
+        <div class="progress">
+          <div class="track"><div class="fill" style="width: 55.55%"></div></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SLIDE 6: EXERCÍCIO D1 -->
+    <section data-slide="6" style="width:1080px;height:1350px;">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        /* ESTILO: treino-dino | CONCEITO DESTE SLIDE: chroma verde D1 — área central livre para vídeo do Ramon */
+        :root { --color-chroma: #00b140; --color-fg: #ffffff; --font-display: "Anton", "Impact", sans-serif; --font-body: "Montserrat", "Helvetica Neue", sans-serif; --pad: 80px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 1080px; height: 1350px; }
+        body { background: var(--color-chroma); color: var(--color-fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow: hidden; }
+        .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--color-fg); }
+        .chroma-bg { position: absolute; inset: 0; z-index: 0; background: var(--color-chroma); }
+        .topbar { position: absolute; top: var(--pad); left: var(--pad); right: var(--pad); height: 40px; display: flex; justify-content: space-between; align-items: center; z-index: 4; }
+        .topbar .logo-img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+    }
+        .topbar .topic { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;  color: rgba(255,255,255,.92); filter: none; text-shadow: none; }
+        .progress { position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 80px 56px; z-index: 5; }
+        .progress .track { width: 100%; height: 3px; background: rgba(255,255,255,.30); border-radius: 2px; overflow: hidden; }
+        .progress .fill { height: 100%; background: #ffffff; border-radius: 2px; }
+        .slide.exercicio .exercise-corner { position: absolute; left: var(--pad); bottom: 110px; z-index: 3; display: flex; flex-direction: column; gap: 8px; max-width: 880px; }
+        .slide.exercicio .ex-code { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.20em;  color: rgba(255,255,255,.70); filter: none; text-shadow: none; }
+        .slide.exercicio .ex-name { font-family: var(--font-body); font-weight: 700; font-size: 38px; letter-spacing: 0.03em;  color: #fff; line-height: 1.1; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-reps { font-family: var(--font-body); font-weight: 300; font-size: 30px; letter-spacing: 0.06em;  color: rgba(255,255,255,.95); display: flex; align-items: baseline; gap: 28px; margin-top: 4px; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-reps .sets { min-width: 150px; font-weight: 600; }
+        .slide.exercicio .ex-reps .reps { display: flex; gap: 16px; font-weight: 300; }
+      </style>
+      <section class="slide exercicio">
+        <div class="chroma-bg"></div>
+        <div class="topbar">
+          <img src="../../../../brand/assets/logo.png" class="logo-img" alt="DINO" />
+          <span class="topic">QUARTO EXERCÍCIO</span>
+        </div>
+        <div class="exercise-corner">
+          <div class="ex-code">D1.</div>
+          <div class="ex-name">REMADA SERROTE<br />COM HALTER</div>
+          <div class="ex-reps">
+            <span class="sets">3 SÉRIES</span>
+            <span class="reps"><span>12</span><span>/</span><span>10</span><span>/</span><span>Ⓕ</span></span>
+          </div>
+        </div>
+        <div class="progress">
+          <div class="track"><div class="fill" style="width: 66.66%"></div></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SLIDE 7: EXERCÍCIO E1 -->
+    <section data-slide="7" style="width:1080px;height:1350px;">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        /* ESTILO: treino-dino | CONCEITO DESTE SLIDE: chroma verde E1 — cue técnico "COTOVELO ALTO" evidenciado como diferencial */
+        :root { --color-chroma: #00b140; --color-fg: #ffffff; --font-display: "Anton", "Impact", sans-serif; --font-body: "Montserrat", "Helvetica Neue", sans-serif; --pad: 80px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 1080px; height: 1350px; }
+        body { background: var(--color-chroma); color: var(--color-fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow: hidden; }
+        .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--color-fg); }
+        .chroma-bg { position: absolute; inset: 0; z-index: 0; background: var(--color-chroma); }
+        .topbar { position: absolute; top: var(--pad); left: var(--pad); right: var(--pad); height: 40px; display: flex; justify-content: space-between; align-items: center; z-index: 4; }
+        .topbar .logo-img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+    }
+        .topbar .topic { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;  color: rgba(255,255,255,.92); filter: none; text-shadow: none; }
+        .progress { position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 80px 56px; z-index: 5; }
+        .progress .track { width: 100%; height: 3px; background: rgba(255,255,255,.30); border-radius: 2px; overflow: hidden; }
+        .progress .fill { height: 100%; background: #ffffff; border-radius: 2px; }
+        .slide.exercicio .exercise-corner { position: absolute; left: var(--pad); bottom: 110px; z-index: 3; display: flex; flex-direction: column; gap: 8px; max-width: 880px; }
+        .slide.exercicio .ex-code { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.20em;  color: rgba(255,255,255,.70); filter: none; text-shadow: none; }
+        .slide.exercicio .ex-name { font-family: var(--font-body); font-weight: 700; font-size: 38px; letter-spacing: 0.03em;  color: #fff; line-height: 1.1; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-cue { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 0.22em;  color: rgba(255,255,255,.55); line-height: 1.3; filter: none; text-shadow: none; border-left: 3px solid rgba(255,255,255,.40); padding-left: 12px; }
+        .slide.exercicio .ex-reps { font-family: var(--font-body); font-weight: 300; font-size: 30px; letter-spacing: 0.06em;  color: rgba(255,255,255,.95); display: flex; align-items: baseline; gap: 28px; margin-top: 4px; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-reps .sets { min-width: 150px; font-weight: 600; }
+        .slide.exercicio .ex-reps .reps { display: flex; gap: 16px; font-weight: 300; }
+      </style>
+      <section class="slide exercicio">
+        <div class="chroma-bg"></div>
+        <div class="topbar">
+          <img src="../../../../brand/assets/logo.png" class="logo-img" alt="DINO" />
+          <span class="topic">QUINTO EXERCÍCIO</span>
+        </div>
+        <div class="exercise-corner">
+          <div class="ex-code">E1.</div>
+          <div class="ex-name">PUXADA UNILATERAL<br />NA POLIA BAIXA</div>
+          <div class="ex-cue">COTOVELO ALTO · FOCO DORSAL</div>
+          <div class="ex-reps">
+            <span class="sets">3 SÉRIES</span>
+            <span class="reps"><span>15</span><span>/</span><span>12</span><span>/</span><span>Ⓕ</span></span>
+          </div>
+        </div>
+        <div class="progress">
+          <div class="track"><div class="fill" style="width: 77.77%"></div></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SLIDE 8: EXERCÍCIO F1 -->
+    <section data-slide="8" style="width:1080px;height:1350px;">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        /* ESTILO: treino-dino | CONCEITO DESTE SLIDE: chroma verde F1 — pullover de fechamento, área livre para vídeo */
+        :root { --color-chroma: #00b140; --color-fg: #ffffff; --font-display: "Anton", "Impact", sans-serif; --font-body: "Montserrat", "Helvetica Neue", sans-serif; --pad: 80px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 1080px; height: 1350px; }
+        body { background: var(--color-chroma); color: var(--color-fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow: hidden; }
+        .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--color-fg); }
+        .chroma-bg { position: absolute; inset: 0; z-index: 0; background: var(--color-chroma); }
+        .topbar { position: absolute; top: var(--pad); left: var(--pad); right: var(--pad); height: 40px; display: flex; justify-content: space-between; align-items: center; z-index: 4; }
+        .topbar .logo-img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+    }
+        .topbar .topic { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;  color: rgba(255,255,255,.92); filter: none; text-shadow: none; }
+        .progress { position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 80px 56px; z-index: 5; }
+        .progress .track { width: 100%; height: 3px; background: rgba(255,255,255,.30); border-radius: 2px; overflow: hidden; }
+        .progress .fill { height: 100%; background: #ffffff; border-radius: 2px; }
+        .slide.exercicio .exercise-corner { position: absolute; left: var(--pad); bottom: 110px; z-index: 3; display: flex; flex-direction: column; gap: 8px; max-width: 880px; }
+        .slide.exercicio .ex-code { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.20em;  color: rgba(255,255,255,.70); filter: none; text-shadow: none; }
+        .slide.exercicio .ex-name { font-family: var(--font-body); font-weight: 700; font-size: 38px; letter-spacing: 0.03em;  color: #fff; line-height: 1.1; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-detail { font-family: var(--font-body);  font-size: 24px; letter-spacing: 0.06em;  color: rgba(255,255,255,.70); line-height: 1.2; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-reps { font-family: var(--font-body); font-weight: 300; font-size: 30px; letter-spacing: 0.06em;  color: rgba(255,255,255,.95); display: flex; align-items: baseline; gap: 28px; margin-top: 4px; filter: none; text-shadow: none; }
+        .slide.exercicio .ex-reps .sets { min-width: 150px; font-weight: 600; }
+        .slide.exercicio .ex-reps .reps { display: flex; gap: 16px; font-weight: 300; }
+      </style>
+      <section class="slide exercicio">
+        <div class="chroma-bg"></div>
+        <div class="topbar">
+          <img src="../../../../brand/assets/logo.png" class="logo-img" alt="DINO" />
+          <span class="topic">SEXTO EXERCÍCIO</span>
+        </div>
+        <div class="exercise-corner">
+          <div class="ex-code">F1.</div>
+          <div class="ex-name">PULLOVER NA<br />POLIA ALTA</div>
+          <div class="ex-detail">CORDA OU BARRA RETA</div>
+          <div class="ex-reps">
+            <span class="sets">3 SÉRIES</span>
+            <span class="reps"><span>15</span><span>/</span><span>12</span><span>/</span><span>Ⓕ</span></span>
+          </div>
+        </div>
+        <div class="progress">
+          <div class="track"><div class="fill" style="width: 88.88%"></div></div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SLIDE 9: CTA -->
+    <section data-slide="9" style="width:1080px;height:1350px;">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap');
+        /* ESTILO: treino-dino | CONCEITO DESTE SLIDE: CTA centralizador — frase de fechamento Anton sobre foto Ramon, call to action corpo menor */
+        :root { --color-bg: #000000; --color-fg: #ffffff; --color-muted: #7f7f7f; --font-display: "Anton", "Impact", sans-serif; --font-body: "Montserrat", "Helvetica Neue", sans-serif; --pad: 80px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 1080px; height: 1350px; }
+        body { background: var(--color-bg); color: var(--color-fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow: hidden; }
+        .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; color: var(--color-fg); }
+        .slide-bg { position: absolute; inset: 0; z-index: 0; background-color: #000000; background-size: cover; background-position: center; }
+        .img-overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, rgba(0,0,0,.60) 0%, rgba(0,0,0,.30) 35%, rgba(0,0,0,.50) 65%, rgba(0,0,0,.85) 100%); }
+        .topbar { position: absolute; top: var(--pad); left: var(--pad); right: var(--pad); height: 40px; display: flex; justify-content: space-between; align-items: center; z-index: 4; }
+        .topbar .logo-img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+    }
+        .topbar .topic { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;  color: rgba(255,255,255,.92); text-shadow: 0 2px 5px rgba(0,0,0,.5); }
+        .progress { position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 80px 56px; z-index: 5; }
+        .progress .track { width: 100%; height: 3px; background: rgba(255,255,255,.22); border-radius: 2px; overflow: hidden; }
+        .progress .fill { height: 100%; background: #ffffff; border-radius: 2px; }
+        .slide.cta .cta-block { position: absolute; left: var(--pad); right: var(--pad); bottom: 110px; top: 160px; z-index: 3; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 28px; }
+        .slide.cta .big-title { height: 32px;  font-size: 128px; line-height: 0.93; letter-spacing: 0.5px;  color: #fff; text-shadow: 0 4px 28px rgba(0,0,0,.5); }
+        .slide.cta .cta-body { font-family: var(--font-body);  font-size: 28px; letter-spacing: 0.06em;  color: rgba(255,255,255,.80); line-height: 1.45; text-shadow: 0 2px 8px rgba(0,0,0,.4); max-width: 760px; }
+        .slide.cta .cta-divider { width: 64px; height: 3px; background: #ffffff; opacity: 0.7; }
+      </style>
+      <section class="slide cta">
+        <div class="slide-bg" data-bg-drop="full"></div>
+        <div class="img-overlay"></div>
+        <div class="topbar">
+          <img src="../../../../brand/assets/logo.png" class="logo-img" alt="DINO" />
+          <span class="topic">DIRECIONE SEU ESFORÇO</span>
+        </div>
+        <div class="cta-block">
+          <h1 class="big-title">O MÉTODO<br />ESTÁ AQUI.<br />FALTA<br />EXECUTAR.</h1>
+          <div class="cta-divider"></div>
+          <p class="cta-body">SALVA ESSE TREINO E EXECUTA<br />COM O MESMO NÍVEL DE EXIGÊNCIA<br />QUE O RAMON USA.</p>
+        </div>
+        <div class="progress">
+          <div class="track"><div class="fill" style="width: 100%"></div></div>
+        </div>
+      </section>
+    </section>
+
+  </div>
+
+  <div class="dt-controls" id="dt-controls">
+    <button class="dt-prev" type="button" aria-label="Slide anterior">‹</button>
+    <div class="dt-dots"></div>
+    <button class="dt-next" type="button" aria-label="Próximo slide">›</button>
+    <span class="dt-counter">1 / 1</span>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      var carousel = document.getElementById("dt-carousel");
+      var slides = Array.prototype.slice.call(carousel.querySelectorAll("section[data-slide]"));
+      var total = slides.length; if (total === 0) return;
+      var controls = document.getElementById("dt-controls");
+      var prevBtn = controls.querySelector(".dt-prev");
+      var nextBtn = controls.querySelector(".dt-next");
+      var dotsEl = controls.querySelector(".dt-dots");
+      var counterEl = controls.querySelector(".dt-counter");
+      slides.forEach(function (_, i) {
+        var d = document.createElement("span"); d.className = "dt-dot";
+        d.addEventListener("click", function () { goTo(i); }); dotsEl.appendChild(d);
+      });
+      var dots = Array.prototype.slice.call(dotsEl.querySelectorAll(".dt-dot"));
+      var current = 0;
+      function update() {
+        counterEl.textContent = (current + 1) + " / " + total;
+        dots.forEach(function (d, i) { d.classList.toggle("is-active", i === current); });
+        prevBtn.disabled = current === 0; nextBtn.disabled = current === total - 1;
+      }
+      function goTo(idx) {
+        current = Math.max(0, Math.min(total - 1, idx));
+        slides[current].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        update();
+      }
+      prevBtn.addEventListener("click", function () { goTo(current - 1); });
+      nextBtn.addEventListener("click", function () { goTo(current + 1); });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight") { e.preventDefault(); goTo(current + 1); }
+        else if (e.key === "ArrowLeft") { e.preventDefault(); goTo(current - 1); }
+      });
+      var st;
+      carousel.addEventListener("scroll", function () {
+        clearTimeout(st);
+        st = setTimeout(function () {
+          var c = carousel.scrollLeft + carousel.clientWidth / 2;
+          var n = 0, m = Infinity;
+          slides.forEach(function (s, i) {
+            var sc = s.offsetLeft + s.offsetWidth / 2;
+            var d = Math.abs(sc - c);
+            if (d < m) { m = d; n = i; }
+          });
+          if (n !== current) { current = n; update(); }
+        }, 80);
+      });
+      update();
+
+      // Scaling: ajusta zoom de cada slide para caber na viewport; remove em export-mode
+      function computeScale(slide) {
+        var h = parseInt(slide.style.height, 10) || 1350;
+        var w = parseInt(slide.style.width, 10) || 1080;
+        return Math.min((window.innerHeight - 80) / h, (window.innerWidth - 80) / w, 1);
+      }
+      function applyScaling() {
+        if (document.body.classList.contains("export-mode")) return;
+        slides.forEach(function (s) { s.style.zoom = computeScale(s); });
+      }
+      function removeScaling() {
+        slides.forEach(function (s) { s.style.zoom = ""; });
+      }
+      new MutationObserver(function () {
+        if (document.body.classList.contains("export-mode")) removeScaling();
+      }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+      applyScaling();
+      window.addEventListener("resize", applyScaling);
+
+      // Drop zones: [data-bg-drop] explícitas; fallback: slide inteiro
+      slides.forEach(function (slide) {
+        var zones = Array.prototype.slice.call(slide.querySelectorAll("[data-bg-drop]"));
+        if (zones.length === 0) { slide.setAttribute("data-bg-drop", "full"); zones = [slide]; }
+        zones.forEach(bindZone);
+      });
+      function bindZone(zone) {
+        zone.addEventListener("dragover", function (e) { e.preventDefault(); zone.classList.add("dt-drop-active"); });
+        zone.addEventListener("dragleave", function (e) { if (e.target === zone) zone.classList.remove("dt-drop-active"); });
+        zone.addEventListener("drop", function (e) {
+          e.preventDefault(); e.stopPropagation(); zone.classList.remove("dt-drop-active");
+          var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+          if (!f || f.type.indexOf("image/") !== 0) return;
+          var r = new FileReader();
+          r.onload = function () {
+            zone.style.backgroundImage = "url(" + r.result + ")";
+            zone.style.backgroundSize = "cover";
+            zone.style.backgroundPosition = "50% 50%";
+            zone.style.backgroundRepeat = "no-repeat";
+            zone.setAttribute("data-has-bg", "1");
+          };
+          r.readAsDataURL(f);
+        });
+        var dragging = false, sx = 0, sy = 0, sp = { x: 50, y: 50 };
+        function getPos() {
+          var p = zone.style.backgroundPosition || "50% 50%";
+          var pp = p.split(/\s+/); var x = parseFloat(pp[0]); var y = parseFloat(pp[1]);
+          return { x: isNaN(x) ? 50 : x, y: isNaN(y) ? 50 : y };
+        }
+        zone.addEventListener("mousedown", function (e) {
+          if (!zone.hasAttribute("data-has-bg")) return;
+          e.preventDefault(); e.stopPropagation();
+          dragging = true; sx = e.clientX; sy = e.clientY; sp = getPos();
+          zone.classList.add("dt-grabbing");
+        });
+        document.addEventListener("mousemove", function (e) {
+          if (!dragging) return;
+          var dx = ((sx - e.clientX) / zone.offsetWidth) * 100;
+          var dy = ((sy - e.clientY) / zone.offsetHeight) * 100;
+          var nx = Math.max(0, Math.min(100, sp.x + dx));
+          var ny = Math.max(0, Math.min(100, sp.y + dy));
+          zone.style.backgroundPosition = nx.toFixed(1) + "% " + ny.toFixed(1) + "%";
+        });
+        document.addEventListener("mouseup", function () {
+          if (dragging) { dragging = false; zone.classList.remove("dt-grabbing"); }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

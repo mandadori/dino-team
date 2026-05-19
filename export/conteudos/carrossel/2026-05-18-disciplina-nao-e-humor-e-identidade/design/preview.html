@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Preview — Disciplina não é humor (layout-dividido)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Wrapper Dino Team: carrossel arrastável + drop de imagem + reposicionamento */
+    html, body { margin: 0; padding: 0; background: #111; overscroll-behavior: none; }
+
+    .dt-carousel {
+      display: flex; align-items: center; gap: 40px; padding: 0 40px;
+      overflow-x: auto; overflow-y: hidden; height: 100vh;
+      scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .dt-carousel::-webkit-scrollbar { display: none; }
+
+    section[data-slide] {
+      flex-shrink: 0; scroll-snap-align: center; position: relative;
+      overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,.6);
+    }
+
+    [data-bg-drop].dt-drop-active { outline: 6px dashed #00b140; outline-offset: -6px; }
+    [data-bg-drop][data-has-bg] { cursor: grab; }
+    [data-bg-drop][data-has-bg].dt-grabbing { cursor: grabbing; }
+    [data-bg-drop][data-has-bg]::after {
+      content: "arrastar = reposicionar";
+      position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+      font: 600 10px/1 "Montserrat", sans-serif; letter-spacing: .08em;
+      color: rgba(255,255,255,.7); background: rgba(0,0,0,.55);
+      padding: 4px 10px; border-radius: 999px; pointer-events: none;
+      white-space: nowrap; z-index: 10;
+    }
+    body.export-mode [data-bg-drop][data-has-bg]::after { display: none; }
+
+    .dt-zoom-panel {
+      display: none; align-items: center; gap: 6px;
+      border-left: 1px solid rgba(255,255,255,.2); padding-left: 14px;
+      font-size: 12px; font-weight: 600; letter-spacing: .06em;
+    }
+    .dt-zoom-panel.is-visible { display: flex; }
+    .dt-zoom-panel input[type=number] {
+      width: 58px; background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.28); color: #fff;
+      border-radius: 6px; padding: 4px 6px; font: 700 12px "Montserrat", sans-serif;
+      text-align: center; -moz-appearance: textfield; appearance: textfield;
+    }
+    .dt-zoom-panel input[type=number]::-webkit-inner-spin-button { opacity: 0.6; cursor: pointer; }
+
+    .dt-controls {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 14px; padding: 10px 18px;
+      background: rgba(0,0,0,.72); backdrop-filter: blur(10px);
+      border-radius: 999px; font-family: "Montserrat", sans-serif;
+      color: #fff; z-index: 9999; user-select: none;
+    }
+    .dt-controls button {
+      background: transparent; border: 1px solid rgba(255,255,255,.28);
+      color: #fff; width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; font-size: 20px; line-height: 1;
+      display: flex; align-items: center; justify-content: center; padding: 0;
+      transition: background .15s, opacity .15s;
+    }
+    .dt-controls button:hover { background: rgba(255,255,255,.12); }
+    .dt-controls button:disabled { opacity: 0.25; cursor: default; }
+    .dt-save {
+      background: rgba(0,177,64,.18) !important; border-color: #00b140 !important;
+      color: #00e051 !important; width: auto !important; padding: 0 14px !important;
+      font-size: 12px !important; font-weight: 700; letter-spacing: .06em;
+      white-space: nowrap; border-radius: 999px !important;
+    }
+    .dt-save:hover { background: rgba(0,177,64,.36) !important; }
+    .dt-controls .dt-dots { display: flex; gap: 6px; }
+    .dt-controls .dt-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,.32); cursor: pointer;
+      transition: background .15s, transform .15s;
+    }
+    .dt-controls .dt-dot.is-active { background: #fff; transform: scale(1.15); }
+    .dt-controls .dt-counter {
+      font-size: 12px; letter-spacing: 0.14em; font-weight: 600;
+      min-width: 48px; text-align: center;
+    }
+
+    body.export-mode .dt-controls { display: none !important; }
+    body.export-mode .dt-carousel {
+      display: block; padding: 0; gap: 0; overflow: visible;
+      height: auto; scroll-snap-type: none;
+    }
+    body.export-mode section[data-slide] { box-shadow: none; }
+  </style>
+</head>
+<body>
+  <div class="dt-carousel" id="dt-carousel">
+        <section data-slide="1" style="width:1080px;height:1350px;">
+      <style>
+    /* ESTILO: layout-dividido | CONCEITO: capa — enunciado da tese, peso visual 50/50 em ambas as metades */
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #b3b3b3;
+      --color-photo-placeholder-top: #1a1a1a;
+      --color-photo-placeholder-bottom: #262626;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --text-shadow-strong:
+        0 4px 16px rgba(0, 0, 0, 0.55),
+        0 2px 6px rgba(0, 0, 0, 0.45);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .slide {
+      width: 1080px;
+      height: 1350px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg);
+    }
+    .half {
+      position: relative;
+      width: 1080px;
+      height: 675px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 80px;
+      text-align: center;
+    }
+    .half.top { background-color: var(--color-photo-placeholder-top); }
+    .half.bottom { background-color: var(--color-photo-placeholder-bottom); }
+    .half.top[data-has-bg] { filter: grayscale(0.85) contrast(1.05); }
+    .half.bottom[data-has-bg] { filter: contrast(1.08) saturate(1.05); }
+    .half::before {
+      content: attr(data-label);
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.22);
+      pointer-events: none;
+    }
+    .half[data-has-bg]::before { display: none; }
+    .half-text {
+      position: relative;
+      z-index: 2;
+      font-family: var(--font-display);
+      font-weight: 400;
+      color: var(--color-fg);
+      text-transform: uppercase;
+      line-height: 0.95;
+      letter-spacing: -0.005em;
+      text-shadow: none;
+      max-width: 920px;
+      font-size: 70px;
+    }
+    .brand-stamp {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 36px;
+      text-align: center;
+      z-index: 5;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+      text-shadow: none;
+      pointer-events: none;
+    }
+  </style>
+      <section class="slide capa">
+    <div class="half top" data-bg-drop="topo" data-label="[FOTO SUPERIOR]">
+      <div class="half-text">DISCIPLINA NÃO DEPENDE DO SEU HUMOR...</div>
+    </div>
+    <div class="half bottom" data-bg-drop="base" data-label="[FOTO INFERIOR]">
+      <div class="half-text">DEPENDE DE QUEM VOCÊ DECIDIU SER.</div>
+    </div>
+    <div class="brand-stamp">DINO TEAM</div>
+  </section>
+    </section>
+
+    <section data-slide="2" style="width:1080px;height:1350px;">
+      <style>
+    /* ESTILO: layout-dividido | CONCEITO: motivação é estado transitório, disciplina é escolha repetida até virar caráter */
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #b3b3b3;
+      --color-photo-placeholder-top: #1a1a1a;
+      --color-photo-placeholder-bottom: #262626;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --text-shadow-strong:
+        0 4px 16px rgba(0, 0, 0, 0.55),
+        0 2px 6px rgba(0, 0, 0, 0.45);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .slide {
+      width: 1080px;
+      height: 1350px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg);
+    }
+    .half {
+      position: relative;
+      width: 1080px;
+      height: 675px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 80px;
+      text-align: center;
+    }
+    .half.top { background-color: var(--color-photo-placeholder-top); }
+    .half.bottom { background-color: var(--color-photo-placeholder-bottom); }
+    .half.top[data-has-bg] { filter: grayscale(0.85) contrast(1.05); }
+    .half.bottom[data-has-bg] { filter: contrast(1.08) saturate(1.05); }
+    .half::before {
+      content: attr(data-label);
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.22);
+      pointer-events: none;
+    }
+    .half[data-has-bg]::before { display: none; }
+    .half-text {
+      position: relative;
+      z-index: 2;
+      font-family: var(--font-display);
+      font-weight: 400;
+      color: var(--color-fg);
+      text-transform: uppercase;
+      line-height: 0.95;
+      letter-spacing: -0.005em;
+      text-shadow: none;
+      max-width: 920px;
+      font-size: 55px;
+    }
+    .brand-stamp {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 36px;
+      text-align: center;
+      z-index: 5;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+      text-shadow: none;
+      pointer-events: none;
+    }
+  </style>
+      <section class="slide dividido">
+    <div class="half top" data-bg-drop="topo" data-label="[FOTO SUPERIOR]">
+      <div class="half-text">MOTIVAÇÃO É UM ESTADO. ELA SOBE, ELA CAI...</div>
+    </div>
+    <div class="half bottom" data-bg-drop="base" data-label="[FOTO INFERIOR]">
+      <div class="half-text">PORQUE DISCIPLINA NÃO É SENTIMENTO — É ESCOLHA REPETIDA ATÉ VIRAR CARÁTER.</div>
+    </div>
+    <div class="brand-stamp">DINO TEAM</div>
+  </section>
+    </section>
+
+    <section data-slide="3" style="width:1080px;height:1350px;">
+      <style>
+    /* ESTILO: layout-dividido | CONCEITO: o diagnóstico errado — consistência quebra por erro de diagnóstico, não de caráter */
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #b3b3b3;
+      --color-photo-placeholder-top: #1a1a1a;
+      --color-photo-placeholder-bottom: #262626;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --text-shadow-strong:
+        0 4px 16px rgba(0, 0, 0, 0.55),
+        0 2px 6px rgba(0, 0, 0, 0.45);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .slide {
+      width: 1080px;
+      height: 1350px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg);
+    }
+    .half {
+      position: relative;
+      width: 1080px;
+      height: 675px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 80px;
+      text-align: center;
+    }
+    .half.top { background-color: var(--color-photo-placeholder-top); }
+    .half.bottom { background-color: var(--color-photo-placeholder-bottom); }
+    .half.top[data-has-bg] { filter: grayscale(0.85) contrast(1.05); }
+    .half.bottom[data-has-bg] { filter: contrast(1.08) saturate(1.05); }
+    .half::before {
+      content: attr(data-label);
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.22);
+      pointer-events: none;
+    }
+    .half[data-has-bg]::before { display: none; }
+    .half-text {
+      position: relative;
+      z-index: 2;
+      font-family: var(--font-display);
+      font-weight: 400;
+      color: var(--color-fg);
+      text-transform: uppercase;
+      line-height: 0.95;
+      letter-spacing: -0.005em;
+      text-shadow: none;
+      max-width: 920px;
+      font-size: 60px;
+    }
+    .brand-stamp {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 36px;
+      text-align: center;
+      z-index: 5;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+      text-shadow: none;
+      pointer-events: none;
+    }
+  </style>
+      <section class="slide dividido">
+    <div class="half top" data-bg-drop="topo" data-label="[FOTO SUPERIOR]">
+      <div class="half-text">VOCÊ NÃO PERDEU CONSISTÊNCIA POR FALTA DE DISCIPLINA...</div>
+    </div>
+    <div class="half bottom" data-bg-drop="base" data-label="[FOTO INFERIOR]">
+      <div class="half-text">MAS POR DEPENDER DE VONTADE PARA EXECUTAR O QUE DEVERIA SER DECISÃO.</div>
+    </div>
+    <div class="brand-stamp">DINO TEAM</div>
+  </section>
+    </section>
+
+    <section data-slide="4" style="width:1080px;height:1350px;">
+      <style>
+    /* ESTILO: layout-dividido | CONCEITO: identidade vs. desejo — "EU QUERO" depende do humor, "EU TREINO" é quem você é */
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #b3b3b3;
+      --color-photo-placeholder-top: #1a1a1a;
+      --color-photo-placeholder-bottom: #262626;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --text-shadow-strong:
+        0 4px 16px rgba(0, 0, 0, 0.55),
+        0 2px 6px rgba(0, 0, 0, 0.45);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .slide {
+      width: 1080px;
+      height: 1350px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg);
+    }
+    .half {
+      position: relative;
+      width: 1080px;
+      height: 675px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 80px;
+      text-align: center;
+    }
+    .half.top { background-color: var(--color-photo-placeholder-top); }
+    .half.bottom { background-color: var(--color-photo-placeholder-bottom); }
+    .half.top[data-has-bg] { filter: grayscale(0.85) contrast(1.05); }
+    .half.bottom[data-has-bg] { filter: contrast(1.08) saturate(1.05); }
+    .half::before {
+      content: attr(data-label);
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.22);
+      pointer-events: none;
+    }
+    .half[data-has-bg]::before { display: none; }
+    .half-text {
+      position: relative;
+      z-index: 2;
+      font-family: var(--font-display);
+      font-weight: 400;
+      color: var(--color-fg);
+      text-transform: uppercase;
+      line-height: 0.95;
+      letter-spacing: -0.005em;
+      text-shadow: none;
+      max-width: 920px;
+      font-size: 60px;
+    }
+    .brand-stamp {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 36px;
+      text-align: center;
+      z-index: 5;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+      text-shadow: none;
+      pointer-events: none;
+    }
+  </style>
+      <section class="slide dividido">
+    <div class="half top" data-bg-drop="topo" data-label="[FOTO SUPERIOR]">
+      <div class="half-text">"EU QUERO TREINAR" DEPENDE DE COMO VOCÊ ACORDA...</div>
+    </div>
+    <div class="half bottom" data-bg-drop="base" data-label="[FOTO INFERIOR]">
+      <div class="half-text">ATÉ QUE "EU TREINO" DEIXA DE SER DECISÃO E PASSA A SER QUEM VOCÊ É.</div>
+    </div>
+    <div class="brand-stamp">DINO TEAM</div>
+  </section>
+    </section>
+
+    <section data-slide="5" style="width:1080px;height:1350px;">
+      <style>
+    /* ESTILO: layout-dividido | CONCEITO: prova viva (Ramon) — identidade antes da condição, atleta antes da estrutura */
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #b3b3b3;
+      --color-photo-placeholder-top: #1a1a1a;
+      --color-photo-placeholder-bottom: #262626;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --text-shadow-strong:
+        0 4px 16px rgba(0, 0, 0, 0.55),
+        0 2px 6px rgba(0, 0, 0, 0.45);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .slide {
+      width: 1080px;
+      height: 1350px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg);
+    }
+    .half {
+      position: relative;
+      width: 1080px;
+      height: 675px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 80px;
+      text-align: center;
+    }
+    .half.top { background-color: var(--color-photo-placeholder-top); }
+    .half.bottom { background-color: var(--color-photo-placeholder-bottom); }
+    .half.top[data-has-bg] { filter: grayscale(0.85) contrast(1.05); }
+    .half.bottom[data-has-bg] { filter: contrast(1.08) saturate(1.05); }
+    .half::before {
+      content: attr(data-label);
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.22);
+      pointer-events: none;
+    }
+    .half[data-has-bg]::before { display: none; }
+    .half-text {
+      position: relative;
+      z-index: 2;
+      font-family: var(--font-display);
+      font-weight: 400;
+      color: var(--color-fg);
+      text-transform: uppercase;
+      line-height: 0.95;
+      letter-spacing: -0.005em;
+      text-shadow: none;
+      max-width: 920px;
+      font-size: 55px;
+    }
+    .brand-stamp {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 36px;
+      text-align: center;
+      z-index: 5;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+      text-shadow: none;
+      pointer-events: none;
+    }
+  </style>
+      <section class="slide dividido">
+    <div class="half top" data-bg-drop="topo" data-label="[FOTO SUPERIOR]">
+      <div class="half-text">RAMON TREINOU EM PRAÇA SEM ACADEMIA, SEM SUPLEMENTO, SEM ESTRUTURA...</div>
+    </div>
+    <div class="half bottom" data-bg-drop="base" data-label="[FOTO INFERIOR]">
+      <div class="half-text">PORQUE ELE JÁ ERA ATLETA ANTES DE TER AS CONDIÇÕES DE ATLETA.</div>
+    </div>
+    <div class="brand-stamp">DINO TEAM</div>
+  </section>
+    </section>
+
+    <section data-slide="6" style="width:1080px;height:1350px;">
+      <style>
+    /* ESTILO: layout-dividido | CONCEITO: virada central — cada execução sem vontade é evidência de identidade construída */
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #b3b3b3;
+      --color-photo-placeholder-top: #1a1a1a;
+      --color-photo-placeholder-bottom: #262626;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --text-shadow-strong:
+        0 4px 16px rgba(0, 0, 0, 0.55),
+        0 2px 6px rgba(0, 0, 0, 0.45);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .slide {
+      width: 1080px;
+      height: 1350px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg);
+    }
+    .half {
+      position: relative;
+      width: 1080px;
+      height: 675px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 80px;
+      text-align: center;
+    }
+    .half.top { background-color: var(--color-photo-placeholder-top); }
+    .half.bottom { background-color: var(--color-photo-placeholder-bottom); }
+    .half.top[data-has-bg] { filter: grayscale(0.85) contrast(1.05); }
+    .half.bottom[data-has-bg] { filter: contrast(1.08) saturate(1.05); }
+    .half::before {
+      content: attr(data-label);
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.22);
+      pointer-events: none;
+    }
+    .half[data-has-bg]::before { display: none; }
+    .half-text {
+      position: relative;
+      z-index: 2;
+      font-family: var(--font-display);
+      font-weight: 400;
+      color: var(--color-fg);
+      text-transform: uppercase;
+      line-height: 0.95;
+      letter-spacing: -0.005em;
+      text-shadow: none;
+      max-width: 920px;
+      font-size: 65px;
+    }
+    .brand-stamp {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 36px;
+      text-align: center;
+      z-index: 5;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+      text-shadow: none;
+      pointer-events: none;
+    }
+  </style>
+      <section class="slide dividido">
+    <div class="half top" data-bg-drop="topo" data-label="[FOTO SUPERIOR]">
+      <div class="half-text">CADA VEZ QUE VOCÊ EXECUTA SEM VONTADE, VOCÊ NÃO ESTÁ FORÇANDO...</div>
+    </div>
+    <div class="half bottom" data-bg-drop="base" data-label="[FOTO INFERIOR]">
+      <div class="half-text">ESTÁ PROVANDO PARA VOCÊ MESMO QUEM VOCÊ DECIDIU SER.</div>
+    </div>
+    <div class="brand-stamp">DINO TEAM</div>
+  </section>
+    </section>
+
+    <section data-slide="7" style="width:1080px;height:1350px;">
+      <style>
+    /* ESTILO: layout-dividido | CONCEITO: CTA Variação B — foto superior com frase de impacto, preto sólido inferior com chamada editorial Anton */
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #b3b3b3;
+      --color-photo-placeholder-top: #1a1a1a;
+      --color-photo-placeholder-bottom: #262626;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --text-shadow-strong:
+        0 4px 16px rgba(0, 0, 0, 0.55),
+        0 2px 6px rgba(0, 0, 0, 0.45);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .slide {
+      width: 1080px;
+      height: 1350px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg);
+    }
+    .half {
+      position: relative;
+      width: 1080px;
+      height: 675px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 80px;
+      text-align: center;
+    }
+    .half.top { background-color: var(--color-photo-placeholder-top); }
+    .half.bottom { background-color: var(--color-photo-placeholder-bottom); }
+    .half.top[data-has-bg] { filter: grayscale(0.85) contrast(1.05); }
+    .half.bottom[data-has-bg] { filter: contrast(1.08) saturate(1.05); }
+    .half::before {
+      content: attr(data-label);
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.22);
+      pointer-events: none;
+    }
+    .half[data-has-bg]::before { display: none; }
+    .half-text {
+      position: relative;
+      z-index: 2;
+      font-family: var(--font-display);
+      font-weight: 400;
+      color: var(--color-fg);
+      text-transform: uppercase;
+      line-height: 0.95;
+      letter-spacing: -0.005em;
+      text-shadow: none;
+      max-width: 920px;
+      font-size: 90px;
+    }
+    .brand-stamp {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 36px;
+      text-align: center;
+      z-index: 5;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+      text-shadow: none;
+      pointer-events: none;
+    }
+    /* CTA: metade inferior preto sólido #000, sem zona de drop */
+    .slide.cta .half.bottom {
+      background-color: #000000;
+      filter: none;
+    }
+    .slide.cta .half.bottom::before { display: none; }
+    /* Variação B: três linhas curtas Anton em 72px com line-height confortável */
+    .slide.cta .half.bottom .half-text {
+      font-size: 72px;
+      line-height: 1.1;
+      text-shadow: none;
+    }
+  </style>
+      <section class="slide cta">
+    <div class="half top" data-bg-drop="topo" data-label="[FOTO SUPERIOR]">
+      <div class="half-text">DISCIPLINA NÃO É DOM. É CONSTRUÇÃO...</div>
+    </div>
+    <div class="half bottom">
+      <div class="half-text">VOCÊ JÁ TREINOU SEM VONTADE.<br>JÁ SABE COMO É.<br>AGORA FAZ DISSO ROTINA.</div>
+    </div>
+    <div class="brand-stamp">DINO TEAM</div>
+  </section>
+    </section>
+
+
+  </div>
+
+  <div class="dt-controls" id="dt-controls">
+    <button class="dt-prev" type="button" aria-label="Slide anterior">‹</button>
+    <div class="dt-dots"></div>
+    <button class="dt-next" type="button" aria-label="Próximo slide">›</button>
+    <span class="dt-counter">1 / 1</span>
+    <div class="dt-zoom-panel" id="dt-zoom-panel">
+      <span>Zoom</span>
+      <input type="number" id="dt-zoom-input" min="25" max="800" step="1" value="100">
+      <span>%</span>
+    </div>
+    <button class="dt-save" id="dt-save" type="button" aria-label="Salvar HTML com imagens">Salvar HTML</button>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      var carousel = document.getElementById("dt-carousel");
+      var slides = Array.prototype.slice.call(carousel.querySelectorAll("section[data-slide]"));
+      var total = slides.length; if (total === 0) return;
+      var controls = document.getElementById("dt-controls");
+      var prevBtn = controls.querySelector(".dt-prev");
+      var nextBtn = controls.querySelector(".dt-next");
+      var dotsEl = controls.querySelector(".dt-dots");
+      var counterEl = controls.querySelector(".dt-counter");
+      slides.forEach(function (_, i) {
+        var d = document.createElement("span"); d.className = "dt-dot";
+        d.addEventListener("click", function () { goTo(i); }); dotsEl.appendChild(d);
+      });
+      var dots = Array.prototype.slice.call(dotsEl.querySelectorAll(".dt-dot"));
+      var current = 0;
+      function update() {
+        counterEl.textContent = (current + 1) + " / " + total;
+        dots.forEach(function (d, i) { d.classList.toggle("is-active", i === current); });
+        prevBtn.disabled = current === 0; nextBtn.disabled = current === total - 1;
+      }
+      function goTo(idx) {
+        current = Math.max(0, Math.min(total - 1, idx));
+        slides[current].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        update();
+      }
+      prevBtn.addEventListener("click", function () { goTo(current - 1); });
+      nextBtn.addEventListener("click", function () { goTo(current + 1); });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight") { e.preventDefault(); goTo(current + 1); }
+        else if (e.key === "ArrowLeft") { e.preventDefault(); goTo(current - 1); }
+      });
+      var st;
+      carousel.addEventListener("scroll", function () {
+        clearTimeout(st);
+        st = setTimeout(function () {
+          var c = carousel.scrollLeft + carousel.clientWidth / 2;
+          var n = 0, m = Infinity;
+          slides.forEach(function (s, i) {
+            var sc = s.offsetLeft + s.offsetWidth / 2;
+            var d = Math.abs(sc - c);
+            if (d < m) { m = d; n = i; }
+          });
+          if (n !== current) { current = n; update(); }
+        }, 80);
+      });
+      update();
+
+      // Scaling: ajusta zoom de cada slide para caber na viewport; remove em export-mode
+      function computeScale(slide) {
+        var h = parseInt(slide.style.height, 10) || 1350;
+        var w = parseInt(slide.style.width, 10) || 1080;
+        return Math.min((window.innerHeight - 80) / h, (window.innerWidth - 80) / w, 1);
+      }
+      function applyScaling() {
+        if (document.body.classList.contains("export-mode")) return;
+        slides.forEach(function (s) { s.style.zoom = computeScale(s); });
+      }
+      function removeScaling() {
+        slides.forEach(function (s) { s.style.zoom = ""; });
+      }
+      new MutationObserver(function () {
+        if (document.body.classList.contains("export-mode")) removeScaling();
+      }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+      applyScaling();
+      window.addEventListener("resize", applyScaling);
+
+      // Salvar HTML: serializa DOM atual (inline styles com base64) e dispara download
+      document.getElementById("dt-save").addEventListener("click", function () {
+        var title = document.title;
+        var html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = title.replace(/[^\w\s\-—()]/g, "").trim().replace(/\s+/g, " ") + ".html";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+      });
+
+      // Zoom panel: input numérico na barra de controles
+      var zoomPanel = document.getElementById("dt-zoom-panel");
+      var zoomInput = document.getElementById("dt-zoom-input");
+      var activeZone = null;
+
+      function setActiveZone(zone) {
+        activeZone = zone;
+        zoomPanel.classList.add("is-visible");
+        zoomInput.value = Math.round((zone._bgZoom || 1) * 100);
+      }
+
+      zoomInput.addEventListener("input", function () {
+        if (!activeZone) return;
+        var v = parseFloat(zoomInput.value);
+        if (isNaN(v) || v < 1) return;
+        activeZone._bgZoom = v / 100;
+        applyBgZoom(activeZone);
+      });
+      // Impede que setas do teclado no input naveguem o carrossel
+      zoomInput.addEventListener("keydown", function (e) { e.stopPropagation(); });
+
+      // Drop zones: [data-bg-drop] explícitas; fallback: slide inteiro
+      slides.forEach(function (slide) {
+        var zones = Array.prototype.slice.call(slide.querySelectorAll("[data-bg-drop]"));
+        if (zones.length === 0) { slide.setAttribute("data-bg-drop", "full"); zones = [slide]; }
+        zones.forEach(bindZone);
+      });
+
+      // Retorna as dimensões CSS reais da zone no espaço de design (antes do zoom do slide)
+      function getZoneDesignSize(zone) {
+        var slide = zone.closest("section[data-slide]") || zone;
+        var slideW = parseInt(slide.style.width, 10) || 1080;
+        var slideH = parseInt(slide.style.height, 10) || 1350;
+        var sr = slide.getBoundingClientRect();
+        var zr = zone.getBoundingClientRect();
+        return {
+          w: slideW * (zr.width / sr.width),
+          h: slideH * (zr.height / sr.height)
+        };
+      }
+
+      // Aplica zoom na background-image sem tocar no layout
+      function applyBgZoom(zone) {
+        var bw = (zone._bgNatW * zone._bgScale * zone._bgZoom).toFixed(1);
+        var bh = (zone._bgNatH * zone._bgScale * zone._bgZoom).toFixed(1);
+        zone.style.backgroundSize = bw + "px " + bh + "px";
+      }
+
+      function bindZone(zone) {
+        zone.addEventListener("dragover", function (e) { e.preventDefault(); zone.classList.add("dt-drop-active"); });
+        zone.addEventListener("dragleave", function (e) { if (e.target === zone) zone.classList.remove("dt-drop-active"); });
+        zone.addEventListener("drop", function (e) {
+          e.preventDefault(); e.stopPropagation(); zone.classList.remove("dt-drop-active");
+          var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+          if (!f || f.type.indexOf("image/") !== 0) return;
+          var r = new FileReader();
+          r.onload = function () {
+            var dataUrl = r.result;
+            var img = new Image();
+            img.onload = function () {
+              var ds = getZoneDesignSize(zone);
+              var scale = Math.max(ds.w / img.naturalWidth, ds.h / img.naturalHeight);
+              zone._bgNatW = img.naturalWidth;
+              zone._bgNatH = img.naturalHeight;
+              zone._bgScale = scale;
+              zone._bgZoom = 1.0;
+              zone.style.backgroundImage = "url(" + dataUrl + ")";
+              zone.style.backgroundRepeat = "no-repeat";
+              zone.style.backgroundPosition = "50% 50%";
+              applyBgZoom(zone);
+              zone.setAttribute("data-has-bg", "1");
+              setActiveZone(zone);
+            };
+            img.src = dataUrl;
+          };
+          r.readAsDataURL(f);
+        });
+
+        var dragging = false, sx = 0, sy = 0, sp = { x: 50, y: 50 };
+        function getPos() {
+          var p = zone.style.backgroundPosition || "50% 50%";
+          var pp = p.split(/\s+/); var x = parseFloat(pp[0]); var y = parseFloat(pp[1]);
+          return { x: isNaN(x) ? 50 : x, y: isNaN(y) ? 50 : y };
+        }
+        zone.addEventListener("mousedown", function (e) {
+          if (!zone.hasAttribute("data-has-bg")) return;
+          e.preventDefault(); e.stopPropagation();
+          setActiveZone(zone);
+          dragging = true; sx = e.clientX; sy = e.clientY; sp = getPos();
+          zone.classList.add("dt-grabbing");
+        });
+        document.addEventListener("mousemove", function (e) {
+          if (!dragging) return;
+          var rect = zone.getBoundingClientRect();
+          var dx = ((sx - e.clientX) / rect.width) * 100;
+          var dy = ((sy - e.clientY) / rect.height) * 100;
+          var nx = Math.max(0, Math.min(100, sp.x + dx));
+          var ny = Math.max(0, Math.min(100, sp.y + dy));
+          zone.style.backgroundPosition = nx.toFixed(1) + "% " + ny.toFixed(1) + "%";
+        });
+        document.addEventListener("mouseup", function () {
+          if (dragging) { dragging = false; zone.classList.remove("dt-grabbing"); }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

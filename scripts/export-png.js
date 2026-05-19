@@ -61,6 +61,8 @@ async function exportFromPreview(browser, previewPath, exportDir, width, height)
   const page = await browser.newPage();
   await page.setViewport({ width, height, deviceScaleFactor: 1 });
   await page.goto(pathToFileURL(previewPath).href, { waitUntil: "load", timeout: 60000 });
+  // Aguarda o bundle do Claude Design terminar de desempacotar o DOM (async pós-DOMContentLoaded)
+  await page.waitForSelector("section[data-slide]", { timeout: 30000 }).catch(() => {});
   await page.evaluate(() => document.fonts.ready);
 
   const slideCount = await page.$$eval("section[data-slide]", (sections) => sections.length);
@@ -72,6 +74,10 @@ async function exportFromPreview(browser, previewPath, exportDir, width, height)
   for (let i = 1; i <= slideCount; i++) {
     // Mostra apenas o slide i, reseta o body para posição 0,0
     await page.evaluate((slideN) => {
+      // Aciona modo export do wrapper Dino Team (oculta controles, neutraliza carrossel).
+      // Se o preview não usar o wrapper (formato antigo), a classe é inerte — o fallback abaixo cobre.
+      document.body.classList.add("export-mode");
+
       // Oculta todas as sections e labels de slide
       document.querySelectorAll("section[data-slide]").forEach((s) => {
         s.style.display = "none";
@@ -82,6 +88,8 @@ async function exportFromPreview(browser, previewPath, exportDir, width, height)
       // Exibe apenas o slide alvo
       const target = document.querySelector(`section[data-slide="${slideN}"]`);
       if (target) target.style.display = "";
+
+      // Fallback para previews antigos sem o wrapper Dino Team:
       document.body.style.cssText = "margin:0;padding:0;overflow:hidden;";
     }, i);
 

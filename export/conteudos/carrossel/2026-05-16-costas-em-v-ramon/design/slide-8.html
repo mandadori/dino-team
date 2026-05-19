@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Slide 8 — Exercício F1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+    /* ESTILO: treino-dino | CONCEITO DESTE SLIDE: chroma verde F1 — pullover de fechamento, área livre para vídeo */
+
+    :root {
+      --color-chroma: #00b140;
+      --color-fg: #ffffff;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --pad: 80px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-chroma);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      color: var(--color-fg);
+    }
+
+    .chroma-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: var(--color-chroma);
+    }
+
+    .topbar {
+      position: absolute;
+      top: var(--pad);
+      left: var(--pad);
+      right: var(--pad);
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 4;
+    }
+    .topbar .logo-img {
+      height: 32px;
+      display: block;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,.5));
+    }
+    .topbar .topic {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      
+      color: rgba(255,255,255,.92);
+      filter: none;
+      text-shadow: none;
+    }
+
+    .progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 36px 80px 56px;
+      z-index: 5;
+    }
+    .progress .track {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,.30);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress .fill {
+      height: 100%;
+      background: #ffffff;
+      border-radius: 2px;
+    }
+
+    .slide.exercicio .exercise-corner {
+      position: absolute;
+      left: var(--pad);
+      bottom: 110px;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 880px;
+    }
+    .slide.exercicio .ex-code {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.20em;
+      
+      color: rgba(255,255,255,.70);
+      filter: none;
+      text-shadow: none;
+    }
+    .slide.exercicio .ex-name {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 38px;
+      letter-spacing: 0.03em;
+      
+      color: #fff;
+      line-height: 1.1;
+      filter: none;
+      text-shadow: none;
+    }
+    .slide.exercicio .ex-detail {
+      font-family: var(--font-body);
+      
+      font-size: 24px;
+      letter-spacing: 0.06em;
+      
+      color: rgba(255,255,255,.70);
+      line-height: 1.2;
+      filter: none;
+      text-shadow: none;
+    }
+    .slide.exercicio .ex-reps {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 30px;
+      letter-spacing: 0.06em;
+      
+      color: rgba(255,255,255,.95);
+      display: flex;
+      align-items: baseline;
+      gap: 28px;
+      margin-top: 4px;
+      filter: none;
+      text-shadow: none;
+    }
+    .slide.exercicio .ex-reps .sets {
+      min-width: 150px;
+      font-weight: 600;
+    }
+    .slide.exercicio .ex-reps .reps {
+      display: flex;
+      gap: 16px;
+      font-weight: 300;
+    }
+  </style>
+</head>
+<body>
+  <section class="slide exercicio">
+    <div class="chroma-bg"></div>
+
+    <div class="topbar">
+      <img src="../../../../brand/assets/logo.png" class="logo-img" alt="DINO" />
+      <span class="topic">SEXTO EXERCÍCIO</span>
+    </div>
+
+    <div class="exercise-corner">
+      <div class="ex-code">F1.</div>
+      <div class="ex-name">PULLOVER NA<br />POLIA ALTA</div>
+      <div class="ex-detail">CORDA OU BARRA RETA</div>
+      <div class="ex-reps">
+        <span class="sets">3 SÉRIES</span>
+        <span class="reps"><span>15</span><span>/</span><span>12</span><span>/</span><span>Ⓕ</span></span>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track"><div class="fill" style="width: 88.88%"></div></div>
+    </div>
+  </section>
+</body>
+</html>

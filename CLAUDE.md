@@ -51,6 +51,7 @@ Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestr
 - [`/brand-discovery`](.claude/skills/brand-discovery/SKILL.md) — entrevista para construir/atualizar o brand book.
 - [`/novo-post`](.claude/skills/novo-post/SKILL.md) — criar um post completo (carrossel ou stories).
 - [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — gerar N posts em sequência, agendável.
+- [`/novo-estilo`](.claude/skills/novo-estilo/SKILL.md) — criar um novo estilo visual para carrossel ou stories.
 
 ### 3. Agentes — especialistas isolados (`.claude/agents/`)
 
@@ -80,5 +81,6 @@ Cada agente é um **especialista em uma função**. Conhece profundamente sua á
 Cada função é executada por skills. Outputs ficam em `export/`, organizados por formato e data.
 
 - **Criação de conteúdo** — produzir posts prontos para publicação. Skills: `/novo-post` (individual), `/lote-posts` (em lote).
+- **Criação de estilos** — criar novos templates visuais para uso nos posts. Skill: `/novo-estilo`.
 - **Descoberta de marca** — entrevista estruturada para preencher ou atualizar o brand book. Skill: `/brand-discovery`.
 
