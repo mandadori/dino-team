@@ -20,8 +20,9 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 
 ## Pré-requisitos
 
-- Brand book preenchido em `brand/`. Em `BRAND_BOOK_INCOMPLETO`, oriente o usuário a rodar `/brand-discovery` antes.
 - Puppeteer/Chromium instalado (`npm install` na raiz).
+
+Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente a rodar `/brand-discovery` antes.
 
 ## Agentes
 
@@ -38,25 +39,54 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 
 ### 1. Parsear input
 
-Liste `templates/formatos/` e `templates/formatos/<formato>/estilos/`. Tokenize a entrada: match com slug de estilo → estilo; resto → tema. Se formato ausente/inválido, pergunte ao usuário oferecendo a lista descoberta. Se faltar estilo OU tema, vá ao Passo 2; caso contrário, Passo 3.
+Liste `templates/formatos/` e `templates/formatos/<formato>/estilos/`. Tokenize a entrada: match com slug de estilo → estilo; resto → tema. Se formato ausente/inválido, pergunte ao usuário oferecendo a lista descoberta. Siga sempre para o Passo 2.
 
-### 2. Scouting (condicional)
+### 2. Confirmar plano (estilo existente ou ad-hoc; scouting de tema)
 
-Acione `pesquisa-tendencias`:
+Se faltar **estilo**, pergunte ao usuário:
 
 ```
-Tarefa: sugerir <estilo|tema|ambos> para um post Instagram.
+Estilo: nenhum definido.
+
+Opções:
+- Usar estilo existente: <lista de slugs de templates/formatos/<formato>/estilos/>
+- Criar do zero (ad-hoc): anexe imagem de referência e/ou descreva o visual desejado
+```
+
+**Aguarde resposta.** Resolva uma das duas vias:
+
+- **Slug existente escolhido** → `modo_estilo = "definido"`, `slug = <escolhido>`.
+- **Ad-hoc** → `modo_estilo = "ad-hoc"`, colete:
+  - `referencia_imagem` (caminho) — opcional
+  - `referencia_descricao` (texto) — opcional
+  - Ao menos um dos dois é obrigatório. Se nenhum, repita a pergunta.
+
+Se faltar **tema**, acione `pesquisa-tendencias`:
+
+```
+Tarefa: sugerir tema para um post Instagram.
 Profundidade: rápida / decisória.
 
 Inputs:
-- Formato: <formato>; Estilos disponíveis: <slugs>
-- Estilo já definido: <slug ou "nenhum">
+- Formato: <formato>
+- Estilo: <slug ou "ad-hoc — <descrição resumida>">
 - Tema já definido: <texto ou "nenhum">
 
-Saída inline (3-4 linhas): estilo sugerido + motivo; tema sugerido + motivo; contexto ancorando em pilar/público/tendência.
+Saída inline (3-4 linhas): tema sugerido + motivo, ancorando em pilar/público/tendência.
 ```
 
-Apresente ao usuário e **aguarde confirmação explícita** ou ajuste.
+Apresente o plano final:
+
+```
+Plano do post:
+- Formato: <formato>
+- Estilo: <slug existente> | ad-hoc (referência: <descrição resumida>)
+- Tema: <tema>
+
+Confirma? (responda "sim" para seguir, ou diga o que ajustar)
+```
+
+**Aguarde confirmação explícita ou ajuste** antes de seguir ao Passo 3.
 
 ### 3. Briefing estratégico
 
@@ -102,7 +132,9 @@ mkdir -p export/conteudos/<formato>/<data>-<slug>/{design,export}
 
 ### 5. Resolver inputs obrigatórios do estilo
 
-Leia `templates/formatos/<formato>/estilos/<estilo>/estilo.md`. Se não declarar seção **"Inputs obrigatórios"**, pule. Caso contrário, por tipo de input:
+**Se `modo_estilo = "ad-hoc"`:** pule este passo. Sem `estilo.md`, não há inputs obrigatórios a verificar.
+
+Caso contrário, leia `templates/formatos/<formato>/estilos/<estilo>/estilo.md`. Se não declarar seção **"Inputs obrigatórios"**, pule. Caso contrário, por tipo de input:
 
 - **Prescrição técnica de treino:**
   - Usuário forneceu exercícios + séries/reps → use direto, salve em `<pasta>/treino.md`.
@@ -165,6 +197,39 @@ Saída: gravar em export/conteudos/<formato>/<data>-<slug>/copy.md.
 
 Critério: arquivo gravado com a estrutura do template e variações nos pontos pedidos.
 
+### 7.5. Pausa para revisão da copy
+
+Mostre ao usuário o conteúdo de `copy.md`:
+
+```
+Copy gerada em export/conteudos/<formato>/<data>-<slug>/copy.md
+
+--- início do copy ---
+<conteúdo integral de copy.md>
+--- fim do copy ---
+
+Confirma? (responda "ok" para seguir ao design, ou descreva o ajuste)
+```
+
+**Aguarde resposta.** Se vier ajuste, re-acione o `copywriter` com o pedido inline (sem re-rodar pesquisa), aguarde nova gravação e reapresente. Repita até "ok". Se confirmado, siga ao Passo 8.
+
+Prompt do `copywriter` em modo ajuste:
+
+```
+Tarefa: ajustar copy do post conforme pedido do usuário.
+
+Inputs:
+- Copy atual: export/conteudos/<formato>/<data>-<slug>/copy.md
+- Pedido de ajuste: <texto do usuário>
+- Briefing inline original: <briefing guardado no Passo 3>
+
+Regras:
+- Preserve estrutura do template e blocos que não foram pedidos para mudar.
+- Aplique apenas o ajuste solicitado.
+
+Saída: sobrescrever export/conteudos/<formato>/<data>-<slug>/copy.md.
+```
+
 ### 8. Design (assets + preview consolidado)
 
 Acione `designer` com as duas tarefas no mesmo prompt:
@@ -173,8 +238,14 @@ Acione `designer` com as duas tarefas no mesmo prompt:
 Tarefa 1 — produzir N assets visuais (um por bloco do copy).
 
 Inputs:
-- Template visual: templates/formatos/<formato>/estilos/<estilo>/<arquivo HTML do estilo>
-- Descrição do estilo: templates/formatos/<formato>/estilos/<estilo>/estilo.md
+- Regras inegociáveis: templates/formatos/README.md
+- Guia visual:
+  - Modo "definido":
+    - Template visual: templates/formatos/<formato>/estilos/<estilo>/<arquivo HTML do estilo>
+    - Descrição do estilo: templates/formatos/<formato>/estilos/<estilo>/estilo.md
+  - Modo "ad-hoc":
+    - Referência (imagem): <caminho ou "nenhuma">
+    - Referência (descrição): <texto do usuário>
 - Copy: export/conteudos/<formato>/<data>-<slug>/copy.md
 - Inputs técnicos (se houver): export/conteudos/<formato>/<data>-<slug>/treino.md
 
