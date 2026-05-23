@@ -24,7 +24,7 @@ Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou 
 
 ```
 /lote-posts carrossel 4 treino-dino:2 layout-dividido:2 panturrilha
-/lote-posts stories 6 padrao
+/lote-posts carrossel 6 layout-dividido mindset
 /lote-posts carrossel treino-dino layout-dividido pernas
 /lote-posts carrossel 5
 ```
@@ -34,10 +34,11 @@ Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou 
 | Agente | Responsabilidade | Quando aciona |
 |---|---|---|
 | `pesquisa-tendencias` | Sugerir distribuição de estilos (se nenhum foi informado) e gerar lista de N subtemas mapeados aos estilos. | Passos 3 e 4 |
-| Pipeline `/novo-post` (briefing → pesquisa → copy) | Executa até a copy de cada post. | Passo 5 |
+| `briefing-writer` | Briefing estratégico por post. | Passo 5 |
+| Pipeline `/novo-post` (pesquisa → copy) | Executa pesquisa e copy de cada post. | Passo 5 |
 | Pipeline `/novo-post` (design) | Executa o design de cada post após aprovação da copy. | Passo 7 |
 | `curador-export` | Valida e exporta PNGs por post. | Passo 8 |
-| `diretor-marca` | Curadoria editorial final por post. | Passo 8 |
+| `revisor-coerencia` + `revisor-brand` + `revisor-compliance` | Curadoria editorial em 3 etapas por post. | Passo 8 |
 
 Cada agente lê o recorte de `brand/` que sua função exige antes de executar. Erro `BRAND_BOOK_INCOMPLETO` vindo de qualquer agente para o lote inteiro.
 
@@ -139,7 +140,7 @@ Confirma? (sim/ok para começar, ou diga o que ajustar)
 
 Para cada par `(subtema, estilo)` da lista, execute os passos do `/novo-post` **até a copy**, sem pausa:
 
-- **Briefing estratégico** (`diretor-marca`) — extraia `slug-do-post`.
+- **Briefing estratégico** (`briefing-writer`) — extraia `slug-do-post`.
 - **Criar pasta do post** — `export/conteudos/<formato>/<data>-<slug>/`.
 - **Resolver inputs obrigatórios do estilo** (apenas se `modo_estilo = "definido"`):
   - Modo interativo: pergunte ao usuário (ex.: lista de exercícios).
@@ -204,9 +205,10 @@ Para cada post confirmado:
 
 1. Snapshot da pesquisa em `<pasta>/pesquisa-base.md`.
 2. [Agente: `curador-export`] → valida assets e exporta PNGs.
-3. [Agente: `diretor-marca`] → parecer editorial.
-   - APROVADO → grava `briefing.md`.
-   - REPROVADO → registra o parecer e marca o post como pulado (refazer é responsabilidade do `/novo-post`).
+3. Curadoria editorial em sequência:
+   a. [Agente: `revisor-coerencia`] → parecer de coerência. APROVADO ou APROVADO COM AJUSTES → segue para 3b. REPROVADO → registra e marca o post como pulado (refazer é responsabilidade do `/novo-post`).
+   b. [Agente: `revisor-brand`] → parecer de identidade. APROVADO → segue para 3c. REPROVADO → registra e marca como pulado.
+   c. [Agente: `revisor-compliance`] → parecer de compliance. APROVADO → grava `briefing.md`. REPROVADO → registra e marca como pulado.
 
 Erros técnicos (`EXPORT_FALHOU`, `VALIDACAO_TECNICA_FALHOU`) → registre e siga ao próximo.
 

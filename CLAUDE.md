@@ -59,19 +59,23 @@ Cada agente domina **uma função** e organiza-se em **setor × papel** apenas t
 
 Agentes não conhecem o fluxo nem outros agentes — recebem input num formato declarado, entregam output num formato declarado. Conhecimento específico de um fluxo vive nas skills e templates, não no agente.
 
-**Agentes atuais (6):**
+**Agentes atuais (9):**
 
 - **Marketing / Pesquisa**
   - [`pesquisa-tendencias`](.claude/agents/pesquisa-tendencias.md) — pesquisa de conteúdo (será renomeado para `pesquisador-mercado` na Onda 3).
+- **Marketing / Estratégia**
+  - [`briefing-writer`](.claude/agents/briefing-writer.md) — recomendação de estilo e briefing estratégico canônico.
 - **Marketing / Execução**
   - [`copywriter`](.claude/agents/copywriter.md) — copy persuasiva.
   - [`designer`](.claude/agents/designer.md) — HTML+CSS visual.
 - **Marketing / Revisão**
   - [`curador-export`](.claude/agents/curador-export.md) — validação técnica + export PNG.
+  - [`revisor-coerencia`](.claude/agents/revisor-coerencia.md) — coerência editorial do artefato com o briefing.
 - **Produto / Consultoria / Execução**
   - [`treinador`](.claude/agents/treinador.md) — decisões técnicas de treino.
 - **Transversais / Brand**
-  - [`diretor-marca`](.claude/agents/diretor-marca.md) — estratégia e curadoria editorial (será quebrado em `briefing-writer`, `revisor-coerencia` e `revisor-brand` na Onda 2).
+  - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca (decisão binária).
+  - [`revisor-compliance`](.claude/agents/revisor-compliance.md) — compliance: promessas proibidas e claims sensíveis.
 
 **Pastas-placeholder das camadas futuras** (na raiz do repo, fora de `.claude/agents/`):
 - `dados/` — Banco de Dados (popula na Onda 3).
