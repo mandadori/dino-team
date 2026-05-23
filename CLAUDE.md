@@ -35,7 +35,7 @@ Este repositório é o **sistema operacional de marca completo** do Dino Team.
 
 ### 1. Branding da marca (`brand/`)
 
-Documentos institucionais que **toda decisão da marca consulta**. São lidos por todos os agentes antes de produzir qualquer coisa:
+Documentos institucionais que ancoram toda decisão. Cada agente lê automaticamente os arquivos ligados à sua função (declarado em `.claude/agents/<nome>.md`); `brand-book.md` é leitura obrigatória dos agentes editoriais.
 
 - [`brand/brand-book.md`](brand/brand-book.md) — essência, propósito, mensagens centrais.
 - [`brand/tom-de-voz.md`](brand/tom-de-voz.md) — como a marca fala.
@@ -53,26 +53,41 @@ Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestr
 - [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — gerar N posts em sequência, agendável.
 - [`/novo-estilo`](.claude/skills/novo-estilo/SKILL.md) — criar um novo estilo visual para carrossel ou stories.
 
-### 3. Agentes — especialistas isolados (`.claude/agents/`)
+### 3. Agentes — especialistas por função (`.claude/agents/`)
 
-Cada agente é um **especialista em uma função**. Conhece profundamente sua área, mas **não conhece o fluxo nem outros agentes** — não decide o que vem antes ou depois dele, não chama ninguém. Recebe input num formato declarado, entrega output num formato declarado.
+Cada agente domina **uma função** e organiza-se em **setor × papel** apenas textualmente — os arquivos físicos ficam todos achatados em `.claude/agents/<nome>.md` porque o loader do Claude Code só enxerga arquivos flat nessa pasta (subpastas são ignoradas). O agrupamento abaixo é a fonte de verdade humana da divisão setorial; o nome do agente carrega a função.
 
-**Agentes:**
-- [`diretor-marca`](.claude/agents/diretor-marca.md) — briefing estratégico de post e curadoria editorial final.
-- [`pesquisa-tendencias`](.claude/agents/pesquisa-tendencias.md) — pesquisa de conteúdo (modo `scouting` ou `deep`).
-- [`copywriter`](.claude/agents/copywriter.md) — copy persuasiva multi-formato.
-- [`designer`](.claude/agents/designer.md) — HTML+CSS standalone por slide/frame.
-- [`curador-export`](.claude/agents/curador-export.md) — validação técnica e export PNG.
-- [`treinador`](.claude/agents/treinador.md) — decisões técnicas de treino (séries, reps, divisão, progressão).
+Agentes não conhecem o fluxo nem outros agentes — recebem input num formato declarado, entregam output num formato declarado. Conhecimento específico de um fluxo vive nas skills e templates, não no agente.
+
+**Agentes atuais (6):**
+
+- **Marketing / Pesquisa**
+  - [`pesquisa-tendencias`](.claude/agents/pesquisa-tendencias.md) — pesquisa de conteúdo (será renomeado para `pesquisador-mercado` na Onda 3).
+- **Marketing / Execução**
+  - [`copywriter`](.claude/agents/copywriter.md) — copy persuasiva.
+  - [`designer`](.claude/agents/designer.md) — HTML+CSS visual.
+- **Marketing / Revisão**
+  - [`curador-export`](.claude/agents/curador-export.md) — validação técnica + export PNG.
+- **Produto / Consultoria / Execução**
+  - [`treinador`](.claude/agents/treinador.md) — decisões técnicas de treino.
+- **Transversais / Brand**
+  - [`diretor-marca`](.claude/agents/diretor-marca.md) — estratégia e curadoria editorial (será quebrado em `briefing-writer`, `revisor-coerencia` e `revisor-brand` na Onda 2).
+
+**Pastas-placeholder das camadas futuras** (na raiz do repo, fora de `.claude/agents/`):
+- `dados/` — Banco de Dados (popula na Onda 3).
+- `dados/politicas/` — políticas YAML declarativas (popula na Onda 5).
+- `campanhas/` — estado vivo de campanhas multi-canal (popula na Onda 5+).
+- `orquestracao/` — `rotas.yaml` declarativo de triggers (popula na Onda 5).
+
+Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-05-22-arquitetura-multi-setor-design.md) para o destino completo (3 setores produtivos + 3 transversais + orquestração).
 
 ---
 
 ## Regras operacionais
 
-- **Skills orquestram o fluxo principal.** A skill define ordem das etapas, pausas de confirmação, critérios entre elas e formato do entregável final. Toda execução começa numa skill.
-- **Agentes são especialistas com autonomia em runtime.** Cada um domina uma função. Dentro de uma ordem dada pela skill, o agente pode trocar informações com outros agentes ou delegar parte do trabalho a outro especialista quando a tarefa exigir — sem precisar que a skill pré-orquestre cada interação.
-- **Brand é o eixo comum.** Agentes podem consultar os arquivos de `brand/` quando o trabalho exigir contexto da marca (tom de voz, público, pilares, identidade visual). Coerência vem daí.
-- **Erros estruturais voltam para a skill.** Quando um agente devolve erro de fluxo (`BRAND_BOOK_INCOMPLETO`, `ESTILO_INVALIDO`, etc.), a skill decide o próximo passo.
+- **Skills orquestram, agentes executam.** Skill define ordem, pausas e formato final; agentes dominam função e podem cooperar entre si dentro de uma ordem.
+- **Brand é o eixo comum.** Qualquer agente consulta `brand/` quando o trabalho exigir contexto da marca.
+- **Erros estruturais voltam pra skill** (ex: `BRAND_BOOK_INCOMPLETO`, `ESTILO_INVALIDO`).
 
 ---
 
