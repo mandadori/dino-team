@@ -6,8 +6,8 @@
 
 **Architecture:**
 - Este plano é um **delta overlay** sobre `docs/plans/2026-05-19-site-dino-team-mvp.md`. Ele substitui pontualmente algumas tasks (paths, agente responsável pelo briefing, novo gate pré-deploy) e **delega o resto ao plano original**.
-- 4 agentes web vivem agora em `.claude/agents/engenharia/{execucao/web,revisao}/`, não em `.claude/agents/` flat.
-- `/novo-site` chama `briefing-writer` (Marketing/Estratégia) para produzir o briefing institucional da home — `briefing-writer` consulta `inteligencia/ramon/` (preenchido na Onda 3) automaticamente.
+- 4 agentes web vivem flat em `.claude/agents/<nome>.md` (Claude Code não enxerga subdiretórios; ver memória [[claude-code-agents-flat-only]]). Agrupamento conceitual "Engenharia / Execução / Web" + "Engenharia / Revisão" vive textualmente em CLAUDE.md, não em pastas.
+- `/novo-site` chama `briefing-writer` (Marketing/Estratégia) para produzir o briefing institucional da home — `briefing-writer` consulta `dados/ramon/` (preenchido na Onda 3) automaticamente.
 - Pré-deploy: `revisor-brand` valida o site inteiro contra o brand book. Sem aprovação dele, não há deploy.
 - Dashboard (`site/app/admin/dashboard/`) fica para Onda 5 — esta onda entrega só a home + scaffold + agentes/skill.
 
@@ -28,14 +28,16 @@
 
 ## File Structure
 
-### Delta vs. plano original
+### Paths dos 4 agentes web
 
-| Arquivo no plano original | Path real desta onda |
+Os 4 agentes web vivem em `.claude/agents/<nome>.md` flat — exatamente como o plano original (`2026-05-19-site-dino-team-mvp.md`) já previa. A spec multi-setor tinha proposto subpastas (`agents/engenharia/execucao/web/...`), mas o smoke test (Onda 1) provou que subdir não funciona — então os paths viraram os mesmos do plano original.
+
+| Agente | Path |
 |---|---|
-| `.claude/agents/arquiteto-web.md` | `.claude/agents/engenharia/execucao/web/arquiteto-web.md` |
-| `.claude/agents/designer-web.md` | `.claude/agents/engenharia/execucao/web/designer-web.md` |
-| `.claude/agents/dev-frontend.md` | `.claude/agents/engenharia/execucao/web/dev-frontend.md` |
-| `.claude/agents/curador-web.md` | `.claude/agents/engenharia/revisao/curador-web.md` |
+| `arquiteto-web` | `.claude/agents/arquiteto-web.md` |
+| `designer-web` | `.claude/agents/designer-web.md` |
+| `dev-frontend` | `.claude/agents/dev-frontend.md` |
+| `curador-web` | `.claude/agents/curador-web.md` |
 
 ### Arquivos do plano original que continuam idênticos
 
@@ -58,104 +60,69 @@ Adicionar 4 bullets em Engenharia (não substituir nada da seção atual).
 
 ---
 
-### Task 1: Criar a árvore de pastas de Engenharia (preparação)
+### Task 1: (sem preparação de pastas — agentes ficam flat)
 
-**Files:**
-- Remove: `.gitkeep` de `.claude/agents/engenharia/execucao/`, `.claude/agents/engenharia/revisao/`
-- Create: `.claude/agents/engenharia/execucao/web/` (não existia)
-
-- [ ] **Step 1: Criar a subpasta `web/` em execucao**
-
-```bash
-mkdir -p .claude/agents/engenharia/execucao/web
-```
-
-- [ ] **Step 2: Remover `.gitkeep` das pastas que vão receber agente**
-
-```bash
-rm -f .claude/agents/engenharia/execucao/.gitkeep
-rm -f .claude/agents/engenharia/revisao/.gitkeep
-```
-
-(O `.gitkeep` em `engenharia/pesquisa/` e `engenharia/estrategia/` fica — ainda não há agentes lá.)
-
-- [ ] **Step 3: Confirmar estrutura**
-
-```bash
-find .claude/agents/engenharia -type d | sort
-```
-
-Esperado:
-```
-.claude/agents/engenharia
-.claude/agents/engenharia/estrategia
-.claude/agents/engenharia/execucao
-.claude/agents/engenharia/execucao/web
-.claude/agents/engenharia/pesquisa
-.claude/agents/engenharia/revisao
-```
-
-- [ ] **Step 4: Não commitar ainda** — commit unificado no fim.
+A Onda 4 originalmente previa criar a árvore `.claude/agents/engenharia/{execucao/web,revisao}/`. Como o loader não usa subpastas, esta task é **no-op** — os 4 agentes web são criados direto em `.claude/agents/<nome>.md` (Task 2). Mantida aqui como marcador para não desnumerar as tasks seguintes.
 
 ---
 
 ### Task 2: Executar Tasks 1-4 do plano original (4 agentes web), com paths ajustados
 
 **Files:**
-- Create: `.claude/agents/engenharia/execucao/web/arquiteto-web.md`
-- Create: `.claude/agents/engenharia/execucao/web/designer-web.md`
-- Create: `.claude/agents/engenharia/execucao/web/dev-frontend.md`
-- Create: `.claude/agents/engenharia/revisao/curador-web.md`
+- Create: `.claude/agents/arquiteto-web.md`
+- Create: `.claude/agents/designer-web.md`
+- Create: `.claude/agents/dev-frontend.md`
+- Create: `.claude/agents/curador-web.md`
 
 **Como executar:**
 1. Abra `docs/plans/2026-05-19-site-dino-team-mvp.md`.
-2. Execute **Task 1** (arquiteto-web) com 1 mudança: escreva o arquivo em `.claude/agents/engenharia/execucao/web/arquiteto-web.md` (não no path original).
-3. Execute **Task 2** (designer-web) em `.claude/agents/engenharia/execucao/web/designer-web.md`.
-4. Execute **Task 3** (dev-frontend) em `.claude/agents/engenharia/execucao/web/dev-frontend.md`.
-5. Execute **Task 4** (curador-web) em `.claude/agents/engenharia/revisao/curador-web.md`.
+2. Execute **Task 1** (arquiteto-web) com 1 mudança: escreva o arquivo em `.claude/agents/arquiteto-web.md` (não no path original).
+3. Execute **Task 2** (designer-web) em `.claude/agents/designer-web.md`.
+4. Execute **Task 3** (dev-frontend) em `.claude/agents/dev-frontend.md`.
+5. Execute **Task 4** (curador-web) em `.claude/agents/curador-web.md`.
 
 O **conteúdo** (frontmatter `name:`, princípios, contratos de I/O, anti-padrões) de cada agente é exatamente o do plano original — não alterar.
 
 - [ ] **Step 1: Executar Task 1 do plano original com path novo**
 
-Conteúdo: copiar verbatim do plano original (Task 1, Step 1) para `.claude/agents/engenharia/execucao/web/arquiteto-web.md`. Manter o frontmatter `name: arquiteto-web` (resolução é por nome).
+Conteúdo: copiar verbatim do plano original (Task 1, Step 1) para `.claude/agents/arquiteto-web.md`. Manter o frontmatter `name: arquiteto-web` (resolução é por nome).
 
 Verificar:
 
 ```bash
-head -5 .claude/agents/engenharia/execucao/web/arquiteto-web.md
+head -5 .claude/agents/arquiteto-web.md
 ```
 
 Esperado: `name: arquiteto-web`.
 
 - [ ] **Step 2: Executar Task 2 do plano original com path novo**
 
-`.claude/agents/engenharia/execucao/web/designer-web.md`. Conteúdo verbatim do plano original (Task 2, Step 1).
+`.claude/agents/designer-web.md`. Conteúdo verbatim do plano original (Task 2, Step 1).
 
 Verificar:
 
 ```bash
-head -5 .claude/agents/engenharia/execucao/web/designer-web.md
+head -5 .claude/agents/designer-web.md
 ```
 
 Esperado: `name: designer-web`.
 
 - [ ] **Step 3: Executar Task 3 do plano original com path novo**
 
-`.claude/agents/engenharia/execucao/web/dev-frontend.md`. Verbatim.
+`.claude/agents/dev-frontend.md`. Verbatim.
 
 ```bash
-head -5 .claude/agents/engenharia/execucao/web/dev-frontend.md
+head -5 .claude/agents/dev-frontend.md
 ```
 
 Esperado: `name: dev-frontend`.
 
 - [ ] **Step 4: Executar Task 4 do plano original com path novo**
 
-`.claude/agents/engenharia/revisao/curador-web.md`. Verbatim.
+`.claude/agents/curador-web.md`. Verbatim.
 
 ```bash
-head -5 .claude/agents/engenharia/revisao/curador-web.md
+head -5 .claude/agents/curador-web.md
 ```
 
 Esperado: `name: curador-web`.
@@ -200,7 +167,7 @@ Na seção "Agentes" do SKILL.md da `/novo-site`, garantir que a tabela contenha
 | `designer-web` | Componentes React + Tailwind + animações | Engenharia/Execução/Web |
 | `dev-frontend` | Estados, formulários, responsividade, a11y, performance | Engenharia/Execução/Web |
 | `curador-web` | Validação técnica: build, lint, types, Lighthouse, preview deploy | Engenharia/Revisão |
-| `briefing-writer` | Briefing institucional da home (Task 10) — consulta `inteligencia/ramon/` | Marketing/Estratégia (externo) |
+| `briefing-writer` | Briefing institucional da home (Task 10) — consulta `dados/ramon/` | Marketing/Estratégia (externo) |
 | `revisor-brand` | Validação de brand pré-deploy (novo gate) — binário | Transversais/Brand (externo) |
 ```
 
@@ -228,7 +195,7 @@ Substituir por:
    - Inputs:
      - Spec do site: docs/specs/2026-05-19-site-dino-team-design.md
      - Brand book (lido automaticamente).
-     - Banco de Inteligência: `inteligencia/ramon/cronograma.md`, `inteligencia/ramon/fase-atual.md` (lidos automaticamente quando produzindo briefing).
+     - Banco de Dados: `dados/ramon/cronograma.md`, `dados/ramon/fase-atual.md` (lidos automaticamente quando produzindo briefing).
    - Saída: `site/docs/home-briefing.md`.
 ```
 
@@ -309,7 +276,7 @@ Tarefa: produzir briefing institucional da home do site Dino Team.
 Inputs:
 - Spec do site: docs/specs/2026-05-19-site-dino-team-design.md (descreve as 7 seções e o tom esperado).
 - Brand book (você lê automaticamente os 5 arquivos de brand/).
-- Banco de Inteligência: `inteligencia/ramon/cronograma.md`, `inteligencia/ramon/fase-atual.md` (você lê automaticamente quando produzindo briefing).
+- Banco de Dados: `dados/ramon/cronograma.md`, `dados/ramon/fase-atual.md` (você lê automaticamente quando produzindo briefing).
 
 Template: templates/briefing.md.
 Saída: gravar em site/docs/home-briefing.md.
@@ -350,7 +317,7 @@ Sem deltas — execute integralmente:
 - Task 18 — page.tsx (importa as 7 seções)
 - Task 19 — build/lint/types (smoke técnico)
 
-Cada task aciona `designer-web` e/ou `dev-frontend` — agora pelos paths novos em `engenharia/execucao/web/`, resolução por nome.
+Cada task aciona `designer-web` e/ou `dev-frontend` — resolução por nome no frontmatter, paths flat conforme o plano original.
 
 - [ ] **Step 1: Executar Task 11**
 - [ ] **Step 2: Executar Task 12**
@@ -435,35 +402,22 @@ Procurar pela subseção `### 3. Agentes` em `CLAUDE.md` (já reorganizada nas o
 
 - [ ] **Step 2: Adicionar a subseção Engenharia**
 
-Adicionar (após `Transversais / Inteligência` e antes do bloco "Pastas-placeholder"):
+Adicionar (após `Transversais / Dados` e antes do bloco "Pastas-placeholder"):
 
 ```markdown
 - **Engenharia / Execução / Web**
-  - [`arquiteto-web`](.claude/agents/engenharia/execucao/web/arquiteto-web.md) — scaffold, organização, libs, config do site.
-  - [`designer-web`](.claude/agents/engenharia/execucao/web/designer-web.md) — componentes React + Tailwind + Framer Motion.
-  - [`dev-frontend`](.claude/agents/engenharia/execucao/web/dev-frontend.md) — estados, formulários, responsividade, a11y, performance.
+  - [`arquiteto-web`](.claude/agents/arquiteto-web.md) — scaffold, organização, libs, config do site.
+  - [`designer-web`](.claude/agents/designer-web.md) — componentes React + Tailwind + Framer Motion.
+  - [`dev-frontend`](.claude/agents/dev-frontend.md) — estados, formulários, responsividade, a11y, performance.
 - **Engenharia / Revisão**
-  - [`curador-web`](.claude/agents/engenharia/revisao/curador-web.md) — build, lint, types, Lighthouse, preview deploy.
+  - [`curador-web`](.claude/agents/curador-web.md) — build, lint, types, Lighthouse, preview deploy.
 ```
 
-- [ ] **Step 3: Atualizar a lista de pastas-placeholder**
+- [ ] **Step 3: (Sem ajuste de pastas-placeholder)**
 
-A nota "Pastas-placeholder (vazias até as ondas correspondentes): ..." precisa remover `engenharia/execucao/` e `engenharia/revisao/` da lista (não estão mais vazias).
+No layout flat, não há pastas-placeholder dentro de `.claude/agents/`. As únicas pastas-placeholder do projeto vivem na raiz (`dados/`, `campanhas/`, `orquestracao/`, `dados/politicas/`) e foram populadas/mantidas pelas ondas correspondentes. Nada a ajustar aqui.
 
-Atual:
-```
-**Pastas-placeholder** (vazias até as ondas correspondentes): `marketing/estrategia/`, `produto/consultoria/{pesquisa,estrategia,revisao}/`, `engenharia/{pesquisa,estrategia,execucao,revisao}/`, `transversais/{inteligencia,plataforma}/`. ...
-```
-
-Substituir por:
-
-```
-**Pastas-placeholder** (vazias até as ondas correspondentes): `produto/consultoria/{pesquisa,estrategia,revisao}/`, `engenharia/{pesquisa,estrategia}/`, `transversais/plataforma/`. ...
-```
-
-(Observe: a Onda 3 já preencheu `marketing/estrategia/` com `briefing-writer` e `transversais/inteligencia/` com `archivist-ramon` — esses devem sair da lista também se ainda estavam lá.)
-
-- [ ] **Step 4: Adicionar nova seção "5. Site" (após "4. Banco de Inteligência" da Onda 3)**
+- [ ] **Step 4: Adicionar nova seção "5. Site" (após "4. Banco de Dados" da Onda 3)**
 
 ```markdown
 ### 5. Site (`site/`)
@@ -476,7 +430,7 @@ Site institucional do Dino Team — Next.js 15 + Tailwind 4 + shadcn/ui + Framer
 - [ ] **Step 5: Verificar**
 
 ```bash
-grep -n "engenharia/" CLAUDE.md
+grep -n "arquiteto-web\|designer-web\|dev-frontend\|curador-web" CLAUDE.md
 grep -n "novo-site\|site/" CLAUDE.md
 ```
 
@@ -537,21 +491,21 @@ Esperado: ~30 arquivos novos/modificados — agentes em Engenharia, skill `/novo
 - [ ] **Step 2: Stage e commit**
 
 ```bash
-git add .claude/agents/engenharia .claude/skills/novo-site site/ CLAUDE.md
+git add .claude/agents/arquiteto-web.md .claude/agents/designer-web.md .claude/agents/dev-frontend.md .claude/agents/curador-web.md .claude/skills/novo-site site/ CLAUDE.md
 git commit -m "$(cat <<'EOF'
 feat(arquitetura): Site + Engenharia MVP (Onda 4)
 
 Conforme spec docs/specs/2026-05-22-arquitetura-multi-setor-design.md §6.5
 e plano-base docs/plans/2026-05-19-site-dino-team-mvp.md adaptado.
 
-Agentes criados em Engenharia:
-- arquiteto-web, designer-web, dev-frontend (engenharia/execucao/web/)
-- curador-web (engenharia/revisao/)
+Agentes web criados (flat em .claude/agents/, agrupados textualmente
+em CLAUDE.md como Engenharia/Execução/Web e Engenharia/Revisão):
+- arquiteto-web.md, designer-web.md, dev-frontend.md, curador-web.md
 
 Skill /novo-site criada com 2 deltas vs. plano original:
 - Briefing institucional produzido por briefing-writer (Marketing/
   Estratégia), não por diretor-marca. briefing-writer consulta
-  inteligencia/ramon/* automaticamente.
+  dados/ramon/* automaticamente.
 - Gate obrigatório pré-deploy: revisor-brand valida o site contra brand
   book. Sem aprovação, sem deploy.
 
@@ -581,7 +535,7 @@ git log -1 --stat | head -60
 
 ## Critério de conclusão da Onda 4
 
-- [ ] 4 agentes web vivem em `.claude/agents/engenharia/execucao/web/` (3) e `.claude/agents/engenharia/revisao/` (1).
+- [ ] 4 agentes web vivem flat em `.claude/agents/<nome>.md` — `arquiteto-web.md`, `designer-web.md`, `dev-frontend.md`, `curador-web.md`. Agrupamento "Engenharia / Execução / Web" e "Engenharia / Revisão" em CLAUDE.md é só textual.
 - [ ] Skill `/novo-site` existe e referencia `briefing-writer` + `revisor-brand` em vez de `diretor-marca`.
 - [ ] `site/docs/home-briefing.md` foi produzido por `briefing-writer` e Bruno aprovou.
 - [ ] Site no ar via preview Vercel (URL emitida).

@@ -5,15 +5,16 @@
 **Goal:** Desacumular as 3 responsabilidades hoje misturadas em `diretor-marca` em 3 agentes especializados (`briefing-writer`, `revisor-coerencia`, `revisor-brand`), criar o agente inicial `revisor-compliance`, e atualizar `/novo-post` e `/lote-posts` para acionar o agente certo em cada passo — sem alterar o comportamento observável.
 
 **Architecture:**
-- `briefing-writer` (Marketing/Estratégia) absorve dois subpapéis hoje feitos por `diretor-marca`: **recomendação de estilo** (P2b do `/novo-post`) e **briefing estratégico** (P4). Lê os 5 arquivos de `brand/`.
-- `revisor-coerencia` (Marketing/Revisão) absorve a **curadoria editorial final** (P11 do `/novo-post`, Passo 8 do `/lote-posts`): avalia ângulo, pilar, hook, 1-ideia-por-bloco, CTA específico — coerência interna do artefato com o briefing.
-- `revisor-brand` (Transversal/Brand) é o **guardião de identidade**: tom de voz, paleta, tipografia, pilares — aprova ou reprova qualquer artefato contra `brand/`. Sem aprovação com ajustes (só APROVADO / REPROVADO).
-- `revisor-compliance` (Transversal/Brand) é inicial e mínimo: checa promessas proibidas e claims sensíveis (saúde, jurídico). Onda 2 entrega só o esqueleto; a lista de termos vetados vive em `brand/` e cresce orgânicamente.
-- O arquivo `diretor-marca.md` **deixa de existir** ao final desta onda (vira `revisor-brand.md`).
+- Layout flat — todos os agentes vivem em `.claude/agents/<nome>.md` (loader do Claude Code não enxerga subdiretórios; ver memória [[claude-code-agents-flat-only]]). A divisão "setor × papel" vive como agrupamento textual em `CLAUDE.md`, não como pasta física.
+- `briefing-writer` (conceitualmente Marketing/Estratégia) absorve dois subpapéis hoje feitos por `diretor-marca`: **recomendação de estilo** (P2b do `/novo-post`) e **briefing estratégico** (P4). Lê os 5 arquivos de `brand/`.
+- `revisor-coerencia` (conceitualmente Marketing/Revisão) absorve a **curadoria editorial final** (P11 do `/novo-post`, Passo 8 do `/lote-posts`): avalia ângulo, pilar, hook, 1-ideia-por-bloco, CTA específico — coerência interna do artefato com o briefing.
+- `revisor-brand` (conceitualmente Transversal/Brand) é o **guardião de identidade**: tom de voz, paleta, tipografia, pilares — aprova ou reprova qualquer artefato contra `brand/`. Sem aprovação com ajustes (só APROVADO / REPROVADO).
+- `revisor-compliance` (conceitualmente Transversal/Brand) é inicial e mínimo: checa promessas proibidas e claims sensíveis (saúde, jurídico). Onda 2 entrega só o esqueleto; a lista de termos vetados vive em `brand/` e cresce orgânicamente.
+- O arquivo `diretor-marca.md` **deixa de existir** ao final desta onda (renomeado in-place para `revisor-brand.md`).
 
 **Spec de referência:** [docs/specs/2026-05-22-arquitetura-multi-setor-design.md §6.3](../specs/2026-05-22-arquitetura-multi-setor-design.md)
 
-**Dependência:** Onda 1 concluída (agentes já vivem em `.claude/agents/{setor}/{papel}/`).
+**Dependência:** Onda 1 concluída (pastas-placeholder + CLAUDE.md com agrupamento textual já em vigor).
 
 **Invariantes:**
 - `/novo-post` e `/lote-posts` continuam entregando o mesmo output ao usuário; muda só **quem internamente** faz cada passo.
@@ -28,15 +29,15 @@
 
 | Arquivo | Responsabilidade |
 |---|---|
-| `.claude/agents/marketing/estrategia/briefing-writer.md` | Recomendação de estilo e produção de briefing estratégico canônico |
-| `.claude/agents/marketing/revisao/revisor-coerencia.md` | Curadoria editorial final: ângulo, pilar, hook, 1-ideia, CTA — coerência interna do artefato com o briefing |
-| `.claude/agents/transversais/brand/revisor-compliance.md` | Compliance mínimo: checa promessas proibidas e claims sensíveis (saúde, jurídico) |
+| `.claude/agents/briefing-writer.md` | Recomendação de estilo e produção de briefing estratégico canônico |
+| `.claude/agents/revisor-coerencia.md` | Curadoria editorial final: ângulo, pilar, hook, 1-ideia, CTA — coerência interna do artefato com o briefing |
+| `.claude/agents/revisor-compliance.md` | Compliance mínimo: checa promessas proibidas e claims sensíveis (saúde, jurídico) |
 
-### Arquivos renomeados / movidos
+### Arquivos renomeados
 
 | Origem | Destino |
 |---|---|
-| `.claude/agents/transversais/brand/diretor-marca.md` | `.claude/agents/transversais/brand/revisor-brand.md` (com edição de frontmatter `name:` e foco em identidade) |
+| `.claude/agents/diretor-marca.md` | `.claude/agents/revisor-brand.md` (rename in-place + edição de frontmatter `name:` + reescrita de conteúdo focada em identidade) |
 
 ### Arquivos modificados
 
@@ -44,7 +45,7 @@
 |---|---|
 | `.claude/skills/novo-post/SKILL.md` | Trocar `diretor-marca` por: `briefing-writer` em P2b e P4; `revisor-coerencia` + `revisor-brand` em P11 (sequencial, com gating de aprovação). Atualizar tabela de agentes. |
 | `.claude/skills/lote-posts/SKILL.md` | Trocar `diretor-marca` por: `briefing-writer` no Passo 5; `revisor-coerencia` + `revisor-brand` no Passo 8. Atualizar tabela de agentes. |
-| `CLAUDE.md` | Substituir o item de `diretor-marca` por 3 itens (`briefing-writer`, `revisor-coerencia`, `revisor-brand`) + `revisor-compliance`. |
+| `CLAUDE.md` | Substituir o item de `diretor-marca` no agrupamento "Transversais / Brand" por 4 itens (`briefing-writer` em Marketing/Estratégia; `revisor-coerencia` em Marketing/Revisão; `revisor-brand` e `revisor-compliance` em Transversais/Brand). |
 
 ---
 
@@ -55,7 +56,7 @@
 ### Task 1: Criar `briefing-writer`
 
 **Files:**
-- Create: `.claude/agents/marketing/estrategia/briefing-writer.md`
+- Create: `.claude/agents/briefing-writer.md`
 
 - [ ] **Step 1: Criar o arquivo com o conteúdo abaixo**
 
@@ -170,7 +171,7 @@ Quando a skill pedir output em caminho, gravo seguindo o template apontado e ret
 - [ ] **Step 2: Verificar frontmatter**
 
 ```bash
-head -5 .claude/agents/marketing/estrategia/briefing-writer.md
+head -5 .claude/agents/briefing-writer.md
 ```
 
 Esperado: vê `name: briefing-writer`, `tools: Read, Write, Edit, Glob, Grep`.
@@ -192,7 +193,7 @@ Esperado: o agente é encontrado (mesmo que devolva `INPUT_INSUFICIENTE`).
 ### Task 2: Criar `revisor-coerencia`
 
 **Files:**
-- Create: `.claude/agents/marketing/revisao/revisor-coerencia.md`
+- Create: `.claude/agents/revisor-coerencia.md`
 
 - [ ] **Step 1: Criar o arquivo com o conteúdo abaixo**
 
@@ -283,7 +284,7 @@ Em APROVADO ou APROVADO COM AJUSTES, a skill segue para `revisor-brand`. Em REPR
 - [ ] **Step 2: Verificar frontmatter**
 
 ```bash
-head -5 .claude/agents/marketing/revisao/revisor-coerencia.md
+head -5 .claude/agents/revisor-coerencia.md
 ```
 
 Esperado: `name: revisor-coerencia`.
@@ -303,27 +304,27 @@ Esperado: agente encontrado.
 ### Task 3: Renomear `diretor-marca.md` → `revisor-brand.md` e refocar conteúdo
 
 **Files:**
-- Move + edit: `.claude/agents/transversais/brand/diretor-marca.md` → `.claude/agents/transversais/brand/revisor-brand.md`
+- Move + edit: `.claude/agents/diretor-marca.md` → `.claude/agents/revisor-brand.md`
 
 **Estratégia:** primeiro `git mv` (preserva histórico), depois reescrita do conteúdo com escopo reduzido. O conteúdo novo está abaixo — substitui o arquivo inteiro.
 
 - [ ] **Step 1: Renomear o arquivo**
 
 ```bash
-git mv .claude/agents/transversais/brand/diretor-marca.md .claude/agents/transversais/brand/revisor-brand.md
+git mv .claude/agents/diretor-marca.md .claude/agents/revisor-brand.md
 ```
 
 - [ ] **Step 2: Verificar o rename**
 
 ```bash
-git status .claude/agents/transversais/brand/
+git status .claude/agents/
 ```
 
 Esperado: `renamed: ... diretor-marca.md -> ... revisor-brand.md`.
 
 - [ ] **Step 3: Substituir o conteúdo do arquivo** (Edit ou Write)
 
-Conteúdo novo de `.claude/agents/transversais/brand/revisor-brand.md`:
+Conteúdo novo de `.claude/agents/revisor-brand.md`:
 
 ```markdown
 ---
@@ -417,7 +418,7 @@ Parecer inline em markdown:
 - [ ] **Step 4: Verificar resultado**
 
 ```bash
-head -5 .claude/agents/transversais/brand/revisor-brand.md
+head -5 .claude/agents/revisor-brand.md
 ```
 
 Esperado: `name: revisor-brand`.
@@ -445,7 +446,7 @@ Esperado: agente não encontrado. Isso é o desejado — `diretor-marca` foi ext
 ### Task 4: Criar `revisor-compliance` (esqueleto inicial)
 
 **Files:**
-- Create: `.claude/agents/transversais/brand/revisor-compliance.md`
+- Create: `.claude/agents/revisor-compliance.md`
 
 **Escopo desta onda:** o agente é criado, mas a lista de termos vetados/claims sensíveis vive em `brand/` e cresce orgânicamente. A versão inicial documenta a função e os princípios, e checa categorias amplas (saúde, jurídico) sem dicionário extenso.
 
@@ -540,7 +541,7 @@ Sem `Tarefa` ou `Inputs`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 - [ ] **Step 2: Verificar frontmatter**
 
 ```bash
-head -5 .claude/agents/transversais/brand/revisor-compliance.md
+head -5 .claude/agents/revisor-compliance.md
 ```
 
 Esperado: `name: revisor-compliance`.
@@ -575,7 +576,7 @@ Trecho atual a substituir (linhas começando em `| Agente |`):
 ```markdown
 | Agente | Responsabilidade | Input | Output |
 |---|---|---|---|
-| `pesquisa-tendencias` | Scouting de tema + pesquisa profunda | formato/estilo OU briefing | sugestão inline (scouting) OU `export/pesquisa/<data>-tendencias-<slug>.md` |
+| `pesquisa-tendencias` | Scouting de tema + pesquisa profunda | formato/estilo OU briefing | sugestão inline (scouting) OU `dados/pesquisas-brutas/<data>-tendencias-<slug>.md` |
 | `diretor-marca` | Recomendação de estilo (P2b) + briefing estratégico (P4) + curadoria editorial final (P11) | formato+tema (P2b) / formato+estilo+tema (P4) / pasta+briefing (P11) | recomendação inline (P2b) / briefing inline (P4) / parecer + `briefing.md` (P11) |
 | `designer` | Estilo ad-hoc em `_rascunho/` (P3) + assets do post + preview consolidado (P9) | refs visuais + contrato (P3) / estilo + copy (P9) | `estilo.md` + arquivo principal + `preview.html` (P3) / `design/*.html` + `design/preview.html` (P9) |
 | `treinador` | Prescrição técnica de treino | exercícios + objetivo + recorte | `treino.md` |
@@ -588,7 +589,7 @@ Substituir por:
 ```markdown
 | Agente | Responsabilidade | Input | Output |
 |---|---|---|---|
-| `pesquisa-tendencias` | Scouting de tema + pesquisa profunda | formato/estilo OU briefing | sugestão inline (scouting) OU `export/pesquisa/<data>-tendencias-<slug>.md` |
+| `pesquisa-tendencias` | Scouting de tema + pesquisa profunda | formato/estilo OU briefing | sugestão inline (scouting) OU `dados/pesquisas-brutas/<data>-tendencias-<slug>.md` |
 | `briefing-writer` | Recomendação de estilo (P2b) + briefing estratégico (P4) | formato+tema (P2b) / formato+estilo+tema (P4) | recomendação inline (P2b) / briefing inline (P4) |
 | `designer` | Estilo ad-hoc em `_rascunho/` (P3) + assets do post + preview consolidado (P9) | refs visuais + contrato (P3) / estilo + copy (P9) | `estilo.md` + arquivo principal + `preview.html` (P3) / `design/*.html` + `design/preview.html` (P9) |
 | `treinador` | Prescrição técnica de treino | exercícios + objetivo + recorte | `treino.md` |
@@ -883,19 +884,19 @@ Trecho atual (deixado pela Onda 1):
 
 ```markdown
 - **Transversais / Brand**
-  - [`diretor-marca`](.claude/agents/transversais/brand/diretor-marca.md) — estratégia e curadoria editorial (será quebrado em `briefing-writer`, `revisor-coerencia` e `revisor-brand` na Onda 2).
+  - [`diretor-marca`](.claude/agents/diretor-marca.md) — estratégia e curadoria editorial (será quebrado em `briefing-writer`, `revisor-coerencia` e `revisor-brand` na Onda 2).
 ```
 
 Substituir por:
 
 ```markdown
 - **Marketing / Estratégia**
-  - [`briefing-writer`](.claude/agents/marketing/estrategia/briefing-writer.md) — recomendação de estilo e briefing estratégico canônico.
+  - [`briefing-writer`](.claude/agents/briefing-writer.md) — recomendação de estilo e briefing estratégico canônico.
 - **Marketing / Revisão**
-  - [`revisor-coerencia`](.claude/agents/marketing/revisao/revisor-coerencia.md) — coerência editorial do artefato com o briefing.
+  - [`revisor-coerencia`](.claude/agents/revisor-coerencia.md) — coerência editorial do artefato com o briefing.
 - **Transversais / Brand**
-  - [`revisor-brand`](.claude/agents/transversais/brand/revisor-brand.md) — guardião transversal da identidade da marca (decisão binária).
-  - [`revisor-compliance`](.claude/agents/transversais/brand/revisor-compliance.md) — compliance: promessas proibidas e claims sensíveis.
+  - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca (decisão binária).
+  - [`revisor-compliance`](.claude/agents/revisor-compliance.md) — compliance: promessas proibidas e claims sensíveis.
 ```
 
 Também atualizar o item de `revisor-coerencia` que aparece dentro de **Marketing / Revisão** já existente (deixado pela Onda 1, que tinha `curador-export` como único filho de `marketing/revisao/`). Se a Onda 1 colocou `curador-export` sozinho num bullet de Marketing/Revisão, basta adicionar o `revisor-coerencia` como segundo bullet.
@@ -904,8 +905,8 @@ Resultado esperado da seção Marketing/Revisão:
 
 ```markdown
 - **Marketing / Revisão**
-  - [`curador-export`](.claude/agents/marketing/revisao/curador-export.md) — validação técnica + export PNG.
-  - [`revisor-coerencia`](.claude/agents/marketing/revisao/revisor-coerencia.md) — coerência editorial do artefato com o briefing.
+  - [`curador-export`](.claude/agents/curador-export.md) — validação técnica + export PNG.
+  - [`revisor-coerencia`](.claude/agents/revisor-coerencia.md) — coerência editorial do artefato com o briefing.
 ```
 
 - [ ] **Step 2: Remover a frase "será quebrado…" agora obsoleta**
@@ -1032,7 +1033,7 @@ mais.
 
 CLAUDE.md atualizado. Comportamento observável do pipeline preservado.
 
-Próxima onda (Onda 3): Banco de Inteligência mínimo + archivist-ramon +
+Próxima onda (Onda 3): Banco de Dados mínimo + archivist-ramon +
 renomear pesquisa-tendencias → pesquisador-mercado.
 EOF
 )"
@@ -1050,10 +1051,10 @@ Esperado: o commit recém-criado com os 7 arquivos.
 
 ## Critério de conclusão da Onda 2
 
-- [ ] `.claude/agents/marketing/estrategia/briefing-writer.md` existe com frontmatter correto.
-- [ ] `.claude/agents/marketing/revisao/revisor-coerencia.md` existe com frontmatter correto.
-- [ ] `.claude/agents/transversais/brand/revisor-brand.md` existe (renomeado de `diretor-marca.md`), com conteúdo reescrito focado em identidade.
-- [ ] `.claude/agents/transversais/brand/revisor-compliance.md` existe (esqueleto inicial).
+- [ ] `.claude/agents/briefing-writer.md` existe com frontmatter correto.
+- [ ] `.claude/agents/revisor-coerencia.md` existe com frontmatter correto.
+- [ ] `.claude/agents/revisor-brand.md` existe (renomeado de `diretor-marca.md`), com conteúdo reescrito focado em identidade.
+- [ ] `.claude/agents/revisor-compliance.md` existe (esqueleto inicial).
 - [ ] `.claude/skills/novo-post/SKILL.md` não menciona mais `diretor-marca`; menciona `briefing-writer` em P2b/P4 e `revisor-coerencia/brand/compliance` em P11.
 - [ ] `.claude/skills/lote-posts/SKILL.md` idem para Passos 5 e 8.
 - [ ] `CLAUDE.md` lista os 4 agentes novos e não tem mais `diretor-marca`.

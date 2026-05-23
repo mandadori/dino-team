@@ -9,7 +9,7 @@
 - **Cron via Vercel Cron** (site já deployado na Onda 4). Sem GitHub Actions — uma plataforma só.
 - **Skills L2 = compostas:** `/planejar-pauta-semanal` produz N briefings sem executar posts. Output em `campanhas/<slug>/briefing-mestre.md` + grafo de execução. A execução real continua sendo `/lote-posts` chamada pelo usuário ou pelo dashboard.
 - **Política em YAML declarativo:** skills consultam antes de chamar tool de publicação. Default conservador (`aprovacao_humana`); regras explícitas liberam casos seguros.
-- **Dashboard leitor + gatilho:** mostra estado lendo arquivos diretos (`campanhas/`, `inteligencia/`, `docs/politicas/`); dispara skills via Route Handlers do Next.js.
+- **Dashboard leitor + gatilho:** mostra estado lendo arquivos diretos (`campanhas/`, `dados/`, `dados/politicas/`); dispara skills via Route Handlers do Next.js.
 - **`publish_instagram.js`** é script Node determinístico; lê env vars (token Instagram Graph API), recebe pasta do post como argumento, posta carrossel ou story. Sem LLM.
 - `integrador-apis` (novo agente em Engenharia/Execução/Integrações) é o owner que constrói e mantém os scripts `publish_*.js` e `fetch_*.js` futuros.
 
@@ -29,15 +29,15 @@
 
 | Arquivo | Responsabilidade |
 |---|---|
-| `.claude/agents/engenharia/execucao/integracoes/integrador-apis.md` | Owner único de `scripts/integrations/`. Constrói e mantém `publish_*.js` e `fetch_*.js` |
+| `.claude/agents/integrador-apis.md` | Owner único de `scripts/integrations/`. Constrói e mantém `publish_*.js` e `fetch_*.js` |
 
 ### Arquivos criados — orquestração
 
 | Arquivo | Responsabilidade |
 |---|---|
 | `orquestracao/rotas.yaml` | Tabela declarativa de rotas: trigger → skill. 1 rota inicial |
-| `docs/politicas/publicacao.yaml` | Regras declarativas para publicação. Defaults conservadores; libera casos seguros |
-| `docs/politicas/README.md` | Como políticas funcionam, quem lê, quem edita |
+| `dados/politicas/publicacao.yaml` | Regras declarativas para publicação. Defaults conservadores; libera casos seguros |
+| `dados/politicas/README.md` | Como políticas funcionam, quem lê, quem edita |
 
 ### Arquivos criados — skill L2
 
@@ -60,10 +60,10 @@
 | `site/app/admin/dashboard/page.tsx` | Página raiz do dashboard — overview |
 | `site/app/admin/dashboard/campanhas/page.tsx` | Kanban de campanhas em curso (lê `campanhas/*/status.yaml`) |
 | `site/app/admin/dashboard/aprovacoes/page.tsx` | Fila de aprovações pendentes (lê `campanhas/*/status.yaml`) |
-| `site/app/admin/dashboard/inteligencia/page.tsx` | Frescor dos slices do banco |
+| `site/app/admin/dashboard/dados/page.tsx` | Frescor dos slices do banco |
 | `site/app/admin/layout.tsx` | Layout protegido por token via middleware |
 | `site/middleware.ts` | Middleware de auth básica via env `DASHBOARD_TOKEN` |
-| `site/lib/dashboard/readers.ts` | Funções server-side para ler `campanhas/`, `inteligencia/`, `docs/politicas/` |
+| `site/lib/dashboard/readers.ts` | Funções server-side para ler `campanhas/`, `dados/`, `dados/politicas/` |
 | `site/app/api/skills/dispatch/route.ts` | Route Handler que dispara skill (POST) — chamado pelos botões |
 
 ### Arquivos criados — Vercel Cron
@@ -83,8 +83,8 @@
 
 | Arquivo | Modificação |
 |---|---|
-| `CLAUDE.md` | Adicionar seção 6 "Orquestração + Dashboard", novo agente `integrador-apis`, nova skill `/planejar-pauta-semanal`, link para `orquestracao/rotas.yaml` e `docs/politicas/` |
-| `.claude/skills/novo-post/SKILL.md` | Adicionar passo opcional no fim: "consultar `docs/politicas/publicacao.yaml`; se canal == 'instagram' e política permitir, oferecer chamar `publish_instagram.js`" |
+| `CLAUDE.md` | Adicionar seção 6 "Orquestração + Dashboard", novo agente `integrador-apis`, nova skill `/planejar-pauta-semanal`, link para `orquestracao/rotas.yaml` e `dados/politicas/` |
+| `.claude/skills/novo-post/SKILL.md` | Adicionar passo opcional no fim: "consultar `dados/politicas/publicacao.yaml`; se canal == 'instagram' e política permitir, oferecer chamar `publish_instagram.js`" |
 | `.claude/skills/lote-posts/SKILL.md` | Idem |
 | `site/app/page.tsx` | Adicionar link discreto pra `/admin/dashboard` no footer (só visível quando logado/token) |
 | `site/.env.example` | Adicionar `DASHBOARD_TOKEN`, `INSTAGRAM_*`, `CLAUDE_API_KEY`, `CRON_SECRET` |
@@ -98,15 +98,9 @@
 ### Task 1: Criar agente `integrador-apis`
 
 **Files:**
-- Create: `.claude/agents/engenharia/execucao/integracoes/integrador-apis.md`
+- Create: `.claude/agents/integrador-apis.md`
 
-- [ ] **Step 1: Criar a pasta `integracoes/` e remover `.gitkeep` do papel pai**
-
-```bash
-mkdir -p .claude/agents/engenharia/execucao/integracoes
-```
-
-- [ ] **Step 2: Criar o arquivo do agente**
+- [ ] **Step 1: Criar o arquivo do agente** (sem subpasta — layout flat)
 
 ```markdown
 ---
@@ -180,7 +174,7 @@ Sem `Tarefa` ou `Inputs`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 - `DEPENDENCIA_AUSENTE — <pacote>` — pacote npm necessário não está em `package.json` da raiz.
 ```
 
-- [ ] **Step 3: Smoke test do roteamento**
+- [ ] **Step 2: Smoke test do roteamento**
 
 ```
 Task(subagent_type="integrador-apis", prompt="SMOKE_OK_INTEGRADOR")
@@ -188,7 +182,7 @@ Task(subagent_type="integrador-apis", prompt="SMOKE_OK_INTEGRADOR")
 
 Esperado: encontrado.
 
-- [ ] **Step 4: Não commitar ainda.**
+- [ ] **Step 3: Não commitar ainda.**
 
 ---
 
@@ -283,11 +277,11 @@ Se credenciais não existem, esperado: erro claro tipo `IG_USER_ID não definido
 
 ---
 
-### Task 3: Criar `docs/politicas/publicacao.yaml` e README
+### Task 3: Criar `dados/politicas/publicacao.yaml` e README
 
 **Files:**
-- Create: `docs/politicas/publicacao.yaml`
-- Create: `docs/politicas/README.md`
+- Create: `dados/politicas/publicacao.yaml`
+- Create: `dados/politicas/README.md`
 
 - [ ] **Step 1: Criar `publicacao.yaml`**
 
@@ -329,7 +323,7 @@ publicacao:
     fallback_timeout: pausar     # pausar | abortar | publicar (NUNCA publicar como default)
 ```
 
-- [ ] **Step 2: Criar `docs/politicas/README.md`**
+- [ ] **Step 2: Criar `dados/politicas/README.md`**
 
 ```markdown
 # Políticas declarativas — Dino Team
@@ -342,7 +336,7 @@ Regras de governança que o sistema consulta antes de cada ação sensível. For
 
 ## Como uma skill consulta a política
 
-1. Antes de chamar `publish_*.js`, a skill carrega `docs/politicas/publicacao.yaml`.
+1. Antes de chamar `publish_*.js`, a skill carrega `dados/politicas/publicacao.yaml`.
 2. Avalia cada regra em ordem; primeira regra cuja `condicao` casa decide.
 3. Se `modo: automatico` → chama o script imediatamente, mas registra "janela de aborto" — humano pode cancelar nesse prazo.
 4. Se `modo: aprovacao_humana` → pausa o pipeline, escala para o canal declarado em `escala:`.
@@ -394,13 +388,13 @@ publicacao:
 - [ ] **Step 3: Verificar**
 
 ```bash
-ls docs/politicas/
+ls dados/politicas/
 ```
 
 Esperado: `publicacao.yaml`, `README.md`. O `.gitkeep` da Onda 1 já não está lá (ou removê-lo agora).
 
 ```bash
-rm -f docs/politicas/.gitkeep
+rm -f dados/politicas/.gitkeep
 ```
 
 - [ ] **Step 4: Não commitar ainda.**
@@ -518,7 +512,7 @@ Toda semana, planejar **N briefings** que cubram os pilares ativos, evitem ângu
 | Agente | Quando |
 |---|---|
 | `pesquisador-mercado` | Levantar tendências da semana corrente + sugerir distribuição de pilares (1 chamada profunda) |
-| `briefing-writer` | Produzir cada um dos N briefings (N chamadas) — consulta `inteligencia/ramon/` automaticamente |
+| `briefing-writer` | Produzir cada um dos N briefings (N chamadas) — consulta `dados/ramon/` automaticamente |
 
 ## Pipeline
 
@@ -546,7 +540,7 @@ Inputs:
 - Semana ativa: <YYYY-Www> (de <data-início> a <data-fim>).
 - N: <N>
 - Pilares ativos: lê brand/pilares-conteudo.md
-- Ângulos queimados: lê inteligencia/performance/angulos-queimados.md (não repetir nas próximas 4 semanas)
+- Ângulos queimados: lê dados/performance/angulos-queimados.md (não repetir nas próximas 4 semanas)
 
 Saída: gravar em campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md.
 
@@ -566,7 +560,7 @@ Inputs:
 - Estilo: (deixe briefing-writer recomendar — passe lista de estilos disponíveis)
 - Data prevista de publicação: <data específica na semana>
 
-Briefing-writer lê automaticamente inteligencia/ramon/ + performance/angulos-queimados.md.
+Briefing-writer lê automaticamente dados/ramon/ + performance/angulos-queimados.md.
 
 Saída: gravar em campanhas/<YYYY-Www>-pauta-semanal/output/posts/<N>-<slug-do-briefing>.md.
 ```
@@ -849,7 +843,7 @@ Esperado: build passa, sem TypeScript error.
 - Create: `site/app/admin/dashboard/page.tsx`
 - Create: `site/app/admin/dashboard/campanhas/page.tsx`
 - Create: `site/app/admin/dashboard/aprovacoes/page.tsx`
-- Create: `site/app/admin/dashboard/inteligencia/page.tsx`
+- Create: `site/app/admin/dashboard/dados/page.tsx`
 - Create: `site/lib/dashboard/readers.ts`
 - Create: `site/app/api/skills/dispatch/route.ts`
 
@@ -881,14 +875,14 @@ Arquivos:
   - readCampanhas(): { slug, estado, briefings_count, ultima_atividade }[]
   - readAprovacoesPendentes(): { campanha_slug, tarefa_id, aguardando_desde }[]
   - readInteligencia(): { slice: 'ramon'|'mercado'|'performance', ultima_atualizacao: Date, arquivos: { path, ultima_atualizacao }[] }[]
-  - readPoliticas(): texto raw de docs/politicas/publicacao.yaml (parse YAML opcional).
+  - readPoliticas(): texto raw de dados/politicas/publicacao.yaml (parse YAML opcional).
 
   Todas leem do filesystem na raiz do repo via path.resolve(process.cwd(), '..', ...). Atenção: site/ é subpasta do repo; readers precisam subir 1 nível.
 
 - site/app/admin/dashboard/page.tsx — overview:
   - Cards: N campanhas em curso, N aprovações pendentes, frescor mediano do banco.
   - 3 botões: 'Novo post' (link /admin/dashboard/novo-post-form), 'Novo lote' (link), 'Atualizar Ramon' (link).
-  - Link discreto para /admin/dashboard/{campanhas,aprovacoes,inteligencia}.
+  - Link discreto para /admin/dashboard/{campanhas,aprovacoes,dados}.
 
 - site/app/admin/dashboard/campanhas/page.tsx — kanban simples:
   - Colunas: em-curso, aguardando-aprovacao, concluida.
@@ -897,7 +891,7 @@ Arquivos:
 - site/app/admin/dashboard/aprovacoes/page.tsx — lista:
   - Cada item: campanha + tarefa + aguardando há quanto tempo + botões 'aprovar' (POST para /api/skills/dispatch) / 'rever'.
 
-- site/app/admin/dashboard/inteligencia/page.tsx — tabela:
+- site/app/admin/dashboard/dados/page.tsx — tabela:
   - Linha por slice; mostra última atualização e arquivos.
   - Botão 'Atualizar Ramon' que linka para /admin/dashboard/comando?cmd=/atualizar-ramon.
 
@@ -922,7 +916,7 @@ POST body:
 Comportamento:
 1. Verificar cookie/header dashboard_token; se inválido, 401.
 2. Verificar CLAUDE_API_KEY; se não, 500.
-3. Antes de disparar publish_*.js, carregar docs/politicas/publicacao.yaml e avaliar:
+3. Antes de disparar publish_*.js, carregar dados/politicas/publicacao.yaml e avaliar:
    - Se skill termina em publicação e regras dizem 'aprovacao_humana', retornar 200 com { dispatched: false, motivo: 'política exige aprovação humana', regra: <id> }.
    - Caso contrário, prosseguir.
 4. Disparar skill via Claude Agent SDK como na Task 7 (handler do cron) com prompt formatado: '<skill> <args>'.
@@ -930,7 +924,7 @@ Comportamento:
 
 Logging: site/.logs/dispatch-<timestamp>.json.
 
-Critério: do dashboard, clicar 'Atualizar Ramon' deve disparar /atualizar-ramon no backend e retornar 200; abrir o repo local mostra que arquivo /inteligencia/ramon/ mudou após interação.
+Critério: do dashboard, clicar 'Atualizar Ramon' deve disparar /atualizar-ramon no backend e retornar 200; abrir o repo local mostra que arquivo /dados/ramon/ mudou após interação.
 """)
 ```
 
@@ -959,7 +953,7 @@ Localizar o Passo 13 ("Entregar ao usuário") em `.claude/skills/novo-post/SKILL
 ```markdown
 ### 14. Publicação (opcional, gated por política)
 
-Carregar `docs/politicas/publicacao.yaml`. Avaliar as regras com as variáveis disponíveis:
+Carregar `dados/politicas/publicacao.yaml`. Avaliar as regras com as variáveis disponíveis:
 - `artefato.canal = 'instagram'`
 - `briefing.pilar = <pilar do briefing>`
 - `artefato.contem_termo(<termo>)` (varrer copy + briefing para termos sensíveis)
@@ -1023,7 +1017,7 @@ Após `Engenharia / Revisão` (deixada pela Onda 4), adicionar:
 
 ```markdown
 - **Engenharia / Execução / Integrações**
-  - [`integrador-apis`](.claude/agents/engenharia/execucao/integracoes/integrador-apis.md) — constrói/mantém `scripts/integrations/publish_*.js` e `fetch_*.js`. Owner único.
+  - [`integrador-apis`](.claude/agents/integrador-apis.md) — constrói/mantém `scripts/integrations/publish_*.js` e `fetch_*.js`. Owner único.
 ```
 
 E adicionar na seção 2 (Skills) a nova skill:
@@ -1042,7 +1036,7 @@ Após a seção 5 (Site) deixada pela Onda 4:
 Camada que torna o sistema reativo. Triggers (cron, futuramente webhook/threshold) disparam skills sem slash command. Políticas declarativas decidem quando humano entra. Dashboard mostra estado e permite gatilho manual.
 
 - **Rotas:** [`orquestracao/rotas.yaml`](orquestracao/rotas.yaml) — tabela declarativa de trigger → skill. v1 com 1 rota (cron pauta semanal).
-- **Políticas:** [`docs/politicas/publicacao.yaml`](docs/politicas/publicacao.yaml) — regras de quando publicação é automática e quando exige aprovação humana.
+- **Políticas:** [`dados/politicas/publicacao.yaml`](dados/politicas/publicacao.yaml) — regras de quando publicação é automática e quando exige aprovação humana.
 - **Dashboard:** rota `/admin/dashboard` no site. Mostra campanhas em curso, aprovações pendentes, frescor do banco, e dispara skills via Route Handler.
 - **Cron:** Vercel Cron + Route Handler em `site/app/api/cron/<id>/route.ts`.
 - **Tools de publicação:** scripts em [`scripts/integrations/`](scripts/integrations/), mantidos por `integrador-apis`. v1: `publish_instagram.js`.
@@ -1141,13 +1135,13 @@ Esperado: agente novo, 4 skill/políticas/orquestração novas, scripts/integrat
 - [ ] **Step 2: Stage e commit**
 
 ```bash
-git add .claude/agents/engenharia/execucao/integracoes/ \
+git add .claude/agents/integrador-apis.md \
         .claude/skills/planejar-pauta-semanal/ \
         .claude/skills/novo-post/SKILL.md \
         .claude/skills/lote-posts/SKILL.md \
         scripts/integrations/ \
         orquestracao/ \
-        docs/politicas/ \
+        dados/politicas/ \
         campanhas/_schema.md \
         site/ \
         CLAUDE.md
@@ -1163,13 +1157,14 @@ Primeira automação real:
   executar posts. Output em campanhas/<YYYY-Www>-pauta-semanal/.
 - orquestracao/rotas.yaml: tabela declarativa, 1 rota (cron 2ª 9h).
 - Vercel Cron + Route Handler em site/app/api/cron/planejar-pauta-semanal.
-- docs/politicas/publicacao.yaml: regras declarativas (defaults
+- dados/politicas/publicacao.yaml: regras declarativas (defaults
   conservadores; libera educacional/descritivo no Instagram com janela
   de aborto).
 - Dashboard em site/app/admin/dashboard/: kanban de campanhas, fila de
   aprovações, frescor do banco, botões de dispatch. Auth via token via
   middleware.
-- integrador-apis (engenharia/execucao/integracoes/, novo): owner único
+- integrador-apis (novo, flat em .claude/agents/, agrupado em CLAUDE.md
+  como Engenharia/Execução/Integrações): owner único
   de scripts/integrations/.
 - scripts/integrations/publish_instagram.js: primeira tool de publicação
   determinística. Idempotente, dry-run, logs estruturados.
@@ -1201,7 +1196,7 @@ git log -1 --stat | head -80
 - [ ] `scripts/integrations/publish_instagram.js` existe, suporta `--dry-run`, falha claro sem credenciais, é idempotente.
 - [ ] `orquestracao/rotas.yaml` declara a rota `pauta-semanal-cron`.
 - [ ] `site/vercel.json` declara o cron correspondente.
-- [ ] `docs/politicas/publicacao.yaml` define defaults + ao menos 3 regras explícitas.
+- [ ] `dados/politicas/publicacao.yaml` define defaults + ao menos 3 regras explícitas.
 - [ ] `/planejar-pauta-semanal` existe e rodou pelo menos 1 vez (manual ou via cron) e produziu pasta `campanhas/<YYYY-Www>-pauta-semanal/`.
 - [ ] Dashboard em `/admin/dashboard` carrega e mostra a campanha recém-criada.
 - [ ] Política bloqueou pelo menos 1 publicação que precisava de aprovação humana (smoke test 3).

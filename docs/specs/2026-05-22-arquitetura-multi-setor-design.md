@@ -2,7 +2,7 @@
 
 **Data:** 2026-05-22
 **Status:** Spec aprovada — pronta para virar plano de implementação
-**Escopo:** Redesenho da arquitetura completa do sistema de agentes e skills da Dino Team — de plano flat (6 agentes + 4 skills) para sistema multi-setor com hierarquia, banco de inteligência, orquestração e dashboard
+**Escopo:** Redesenho da arquitetura completa do sistema de agentes e skills da Dino Team — de plano flat (6 agentes + 4 skills) para sistema multi-setor com hierarquia, banco de dados, orquestração e dashboard
 
 ---
 
@@ -22,7 +22,7 @@ A arquitetura atual (6 agentes flat + 4 skills monolíticas) funciona para produ
 
 Sistema operacional de marca completo, organizado em **3 camadas verticais** + **camada de orquestração**:
 
-- **Transversais** (Brand, Inteligência, Plataforma & Ops) servem todos os setores
+- **Transversais** (Brand, Dados, Plataforma & Ops) servem todos os setores
 - **Setores produtivos** (Marketing, Produto, Engenharia) com 4 papéis funcionais uniformes
 - **Orquestração** (Skills L1/L2/L3, Roteador de eventos, Políticas, Dashboard) que torna o sistema reativo
 
@@ -33,11 +33,11 @@ O sistema é desenhado para crescer de uso interativo (slash command) para autom
 | # | Princípio | Implicação |
 |---|---|---|
 | 1 | Setor é vertical, função é horizontal | Toda execução vive num setor; os 4 papéis (P/E/E/R) são padronizados entre setores |
-| 2 | Transversais NUNCA viram filho de setor | Brand, Inteligência, Engenharia(*), Plataforma servem todos |
+| 2 | Transversais NUNCA viram filho de setor | Brand, Dados, Engenharia(*), Plataforma servem todos |
 | 3 | Skill conhece a árvore. Agente conhece só sua função | Skill orquestra; agente recebe contrato isolado de I/O |
 | 4 | Contexto destilado, não histórico inteiro | Skill destila briefing e passa só o que o agente precisa; redução estimada de 40-60% em tokens por pipeline |
 | 5 | L1 → L2 → L3: composição, não duplicação | Campanha multi-setor (L3) reusa skills atômicas (L1); pesquisa compartilhada via banco |
-| 6 | Banco de Inteligência é fonte da verdade compartilhada | Pesquisa, contexto-Ramon e performance vivem no banco; setores consultam, não recriam |
+| 6 | Banco de Dados é fonte da verdade compartilhada | Pesquisa, contexto-Ramon e performance vivem no banco; setores consultam, não recriam |
 | 7 | Políticas substituem aprovações ad-hoc | Em vez de "pausa para humano em cada passo", regra declarada decide quando humano entra |
 | 8 | Dashboard é leitor + gatilho, não controlador (no MVP) | Mostra estado e dispara skills via link; lógica vive nas skills |
 | 9 | Versionamento de agente é obrigatório quando entrar em produção contínua | `copywriter@v2` em vez de sobrescrever; permite rollback e A/B |
@@ -61,7 +61,7 @@ Cada agente, skill, slice de banco, dependência externa só é criado quando o 
 ║  servem TODOS os setores. agentes próprios + bancos próprios.        ║
 ║                                                                      ║
 ║  ┌──────────┐  ┌──────────────┐  ┌──────────────┐                    ║
-║  │  Brand   │  │ Inteligência │  │ Plataforma   │                    ║
+║  │  Brand   │  │ Dados │  │ Plataforma   │                    ║
 ║  │          │  │              │  │ & Operações  │                    ║
 ║  │ guardião │  │ banco vivo:  │  │              │                    ║
 ║  │ editorial│  │ Ramon,       │  │ mantém o     │                    ║
@@ -197,7 +197,7 @@ Os papéis são **tipos abstratos** que cada setor instancia com seus próprios 
 
 ```
                  ┌─────────────────────────────────────┐
-                 │     Banco de Inteligência           │
+                 │     Banco de Dados           │
                  │  (Ramon, Mercado, Performance)      │
                  └────┬───────────────────────┬────────┘
                       │ LÊ                    │ ESCREVE
@@ -284,7 +284,7 @@ prazo: "<YYYY-MM-DD | imediato>"
 │   └── revisao/
 └── transversais/
     ├── brand/
-    ├── inteligencia/
+    ├── dados/
     └── plataforma/
 ```
 
@@ -334,7 +334,7 @@ PUBLICÁVEL
 
 Revisor local pode aprovar com ajustes; brand e compliance só fazem **APROVADO ou REPROVADO**.
 
-### 4.2 Inteligência
+### 4.2 Dados
 
 **A camada mais importante.** É o que diferencia "agentes que produzem coisas isoladas" de "sistema que aprende".
 
@@ -343,7 +343,7 @@ Revisor local pode aprovar com ajustes; brand e compliance só fazem **APROVADO 
 #### 4.2.1 Estrutura — 3 slices
 
 ```
-inteligencia/
+dados/
 ├── _schema.md                  ← manifest do banco
 ├── ramon/                       ← contexto temporal/espacial do Ramon
 │   ├── cronograma.md
@@ -395,7 +395,7 @@ inteligencia/
 
 #### 4.2.4 Schema versionado
 
-`inteligencia/_schema.md` declara slices, owners, versão. Migrações são responsabilidade de `keeper-banco`.
+`dados/_schema.md` declara slices, owners, versão. Migrações são responsabilidade de `keeper-banco`.
 
 ### 4.3 Plataforma & Ops
 
@@ -408,7 +408,7 @@ transversais/plataforma/
 ├── keeper-agentes        ← cria, edita, versiona agentes
 ├── keeper-skills         ← cria, edita, versiona skills
 ├── keeper-banco          ← migra schema do banco
-├── keeper-politicas      ← mantém docs/politicas/ atualizado
+├── keeper-politicas      ← mantém dados/politicas/ atualizado
 └── keeper-dashboard      ← mantém site/dashboard
 ```
 
@@ -472,7 +472,7 @@ campanhas/<slug>/
 
 **Função:** declarar regras de governança que o sistema consulta antes de cada ação sensível.
 
-**Formato:** YAML declarativo em `docs/politicas/`.
+**Formato:** YAML declarativo em `dados/politicas/`.
 
 **Exemplo (`publicacao.yaml`):**
 
@@ -512,7 +512,7 @@ publicacao:
 
 1. **Campanhas em curso** (kanban — lê `campanhas/*/status.yaml`)
 2. **Aprovações pendentes** (lê fila de aprovações)
-3. **Inteligência — frescor** (timestamps por slice)
+3. **Dados — frescor** (timestamps por slice)
 4. **Performance — últimos 30 dias** (gráficos a partir do banco)
 5. **Ações rápidas** (botões para disparar skills L1/L2/L3)
 
@@ -558,7 +558,7 @@ publicacao:
   - `pesquisa-tendencias.md` → `agents/marketing/pesquisa/` (renomeação na Onda 3)
   - `treinador.md` → `agents/produto/consultoria/execucao/`
 - Atualizar paths nas 4 skills (sem mudar lógica)
-- Criar pastas vazias com `.gitkeep`: `inteligencia/`, `campanhas/`, `orquestracao/`, `docs/politicas/`
+- Criar pastas vazias com `.gitkeep`: `dados/`, `campanhas/`, `orquestracao/`, `dados/politicas/`
 - Atualizar `CLAUDE.md` refletindo nova organização
 
 **Critério de conclusão:**
@@ -582,18 +582,18 @@ publicacao:
 - `/novo-post` funciona idêntico, mas com 3 invocações distintas
 - `diretor-marca.md` não existe mais
 
-### 6.4 Onda 3 — Banco de Inteligência mínimo
+### 6.4 Onda 3 — Banco de Dados mínimo
 
 **Objetivo:** dar memória ao sistema. Vazio no início, com schema declarado.
 
 **Entra:**
-- Criar `inteligencia/_schema.md` declarando 3 slices (ramon, mercado, performance)
+- Criar `dados/_schema.md` declarando 3 slices (ramon, mercado, performance)
 - Criar templates vazios:
-  - `inteligencia/ramon/cronograma.md` (+ 1ª entrada manual)
-  - `inteligencia/ramon/fase-atual.md` (+ 1ª entrada manual)
-  - `inteligencia/mercado/vocabulario-publico.md` (template inicial; pode partir de `brand/publico-alvo.md`)
-  - `inteligencia/performance/angulos-queimados.md` (vazio)
-- Criar `agents/transversais/inteligencia/archivist-ramon.md`
+  - `dados/ramon/cronograma.md` (+ 1ª entrada manual)
+  - `dados/ramon/fase-atual.md` (+ 1ª entrada manual)
+  - `dados/mercado/vocabulario-publico.md` (template inicial; pode partir de `brand/publico-alvo.md`)
+  - `dados/performance/angulos-queimados.md` (vazio)
+- Criar `agents/transversais/dados/archivist-ramon.md`
 - Renomear `pesquisa-tendencias.md` → `pesquisador-mercado.md`
 - Adaptar `briefing-writer` para consultar `ramon/` + `performance/angulos-queimados.md` antes de produzir briefing
 - Skill nova: `/atualizar-ramon` (interativa)
@@ -623,7 +623,7 @@ publicacao:
 
 - Tasks 1-4 (criar 4 agentes web): mantidas, mas com paths novos
 - Task 5 (skill `/novo-site`): atualizar para chamar `briefing-writer` + adicionar `revisor-brand` pré-deploy
-- Task 10 (briefing da home): produzido por `briefing-writer` consultando banco de Inteligência
+- Task 10 (briefing da home): produzido por `briefing-writer` consultando banco de Dados
 - Task 21 (atualizar CLAUDE.md): atualizar com estrutura nova
 - Nova task (pré-deploy): acionar `revisor-brand` em modo "validar site contra brand book"
 
@@ -642,7 +642,7 @@ publicacao:
 **Entra:**
 - `orquestracao/rotas.yaml` com **1 rota inicial**: cron toda 2ª 9h → `/planejar-pauta-semanal`
 - Skill `/planejar-pauta-semanal` (L2 — produz N briefings, não executa)
-- `docs/politicas/publicacao.yaml` com regras iniciais minimalistas (defaults aprovação humana; educacional/descritivo automático com janela 30min)
+- `dados/politicas/publicacao.yaml` com regras iniciais minimalistas (defaults aprovação humana; educacional/descritivo automático com janela 30min)
 - Dashboard em `site/app/admin/dashboard/`:
   - Campanhas em curso (lê `campanhas/`)
   - Aprovações pendentes
@@ -666,7 +666,7 @@ A migração está completa quando:
 
 - [ ] Estrutura de pastas reflete os 3 setores × 4 papéis (Onda 1)
 - [ ] `diretor-marca` foi quebrado em 3 agentes (Onda 2)
-- [ ] Banco de Inteligência tem schema declarado e pelo menos 2 slices populados (Onda 3)
+- [ ] Banco de Dados tem schema declarado e pelo menos 2 slices populados (Onda 3)
 - [ ] Site Dino Team está no ar com aprovação de `revisor-brand` (Onda 4)
 - [ ] Sistema produz pauta semanal por cron sem intervenção humana (Onda 5)
 - [ ] Sistema publica pelo menos 1 post via tool determinística (não copy-paste) (Onda 5)
@@ -717,7 +717,7 @@ A arquitetura suporta, mas estes itens **não** são entregues nas 5 ondas:
 2. Quebrar este design em planos executáveis por onda:
    - `docs/plans/<data>-onda-1-reorganizacao.md`
    - `docs/plans/<data>-onda-2-quebrar-diretor-marca.md`
-   - `docs/plans/<data>-onda-3-banco-inteligencia.md`
+   - `docs/plans/<data>-onda-3-banco-dados.md`
    - `docs/plans/<data>-onda-4-site-engenharia.md` (adaptação do plano existente)
    - `docs/plans/<data>-onda-5-orquestracao-dashboard.md`
 3. Executar Onda 1 (baixo risco, validação prática do desenho)

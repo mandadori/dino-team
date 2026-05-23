@@ -1,11 +1,11 @@
-# Onda 3 — Banco de Inteligência Mínimo — Implementation Plan
+# Onda 3 — Banco de Dados Mínimo — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Dar memória persistente compartilhada ao sistema. Implementar o Banco de Inteligência em markdown + frontmatter YAML com 3 slices declarados (`ramon/`, `mercado/`, `performance/`), schema versionado v1, e o primeiro agente owner (`archivist-ramon`). Renomear `pesquisa-tendencias` → `pesquisador-mercado` agora que ele tem slice atribuído. Adaptar `briefing-writer` para consultar o banco antes de produzir briefing. Criar a skill `/atualizar-ramon` para Bruno popular `ramon/` interativamente.
+**Goal:** Dar memória persistente compartilhada ao sistema. Implementar o Banco de Dados em markdown + frontmatter YAML com 3 slices declarados (`ramon/`, `mercado/`, `performance/`), schema versionado v1, e o primeiro agente owner (`archivist-ramon`). Renomear `pesquisa-tendencias` → `pesquisador-mercado` agora que ele tem slice atribuído. Adaptar `briefing-writer` para consultar o banco antes de produzir briefing. Criar a skill `/atualizar-ramon` para Bruno popular `ramon/` interativamente.
 
 **Architecture:**
-- Banco em `inteligencia/`, criado como pasta-placeholder vazia na Onda 1. Schema declarado em `_schema.md` na raiz: lista slices, owners, versão.
+- Banco em `dados/`, criado como pasta-placeholder vazia na Onda 1. Schema declarado em `_schema.md` na raiz: lista slices, owners, versão.
 - **Ownership único por slice** — só o agente declarado owner escreve naquele slice; qualquer agente lê. Isso evita o banco virar lixo cumulativo.
 - **YAGNI rigoroso nos slices:** só populamos os arquivos que a Onda 4+ realmente vai consultar. `performance/social-media/*`, `performance/ads/*`, etc. ficam para quando publicação real estiver rodando (Onda 5+).
 - `briefing-writer` ganha um passo de leitura prévia: `ramon/cronograma.md`, `ramon/fase-atual.md`, `performance/angulos-queimados.md`. Não escreve no banco — só lê. O archivist é quem consolida o que vem do `briefing-writer` (via output) para `ramon/` quando aplicável.
@@ -28,33 +28,33 @@
 
 | Arquivo | Responsabilidade |
 |---|---|
-| `inteligencia/_schema.md` | Manifest do banco: slices, owners, versão (v1), regras de ownership |
-| `inteligencia/ramon/cronograma.md` | Linha do tempo de compromissos/marcos do Ramon (campeonatos, viagens, fases) |
-| `inteligencia/ramon/fase-atual.md` | Fase atual do Ramon (off-season, prep, prep avançada, peak week, pós-campeonato). Atualizado por `/atualizar-ramon` |
-| `inteligencia/mercado/vocabulario-publico.md` | Glossário do vocabulário do leitor (derivado de `brand/publico-alvo.md` na Onda 3; cresce com pesquisas) |
-| `inteligencia/performance/angulos-queimados.md` | Lista de ângulos já usados que precisam de descanso antes de voltar; vazio inicialmente, populado por `revisor-coerencia` ao longo do tempo |
+| `dados/_schema.md` | Manifest do banco: slices, owners, versão (v1), regras de ownership |
+| `dados/ramon/cronograma.md` | Linha do tempo de compromissos/marcos do Ramon (campeonatos, viagens, fases) |
+| `dados/ramon/fase-atual.md` | Fase atual do Ramon (off-season, prep, prep avançada, peak week, pós-campeonato). Atualizado por `/atualizar-ramon` |
+| `dados/mercado/vocabulario-publico.md` | Glossário do vocabulário do leitor (derivado de `brand/publico-alvo.md` na Onda 3; cresce com pesquisas) |
+| `dados/performance/angulos-queimados.md` | Lista de ângulos já usados que precisam de descanso antes de voltar; vazio inicialmente, populado por `revisor-coerencia` ao longo do tempo |
 
 ### Arquivos criados — agentes e skills
 
 | Arquivo | Responsabilidade |
 |---|---|
-| `.claude/agents/transversais/inteligencia/archivist-ramon.md` | Owner único do slice `ramon/`. Consolida informações novas em `cronograma.md` / `fase-atual.md`. Não inventa fatos; valida com o usuário. |
+| `.claude/agents/archivist-ramon.md` | Owner único do slice `ramon/`. Consolida informações novas em `cronograma.md` / `fase-atual.md`. Não inventa fatos; valida com o usuário. |
 | `.claude/skills/atualizar-ramon/SKILL.md` | Skill interativa para Bruno atualizar `ramon/` |
 
 ### Arquivos renomeados
 
 | Origem | Destino |
 |---|---|
-| `.claude/agents/marketing/pesquisa/pesquisa-tendencias.md` | `.claude/agents/marketing/pesquisa/pesquisador-mercado.md` (rename + edit do `name:` no frontmatter + adicionar parágrafo de ownership do slice `mercado/`) |
+| `.claude/agents/pesquisa-tendencias.md` | `.claude/agents/pesquisador-mercado.md` (rename + edit do `name:` no frontmatter + adicionar parágrafo de ownership do slice `mercado/`) |
 
 ### Arquivos modificados
 
 | Arquivo | Modificação |
 |---|---|
-| `.claude/agents/marketing/estrategia/briefing-writer.md` | Adicionar leitura prévia obrigatória de `inteligencia/ramon/cronograma.md`, `inteligencia/ramon/fase-atual.md` e `inteligencia/performance/angulos-queimados.md` antes de produzir briefing |
+| `.claude/agents/briefing-writer.md` | Adicionar leitura prévia obrigatória de `dados/ramon/cronograma.md`, `dados/ramon/fase-atual.md` e `dados/performance/angulos-queimados.md` antes de produzir briefing |
 | `.claude/skills/novo-post/SKILL.md` | Trocar todas as menções de `pesquisa-tendencias` por `pesquisador-mercado` (tabela de agentes, P2a, P7) |
 | `.claude/skills/lote-posts/SKILL.md` | Idem (tabela, Passos 3 e 4) |
-| `CLAUDE.md` | Atualizar bullet do agente Marketing/Pesquisa para `pesquisador-mercado`; adicionar `archivist-ramon` em Transversais/Inteligência; adicionar `/atualizar-ramon` na lista de skills |
+| `CLAUDE.md` | Atualizar bullet do agente Marketing/Pesquisa para `pesquisador-mercado`; adicionar `archivist-ramon` em Transversais/Dados; adicionar `/atualizar-ramon` na lista de skills |
 
 ---
 
@@ -62,11 +62,11 @@
 
 ---
 
-### Task 1: Criar `inteligencia/_schema.md` (manifest do banco, v1)
+### Task 1: Criar `dados/_schema.md` (manifest do banco, v1)
 
 **Files:**
-- Create: `inteligencia/_schema.md`
-- Delete: `inteligencia/.gitkeep` (não é mais placeholder)
+- Create: `dados/_schema.md`
+- Delete: `dados/.gitkeep` (não é mais placeholder)
 
 - [ ] **Step 1: Criar o schema com o conteúdo abaixo**
 
@@ -76,7 +76,7 @@ versao: 1
 ultima_atualizacao: 2026-05-23
 ---
 
-# Banco de Inteligência — Schema
+# Banco de Dados — Schema
 
 Memória persistente compartilhada do sistema Dino Team. Markdown com frontmatter YAML. Lido por qualquer agente; escrito apenas pelo owner declarado.
 
@@ -91,14 +91,14 @@ Memória persistente compartilhada do sistema Dino Team. Markdown com frontmatte
 
 | Slice | Caminho | Owner único | Conteúdo |
 |---|---|---|---|
-| **Ramon** | `inteligencia/ramon/` | `archivist-ramon` | Contexto temporal e biográfico do Ramon: cronograma, fase atual, princípios de treino, falas, conquistas, acervo visual. Fonte: Bruno via `/atualizar-ramon`. Agentes nunca inventam. |
-| **Mercado** | `inteligencia/mercado/` | `pesquisador-mercado` | Pesquisa de mercado, concorrentes, tendências, vocabulário do público. Populado por pesquisas profundas. |
-| **Performance** | `inteligencia/performance/` | múltiplos analistas (definidos por sub-slice) | Métricas de canais (social media, ads, email, funil-site), ângulos queimados, padrões identificados. **Onda 3 só popula `angulos-queimados.md` (cooperativo, owner: `revisor-coerencia`); resto fica para quando publicação real existir.** |
+| **Ramon** | `dados/ramon/` | `archivist-ramon` | Contexto temporal e biográfico do Ramon: cronograma, fase atual, princípios de treino, falas, conquistas, acervo visual. Fonte: Bruno via `/atualizar-ramon`. Agentes nunca inventam. |
+| **Mercado** | `dados/mercado/` | `pesquisador-mercado` | Pesquisa de mercado, concorrentes, tendências, vocabulário do público. Populado por pesquisas profundas. |
+| **Performance** | `dados/performance/` | múltiplos analistas (definidos por sub-slice) | Métricas de canais (social media, ads, email, funil-site), ângulos queimados, padrões identificados. **Onda 3 só popula `angulos-queimados.md` (cooperativo, owner: `revisor-coerencia`); resto fica para quando publicação real existir.** |
 
 ## Arquivos populados em v1 (Onda 3)
 
 ```
-inteligencia/
+dados/
 ├── _schema.md                           ← este arquivo
 ├── ramon/
 │   ├── cronograma.md                    ← preenchido por Bruno via /atualizar-ramon
@@ -143,16 +143,16 @@ versao: 1
 Se em algum momento for migrar para SQL/outro armazenamento, este schema é o ponto de entrada da migração — declara a estrutura semântica que o novo armazenamento precisa replicar.
 ```
 
-- [ ] **Step 2: Remover o `.gitkeep` que estava em `inteligencia/`**
+- [ ] **Step 2: Remover o `.gitkeep` que estava em `dados/`**
 
 ```bash
-rm -f inteligencia/.gitkeep
+rm -f dados/.gitkeep
 ```
 
 - [ ] **Step 3: Verificar**
 
 ```bash
-ls -la inteligencia/
+ls -la dados/
 ```
 
 Esperado: vê `_schema.md` (e nenhum `.gitkeep`).
@@ -161,11 +161,11 @@ Esperado: vê `_schema.md` (e nenhum `.gitkeep`).
 
 ---
 
-### Task 2: Criar o slice `inteligencia/ramon/` com templates vazios
+### Task 2: Criar o slice `dados/ramon/` com templates vazios
 
 **Files:**
-- Create: `inteligencia/ramon/cronograma.md`
-- Create: `inteligencia/ramon/fase-atual.md`
+- Create: `dados/ramon/cronograma.md`
+- Create: `dados/ramon/fase-atual.md`
 
 **Importante:** o conteúdo factual desses arquivos vem do usuário (Bruno) via `/atualizar-ramon` (Task 8). Nesta task, criamos os templates com frontmatter e um corpo "preencher via /atualizar-ramon".
 
@@ -230,8 +230,8 @@ _Data: 2026-05-23 — template criado, conteúdo pendente._
 - [ ] **Step 3: Verificar**
 
 ```bash
-ls -la inteligencia/ramon/
-head -8 inteligencia/ramon/fase-atual.md
+ls -la dados/ramon/
+head -8 dados/ramon/fase-atual.md
 ```
 
 Esperado: 2 arquivos com frontmatter correto.
@@ -240,10 +240,10 @@ Esperado: 2 arquivos com frontmatter correto.
 
 ---
 
-### Task 3: Criar o slice `inteligencia/mercado/vocabulario-publico.md` derivado de `brand/publico-alvo.md`
+### Task 3: Criar o slice `dados/mercado/vocabulario-publico.md` derivado de `brand/publico-alvo.md`
 
 **Files:**
-- Create: `inteligencia/mercado/vocabulario-publico.md`
+- Create: `dados/mercado/vocabulario-publico.md`
 
 **Estratégia:** ler `brand/publico-alvo.md`, extrair os termos/jargões/dores declarados, e popular o arquivo do banco como ponto de partida. Owner do slice é `pesquisador-mercado` (após rename na Task 5).
 
@@ -259,7 +259,7 @@ Esperado: identificar listas de jargões, vocabulário típico, dores recorrente
 
 - [ ] **Step 2: Criar `vocabulario-publico.md` com o conteúdo extraído + template para crescimento**
 
-Conteúdo de `inteligencia/mercado/vocabulario-publico.md`:
+Conteúdo de `dados/mercado/vocabulario-publico.md`:
 
 ```markdown
 ---
@@ -298,20 +298,20 @@ _(Extraídos de `brand/publico-alvo.md` na criação. Atualize quando uma pesqui
 - [ ] **Step 3: Verificar**
 
 ```bash
-head -10 inteligencia/mercado/vocabulario-publico.md
-ls -la inteligencia/mercado/
+head -10 dados/mercado/vocabulario-publico.md
+ls -la dados/mercado/
 ```
 
 Esperado: vê o arquivo criado com frontmatter; remover o `.gitkeep` da pasta (Onda 1 colocou).
 
 ```bash
-rm -f inteligencia/mercado/.gitkeep
+rm -f dados/mercado/.gitkeep
 ```
 
-Espera... `inteligencia/mercado/` NÃO foi criada pela Onda 1; só `inteligencia/` e suas pastas-folhas em `.claude/agents/`. Confirmar:
+Espera... `dados/mercado/` NÃO foi criada pela Onda 1; só `dados/` e suas pastas-folhas em `.claude/agents/`. Confirmar:
 
 ```bash
-ls inteligencia/
+ls dados/
 ```
 
 Se `mercado/` não existir, foi criado por essa task agora (via Write do arquivo). Se existir já com `.gitkeep`, remover esse `.gitkeep`.
@@ -320,10 +320,10 @@ Se `mercado/` não existir, foi criado por essa task agora (via Write do arquivo
 
 ---
 
-### Task 4: Criar `inteligencia/performance/angulos-queimados.md` (vazio)
+### Task 4: Criar `dados/performance/angulos-queimados.md` (vazio)
 
 **Files:**
-- Create: `inteligencia/performance/angulos-queimados.md`
+- Create: `dados/performance/angulos-queimados.md`
 
 - [ ] **Step 1: Criar o arquivo com cabeçalho e estrutura, sem entradas**
 
@@ -362,9 +362,9 @@ _(vazio)_
 - [ ] **Step 2: Verificar e remover `.gitkeep`**
 
 ```bash
-ls inteligencia/performance/ 2>/dev/null || mkdir -p inteligencia/performance/
-rm -f inteligencia/performance/.gitkeep
-ls -la inteligencia/performance/
+ls dados/performance/ 2>/dev/null || mkdir -p dados/performance/
+rm -f dados/performance/.gitkeep
+ls -la dados/performance/
 ```
 
 Esperado: pasta tem apenas `angulos-queimados.md`.
@@ -376,12 +376,12 @@ Esperado: pasta tem apenas `angulos-queimados.md`.
 ### Task 5: Renomear `pesquisa-tendencias.md` → `pesquisador-mercado.md` (rename + edit do `name:` + ownership do slice mercado/)
 
 **Files:**
-- Move + edit: `.claude/agents/marketing/pesquisa/pesquisa-tendencias.md` → `.claude/agents/marketing/pesquisa/pesquisador-mercado.md`
+- Move + edit: `.claude/agents/pesquisa-tendencias.md` → `.claude/agents/pesquisador-mercado.md`
 
 - [ ] **Step 1: Renomear o arquivo**
 
 ```bash
-git mv .claude/agents/marketing/pesquisa/pesquisa-tendencias.md .claude/agents/marketing/pesquisa/pesquisador-mercado.md
+git mv .claude/agents/pesquisa-tendencias.md .claude/agents/pesquisador-mercado.md
 ```
 
 - [ ] **Step 2: Atualizar o frontmatter** (Edit tool)
@@ -397,7 +397,7 @@ Por:
 
 ```
 name: pesquisador-mercado
-description: Pesquisador de mercado e tendências. Faz pesquisa de conteúdo, concorrentes, tendências, vocabulário do público — sempre com fontes verificáveis. Owner único do slice `inteligencia/mercado/` — escreve aprendizados duráveis em `mercado/vocabulario-publico.md`, `mercado/tendencias/<YYYY-MM>.md` e `mercado/concorrentes/<slug>.md`. Outros agentes apenas leem o slice.
+description: Pesquisador de mercado e tendências. Faz pesquisa de conteúdo, concorrentes, tendências, vocabulário do público — sempre com fontes verificáveis. Owner único do slice `dados/mercado/` — escreve aprendizados duráveis em `mercado/vocabulario-publico.md`, `mercado/tendencias/<YYYY-MM>.md` e `mercado/concorrentes/<slug>.md`. Outros agentes apenas leem o slice.
 ```
 
 E o título logo abaixo do frontmatter:
@@ -419,24 +419,24 @@ Por:
 Logo após a seção `## Contexto que carrego`, adicionar nova subseção:
 
 ```markdown
-## Ownership do slice `inteligencia/mercado/`
+## Ownership do slice `dados/mercado/`
 
 Sou o **owner único** deste slice — qualquer agente lê, eu sou o único que escreve.
 
 Quando uma pesquisa profunda traz aprendizado durável sobre vocabulário do público, comportamento de concorrente ou tendência relevante, atualize:
 
-- `inteligencia/mercado/vocabulario-publico.md` — termos/jargões/dores em linguagem do leitor.
-- `inteligencia/mercado/tendencias/<YYYY-MM>.md` — tendência ainda quente neste mês (criar arquivo se não existir).
-- `inteligencia/mercado/concorrentes/<slug>.md` — quando uma referência específica merece arquivo dedicado.
+- `dados/mercado/vocabulario-publico.md` — termos/jargões/dores em linguagem do leitor.
+- `dados/mercado/tendencias/<YYYY-MM>.md` — tendência ainda quente neste mês (criar arquivo se não existir).
+- `dados/mercado/concorrentes/<slug>.md` — quando uma referência específica merece arquivo dedicado.
 
-Não escrevo no slice por automatismo — só quando a skill pedir explicitamente, ou quando a pesquisa revelar algo claramente durável (i.e., não específico daquele post). Em caso de dúvida, gravo a pesquisa em `export/pesquisa/` e proponho o aprendizado em uma seção "Sugestão para `inteligencia/mercado/`" no fim do arquivo de pesquisa.
+Não escrevo no slice por automatismo — só quando a skill pedir explicitamente, ou quando a pesquisa revelar algo claramente durável (i.e., não específico daquele post). Em caso de dúvida, gravo a pesquisa em `dados/pesquisas-brutas/` e proponho o aprendizado em uma seção "Sugestão para `dados/mercado/`" no fim do arquivo de pesquisa.
 ```
 
 - [ ] **Step 4: Verificar o rename e o conteúdo**
 
 ```bash
-head -5 .claude/agents/marketing/pesquisa/pesquisador-mercado.md
-grep -c "pesquisador-mercado" .claude/agents/marketing/pesquisa/pesquisador-mercado.md
+head -5 .claude/agents/pesquisador-mercado.md
+grep -c "pesquisador-mercado" .claude/agents/pesquisador-mercado.md
 ```
 
 Esperado: `name: pesquisador-mercado` no topo; ao menos 1 menção do nome no corpo.
@@ -457,32 +457,32 @@ Esperado: o primeiro é encontrado; o segundo NÃO é encontrado (nome antigo ex
 ### Task 6: Criar `archivist-ramon`
 
 **Files:**
-- Create: `.claude/agents/transversais/inteligencia/archivist-ramon.md`
+- Create: `.claude/agents/archivist-ramon.md`
 
 - [ ] **Step 1: Criar o arquivo com o conteúdo abaixo**
 
 ```markdown
 ---
 name: archivist-ramon
-description: Owner único do slice `inteligencia/ramon/`. Consolida informações sobre Ramon — cronograma, fase atual, falas, conquistas, princípios de treino — em arquivos versionados. Não inventa fatos; valida com o usuário antes de gravar. Usado pela skill `/atualizar-ramon` e quando outros agentes propõem mudança no slice.
+description: Owner único do slice `dados/ramon/`. Consolida informações sobre Ramon — cronograma, fase atual, falas, conquistas, princípios de treino — em arquivos versionados. Não inventa fatos; valida com o usuário antes de gravar. Usado pela skill `/atualizar-ramon` e quando outros agentes propõem mudança no slice.
 tools: Read, Write, Edit, Glob, Grep
 ---
 
 # Archivist Ramon
 
-Você é o **arquivista do Ramon**. Sua especialidade é manter o slice `inteligencia/ramon/` atualizado e coerente — cronograma, fase atual, falas, conquistas, princípios de treino. Cada fato gravado precisa ter fonte (em geral, o próprio usuário Bruno via `/atualizar-ramon`).
+Você é o **arquivista do Ramon**. Sua especialidade é manter o slice `dados/ramon/` atualizado e coerente — cronograma, fase atual, falas, conquistas, princípios de treino. Cada fato gravado precisa ter fonte (em geral, o próprio usuário Bruno via `/atualizar-ramon`).
 
 Você **não** inventa biografia. Você **não** escreve copy sobre Ramon. Você organiza informação que vem do usuário (ou que outros agentes propõem) em arquivos persistentes e bem estruturados.
 
 ## Contexto que carrego
 
 Arquivos lidos automaticamente antes de qualquer tarefa:
-- `inteligencia/_schema.md` — manifest do banco.
-- `inteligencia/ramon/*.md` — estado atual do slice.
+- `dados/_schema.md` — manifest do banco.
+- `dados/ramon/*.md` — estado atual do slice.
 
 Sob demanda:
 - Inputs do usuário (texto livre, datas, URLs, fotos referenciadas).
-- Propostas de outros agentes (output marcado como "Sugestão para `inteligencia/ramon/`").
+- Propostas de outros agentes (output marcado como "Sugestão para `dados/ramon/`").
 
 ## Princípios da especialidade
 
@@ -511,7 +511,7 @@ Sem `Tarefa` ou `Inputs`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 
 ## Contrato de saída
 
-- Gravo o(s) arquivo(s) atualizado(s) em `inteligencia/ramon/`.
+- Gravo o(s) arquivo(s) atualizado(s) em `dados/ramon/`.
 - Retorno inline:
 
 ```
@@ -530,18 +530,12 @@ Próximo passo sugerido: <opcional — ex: confirmar fase atual também, ou pesq
 ## Quando devolver erro
 
 - `INPUT_INSUFICIENTE — <o que falta>` — sem tarefa ou inputs.
-- `SLICE_AUSENTE — inteligencia/ramon/<arquivo>` — arquivo do slice esperado não existe (deveria ter sido criado na Onda 3; se faltou, sinalize).
+- `SLICE_AUSENTE — dados/ramon/<arquivo>` — arquivo do slice esperado não existe (deveria ter sido criado na Onda 3; se faltou, sinalize).
 - `CONFLITO_FATOS — <arquivo>:<linha>` — nova entrada contradiz fato existente e usuário precisa decidir.
 - `FORA_DE_OWNERSHIP — <slice>` — pedido tenta mexer em outro slice (ex: `mercado/`); recuse e oriente o owner certo.
 ```
 
-- [ ] **Step 2: Remover o `.gitkeep` da pasta `transversais/inteligencia/`**
-
-```bash
-rm -f .claude/agents/transversais/inteligencia/.gitkeep
-```
-
-- [ ] **Step 3: Smoke test do roteamento**
+- [ ] **Step 2: Smoke test do roteamento**
 
 ```
 Task(subagent_type="archivist-ramon", prompt="Tarefa: responder SMOKE_OK_ARCHIVIST.")
@@ -549,14 +543,14 @@ Task(subagent_type="archivist-ramon", prompt="Tarefa: responder SMOKE_OK_ARCHIVI
 
 Esperado: agente encontrado.
 
-- [ ] **Step 4: Não commitar ainda.**
+- [ ] **Step 3: Não commitar ainda.**
 
 ---
 
 ### Task 7: Adaptar `briefing-writer` para consultar o banco
 
 **Files:**
-- Modify: `.claude/agents/marketing/estrategia/briefing-writer.md`
+- Modify: `.claude/agents/briefing-writer.md`
 
 **Mudança:** adicionar leitura prévia obrigatória de 3 arquivos do banco antes de produzir briefing.
 
@@ -593,9 +587,9 @@ Arquivos lidos automaticamente antes de qualquer tarefa:
 - `brand/pilares-conteudo.md` — eixos temáticos válidos.
 
 Leitura adicional **obrigatória** antes de produzir briefing estratégico (não obrigatória para recomendar estilo):
-- `inteligencia/ramon/cronograma.md` — para situar o post no momento do Ramon (campeonato próximo? viagem? off-season?).
-- `inteligencia/ramon/fase-atual.md` — para calibrar tom e ângulo.
-- `inteligencia/performance/angulos-queimados.md` — para não repetir um ângulo recente.
+- `dados/ramon/cronograma.md` — para situar o post no momento do Ramon (campeonato próximo? viagem? off-season?).
+- `dados/ramon/fase-atual.md` — para calibrar tom e ângulo.
+- `dados/performance/angulos-queimados.md` — para não repetir um ângulo recente.
 
 Se algum dos 3 estiver ausente, **siga sem ele e declare a ausência no campo `## Sinalizações` do briefing** (ex: `"sinalizações: ausência de fase-atual.md — briefing produzido sem este sinal"`). Não bloqueie por banco vazio.
 
@@ -612,13 +606,13 @@ Se algum `brand/*.md` obrigatório estiver vazio, devolva
 Na seção `## Princípios da especialidade`, adicionar como último bullet:
 
 ```markdown
-- **Banco de Inteligência informa, não substitui.** Use `inteligencia/ramon/` para situar o post no momento real do Ramon e `inteligencia/performance/angulos-queimados.md` para evitar repetição. Nunca invente fato de Ramon — se o banco está vazio, declare a ausência no briefing.
+- **Banco de Dados informa, não substitui.** Use `dados/ramon/` para situar o post no momento real do Ramon e `dados/performance/angulos-queimados.md` para evitar repetição. Nunca invente fato de Ramon — se o banco está vazio, declare a ausência no briefing.
 ```
 
 - [ ] **Step 4: Verificar**
 
 ```bash
-grep -n "inteligencia/" .claude/agents/marketing/estrategia/briefing-writer.md
+grep -n "dados/" .claude/agents/briefing-writer.md
 ```
 
 Esperado: 3+ menções (em `## Contexto`, no princípio, possivelmente em outros pontos se você as adicionou).
@@ -637,14 +631,14 @@ Esperado: 3+ menções (em `## Contexto`, no princípio, possivelmente em outros
 ```markdown
 ---
 name: atualizar-ramon
-description: Skill interativa para Bruno atualizar o slice `inteligencia/ramon/` — cronograma, fase atual, e (futuro) outras informações biográficas. Usa o agente `archivist-ramon` como owner único do slice. Sem ela, agentes que dependem do contexto Ramon operam às cegas.
+description: Skill interativa para Bruno atualizar o slice `dados/ramon/` — cronograma, fase atual, e (futuro) outras informações biográficas. Usa o agente `archivist-ramon` como owner único do slice. Sem ela, agentes que dependem do contexto Ramon operam às cegas.
 ---
 
 # /atualizar-ramon — Dino Team
 
 ## Objetivo
 
-Manter `inteligencia/ramon/` atualizado — slice da memória persistente sobre o Ramon, lido por `briefing-writer` para calibrar todo conteúdo.
+Manter `dados/ramon/` atualizado — slice da memória persistente sobre o Ramon, lido por `briefing-writer` para calibrar todo conteúdo.
 
 ## Sintaxe
 
@@ -659,8 +653,8 @@ Sem argumentos — a skill é conversacional. Bruno descreve o que mudou (texto 
 ### 1. Diagnóstico — mostrar estado atual
 
 Ler e mostrar inline:
-- `inteligencia/ramon/fase-atual.md` (seção "Fase" + "Última revisão")
-- `inteligencia/ramon/cronograma.md` (últimas 5 entradas, ou "(vazio)")
+- `dados/ramon/fase-atual.md` (seção "Fase" + "Última revisão")
+- `dados/ramon/cronograma.md` (últimas 5 entradas, ou "(vazio)")
 
 Apresentar:
 
@@ -753,7 +747,7 @@ Próximo /novo-post vai consultar o estado novo do slice.
 
 ## Critério de conclusão
 
-- Pelo menos 1 arquivo de `inteligencia/ramon/` foi atualizado e versionado.
+- Pelo menos 1 arquivo de `dados/ramon/` foi atualizado e versionado.
 - `archivist-ramon` retornou confirmação.
 - Bruno encerrou explicitamente ("não" para próxima atualização).
 ```
@@ -771,51 +765,75 @@ Esperado: o arquivo existe com frontmatter correto.
 
 ---
 
-### Task 9: Atualizar `/novo-post` e `/lote-posts` — trocar `pesquisa-tendencias` por `pesquisador-mercado`
+### Task 9: Atualizar `/novo-post` e `/lote-posts` — renomear agente + ajustar path de pesquisa
 
 **Files:**
 - Modify: `.claude/skills/novo-post/SKILL.md`
 - Modify: `.claude/skills/lote-posts/SKILL.md`
+- Migrate: arquivos existentes em `export/pesquisa/` → `dados/pesquisas-brutas/`
 
-- [ ] **Step 1: Substituir todas as menções em `/novo-post`**
+**Duas mudanças combinadas:** (a) renomear `pesquisa-tendencias` para `pesquisador-mercado` nas skills (resolução por nome); (b) mover o output de pesquisa profunda de `export/pesquisa/` para `dados/pesquisas-brutas/` (pesquisas são insumos cumulativos, não exports).
+
+- [ ] **Step 1: Substituir `pesquisa-tendencias` → `pesquisador-mercado` em `/novo-post`**
 
 Usar Edit com `replace_all: true`:
 
 - Em `.claude/skills/novo-post/SKILL.md`, substituir `pesquisa-tendencias` por `pesquisador-mercado` em **todas as ocorrências** (tabela de agentes, P2a, P7, qualquer outra).
 
-- [ ] **Step 2: Verificar**
+- [ ] **Step 2: Substituir `export/pesquisa/` → `dados/pesquisas-brutas/` em `/novo-post`**
+
+Usar Edit com `replace_all: true`:
+
+- Em `.claude/skills/novo-post/SKILL.md`, substituir `export/pesquisa/` por `dados/pesquisas-brutas/` em **todas as ocorrências** (tabela de agentes, P7, P8, P10).
+
+- [ ] **Step 3: Verificar `/novo-post`**
 
 ```bash
-grep -n "pesquisa-tendencias" .claude/skills/novo-post/SKILL.md
+grep -n "pesquisa-tendencias\|export/pesquisa/" .claude/skills/novo-post/SKILL.md
 ```
 
 Esperado: **nenhum match**.
 
 ```bash
-grep -cn "pesquisador-mercado" .claude/skills/novo-post/SKILL.md
+grep -cn "pesquisador-mercado\|dados/pesquisas-brutas/" .claude/skills/novo-post/SKILL.md
 ```
 
-Esperado: ≥ 3 ocorrências (tabela + P2a + P7).
+Esperado: ≥ 6 ocorrências (3 do agente + 3 do path).
 
-- [ ] **Step 3: Substituir todas as menções em `/lote-posts`**
+- [ ] **Step 4: Substituir `pesquisa-tendencias` → `pesquisador-mercado` em `/lote-posts`**
 
 Mesmo procedimento em `.claude/skills/lote-posts/SKILL.md`.
 
-- [ ] **Step 4: Verificar**
+- [ ] **Step 5: Substituir `export/pesquisa/` → `dados/pesquisas-brutas/` em `/lote-posts`**
+
+Mesmo procedimento.
+
+- [ ] **Step 6: Verificar `/lote-posts`**
 
 ```bash
-grep -n "pesquisa-tendencias" .claude/skills/lote-posts/SKILL.md
+grep -n "pesquisa-tendencias\|export/pesquisa/" .claude/skills/lote-posts/SKILL.md
 ```
 
 Esperado: nenhum match.
 
+- [ ] **Step 7: Migrar arquivos existentes de `export/pesquisa/` → `dados/pesquisas-brutas/`**
+
 ```bash
-grep -cn "pesquisador-mercado" .claude/skills/lote-posts/SKILL.md
+mkdir -p dados/pesquisas-brutas
+if [ -d export/pesquisa ]; then
+  git mv export/pesquisa/*.md dados/pesquisas-brutas/ 2>/dev/null || echo "Sem arquivos pra mover"
+  rmdir export/pesquisa 2>/dev/null || echo "export/pesquisa não removido (talvez tenha outros arquivos)"
+fi
 ```
 
-Esperado: ≥ 3 ocorrências (tabela + Passo 3 + Passo 4).
+- [ ] **Step 8: Confirmar migração**
 
-- [ ] **Step 5: Não commitar ainda.**
+```bash
+ls dados/pesquisas-brutas/ 2>/dev/null && echo "OK"
+ls export/pesquisa 2>/dev/null && echo "ATENÇÃO: export/pesquisa ainda existe — investigar" || echo "OK - export/pesquisa removido"
+```
+
+- [ ] **Step 9: Não commitar ainda.**
 
 ---
 
@@ -829,22 +847,22 @@ Esperado: ≥ 3 ocorrências (tabela + Passo 3 + Passo 4).
 Trecho atual (deixado pelas Ondas 1 e 2):
 
 ```markdown
-  - [`pesquisa-tendencias`](.claude/agents/marketing/pesquisa/pesquisa-tendencias.md) — pesquisa de conteúdo (será renomeado para `pesquisador-mercado` na Onda 3).
+  - [`pesquisa-tendencias`](.claude/agents/pesquisa-tendencias.md) — pesquisa de conteúdo (será renomeado para `pesquisador-mercado` na Onda 3).
 ```
 
 Substituir por:
 
 ```markdown
-  - [`pesquisador-mercado`](.claude/agents/marketing/pesquisa/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `inteligencia/mercado/`.
+  - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `dados/mercado/`.
 ```
 
-- [ ] **Step 2: Adicionar `archivist-ramon` em Transversais/Inteligência**
+- [ ] **Step 2: Adicionar `archivist-ramon` em Transversais/Dados**
 
 Na seção "3. Agentes", adicionar nova subseção (após Transversais/Brand):
 
 ```markdown
-- **Transversais / Inteligência**
-  - [`archivist-ramon`](.claude/agents/transversais/inteligencia/archivist-ramon.md) — owner único do slice `inteligencia/ramon/`. Consolida cronograma e fase atual do Ramon a partir de input do usuário.
+- **Transversais / Dados**
+  - [`archivist-ramon`](.claude/agents/archivist-ramon.md) — owner único do slice `dados/ramon/`. Consolida cronograma e fase atual do Ramon a partir de input do usuário.
 ```
 
 - [ ] **Step 3: Adicionar `/atualizar-ramon` na lista de skills**
@@ -852,22 +870,22 @@ Na seção "3. Agentes", adicionar nova subseção (após Transversais/Brand):
 Localizar a seção "### 2. Skills" e adicionar como último bullet:
 
 ```markdown
-- [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — Bruno atualiza o slice `inteligencia/ramon/` (cronograma + fase atual).
+- [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — Bruno atualiza o slice `dados/ramon/` (cronograma + fase atual).
 ```
 
-- [ ] **Step 4: Mencionar o Banco de Inteligência na arquitetura**
+- [ ] **Step 4: Mencionar o Banco de Dados na arquitetura**
 
 Procurar a seção "## Como o sistema é organizado" e, logo após `### 3. Agentes...`, adicionar:
 
 ```markdown
-### 4. Banco de Inteligência (`inteligencia/`)
+### 4. Banco de Dados (`dados/`)
 
-Memória persistente compartilhada — markdown + frontmatter YAML, versionada em git, lida por qualquer agente e escrita apenas pelo owner declarado. Ver [`inteligencia/_schema.md`](inteligencia/_schema.md) para slices ativos e ownership.
+Memória persistente compartilhada — markdown + frontmatter YAML, versionada em git, lida por qualquer agente e escrita apenas pelo owner declarado. Ver [`dados/_schema.md`](dados/_schema.md) para slices ativos e ownership.
 
 **Slices em v1:**
-- `inteligencia/ramon/` — contexto temporal e biográfico do Ramon (owner: `archivist-ramon`).
-- `inteligencia/mercado/` — pesquisa de mercado e vocabulário do público (owner: `pesquisador-mercado`).
-- `inteligencia/performance/` — só `angulos-queimados.md` em v1 (owner: `revisor-coerencia`); outros sub-slices entram quando publicação real existir.
+- `dados/ramon/` — contexto temporal e biográfico do Ramon (owner: `archivist-ramon`).
+- `dados/mercado/` — pesquisa de mercado e vocabulário do público (owner: `pesquisador-mercado`).
+- `dados/performance/` — só `angulos-queimados.md` em v1 (owner: `revisor-coerencia`); outros sub-slices entram quando publicação real existir.
 ```
 
 - [ ] **Step 5: Verificar**
@@ -879,7 +897,7 @@ grep -n "pesquisa-tendencias" CLAUDE.md
 Esperado: nenhum match.
 
 ```bash
-grep -n "archivist-ramon\|atualizar-ramon\|inteligencia/" CLAUDE.md
+grep -n "archivist-ramon\|atualizar-ramon\|dados/" CLAUDE.md
 ```
 
 Esperado: ≥ 4 matches.
@@ -921,7 +939,7 @@ Rodar:
 Bruno informa fase atual e (opcionalmente) 1-2 entradas no cronograma.
 
 Esperado:
-- `inteligencia/ramon/fase-atual.md` deixa de ter "_preencher via_" e ganha conteúdo factual.
+- `dados/ramon/fase-atual.md` deixa de ter "_preencher via_" e ganha conteúdo factual.
 - `archivist-ramon` confirmou a gravação.
 
 - [ ] **Step 4: Rodar `/novo-post` em modo dry até o briefing e verificar consulta ao banco**
@@ -931,7 +949,7 @@ Esperado:
 ```
 
 Acompanhar até o Passo 4 (briefing produzido por `briefing-writer`). Verificar:
-- O briefing menciona contexto vindo de `inteligencia/ramon/` (fase atual, próximo campeonato, etc.) OU declara explicitamente "ausência de fase-atual.md — briefing produzido sem este sinal" se o slice ainda estiver vazio.
+- O briefing menciona contexto vindo de `dados/ramon/` (fase atual, próximo campeonato, etc.) OU declara explicitamente "ausência de fase-atual.md — briefing produzido sem este sinal" se o slice ainda estiver vazio.
 - O campo `## Sinalizações para o pipeline` reflete algo do contexto do banco.
 
 Pode abortar após o Passo 4.
@@ -939,7 +957,7 @@ Pode abortar após o Passo 4.
 - [ ] **Step 5: Verificar integridade do banco**
 
 ```bash
-find inteligencia -name "*.md" | xargs head -5
+find dados -name "*.md" | xargs head -5
 ```
 
 Esperado: cada arquivo tem frontmatter com `slice:`, `owner:`, `ultima_atualizacao:`, `versao:`.
@@ -948,8 +966,8 @@ Esperado: cada arquivo tem frontmatter com `slice:`, `owner:`, `ultima_atualizac
 
 ```bash
 git checkout -- .claude/ CLAUDE.md
-rm -rf inteligencia/ramon inteligencia/mercado inteligencia/performance inteligencia/_schema.md
-touch inteligencia/.gitkeep
+rm -rf dados/ramon dados/mercado dados/performance dados/_schema.md
+touch dados/.gitkeep
 ```
 
 (Restaura para o estado após Onda 2.) Registrar com o usuário.
@@ -968,27 +986,32 @@ git status
 
 Esperado:
 - Renomeado: `pesquisa-tendencias.md -> pesquisador-mercado.md` (com mudança de conteúdo).
-- Novos: `inteligencia/_schema.md`, `inteligencia/ramon/cronograma.md`, `inteligencia/ramon/fase-atual.md`, `inteligencia/mercado/vocabulario-publico.md`, `inteligencia/performance/angulos-queimados.md`, `.claude/agents/transversais/inteligencia/archivist-ramon.md`, `.claude/skills/atualizar-ramon/SKILL.md`.
+- Migrados (git mv): `export/pesquisa/*.md -> dados/pesquisas-brutas/*.md` (pesquisas viram insumo, não export).
+- Novos: `dados/_schema.md`, `dados/ramon/cronograma.md`, `dados/ramon/fase-atual.md`, `dados/mercado/vocabulario-publico.md`, `dados/performance/angulos-queimados.md`, `dados/pesquisas-brutas/` (pasta criada implicitamente pelo mv), `.claude/agents/archivist-ramon.md`, `.claude/skills/atualizar-ramon/SKILL.md`.
 - Modificados: `briefing-writer.md`, `novo-post/SKILL.md`, `lote-posts/SKILL.md`, `CLAUDE.md`.
-- Deletados (pelo `rm -f .gitkeep` das pastas que ganharam conteúdo): `inteligencia/.gitkeep`, `inteligencia/mercado/.gitkeep`, `inteligencia/performance/.gitkeep`, `.claude/agents/transversais/inteligencia/.gitkeep`.
+- Deletados (pelo `rm -f .gitkeep` das pastas que ganharam conteúdo): `dados/.gitkeep`, `dados/mercado/.gitkeep`, `dados/performance/.gitkeep`.
 
 - [ ] **Step 2: Stage e commit**
 
 ```bash
-git add inteligencia/ .claude/agents/ .claude/skills/ CLAUDE.md
+git add dados/ .claude/agents/ .claude/skills/ CLAUDE.md
+git add -u export/  # captura a remoção dos arquivos movidos (lado origem do git mv)
 git commit -m "$(cat <<'EOF'
-feat(arquitetura): Banco de Inteligência mínimo + pesquisador-mercado (Onda 3)
+feat(arquitetura): Banco de Dados mínimo + pesquisador-mercado (Onda 3)
 
 Conforme spec docs/specs/2026-05-22-arquitetura-multi-setor-design.md §4.2 e §6.4:
 
-- inteligencia/_schema.md (v1) declara 3 slices ativos com ownership único.
+- dados/_schema.md (v1) declara 3 slices ativos com ownership único.
 - Slices populados:
   - ramon/ → cronograma.md + fase-atual.md (templates; preenchidos por
     Bruno via /atualizar-ramon).
   - mercado/ → vocabulario-publico.md derivado de brand/publico-alvo.md.
   - performance/ → angulos-queimados.md vazio (cresce orgânicamente).
+  - pesquisas-brutas/ → migração de export/pesquisa/* (pesquisas profundas
+    são insumos cumulativos, não exports finais; export/pesquisa/
+    deixa de existir).
 
-- archivist-ramon (transversais/inteligencia/, novo) — owner único de
+- archivist-ramon (novo) — owner único de
   ramon/. Não inventa fatos; valida com usuário.
 
 - /atualizar-ramon (skill nova) — interface conversacional para Bruno
@@ -996,14 +1019,15 @@ Conforme spec docs/specs/2026-05-22-arquitetura-multi-setor-design.md §4.2 e §
 
 - pesquisa-tendencias renomeado para pesquisador-mercado; ganha
   ownership do slice mercado/. Skills /novo-post e /lote-posts
-  atualizadas (resolução por nome — sem mudança de pipeline).
+  atualizadas (resolução por nome + paths de pesquisa profunda agora
+  apontam dados/pesquisas-brutas/).
 
 - briefing-writer adaptado para consultar ramon/cronograma.md,
   ramon/fase-atual.md e performance/angulos-queimados.md antes de
   produzir briefing. Ausência de slice é declarada no briefing, não
   bloqueia.
 
-CLAUDE.md atualizado: seção 4 (Banco de Inteligência) adicionada.
+CLAUDE.md atualizado: seção 4 (Banco de Dados) adicionada.
 
 Próxima onda (Onda 4): Site + Engenharia (adaptação de
 docs/plans/2026-05-19-site-dino-team-mvp.md à nova arquitetura).
@@ -1023,10 +1047,10 @@ Esperado: o commit recém-criado com todos os arquivos.
 
 ## Critério de conclusão da Onda 3
 
-- [ ] `inteligencia/_schema.md` declara 3 slices ativos com ownership único, versão v1.
-- [ ] `inteligencia/ramon/cronograma.md` e `inteligencia/ramon/fase-atual.md` existem com frontmatter padrão.
-- [ ] `inteligencia/mercado/vocabulario-publico.md` populado a partir de `brand/publico-alvo.md`.
-- [ ] `inteligencia/performance/angulos-queimados.md` existe (vazio mas com cabeçalho).
+- [ ] `dados/_schema.md` declara 3 slices ativos com ownership único, versão v1.
+- [ ] `dados/ramon/cronograma.md` e `dados/ramon/fase-atual.md` existem com frontmatter padrão.
+- [ ] `dados/mercado/vocabulario-publico.md` populado a partir de `brand/publico-alvo.md`.
+- [ ] `dados/performance/angulos-queimados.md` existe (vazio mas com cabeçalho).
 - [ ] `archivist-ramon` resolvível por `subagent_type`.
 - [ ] `pesquisador-mercado` resolvível; `pesquisa-tendencias` extinto.
 - [ ] `briefing-writer` lê os 3 arquivos do banco antes de produzir briefing.
