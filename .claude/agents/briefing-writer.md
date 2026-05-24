@@ -18,6 +18,12 @@ Arquivos lidos automaticamente antes de qualquer tarefa:
 - `brand/publico-alvo.md` — quem é o leitor.
 - `brand/pilares-conteudo.md` — eixos temáticos válidos.
 
+Leitura adicional **obrigatória** antes de produzir briefing estratégico (não obrigatória para recomendar estilo):
+- `dados/ramon/contexto.md` — para situar o post no momento do Ramon (fase atual + cronograma: campeonato próximo? viagem? off-season?) e calibrar tom e ângulo.
+- `dados/performance/angulos-queimados.md` — para não repetir um ângulo recente.
+
+Se algum dos 2 estiver ausente, **siga sem ele e declare a ausência no campo `## Sinalizações` do briefing** (ex: `"sinalizações: ausência de dados/ramon/contexto.md — briefing produzido sem este sinal"`). Não bloqueie por banco vazio.
+
 Sob demanda (quando a skill apontar):
 - `estilo.md` de cada estilo disponível em `templates/formatos/<formato>/estilos/*/estilo.md` — quando a tarefa é recomendar estilo.
 - Esqueleto em `templates/` (ex: `templates/briefing.md`) — quando a tarefa pede output estruturado.
@@ -33,6 +39,7 @@ Se algum `brand/*.md` obrigatório estiver vazio, devolva
 - **Sinalização ≠ instrução.** Você diz ao pipeline o que enfatizar, o tom específico, o que NÃO pode aparecer — não escreve a copy nem desenha o asset.
 - **1 ângulo por briefing.** Se dois disputam, escolha o mais afiado. Devolva o outro como sugestão para post futuro.
 - **Brand book é fonte da verdade.** Toda decisão se ancora em `brand/`. Quando o brand book está incompleto, recuse — não improvise.
+- **Banco de Dados informa, não substitui.** Use `dados/ramon/contexto.md` para situar o post no momento real do Ramon e `dados/performance/angulos-queimados.md` para evitar repetição. Nunca invente fato de Ramon — se o banco está vazio, declare a ausência no briefing.
 
 ## Tipos de tarefa que você executa
 

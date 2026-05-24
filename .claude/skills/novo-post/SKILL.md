@@ -32,7 +32,7 @@ Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente
 
 | Agente | Responsabilidade | Input | Output |
 |---|---|---|---|
-| `pesquisa-tendencias` | Scouting de tema + pesquisa profunda | formato/estilo OU briefing | sugestão inline (scouting) OU `export/pesquisa/<data>-tendencias-<slug>.md` |
+| `pesquisador-mercado` | Scouting de tema + pesquisa profunda | formato/estilo OU briefing | sugestão inline (scouting) OU `dados/pesquisas-brutas/<data>-tendencias-<slug>.md` |
 | `briefing-writer` | Recomendação de estilo (P2b) + briefing estratégico (P4) | formato+tema (P2b) / formato+estilo+tema (P4) | recomendação inline (P2b) / briefing inline (P4) |
 | `designer` | Estilo ad-hoc em `_rascunho/` (P3) + assets do post + preview consolidado (P9) | refs visuais + contrato (P3) / estilo + copy (P9) | `estilo.md` + arquivo principal + `preview.html` (P3) / `design/*.html` + `design/preview.html` (P9) |
 | `treinador` | Prescrição técnica de treino | exercícios + objetivo + recorte | `treino.md` |
@@ -57,7 +57,7 @@ Ordem: tema primeiro, estilo depois — porque a recomendação de estilo depend
 #### 2a. Tema
 
 - **Tema veio no input** → usa direto.
-- **Sem tema** → acione `pesquisa-tendencias` modo scouting:
+- **Sem tema** → acione `pesquisador-mercado` modo scouting:
 
 ```
 Tarefa: sugerir tema para um post Instagram.
@@ -244,7 +244,7 @@ Saída: inline no formato canônico do treinador.
 
 ### 7. Pesquisa profunda
 
-Acione `pesquisa-tendencias`:
+Acione `pesquisador-mercado`:
 
 ```
 Tarefa: levantar matéria-prima profunda para a copy.
@@ -257,7 +257,7 @@ Inputs:
 Foco: ângulos não-óbvios e contradições dentro do recorte; referências concretas com link; dados/citações verificáveis; mitos a quebrar.
 
 Template: templates/pesquisa.md.
-Saída: gravar em export/pesquisa/<data>-tendencias-<slug>.md.
+Saída: gravar em dados/pesquisas-brutas/<data>-tendencias-<slug>.md.
 ```
 
 ### 8. Copy (pausa)
@@ -268,7 +268,7 @@ Acione `copywriter`:
 Tarefa: escrever copy do post seguindo a ## Estrutura do estilo.
 
 Inputs:
-- Pesquisa: export/pesquisa/<data>-tendencias-<slug>.md
+- Pesquisa: dados/pesquisas-brutas/<data>-tendencias-<slug>.md
 - Briefing inline:
   - Pilar: <pilar>
   - Objetivo: <objetivo>
@@ -371,7 +371,7 @@ Opções:
 Snapshot da pesquisa na pasta do post:
 
 ```bash
-cp -n export/pesquisa/<data>-tendencias-<slug>.md \
+cp -n dados/pesquisas-brutas/<data>-tendencias-<slug>.md \
       export/conteudos/<formato>/<data>-<slug>/pesquisa-base.md
 ```
 

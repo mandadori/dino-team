@@ -52,6 +52,7 @@ Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestr
 - [`/novo-post`](.claude/skills/novo-post/SKILL.md) — criar um post completo (carrossel ou stories).
 - [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — gerar N posts em sequência, agendável.
 - [`/novo-estilo`](.claude/skills/novo-estilo/SKILL.md) — criar um novo estilo visual para carrossel ou stories.
+- [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — atualizar o slice `dados/ramon/` (fase atual + cronograma + outras vertentes).
 
 ### 3. Agentes — especialistas por função (`.claude/agents/`)
 
@@ -59,10 +60,10 @@ Cada agente domina **uma função** e organiza-se em **setor × papel** apenas t
 
 Agentes não conhecem o fluxo nem outros agentes — recebem input num formato declarado, entregam output num formato declarado. Conhecimento específico de um fluxo vive nas skills e templates, não no agente.
 
-**Agentes atuais (9):**
+**Agentes atuais (11):**
 
 - **Marketing / Pesquisa**
-  - [`pesquisa-tendencias`](.claude/agents/pesquisa-tendencias.md) — pesquisa de conteúdo (será renomeado para `pesquisador-mercado` na Onda 3).
+  - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `dados/mercado/`.
 - **Marketing / Estratégia**
   - [`briefing-writer`](.claude/agents/briefing-writer.md) — recomendação de estilo e briefing estratégico canônico.
 - **Marketing / Execução**
@@ -76,14 +77,26 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 - **Transversais / Brand**
   - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca (decisão binária).
   - [`revisor-compliance`](.claude/agents/revisor-compliance.md) — compliance: promessas proibidas e claims sensíveis.
+- **Transversais / Dados**
+  - [`archivist-ramon`](.claude/agents/archivist-ramon.md) — owner único do slice `dados/ramon/`; consolida o contexto do Ramon (input do usuário + auto-sync de fontes públicas).
+  - [`analista-performance`](.claude/agents/analista-performance.md) — owner único do slice `dados/performance/`; registra ângulos queimados e (futuro) métricas de canais.
 
 **Pastas-placeholder das camadas futuras** (na raiz do repo, fora de `.claude/agents/`):
-- `dados/` — Banco de Dados (popula na Onda 3).
 - `dados/politicas/` — políticas YAML declarativas (popula na Onda 5).
 - `campanhas/` — estado vivo de campanhas multi-canal (popula na Onda 5+).
 - `orquestracao/` — `rotas.yaml` declarativo de triggers (popula na Onda 5).
 
 Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-05-22-arquitetura-multi-setor-design.md) para o destino completo (3 setores produtivos + 3 transversais + orquestração).
+
+### 4. Banco de Dados (`dados/`)
+
+Memória persistente compartilhada — markdown + frontmatter YAML, versionada em git, lida por qualquer agente e escrita apenas pelo owner declarado. Ver [`dados/_schema.md`](dados/_schema.md) para slices ativos e ownership.
+
+**Slices em v1:**
+- `dados/ramon/contexto.md` — contexto temporal e biográfico do Ramon, arquivo único (owner: `archivist-ramon`).
+- `dados/mercado/` — pesquisa de mercado e vocabulário do público (owner: `pesquisador-mercado`).
+- `dados/performance/` — só `angulos-queimados.md` em v1 (owner: `analista-performance`); outros sub-slices entram quando publicação real existir.
+- `dados/pesquisas-brutas/` — pesquisas profundas geradas pelo pipeline (insumo cumulativo).
 
 ---
 

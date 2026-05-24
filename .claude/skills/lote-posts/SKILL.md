@@ -33,7 +33,7 @@ Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou 
 
 | Agente | Responsabilidade | Quando aciona |
 |---|---|---|
-| `pesquisa-tendencias` | Sugerir distribuição de estilos (se nenhum foi informado) e gerar lista de N subtemas mapeados aos estilos. | Passos 3 e 4 |
+| `pesquisador-mercado` | Sugerir distribuição de estilos (se nenhum foi informado) e gerar lista de N subtemas mapeados aos estilos. | Passos 3 e 4 |
 | `briefing-writer` | Briefing estratégico por post. | Passo 5 |
 | Pipeline `/novo-post` (pesquisa → copy) | Executa pesquisa e copy de cada post. | Passo 5 |
 | Pipeline `/novo-post` (design) | Executa o design de cada post após aprovação da copy. | Passo 7 |
@@ -73,7 +73,7 @@ Decida com base no parse:
 
 ### 3. Scouting de distribuição (sem estilo informado)
 
-[Agente: `pesquisa-tendencias`] → input:
+[Agente: `pesquisador-mercado`] → input:
 
 ```
 Tarefa: sugerir uma distribuição de N posts entre os estilos disponíveis.
@@ -96,7 +96,7 @@ Apresente a sugestão e aguarde o usuário confirmar ou ajustar.
 
 ### 4. Distribuir subtemas e confirmar plano
 
-[Agente: `pesquisa-tendencias`] → input:
+[Agente: `pesquisador-mercado`] → input:
 
 ```
 Tarefa: gerar N subtemas distintos, cada um mapeado a um estilo da distribuição.
@@ -145,7 +145,7 @@ Para cada par `(subtema, estilo)` da lista, execute os passos do `/novo-post` **
 - **Resolver inputs obrigatórios do estilo** (apenas se `modo_estilo = "definido"`):
   - Modo interativo: pergunte ao usuário (ex.: lista de exercícios).
   - Modo agendado: pule este post (`SKIPPED — input técnico obrigatório`) e siga.
-- **Pesquisa profunda** (`pesquisa-tendencias`).
+- **Pesquisa profunda** (`pesquisador-mercado`).
 - **Copy** (`copywriter`).
 
 **Política de falha:** se um post falhar em qualquer etapa, registre o erro e continue os demais. `BRAND_BOOK_INCOMPLETO` para o lote inteiro.
