@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+/* ── Tokens da marca Dino Team ──────────────────────────────
+   Identidade estritamente monocromática (brand/referencias-visuais.md):
+   preto + branco + cinza. Sem cores quentes/saturadas. O "acento" é
+   o contraste e a tipografia, não uma cor.
+*/
+@theme {
+  --color-bg: #000000;        /* preto — fundo principal */
+  --color-fg: #ffffff;        /* branco — texto e contraste */
+  --color-muted: #7f7f7f;     /* cinza — hierarquia secundária, divisores */
+  --color-surface: #0c0c0c;   /* quase-preto — superfícies elevadas (cards) */
+  --color-line: #1f1f1f;      /* linha/borda sutil sobre preto */
+
+  --font-display: var(--font-anton);     /* Anton — títulos, caixa alta */
+  --font-body: var(--font-montserrat);   /* Montserrat — corpo */
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Seleção em alto contraste (inverte) */
+::selection {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* Foco visível acessível (WCAG AA) */
+:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+/* Respeita usuários que pedem menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

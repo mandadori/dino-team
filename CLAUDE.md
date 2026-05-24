@@ -53,6 +53,7 @@ Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestr
 - [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — gerar N posts em sequência, agendável.
 - [`/novo-estilo`](.claude/skills/novo-estilo/SKILL.md) — criar um novo estilo visual para carrossel ou stories.
 - [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — atualizar o slice `dados/ramon/` (fase atual + cronograma + outras vertentes).
+- [`/novo-site`](.claude/skills/novo-site/SKILL.md) — criar ou alterar o site (dual-mode); aciona os agentes de Engenharia + `briefing-writer` + gate `revisor-brand`.
 
 ### 3. Agentes — especialistas por função (`.claude/agents/`)
 
@@ -60,7 +61,7 @@ Cada agente domina **uma função** e organiza-se em **setor × papel** apenas t
 
 Agentes não conhecem o fluxo nem outros agentes — recebem input num formato declarado, entregam output num formato declarado. Conhecimento específico de um fluxo vive nas skills e templates, não no agente.
 
-**Agentes atuais (11):**
+**Agentes atuais (15):**
 
 - **Marketing / Pesquisa**
   - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `dados/mercado/`.
@@ -80,6 +81,12 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 - **Transversais / Dados**
   - [`archivist-ramon`](.claude/agents/archivist-ramon.md) — owner único do slice `dados/ramon/`; consolida o contexto do Ramon (input do usuário + auto-sync de fontes públicas).
   - [`analista-performance`](.claude/agents/analista-performance.md) — owner único do slice `dados/performance/`; registra ângulos queimados e (futuro) métricas de canais.
+- **Engenharia / Execução / Web**
+  - [`arquiteto-web`](.claude/agents/arquiteto-web.md) — scaffold, organização, libs, config do site.
+  - [`designer-web`](.claude/agents/designer-web.md) — componentes React + Tailwind + Framer Motion.
+  - [`dev-frontend`](.claude/agents/dev-frontend.md) — estados, formulários, responsividade, a11y, performance.
+- **Engenharia / Revisão**
+  - [`curador-web`](.claude/agents/curador-web.md) — build, lint, types, Lighthouse, preview deploy.
 
 **Pastas-placeholder das camadas futuras** (na raiz do repo, fora de `.claude/agents/`):
 - `dados/politicas/` — políticas YAML declarativas (popula na Onda 5).
@@ -97,6 +104,13 @@ Memória persistente compartilhada — markdown + frontmatter YAML, versionada e
 - `dados/mercado/` — pesquisa de mercado e vocabulário do público (owner: `pesquisador-mercado`).
 - `dados/performance/` — só `angulos-queimados.md` em v1 (owner: `analista-performance`); outros sub-slices entram quando publicação real existir.
 - `dados/pesquisas-brutas/` — pesquisas profundas geradas pelo pipeline (insumo cumulativo).
+
+### 5. Site (`site/`)
+
+Site institucional + comercial do Dino Team — Next.js 16 + Tailwind 4 + Framer Motion + Lucide + MDX. Construído e mantido pelo setor de Engenharia. Identidade monocromática (preto/branco/cinza) fiel ao brand book.
+
+- [`/novo-site`](.claude/skills/novo-site/SKILL.md) — skill dual-mode (criação vs. alteração). Aciona `briefing-writer` para o briefing institucional e exige aprovação de `revisor-brand` antes de cada deploy.
+- MVP: home da consultoria com 7 seções (Hero, ParaQuemE, Método, Resultados, SobreRamon, FAQ, CtaFinal). Briefing em `site/docs/home-briefing.md`.
 
 ---
 
