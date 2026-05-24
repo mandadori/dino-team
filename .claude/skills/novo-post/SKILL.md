@@ -496,6 +496,38 @@ Imagens prontas para upload:
 Briefing institucional: export/conteudos/<formato>/<data>-<slug>/briefing.md
 ```
 
+### 14. Publicação (opcional, gated por política)
+
+Carregar `dados/politicas/publicacao.yaml`. Avaliar as regras com as variáveis disponíveis:
+- `artefato.canal = 'instagram'`
+- `briefing.pilar = <pilar do briefing>`
+- `artefato.contem_termo(<termo>)` (varrer copy + briefing para termos sensíveis)
+
+**Regra que casa primeiro decide.** Se `modo: automatico` → oferecer ao usuário publicar agora:
+
+```
+Política autoriza publicação automática neste post (regra: <id>).
+Janela de aborto: <N> min após publicação.
+
+Quer publicar agora? (sim para chamar publish_instagram.js; não para fechar)
+```
+
+Se sim → executar:
+
+```bash
+node scripts/integrations/publish_instagram.js --post export/conteudos/<formato>/<data>-<slug>/
+```
+
+Reportar resposta (status, instagram_media_id, posted_at) inline.
+
+Se `modo: aprovacao_humana` → não chamar o script automaticamente. Mostrar:
+
+```
+Política exige aprovação humana antes de publicar (regra: <id>, motivo: <motivo>).
+Para publicar, rode manualmente:
+  node scripts/integrations/publish_instagram.js --post export/conteudos/<formato>/<data>-<slug>/
+```
+
 ## Entregável final
 
 ```

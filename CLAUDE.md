@@ -54,6 +54,7 @@ Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestr
 - [`/novo-estilo`](.claude/skills/novo-estilo/SKILL.md) — criar um novo estilo visual para carrossel ou stories.
 - [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — atualizar o slice `dados/ramon/` (fase atual + cronograma + outras vertentes).
 - [`/novo-site`](.claude/skills/novo-site/SKILL.md) — criar ou alterar o site (dual-mode); aciona os agentes de Engenharia + `briefing-writer` + gate `revisor-brand`.
+- [`/planejar-pauta-semanal`](.claude/skills/planejar-pauta-semanal/SKILL.md) — L2: produz N briefings da semana (sem executar). Agendável (default: 2ª 9h via cron).
 
 ### 3. Agentes — especialistas por função (`.claude/agents/`)
 
@@ -61,7 +62,7 @@ Cada agente domina **uma função** e organiza-se em **setor × papel** apenas t
 
 Agentes não conhecem o fluxo nem outros agentes — recebem input num formato declarado, entregam output num formato declarado. Conhecimento específico de um fluxo vive nas skills e templates, não no agente.
 
-**Agentes atuais (15):**
+**Agentes atuais (16):**
 
 - **Marketing / Pesquisa**
   - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `dados/mercado/`.
@@ -85,13 +86,10 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
   - [`arquiteto-web`](.claude/agents/arquiteto-web.md) — scaffold, organização, libs, config do site.
   - [`designer-web`](.claude/agents/designer-web.md) — componentes React + Tailwind + Framer Motion.
   - [`dev-frontend`](.claude/agents/dev-frontend.md) — estados, formulários, responsividade, a11y, performance.
+- **Engenharia / Execução / Integrações**
+  - [`integrador-apis`](.claude/agents/integrador-apis.md) — constrói/mantém `scripts/integrations/publish_*.js` e `fetch_*.js`. Owner único.
 - **Engenharia / Revisão**
   - [`curador-web`](.claude/agents/curador-web.md) — build, lint, types, Lighthouse, preview deploy.
-
-**Pastas-placeholder das camadas futuras** (na raiz do repo, fora de `.claude/agents/`):
-- `dados/politicas/` — políticas YAML declarativas (popula na Onda 5).
-- `campanhas/` — estado vivo de campanhas multi-canal (popula na Onda 5+).
-- `orquestracao/` — `rotas.yaml` declarativo de triggers (popula na Onda 5).
 
 Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-05-22-arquitetura-multi-setor-design.md) para o destino completo (3 setores produtivos + 3 transversais + orquestração).
 
@@ -111,6 +109,17 @@ Site institucional + comercial do Dino Team — Next.js 16 + Tailwind 4 + Framer
 
 - [`/novo-site`](.claude/skills/novo-site/SKILL.md) — skill dual-mode (criação vs. alteração). Aciona `briefing-writer` para o briefing institucional e exige aprovação de `revisor-brand` antes de cada deploy.
 - MVP: home da consultoria com 7 seções (Hero, ParaQuemE, Método, Resultados, SobreRamon, FAQ, CtaFinal). Briefing em `site/docs/home-briefing.md`.
+
+### 6. Orquestração + Dashboard
+
+Camada que torna o sistema reativo. Triggers (cron, futuramente webhook/threshold) disparam skills sem slash command. Políticas declarativas decidem quando humano entra. Dashboard mostra estado e permite gatilho manual.
+
+- **Rotas:** [`orquestracao/rotas.yaml`](orquestracao/rotas.yaml) — tabela declarativa de trigger → skill. v1 com 1 rota (cron pauta semanal).
+- **Políticas:** [`dados/politicas/publicacao.yaml`](dados/politicas/publicacao.yaml) — regras de quando publicação é automática e quando exige aprovação humana.
+- **Dashboard:** rota `/admin/dashboard` no site (auth por token). Mostra campanhas em curso, aprovações pendentes, frescor do banco, e dispara skills via Route Handler.
+- **Cron:** Vercel Cron + Route Handler em `site/app/api/cron/<id>/route.ts`.
+- **Tools de publicação:** scripts em [`scripts/integrations/`](scripts/integrations/), mantidos por `integrador-apis`. v1: `publish_instagram.js`.
+- **Campanhas:** estado vivo em [`campanhas/`](campanhas/) (schema em `campanhas/_schema.md`), escrito por skills L2/L3, lido pelo dashboard.
 
 ---
 

@@ -1,0 +1,5 @@
+# Credenciais reais — nunca versionar
+.env
+
+# Logs de execução
+.logs/

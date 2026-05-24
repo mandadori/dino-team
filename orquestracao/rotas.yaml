@@ -1,0 +1,17 @@
+# Rotas declarativas — Dino Team
+# Lida por: roteador de orquestração (implementado em site/app/api/cron/*)
+# Versão: 1
+
+rotas:
+  - id: pauta-semanal-cron
+    trigger:
+      tipo: cron
+      schedule: "0 9 * * 1"          # toda 2ª-feira 9h (TZ: America/Sao_Paulo)
+      timezone: America/Sao_Paulo
+    skill: /planejar-pauta-semanal
+    args:
+      N: 5
+    notificacao:
+      sucesso: dashboard              # registra em campanhas/.../log.md; dashboard mostra
+      falha: dashboard
+    ativa: true

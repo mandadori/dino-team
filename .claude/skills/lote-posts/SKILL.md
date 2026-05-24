@@ -229,6 +229,10 @@ Pulados/falhos (<N-M>):
 - <slug-x>: <motivo>
 ```
 
+### 10. Publicação por post (opcional, gated por política)
+
+Para cada post aprovado, aplicar o mesmo gate de política do Passo 14 do `/novo-post`: carregar `dados/politicas/publicacao.yaml`, avaliar as regras e só chamar `scripts/integrations/publish_instagram.js` quando a regra que casa diz `modo: automatico`. Em modo cron/agendado, **nunca publicar automaticamente** — apenas listar quais posts ficaram autorizados pela política e quais exigem aprovação humana.
+
 ---
 
 ## Modo agendado (`/schedule`)

@@ -1,0 +1,35 @@
+# Política de publicação — Dino Team
+# Lida por: skills de publicação (/novo-post, /lote-posts) antes de chamar publish_*.js
+# Lida por: roteador de orquestração antes de disparar skill automatizada
+# Mantida por: keeper-politicas (agente futuro) e o usuário
+# Versão: 1
+
+publicacao:
+  defaults:
+    modo: aprovacao_humana       # default conservador — qualquer post precisa de OK humano antes de publicar
+
+  regras:
+    # Posts educacionais/descritivos no Instagram com baixo risco viram automáticos
+    # (mas janela de aborto permite cancelar nos primeiros 30 min)
+    - id: instagram-educacional-automatico
+      condicao: "artefato.canal == 'instagram' AND briefing.pilar in ['educacional', 'descritivo']"
+      modo: automatico
+      janela_aborto_minutos: 30
+
+    # Qualquer Meta Ads acima de R$500 exige aprovação explícita
+    - id: meta-ads-acima-500
+      condicao: "artefato.canal == 'meta-ads' AND briefing.orcamento_brl > 500"
+      modo: aprovacao_humana
+      escala: usuario-via-dashboard
+
+    # Termos sensíveis sempre exigem aprovação humana (defesa em profundidade
+    # depois do revisor-compliance)
+    - id: termos-sensiveis
+      condicao: "artefato.contem_termo('suplemento') OR artefato.contem_termo('emagrecer') OR artefato.contem_termo('cura')"
+      modo: aprovacao_humana
+      motivo: compliance
+
+  iteracao:
+    limite_revisao: 3            # após 3 reprovações, parar e escalar para humano
+    timeout_humano_horas: 24     # se humano não responde em 24h, aplicar fallback
+    fallback_timeout: pausar     # pausar | abortar | publicar (NUNCA publicar como default)
