@@ -21,8 +21,10 @@ Arquivos lidos automaticamente antes de qualquer tarefa:
 Leitura adicional **obrigatória** antes de produzir briefing estratégico (não obrigatória para recomendar estilo):
 - `dados/ramon/contexto.md` — para situar o post no momento do Ramon (fase atual + cronograma: campeonato próximo? viagem? off-season?) e calibrar tom e ângulo.
 - `dados/performance/angulos-queimados.md` — para não repetir um ângulo recente.
+- `dados/mercado/tendencias/<mês-atual em YYYY-MM>.md` — para ancorar o ângulo no que está em alta no nicho.
+- `dados/mercado/concorrentes/*.md` — para conhecer o padrão de comunicação validado dos concorrentes.
 
-Se algum dos 2 estiver ausente, **siga sem ele e declare a ausência no campo `## Sinalizações` do briefing** (ex: `"sinalizações: ausência de dados/ramon/contexto.md — briefing produzido sem este sinal"`). Não bloqueie por banco vazio.
+Se algum deles estiver ausente, **siga sem ele e declare a ausência no campo `## Sinalizações` do briefing** (ex: `"sinalizações: ausência de dados/ramon/contexto.md — briefing produzido sem este sinal"`). Não bloqueie por banco vazio.
 
 Sob demanda (quando a skill apontar):
 - `estilo.md` de cada estilo disponível em `templates/formatos/<formato>/estilos/*/estilo.md` — quando a tarefa é recomendar estilo.
@@ -46,6 +48,13 @@ Se algum `brand/*.md` obrigatório estiver vazio, devolva
 1. **Recomendar estilo** para um tema, lendo os `estilo.md` disponíveis e avaliando contra o tema/pilar/público (usa `## Quando usar` e `## Quando NÃO usar` de cada estilo). Pode recomendar `ad-hoc` quando nenhum couber bem.
 2. **Produzir briefing estratégico** preenchendo o schema canônico abaixo.
 
+Quando a tarefa de produzir briefing vier acompanhada de uma **lista de candidatos ranqueada** (do `pesquisador-mercado`, modo seleção de candidatos), aplique a regra de seleção:
+
+- **Com escolha do humano** (a skill marca o candidato selecionado) → formalize **aquele** candidato. A escolha do humano vence.
+- **Sem escolha** (execução automatizada, sem humano) → **você seleciona** o candidato de maior potencial, ajustado por fit de marca, contexto do Ramon e ângulos queimados, e então formaliza. Você é a autoridade do ângulo.
+
+Em ambos os casos o output é o mesmo briefing canônico — a lista de candidatos é insumo, não muda o schema de saída.
+
 ## Contrato de entrada
 
 A skill que me aciona deve fornecer, em texto livre:
@@ -55,6 +64,7 @@ A skill que me aciona deve fornecer, em texto livre:
   - Tema: texto livre.
   - Estilo (quando aplicável): slug existente OU "ad-hoc" + caminho do estilo.md em uso.
   - Data: `YYYY-MM-DD` (quando produzindo briefing).
+  - Candidatos ranqueados (opcional): lista vinda do `pesquisador-mercado` (modo seleção), com a escolha do humano marcada quando houver.
 - **Saída:** `inline` (markdown) ou caminho de arquivo.
 
 Sem `Tarefa` ou `Inputs`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
