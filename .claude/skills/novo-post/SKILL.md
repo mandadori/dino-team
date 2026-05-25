@@ -44,7 +44,7 @@ Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente
 
 ## Pipeline
 
-3 pausas no modo definido (Passos 2, 8, 9). 5 pausas no modo ad-hoc (Passos 2, 3, 8, 9, 12).
+4 pausas no modo definido (Passos 2, 8, 9, 13.5). 6 pausas no modo ad-hoc (Passos 2, 3, 8, 9, 13.5, 13.6).
 
 ### 1. Parsear input
 
@@ -504,23 +504,6 @@ Status válidos: APROVADO | REPROVADO.
 - **APROVADO** → consolidar briefing institucional usando `templates/briefing.md` (sem variações A/B, sem rastros de processo) e gravar em `export/conteudos/<formato>/<data>-<slug>/briefing.md`. **Este é o último passo da curadoria.**
 - **REPROVADO** → reabra `copy` ou `design` e re-rode 11a desde o início.
 
-### 12. Salvar/descartar `_rascunho/` (pausa)
-
-**Só executa quando `modo_estilo = "ad-hoc"`.** Em modo definido, pule para o Passo 13.
-
-```
-Estilo ad-hoc usado no post: templates/formatos/<formato>/estilos/_rascunho/
-
-Quer salvar como estilo permanente?
-- "salvar <slug-em-kebab-case>" → mantém pasta, renomeia.
-- "descartar" → remove a pasta.
-```
-
-- **Salvar:** valide kebab-case (`^[a-z0-9-]+$`). Se já existir `templates/formatos/<formato>/estilos/<slug>/`, peça outro slug. Então `mv templates/formatos/<formato>/estilos/_rascunho/ templates/formatos/<formato>/estilos/<slug>/`.
-- **Descartar:** `rm -rf templates/formatos/<formato>/estilos/_rascunho/`.
-
-Registre o resultado para o Passo 13.
-
 ### 13. Entregar ao usuário
 
 ```
@@ -540,6 +523,112 @@ Imagens prontas para upload:
 
 Briefing institucional: export/conteudos/<formato>/<data>-<slug>/briefing.md
 ```
+
+### 13.5. Adaptar para stories (pausa)
+
+**Só executa quando `<formato> = carrossel`.** Em outros formatos, pule para o Passo 13.6 (ad-hoc) ou Passo 14 (modo definido).
+
+```
+Quer adaptar este post para stories (9:16)?
+- "sim" → gera versão stories
+- "não" → segue para o próximo passo
+```
+
+Se "não", pule para o Passo 13.6 (ad-hoc) ou Passo 14 (modo definido).
+
+Se "sim", acione `designer`:
+
+```
+Tarefa: adaptar assets do carrossel para stories (9:16).
+
+Inputs:
+- Regras inegociáveis: templates/formatos/README.md
+- Estilo de referência: <caminho do estilo.md do carrossel>
+- Template de referência: <pasta do estilo>/slide.html
+- Copy: export/conteudos/carrossel/<data>-<slug>/copy.md
+- Inputs técnicos (se houver): export/conteudos/carrossel/<data>-<slug>/treino.md
+- Formato de saída: stories (1080×1920)
+
+Saída em export/conteudos/carrossel/<data>-<slug>/stories/design/:
+- frame-N.html por bloco da ## Estrutura do estilo
+- preview.html usando templates/wrappers/preview-wrapper.html verbatim
+
+Drop zones: manter as declaradas no estilo de referência.
+```
+
+#### Pausa para revisão do preview stories
+
+```
+Stories gerado em export/conteudos/carrossel/<data>-<slug>/stories/design/:
+- preview.html
+- <frames individuais>
+
+Opções:
+- "exportar" → exporto como está
+- Anexe preview.html editado → sobrescrevo e exporto
+- Peça ajustes visuais → repasso ao designer
+- Ajuste de copy → re-aciono copywriter; salvo em stories/copy.md (copy.md original intacto)
+```
+
+**Aguarde resposta.** Se vier ajuste visual, repasse ao `designer` com o ponto específico e aguarde nova gravação. Se vier ajuste de copy, acione `copywriter`:
+
+```
+Tarefa: ajustar copy para versão stories do post.
+
+Inputs:
+- Copy original: export/conteudos/carrossel/<data>-<slug>/copy.md
+- Pedido de ajuste: <texto do usuário>
+- Briefing inline original: <briefing guardado no Passo 4>
+- Estilo a seguir: <caminho do estilo.md do carrossel>
+
+Regras:
+- Preserve a ## Estrutura do estilo e blocos não pedidos para mudar.
+- Aplique apenas o ajuste solicitado.
+
+Saída: gravar em export/conteudos/carrossel/<data>-<slug>/stories/copy.md.
+NÃO alterar export/conteudos/carrossel/<data>-<slug>/copy.md.
+```
+
+Repita até "exportar" ou confirmação. Após aprovação, acione `curador-export`:
+
+```
+Tarefa: validar assets e executar export para PNG.
+
+Inputs:
+- Pasta: export/conteudos/carrossel/<data>-<slug>/stories/design/
+- Estilo: <caminho do estilo.md do carrossel>
+
+Critérios:
+- Dimensões dos frames = 1080×1920.
+- Tipografia/paleta dentro de brand/referencias-visuais.md (+ extras autorizadas pelo estilo.md).
+- Sem JavaScript em assets individuais (JS só no wrapper).
+- preview.html tem section[data-slide="N"] para cada frame.
+
+Comando: node scripts/export-png.js export/conteudos/carrossel/<data>-<slug>/stories/
+
+Pós-export: verificar que qtd. de PNGs em stories/export/ = qtd. de frame-N.html em stories/design/.
+
+Saída: inline com status, lista de PNGs, observações.
+```
+
+**Curadoria não se repete** — copy e briefing já foram aprovados nos Passos 11a/b/c.
+
+Em `VALIDACAO_TECNICA_FALHOU` → corrija no designer no ponto apontado. Em `EXPORT_FALHOU` → resolva a causa e re-rode.
+
+### 13.6. Salvar/descartar `_rascunho/` (pausa)
+
+**Só executa quando `modo_estilo = "ad-hoc"`.** Em modo definido, pule para o Passo 14.
+
+```
+Estilo ad-hoc usado no post: templates/formatos/<formato>/estilos/_rascunho/
+
+Quer salvar como estilo permanente?
+- "salvar <slug-em-kebab-case>" → mantém pasta, renomeia.
+- "descartar" → remove a pasta.
+```
+
+- **Salvar:** valide kebab-case (`^[a-z0-9-]+$`). Se já existir `templates/formatos/<formato>/estilos/<slug>/`, peça outro slug. Então `mv templates/formatos/<formato>/estilos/_rascunho/ templates/formatos/<formato>/estilos/<slug>/`. O estilo é salvo somente em `templates/formatos/carrossel/estilos/<slug>/` — nenhum estilo é criado em `templates/formatos/stories/`.
+- **Descartar:** `rm -rf templates/formatos/<formato>/estilos/_rascunho/`.
 
 ### 14. Publicação (opcional, gated por política)
 
@@ -585,7 +674,14 @@ export/conteudos/<formato>/<data>-<slug>/
 │   └── preview.html
 ├── export/
 │   └── <PNGs>
-└── briefing.md
+├── briefing.md
+└── stories/                      (quando adaptação stories executada)
+    ├── copy.md                   (só existe se houver ajuste de copy no stories)
+    ├── design/
+    │   ├── <frames HTML>
+    │   └── preview.html
+    └── export/
+        └── <PNGs>
 ```
 
 ## Critério de conclusão
@@ -593,5 +689,6 @@ export/conteudos/<formato>/<data>-<slug>/
 - A pasta `export/conteudos/<formato>/<data>-<slug>/` contém `pesquisa-base.md`, `copy.md`, `design/` com assets + `preview.html`, `export/` com PNGs e `briefing.md`.
 - Quantidade de PNGs em `export/` é igual à de assets HTML em `design/`.
 - `briefing.md` foi gerado por curadoria editorial com status APROVADO.
-- Em modo ad-hoc, `_rascunho/` foi salvo com slug definitivo ou removido (não deve sobrar entre execuções).
+- Em modo ad-hoc, `_rascunho/` foi salvo com slug definitivo ou removido (não deve sobrar entre execuções) — a decisão ocorre no Passo 13.6, após o Passo 13.5.
 - Usuário recebeu a mensagem final do Passo 13 com lista de PNGs e caminho do briefing.
+- Quando adaptação stories executada: `stories/design/` contém `frame-N.html` + `preview.html`; `stories/export/` contém um PNG por frame; quantidade de PNGs = quantidade de frames HTML; `copy.md` raiz não foi alterado.

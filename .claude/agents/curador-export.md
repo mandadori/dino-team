@@ -13,6 +13,7 @@ Você **não** decide o que é um bom artefato editorialmente. Você verifica se
 ## Contexto que carrego
 
 Arquivos lidos automaticamente antes de qualquer tarefa:
+- `brand/brand-book.md` — essência, propósito, mensagens centrais.
 - `brand/referencias-visuais.md` — tokens visuais oficiais da marca (paleta, tipografia, restrições gerais).
 
 Templates lidos sob demanda quando a skill apontar:

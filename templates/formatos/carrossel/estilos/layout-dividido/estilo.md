@@ -1,4 +1,4 @@
-# Estilo `_rascunho` (Dividido) — Carrossel
+# Estilo `layout-dividido` — Carrossel
 
 ## Conceito visual
 
@@ -11,6 +11,46 @@ A narrativa é binária e cinematográfica: **tensão em cima, resolução embai
 A tipografia é o protagonista absoluto. Anton em topo e base no mesmo peso visual, branca, sem `text-shadow` — o tratamento das fotos (filtros + overlay natural) cuida da legibilidade. **Font-size padrão: 90px; pode ser reduzido para acomodar frases mais longas, desde que o texto ocupe no máximo 2–3 linhas por metade.** Frases curtas (1–2 linhas) e longas (2–3 linhas) são ambas válidas: curtas maximizam impacto visual; longas permitem ensinamento e profundidade filosófica. Stamp pequeno `DINO TEAM` em Montserrat tracking aberto no rodapé inferior, decorativo.
 
 Sem barra de progresso, sem swipe cue, sem tag de tópico, sem watermark, sem logo. **Minimalismo agressivo.**
+
+DNA editorial: pílula filosófica binária. Cada slide é uma microvirada — tensão e resolução no mesmo frame.
+
+---
+
+## Estrutura
+
+Sequência **flexível** de **3 a 7 slides**:
+- **Primeiro slide:** capa obrigatória (`slide capa`).
+- **Último slide:** CTA obrigatório (`slide cta`).
+- **Slides intermediários:** todos `slide dividido`, na sequência narrativa que o ângulo pedir.
+
+### Bloco `capa` (primeiro slide, obrigatório)
+
+- **Classe HTML / variante visual:** `slide capa`
+- **Função editorial:** hook — introduz o tema com promessa ou provocação binária.
+- **Tom:** anunciativo + provocador. Estabelece a tensão que o post vai resolver.
+- **O que entregar:** 2 frases — uma na metade superior (introduz tema/contexto), outra na metade inferior (promessa ou angulo do post). Pode dispensar a regra `...` / `.` se a capa precisar de outro fechamento. Limite: máx 2–3 linhas por metade.
+- **Variações A/B:** sim — A e B para as duas frases da capa.
+- **Inputs visuais:** 2 fotos — uma na zona `data-bg-drop="topo"`, outra em `data-bg-drop="base"`.
+
+### Blocos `dividido-1..N` (intermediários, flexíveis)
+
+- **Classe HTML / variante visual:** `slide dividido`
+- **Função editorial:** desenvolvimento + virada — cada slide é um par tensão→resolução autocontido.
+- **Tom:** topo = limitante / queixoso / percepção comum; base = verdade / perspectiva correta / porquê vale a pena. Base geralmente começa com "MAS" ou "ATÉ".
+- **O que entregar:** 2 frases por slide — topo termina em `...`, base termina em `.`. Mesmo peso tipográfico em ambas. Limite: máx 2–3 linhas por metade. Frases curtas (1–2 linhas) maximizam impacto; longas permitem profundidade.
+- **Variações A/B:** não. Pares topo/base derivam direto do ângulo do briefing.
+- **Inputs visuais:** 2 fotos por slide — `data-bg-drop="topo"` (filtrada P&B) + `data-bg-drop="base"` (cor preservada).
+
+### Bloco `cta` (último slide, obrigatório)
+
+- **Classe HTML / variante visual:** `slide cta`
+- **Função editorial:** CTA específico — chamada ligada ao conteúdo do post, nunca genérica.
+- **Tom:** afirmativo, marca-DNA. Direção, não pressão.
+- **O que entregar:** 1 frase de tensão na metade superior (sobre foto, termina em `...`) + 1 CTA na metade inferior (sobre preto sólido, Anton centralizado). Eyebrow opcional em Montserrat (classe `.cta-eyebrow`) acima do CTA. Limite: máx 2 linhas no topo, CTA com até 6 palavras.
+- **Variações A/B:** sim — A e B no CTA.
+- **Inputs visuais:** 1 foto somente na metade superior (`data-bg-drop="topo"`). Metade inferior é preto sólido, sem drop zone.
+
+---
 
 ## Quando usar
 
@@ -29,30 +69,33 @@ Sem barra de progresso, sem swipe cue, sem tag de tópico, sem watermark, sem lo
 - Conteúdo **denso em informação** — não cabe.
 - Quando não há **fotos com qualidade** para preencher as duas metades — o estilo depende delas.
 
-## Variações internas
+---
+
+## Variantes visuais
 
 Trocar a classe da `<section class="slide ...">`:
 
 - **`slide capa`** — mesma estrutura 50/50, com texto que introduz o tema (em vez do par tensão/resolução). Útil quando o primeiro slide precisa anunciar o assunto.
 - **`slide dividido`** — variante principal. Frase superior em tom de tensão terminando em `...`; frase inferior em tom de verdade terminando em `.`. Esta é a "alma" do estilo.
-- **`slide cta`** — quebra parcial: metade superior mantém foto + frase; metade inferior vira **preto sólido** (sem foto) com CTA branco Anton centralizado. Eyebrow em Montserrat disponível como elemento opcional via classe `.cta-eyebrow` (não incluído no preview default). Usar apenas no último slide.
+- **`slide cta`** — quebra parcial: metade superior mantém foto + frase; metade inferior vira **preto sólido** (sem foto) com CTA branco Anton centralizado. Eyebrow em Montserrat disponível como elemento opcional via classe `.cta-eyebrow`. Usar apenas no último slide.
 
-## Inputs obrigatórios
+---
 
-Para cada slide do post:
-- **2 imagens** — uma para a metade superior, uma para a inferior. Resolução mínima recomendada 1080×675 cada (ou superior, com bom enquadramento horizontal).
-- **2 frases** — uma para o topo (tensão/afirmação, `...`), uma para a base (resolução/virada, `.`). Frases curtas e longas são ambas válidas. **Regra de layout: máximo 2–3 linhas por metade.** O designer ajusta o font-size (a partir de 90px, reduzindo conforme necessário) para que a frase caiba dentro desse limite de linhas.
+## Cores adicionais / Tokens
 
-Exceção no slide `cta`: apenas **1 imagem** (metade superior) e **1 frase de tensão** + **1 CTA** (em vez da frase de resolução).
+**Nenhuma cor além da paleta da marca.** Apenas preto, branco e cinzas. As fotos contribuem com sua própria gama tonal (B&P na superior, cor preservada na inferior), mas não há nenhuma cor de acento gráfica.
 
-## Cores adicionais
+| Token | Valor |
+|---|---|
+| Font-size frase (padrão) | `90px` Anton — reduzir proporcionalmente se exceder 3 linhas |
+| Filtro foto topo | `grayscale(0.85) contrast(1.05)` quando `[data-has-bg]` |
+| Filtro foto base | `contrast(1.08) saturate(1.05)` |
+| Stamp `DINO TEAM` | Montserrat 14px, `letter-spacing: 0.42em`, 36px do bottom, centralizado |
 
-**Nenhuma além da paleta da marca.** Apenas preto, branco e cinzas. As fotos contribuem com sua própria gama tonal (B&P na superior, cor preservada na inferior), mas não há nenhuma cor de acento gráfica.
+---
 
 ## Notas técnicas
 
-- Texto sempre **branco** (`#FFFFFF`), Anton sem `text-shadow`. Font-size padrão 90px — reduzir proporcionalmente se a frase ocupar mais de 3 linhas. Topo e base devem manter o mesmo font-size dentro do mesmo slide para preservar o peso visual 50/50.
-- Foto superior recebe `filter: grayscale(0.85) contrast(1.05)` via CSS quando há imagem dropada (`[data-has-bg]`).
-- Foto inferior recebe `filter: contrast(1.08) saturate(1.05)` — preserva cor com leve ganho.
+- Texto sempre **branco** (`#FFFFFF`), Anton sem `text-shadow`. Topo e base devem manter o mesmo font-size dentro do mesmo slide para preservar o peso visual 50/50.
 - Zonas de drop marcadas como `[data-bg-drop="topo"]` e `[data-bg-drop="base"]` — o wrapper de preview aceita drag-and-drop e reposicionamento por arraste.
-- Stamp `DINO TEAM` em Montserrat 14px, `letter-spacing: 0.42em`, posicionado a 36px do bottom, centralizado.
+- Slide `cta`: metade inferior **não** marca `data-bg-drop` (preto sólido, sem foto).

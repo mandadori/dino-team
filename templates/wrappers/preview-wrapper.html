@@ -162,8 +162,9 @@
 
       // Scaling: ajusta zoom de cada slide para caber na viewport; remove em export-mode
       function computeScale(slide) {
-        var h = parseInt(slide.style.height, 10) || 1350;
-        var w = parseInt(slide.style.width, 10) || 1080;
+        var h = parseInt(slide.style.height, 10) || slide.offsetHeight;
+        var w = parseInt(slide.style.width, 10) || slide.offsetWidth;
+        if (!h || !w) return 1;
         return Math.min((window.innerHeight - 80) / h, (window.innerWidth - 80) / w, 1);
       }
       function applyScaling() {
@@ -175,6 +176,7 @@
       }
       new MutationObserver(function () {
         if (document.body.classList.contains("export-mode")) removeScaling();
+        else applyScaling();
       }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
       applyScaling();
       window.addEventListener("resize", applyScaling);
@@ -225,8 +227,8 @@
       // Retorna as dimensões CSS reais da zone no espaço de design (antes do zoom do slide)
       function getZoneDesignSize(zone) {
         var slide = zone.closest("section[data-slide]") || zone;
-        var slideW = parseInt(slide.style.width, 10) || 1080;
-        var slideH = parseInt(slide.style.height, 10) || 1350;
+        var slideW = parseInt(slide.style.width, 10) || slide.offsetWidth;
+        var slideH = parseInt(slide.style.height, 10) || slide.offsetHeight;
         var sr = slide.getBoundingClientRect();
         var zr = zone.getBoundingClientRect();
         return {
@@ -241,6 +243,29 @@
         var bh = (zone._bgNatH * zone._bgScale * zone._bgZoom).toFixed(1);
         zone.style.backgroundSize = bw + "px " + bh + "px";
       }
+
+      // Drag state global: 1 par de listeners no document para todas as zonas
+      var dragState = null;
+      function readPos(zone) {
+        var p = zone.style.backgroundPosition || "50% 50%";
+        var pp = p.split(/\s+/); var x = parseFloat(pp[0]); var y = parseFloat(pp[1]);
+        return { x: isNaN(x) ? 50 : x, y: isNaN(y) ? 50 : y };
+      }
+      document.addEventListener("mousemove", function (e) {
+        if (!dragState) return;
+        var zone = dragState.zone;
+        var rect = zone.getBoundingClientRect();
+        var dx = ((dragState.sx - e.clientX) / rect.width) * 100;
+        var dy = ((dragState.sy - e.clientY) / rect.height) * 100;
+        var nx = Math.max(0, Math.min(100, dragState.sp.x + dx));
+        var ny = Math.max(0, Math.min(100, dragState.sp.y + dy));
+        zone.style.backgroundPosition = nx.toFixed(1) + "% " + ny.toFixed(1) + "%";
+      });
+      document.addEventListener("mouseup", function () {
+        if (!dragState) return;
+        dragState.zone.classList.remove("dt-grabbing");
+        dragState = null;
+      });
 
       function bindZone(zone) {
         zone.addEventListener("dragover", function (e) { e.preventDefault(); zone.classList.add("dt-drop-active"); });
@@ -271,31 +296,12 @@
           };
           r.readAsDataURL(f);
         });
-
-        var dragging = false, sx = 0, sy = 0, sp = { x: 50, y: 50 };
-        function getPos() {
-          var p = zone.style.backgroundPosition || "50% 50%";
-          var pp = p.split(/\s+/); var x = parseFloat(pp[0]); var y = parseFloat(pp[1]);
-          return { x: isNaN(x) ? 50 : x, y: isNaN(y) ? 50 : y };
-        }
         zone.addEventListener("mousedown", function (e) {
           if (!zone.hasAttribute("data-has-bg")) return;
           e.preventDefault(); e.stopPropagation();
           setActiveZone(zone);
-          dragging = true; sx = e.clientX; sy = e.clientY; sp = getPos();
+          dragState = { zone: zone, sx: e.clientX, sy: e.clientY, sp: readPos(zone) };
           zone.classList.add("dt-grabbing");
-        });
-        document.addEventListener("mousemove", function (e) {
-          if (!dragging) return;
-          var rect = zone.getBoundingClientRect();
-          var dx = ((sx - e.clientX) / rect.width) * 100;
-          var dy = ((sy - e.clientY) / rect.height) * 100;
-          var nx = Math.max(0, Math.min(100, sp.x + dx));
-          var ny = Math.max(0, Math.min(100, sp.y + dy));
-          zone.style.backgroundPosition = nx.toFixed(1) + "% " + ny.toFixed(1) + "%";
-        });
-        document.addEventListener("mouseup", function () {
-          if (dragging) { dragging = false; zone.classList.remove("dt-grabbing"); }
         });
       }
     })();
