@@ -32,7 +32,7 @@ Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente
 
 | Agente | Responsabilidade | Input | Output |
 |---|---|---|---|
-| `pesquisador-mercado` | Scouting de tema + pesquisa profunda | formato/estilo OU briefing | sugestão inline (scouting) OU `dados/pesquisas-brutas/<data>-tendencias-<slug>.md` |
+| `pesquisador-mercado` | Fase A (scouting de mercado → slice) + Fase B (seleção ranqueada) + pesquisa profunda (P7) | modo + formato/estilo (P2a) / briefing (P7) | slice `dados/mercado/` atualizado (Fase A) / candidatos ranqueados inline (Fase B) / `dados/pesquisas-brutas/<data>-tendencias-<slug>.md` (P7) |
 | `briefing-writer` | Recomendação de estilo (P2b) + briefing estratégico (P4) | formato+tema (P2b) / formato+estilo+tema (P4) | recomendação inline (P2b) / briefing inline (P4) |
 | `designer` | Estilo ad-hoc em `_rascunho/` (P3) + assets do post + preview consolidado (P9) | refs visuais + contrato (P3) / estilo + copy (P9) | `estilo.md` + arquivo principal + `preview.html` (P3) / `design/*.html` + `design/preview.html` (P9) |
 | `treinador` | Prescrição técnica de treino | exercícios + objetivo + recorte | `treino.md` |
@@ -56,20 +56,62 @@ Ordem: tema primeiro, estilo depois — porque a recomendação de estilo depend
 
 #### 2a. Tema
 
-- **Tema veio no input** → usa direto.
-- **Sem tema** → acione `pesquisador-mercado` modo scouting:
+- **Tema veio no input** → usa direto. **Pula todo o scouting (bypass)** — vai para o Passo 2b.
+- **Sem tema** → scouting de duas fases (2a.i → 2a.ii → 2a.iii):
+
+##### 2a.i — Checar frescor da inteligência de mercado
+
+```bash
+f="dados/mercado/tendencias/$(date +%Y-%m).md"
+if [ -f "$f" ] && [ -z "$(find "$f" -mtime +14 2>/dev/null)" ]; then echo "FRESCO"; else echo "STALE"; fi
+```
+
+##### 2a.ii — Auto-heal (só se STALE)
+
+Avise o usuário ("Atualizando inteligência de mercado, isso leva um pouco…") e acione `pesquisador-mercado`:
 
 ```
-Tarefa: sugerir tema para um post Instagram.
-Profundidade: rápida / decisória.
+Tarefa: scouting de mercado (Fase A — inteligência durável).
+Profundidade: deep research.
+
+Inputs:
+- Pilares da marca: (de brand/pilares-conteudo.md)
+- Mês de referência: <YYYY-MM>
+
+Saída: gravar/atualizar dados/mercado/tendencias/<YYYY-MM>.md, dados/mercado/concorrentes/<slug>.md e dados/mercado/vocabulario-publico.md conforme a metodologia do modo scouting de mercado.
+```
+
+Se FRESCO, pule este passo.
+
+##### 2a.iii — Seleção ranqueada (sempre)
+
+Acione `pesquisador-mercado`:
+
+```
+Tarefa: seleção de candidatos (Fase B — ranqueamento).
 
 Inputs:
 - Formato: <formato>
 - Estilo: <slug se veio no input, senão "ainda não definido">
-- Tema já definido: nenhum
+- Quantidade de candidatos: 3-5
 
-Saída inline (3-4 linhas): tema sugerido + motivo, ancorando em pilar/público/tendência.
+Saída inline: candidatos ranqueados (ângulo + pilar + sustentação + potencial), do maior para o menor potencial.
 ```
+
+Apresente e pause:
+
+```
+Candidatos (ranqueados por potencial):
+<lista do agente>
+
+Responda:
+- <número> → escolhe o candidato
+- "mais"   → re-ranqueia / traz outros
+- ajuste em texto livre
+- ou dê seu próprio tema (bypass — sua escolha vence)
+```
+
+A escolha define `tema`. **Guarde o candidato escolhido + a lista ranqueada** (serão reenviados no Passo 4). Se "mais"/ajuste, re-acione o modo seleção e reapresente. **Aguarde escolha explícita** antes de seguir ao Passo 2b.
 
 #### 2b. Estilo (sabendo o tema)
 
@@ -185,6 +227,8 @@ Inputs:
 - Caminho do estilo: <templates/formatos/<formato>/estilos/<slug>/ | templates/formatos/<formato>/estilos/_rascunho/>
 - Tema: <tema>
 - Data: <YYYY-MM-DD>
+- Candidatos ranqueados: <lista da Fase B guardada no Passo 2a.iii | "nenhum — tema veio no input (sem scouting)">
+- Candidato escolhido pelo humano: <o selecionado no Passo 2a.iii | "nenhum">
 
 Leia o estilo.md no caminho indicado (## Estrutura é fonte da modulação de tom por bloco).
 Avalie tema/formato/estilo contra o brand book; decida ângulo central; selecione 1 pilar; defina objetivo; descreva recorte de público; gere slug em kebab-case (2-5 palavras, captura o ângulo, não o tema bruto).
@@ -253,6 +297,7 @@ Profundidade: deep research (WebFetch nas fontes promissoras).
 Inputs:
 - Formato/Estilo/Tema: <formato> / <slug | "ad-hoc"> / <tema>
 - Pilar / Recorte / Sinalizações: <inline do briefing>
+- Contexto de mercado acumulado: dados/mercado/tendencias/<mês-atual em YYYY-MM>.md + dados/mercado/concorrentes/*.md (parta daqui; não redescubra tendências já mapeadas).
 
 Foco: ângulos não-óbvios e contradições dentro do recorte; referências concretas com link; dados/citações verificáveis; mitos a quebrar.
 
