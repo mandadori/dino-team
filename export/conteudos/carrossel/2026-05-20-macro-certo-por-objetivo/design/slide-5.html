@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Slide 5 — Timing Peri-Treino</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ESTILO: editorial-esportivo-monocromatico | CONCEITO: foto full-bleed P&B, overlay escuro gradiente, header 3 tags + número de seção + título Anton, dois blocos PRÉ/PÓS lado a lado, corpo Montserrat LABEL/valor, footer fixo */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+
+    .bg-drop {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #222;
+      background-size: cover;
+      background-position: 50% 25%;
+      background-repeat: no-repeat;
+    }
+
+    .bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.92) 0%,
+        rgba(0,0,0,0.75) 50%,
+        rgba(0,0,0,0.3) 100%
+      );
+      z-index: 1;
+    }
+
+    .content {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      padding: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .header-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+    }
+
+    .section-id {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 72px;
+      line-height: 0.9;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+      margin-bottom: 6px;
+    }
+
+    .janela-nota {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      line-height: 1.4;
+      margin-bottom: 24px;
+    }
+
+    .janela-nota strong {
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .body-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+    }
+
+    /* Dois blocos PRÉ / PÓS lado a lado */
+    .peri-grid {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0;
+    }
+
+    .peri-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding: 0 28px 0 0;
+    }
+
+    .peri-block:last-child {
+      padding: 0 0 0 28px;
+    }
+
+    .peri-divider-v {
+      width: 1px;
+      background: rgba(255,255,255,0.25);
+      align-self: stretch;
+    }
+
+    .peri-block-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .peri-timing {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .peri-row {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: 12px;
+    }
+
+    .peri-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+    }
+
+    .peri-value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      line-height: 1.15;
+    }
+
+    .peri-phase-block {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: 10px;
+      padding-left: 8px;
+      border-left: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .peri-phase-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+    }
+
+    .peri-phase-value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 1.3;
+    }
+
+    .divider-h {
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.25);
+      margin: 18px 0;
+    }
+
+    .nota-editorial {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .footer-left,
+    .footer-right {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="bg-drop" data-bg-drop="full"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="content">
+      <header class="header">
+        <span class="header-tag">DINO TEAM</span>
+        <span class="header-tag">GUIA DE MACROS</span>
+        <span class="header-tag">4 DE 5</span>
+      </header>
+
+      <div class="body-content">
+        <p class="section-id">[NR. 4]</p>
+        <h2 class="section-title">TIMING<br>PERI-TREINO</h2>
+        <p class="janela-nota"><strong>JANELA REAL: 4–6 HORAS</strong> AO REDOR DO TREINO — NÃO 30 MIN</p>
+
+        <div class="peri-grid">
+          <!-- PRÉ-TREINO -->
+          <div class="peri-block">
+            <p class="peri-block-title">PRÉ-TREINO</p>
+            <p class="peri-timing">1–2H ANTES</p>
+
+            <div class="peri-row">
+              <span class="peri-label">PROTEÍNA</span>
+              <span class="peri-value">0,4–0,5 G/KG</span>
+            </div>
+
+            <div class="peri-row">
+              <span class="peri-label">GORDURA</span>
+              <span class="peri-value">MÁX. 10G</span>
+            </div>
+
+            <div class="peri-row">
+              <span class="peri-label">CARBOIDRATO</span>
+            </div>
+            <div class="peri-phase-block">
+              <span class="peri-phase-label">HIPERTROFIA</span>
+              <span class="peri-phase-value">0,75–1,25 G/KG</span>
+            </div>
+            <div class="peri-phase-block">
+              <span class="peri-phase-label">CUTTING</span>
+              <span class="peri-phase-value">REDUZIDO · MÍN. 15G</span>
+            </div>
+          </div>
+
+          <div class="peri-divider-v"></div>
+
+          <!-- PÓS-TREINO -->
+          <div class="peri-block">
+            <p class="peri-block-title">PÓS-TREINO</p>
+            <p class="peri-timing">DENTRO DE 1–2H DEPOIS</p>
+
+            <div class="peri-row">
+              <span class="peri-label">PROTEÍNA</span>
+              <span class="peri-value">0,4–0,5 G/KG</span>
+            </div>
+
+            <div class="peri-row">
+              <span class="peri-label">CARBOIDRATO</span>
+            </div>
+            <div class="peri-phase-block">
+              <span class="peri-phase-label">HIPERTROFIA</span>
+              <span class="peri-phase-value">0,75–1,25 G/KG</span>
+            </div>
+            <div class="peri-phase-block">
+              <span class="peri-phase-label">CUTTING</span>
+              <span class="peri-phase-value">MÍN. 30G CARBO</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider-h"></div>
+        <p class="nota-editorial">O QUE MUDA POR FASE É A COMPOSIÇÃO DA JANELA, NÃO O HORÁRIO.</p>
+      </div>
+
+      <footer class="footer">
+        <span class="footer-left">© DINO TEAM</span>
+        <span class="footer-right">GUIA DE MACROS</span>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>

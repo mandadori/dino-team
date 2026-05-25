@@ -1,0 +1,1679 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Preview — Macros por Objetivo (editorial-esportivo-monocromatico)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Wrapper Dino Team: carrossel arrastável + drop de imagem + reposicionamento */
+    html, body { margin: 0; padding: 0; background: #111; overscroll-behavior: none; }
+
+    .dt-carousel {
+      display: flex; align-items: center; gap: 40px; padding: 0 40px;
+      overflow-x: auto; overflow-y: hidden; height: 100vh;
+      scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .dt-carousel::-webkit-scrollbar { display: none; }
+
+    section[data-slide] {
+      flex-shrink: 0; scroll-snap-align: center; position: relative;
+      overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,.6);
+    }
+
+    [data-bg-drop].dt-drop-active { outline: 6px dashed #00b140; outline-offset: -6px; }
+    [data-bg-drop][data-has-bg] { cursor: grab; }
+    [data-bg-drop][data-has-bg].dt-grabbing { cursor: grabbing; }
+    [data-bg-drop][data-has-bg]::after {
+      content: "arrastar = reposicionar";
+      position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+      font: 600 10px/1 "Montserrat", sans-serif; letter-spacing: .08em;
+      color: rgba(255,255,255,.7); background: rgba(0,0,0,.55);
+      padding: 4px 10px; border-radius: 999px; pointer-events: none;
+      white-space: nowrap; z-index: 10;
+    }
+    body.export-mode [data-bg-drop][data-has-bg]::after { display: none; }
+
+    .dt-zoom-panel {
+      display: none; align-items: center; gap: 6px;
+      border-left: 1px solid rgba(255,255,255,.2); padding-left: 14px;
+      font-size: 12px; font-weight: 600; letter-spacing: .06em;
+    }
+    .dt-zoom-panel.is-visible { display: flex; }
+    .dt-zoom-panel input[type=number] {
+      width: 58px; background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.28); color: #fff;
+      border-radius: 6px; padding: 4px 6px; font: 700 12px "Montserrat", sans-serif;
+      text-align: center; -moz-appearance: textfield; appearance: textfield;
+    }
+    .dt-zoom-panel input[type=number]::-webkit-inner-spin-button { opacity: 0.6; cursor: pointer; }
+
+    .dt-controls {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 14px; padding: 10px 18px;
+      background: rgba(0,0,0,.72); backdrop-filter: blur(10px);
+      border-radius: 999px; font-family: "Montserrat", sans-serif;
+      color: #fff; z-index: 9999; user-select: none;
+    }
+    .dt-controls button {
+      background: transparent; border: 1px solid rgba(255,255,255,.28);
+      color: #fff; width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; font-size: 20px; line-height: 1;
+      display: flex; align-items: center; justify-content: center; padding: 0;
+      transition: background .15s, opacity .15s;
+    }
+    .dt-controls button:hover { background: rgba(255,255,255,.12); }
+    .dt-controls button:disabled { opacity: 0.25; cursor: default; }
+    .dt-save {
+      background: rgba(0,177,64,.18) !important; border-color: #00b140 !important;
+      color: #00e051 !important; width: auto !important; padding: 0 14px !important;
+      font-size: 12px !important; font-weight: 700; letter-spacing: .06em;
+      white-space: nowrap; border-radius: 999px !important;
+    }
+    .dt-save:hover { background: rgba(0,177,64,.36) !important; }
+    .dt-controls .dt-dots { display: flex; gap: 6px; }
+    .dt-controls .dt-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,.32); cursor: pointer;
+      transition: background .15s, transform .15s;
+    }
+    .dt-controls .dt-dot.is-active { background: #fff; transform: scale(1.15); }
+    .dt-controls .dt-counter {
+      font-size: 12px; letter-spacing: 0.14em; font-weight: 600;
+      min-width: 48px; text-align: center;
+    }
+
+    body.export-mode .dt-controls { display: none !important; }
+    body.export-mode .dt-carousel {
+      display: block; padding: 0; gap: 0; overflow: visible;
+      height: auto; scroll-snap-type: none;
+    }
+    body.export-mode section[data-slide] { box-shadow: none; }
+  </style>
+</head>
+<body>
+  <div class="dt-carousel" id="dt-carousel">
+    <!-- SLIDES_HERE -->
+    <section data-slide="1" style="width:1080px;height:1350px;">
+      <style>
+        /* ESTILO: editorial-esportivo-monocromatico | CONCEITO: foto full-bleed P&B com overlay escuro, tipografia editorial Anton + Montserrat, header/footer fixos em branco */
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+          width: 1080px;
+          height: 1350px;
+          overflow: hidden;
+          font-family: 'Montserrat', sans-serif;
+        }
+
+        .slide {
+          position: relative;
+          width: 1080px;
+          height: 1350px;
+          overflow: hidden;
+          background: #1a1a1a;
+        }
+
+        /* Drop zone: foto P&B cobre 100% */
+        .bg-drop {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #2a2a2a;
+          background-size: cover;
+          background-position: 50% 30%;
+          background-repeat: no-repeat;
+        }
+
+        /* Overlay gradiente da capa */
+        .bg-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to top,
+            rgba(0,0,0,0.85) 0%,
+            rgba(0,0,0,0.4) 60%,
+            rgba(0,0,0,0.2) 100%
+          );
+          z-index: 1;
+        }
+
+        /* Conteúdo sobre o overlay */
+        .content {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          padding: 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        /* Header */
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .header-tag {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.85);
+          text-transform: uppercase;
+        }
+
+        /* Bloco central: título */
+        .title-block {
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          padding-bottom: 40px;
+        }
+
+        .main-title {
+          font-family: 'Anton', sans-serif;
+          font-size: 140px;
+          line-height: 0.92;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.01em;
+        }
+
+        .subtitle {
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 300;
+          font-size: 32px;
+          letter-spacing: 0.25em;
+          color: rgba(255,255,255,0.9);
+          text-transform: uppercase;
+        }
+
+        /* Footer */
+        .footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+        }
+
+        .footer-left {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          color: rgba(255,255,255,0.6);
+          text-transform: uppercase;
+        }
+
+        .footer-right {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          color: rgba(255,255,255,0.6);
+          text-transform: uppercase;
+        }
+
+        /* Swipe cue */
+        .swipe-cue {
+          position: absolute;
+          bottom: 92px;
+          right: 80px;
+          font-family: 'Montserrat', sans-serif;
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.55);
+          text-transform: uppercase;
+          z-index: 3;
+        }
+      </style>
+      <div class="slide">
+        <div class="bg-drop" data-bg-drop="full"></div>
+        <div class="bg-overlay"></div>
+        <div class="content">
+          <header class="header">
+            <span class="header-tag">DINO TEAM</span>
+            <span class="header-tag">MÉTODO DINO</span>
+            <span class="header-tag">NUTRIÇÃO</span>
+          </header>
+          <div class="title-block">
+            <h1 class="main-title">MACROS<br>POR<br>OBJETIVO</h1>
+            <p class="subtitle">O QUE AJUSTAR EM CADA FASE</p>
+          </div>
+          <footer class="footer">
+            <span class="footer-left">© DINO TEAM</span>
+            <span class="footer-right">GUIA DE MACROS</span>
+          </footer>
+        </div>
+        <span class="swipe-cue">ARRASTE →</span>
+      </div>
+    </section>
+
+    <section data-slide="2" style="width:1080px;height:1350px;">
+      <style>
+        /* ESTILO: editorial-esportivo-monocromatico | CONCEITO: foto full-bleed P&B, overlay escuro gradiente, header 3 tags + número de seção + título Anton, corpo Montserrat LABEL/valor, footer fixo */
+
+        .s2-slide {
+          position: relative;
+          width: 1080px;
+          height: 1350px;
+          overflow: hidden;
+          background: #1a1a1a;
+        }
+
+        .s2-bg-drop {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #222;
+          background-size: cover;
+          background-position: 50% 25%;
+          background-repeat: no-repeat;
+        }
+
+        .s2-bg-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to top,
+            rgba(0,0,0,0.92) 0%,
+            rgba(0,0,0,0.75) 50%,
+            rgba(0,0,0,0.3) 100%
+          );
+          z-index: 1;
+        }
+
+        .s2-content {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          padding: 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .s2-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .s2-header-tag {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.85);
+          text-transform: uppercase;
+        }
+
+        .s2-section-id {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.65);
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+
+        .s2-section-title {
+          font-family: 'Anton', sans-serif;
+          font-size: 90px;
+          line-height: 0.9;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.01em;
+          margin-bottom: 36px;
+        }
+
+        .s2-body-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 0;
+        }
+
+        .s2-divider {
+          width: 100%;
+          height: 1px;
+          background: rgba(255,255,255,0.25);
+          margin: 20px 0;
+        }
+
+        .s2-data-row {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .s2-data-label {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.65);
+          text-transform: uppercase;
+        }
+
+        .s2-data-value {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 22px;
+          font-weight: 700;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+          line-height: 1.1;
+        }
+
+        .s2-data-sub {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 14px;
+          font-weight: 300;
+          color: rgba(255,255,255,0.75);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          line-height: 1.4;
+          margin-top: 4px;
+        }
+
+        .s2-timing-block {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .s2-timing-label {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.65);
+          text-transform: uppercase;
+        }
+
+        .s2-timing-value {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 17px;
+          font-weight: 400;
+          color: rgba(255,255,255,0.9);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .s2-nota-editorial {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 13px;
+          font-weight: 300;
+          color: rgba(255,255,255,0.55);
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          line-height: 1.5;
+          font-style: italic;
+          margin-top: 4px;
+        }
+
+        .s2-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+        }
+
+        .s2-footer-left,
+        .s2-footer-right {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          color: rgba(255,255,255,0.45);
+          text-transform: uppercase;
+        }
+      </style>
+      <div class="s2-slide">
+        <div class="s2-bg-drop" data-bg-drop="full"></div>
+        <div class="s2-bg-overlay"></div>
+        <div class="s2-content">
+          <header class="s2-header">
+            <span class="s2-header-tag">DINO TEAM</span>
+            <span class="s2-header-tag">GUIA DE MACROS</span>
+            <span class="s2-header-tag">1 DE 5</span>
+          </header>
+          <div class="s2-body-content">
+            <p class="s2-section-id">[NR. 1]</p>
+            <h2 class="s2-section-title">PROTEÍNA</h2>
+            <div class="s2-data-row">
+              <span class="s2-data-label">HIPERTROFIA</span>
+              <span class="s2-data-value">1,6–2,2 G/KG/DIA</span>
+              <span class="s2-data-sub">FAIXA QUE MAXIMIZA SÍNTESE PROTEICA NO OFFSEASON</span>
+            </div>
+            <div class="s2-divider"></div>
+            <div class="s2-data-row">
+              <span class="s2-data-label">CUTTING</span>
+              <span class="s2-data-value">2,3–3,1 G/KG DE MASSA MAGRA/DIA</span>
+              <span class="s2-data-sub">PROTEÍNA SOBE NO CORTE — AQUI ELA NÃO CONSTRÓI, ELA PROTEGE</span>
+            </div>
+            <div class="s2-divider"></div>
+            <div class="s2-data-row">
+              <span class="s2-data-label">RECOMPOSIÇÃO</span>
+              <span class="s2-data-value">2,4–3,1 G/KG/DIA</span>
+              <span class="s2-data-sub">PROTEÍNA COMANDA. CALORIAS PRÓXIMAS DA MANUTENÇÃO</span>
+            </div>
+            <div class="s2-divider"></div>
+            <div class="s2-timing-block">
+              <span class="s2-timing-label">TIMING ESSENCIAL</span>
+              <span class="s2-timing-value">0,4–0,5 G/KG POR REFEIÇÃO · 3–6 REFEIÇÕES/DIA</span>
+            </div>
+            <div class="s2-divider"></div>
+            <p class="s2-nota-editorial">PROTEÍNA SOBE NO CORTE — AQUI ELA NÃO CONSTRÓI, ELA PROTEGE.</p>
+          </div>
+          <footer class="s2-footer">
+            <span class="s2-footer-left">© DINO TEAM</span>
+            <span class="s2-footer-right">GUIA DE MACROS</span>
+          </footer>
+        </div>
+      </div>
+    </section>
+
+    <section data-slide="3" style="width:1080px;height:1350px;">
+      <style>
+        /* ESTILO: editorial-esportivo-monocromatico | CONCEITO: foto full-bleed P&B, overlay escuro gradiente, header 3 tags + número de seção + título Anton, corpo Montserrat LABEL/valor, footer fixo */
+
+        .s3-slide {
+          position: relative;
+          width: 1080px;
+          height: 1350px;
+          overflow: hidden;
+          background: #1a1a1a;
+        }
+
+        .s3-bg-drop {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #222;
+          background-size: cover;
+          background-position: 50% 25%;
+          background-repeat: no-repeat;
+        }
+
+        .s3-bg-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to top,
+            rgba(0,0,0,0.92) 0%,
+            rgba(0,0,0,0.75) 50%,
+            rgba(0,0,0,0.3) 100%
+          );
+          z-index: 1;
+        }
+
+        .s3-content {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          padding: 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .s3-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .s3-header-tag {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.85);
+          text-transform: uppercase;
+        }
+
+        .s3-section-id {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.65);
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+
+        .s3-section-title {
+          font-family: 'Anton', sans-serif;
+          font-size: 90px;
+          line-height: 0.9;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.01em;
+          margin-bottom: 36px;
+        }
+
+        .s3-body-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 0;
+        }
+
+        .s3-divider {
+          width: 100%;
+          height: 1px;
+          background: rgba(255,255,255,0.25);
+          margin: 18px 0;
+        }
+
+        .s3-data-row {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        }
+
+        .s3-data-label {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.65);
+          text-transform: uppercase;
+        }
+
+        .s3-data-value {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 20px;
+          font-weight: 700;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+          line-height: 1.1;
+        }
+
+        .s3-data-sub {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 13px;
+          font-weight: 300;
+          color: rgba(255,255,255,0.7);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          line-height: 1.4;
+          margin-top: 3px;
+        }
+
+        .s3-data-value-highlight {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 20px;
+          font-weight: 700;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+          line-height: 1.1;
+        }
+
+        .s3-arrow-down {
+          color: rgba(255,255,255,0.55);
+          font-size: 18px;
+          margin: 0 4px;
+        }
+
+        .s3-nota-editorial {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 13px;
+          font-weight: 300;
+          color: rgba(255,255,255,0.55);
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          line-height: 1.5;
+          font-style: italic;
+          margin-top: 4px;
+        }
+
+        .s3-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+        }
+
+        .s3-footer-left,
+        .s3-footer-right {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          color: rgba(255,255,255,0.45);
+          text-transform: uppercase;
+        }
+      </style>
+      <div class="s3-slide">
+        <div class="s3-bg-drop" data-bg-drop="full"></div>
+        <div class="s3-bg-overlay"></div>
+        <div class="s3-content">
+          <header class="s3-header">
+            <span class="s3-header-tag">DINO TEAM</span>
+            <span class="s3-header-tag">GUIA DE MACROS</span>
+            <span class="s3-header-tag">2 DE 5</span>
+          </header>
+          <div class="s3-body-content">
+            <p class="s3-section-id">[NR. 2]</p>
+            <h2 class="s3-section-title">CARBOIDRATO</h2>
+            <div class="s3-data-row">
+              <span class="s3-data-label">HIPERTROFIA</span>
+              <span class="s3-data-value">3–5 G/KG/DIA</span>
+              <span class="s3-data-sub">CARBO SUSTENTA O TREINO QUE GERA O ESTÍMULO QUE GERA MÚSCULO</span>
+            </div>
+            <div class="s3-divider"></div>
+            <div class="s3-data-row">
+              <span class="s3-data-label">CUTTING</span>
+              <span class="s3-data-value-highlight">5,3 G/KG <span class="s3-arrow-down">↓</span> 3,8 G/KG</span>
+              <span class="s3-data-sub">PERI-TREINO PROTEGIDO — RESTO REDUZ. MÉDIA REAL EM COMPETIÇÃO</span>
+            </div>
+            <div class="s3-divider"></div>
+            <div class="s3-data-row">
+              <span class="s3-data-label">RECOMPOSIÇÃO</span>
+              <span class="s3-data-value">PERI PROTEGIDO · DÉFICIT MODERADO</span>
+              <span class="s3-data-sub">SEGUE A LÓGICA DO CUTTING — PERI INTOCÁVEL, RESTO AJUSTADO</span>
+            </div>
+            <div class="s3-divider"></div>
+            <p class="s3-nota-editorial">CARBO DE FORA DO PERI SAI PRIMEIRO. O DO PERI FICA ATÉ O FIM.</p>
+          </div>
+          <footer class="s3-footer">
+            <span class="s3-footer-left">© DINO TEAM</span>
+            <span class="s3-footer-right">GUIA DE MACROS</span>
+          </footer>
+        </div>
+      </div>
+    </section>
+
+    <section data-slide="4" style="width:1080px;height:1350px;">
+      <style>
+        /* ESTILO: editorial-esportivo-monocromatico | CONCEITO: foto full-bleed P&B, overlay escuro gradiente, header 3 tags + número de seção + título Anton, corpo Montserrat LABEL/valor, callout hormonal destacado, footer fixo */
+
+        .s4-slide {
+          position: relative;
+          width: 1080px;
+          height: 1350px;
+          overflow: hidden;
+          background: #1a1a1a;
+        }
+
+        .s4-bg-drop {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #222;
+          background-size: cover;
+          background-position: 50% 25%;
+          background-repeat: no-repeat;
+        }
+
+        .s4-bg-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to top,
+            rgba(0,0,0,0.92) 0%,
+            rgba(0,0,0,0.75) 50%,
+            rgba(0,0,0,0.3) 100%
+          );
+          z-index: 1;
+        }
+
+        .s4-content {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          padding: 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .s4-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .s4-header-tag {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.85);
+          text-transform: uppercase;
+        }
+
+        .s4-section-id {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.65);
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+
+        .s4-section-title {
+          font-family: 'Anton', sans-serif;
+          font-size: 90px;
+          line-height: 0.9;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.01em;
+          margin-bottom: 36px;
+        }
+
+        .s4-body-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 0;
+        }
+
+        .s4-divider {
+          width: 100%;
+          height: 1px;
+          background: rgba(255,255,255,0.25);
+          margin: 18px 0;
+        }
+
+        .s4-data-row {
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        }
+
+        .s4-data-label {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.65);
+          text-transform: uppercase;
+        }
+
+        .s4-data-value {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 20px;
+          font-weight: 700;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+          line-height: 1.15;
+        }
+
+        .s4-data-sub {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 13px;
+          font-weight: 300;
+          color: rgba(255,255,255,0.7);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          line-height: 1.4;
+          margin-top: 3px;
+        }
+
+        .s4-callout {
+          border-left: 3px solid rgba(255,255,255,0.6);
+          padding: 14px 20px;
+          background: rgba(255,255,255,0.05);
+        }
+
+        .s4-callout-label {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.25em;
+          color: rgba(255,255,255,0.5);
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+
+        .s4-callout-text {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 14px;
+          font-weight: 400;
+          color: rgba(255,255,255,0.9);
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          line-height: 1.5;
+        }
+
+        .s4-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+        }
+
+        .s4-footer-left,
+        .s4-footer-right {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          color: rgba(255,255,255,0.45);
+          text-transform: uppercase;
+        }
+      </style>
+      <div class="s4-slide">
+        <div class="s4-bg-drop" data-bg-drop="full"></div>
+        <div class="s4-bg-overlay"></div>
+        <div class="s4-content">
+          <header class="s4-header">
+            <span class="s4-header-tag">DINO TEAM</span>
+            <span class="s4-header-tag">GUIA DE MACROS</span>
+            <span class="s4-header-tag">3 DE 5</span>
+          </header>
+          <div class="s4-body-content">
+            <p class="s4-section-id">[NR. 3]</p>
+            <h2 class="s4-section-title">GORDURA</h2>
+            <div class="s4-data-row">
+              <span class="s4-data-label">HIPERTROFIA</span>
+              <span class="s4-data-value">0,5–1,5 G/KG/DIA</span>
+              <span class="s4-data-sub">20–35% DAS CALORIAS. O AJUSTE AQUI É PELO CARBO, NÃO PELA GORDURA</span>
+            </div>
+            <div class="s4-divider"></div>
+            <div class="s4-data-row">
+              <span class="s4-data-label">CUTTING</span>
+              <span class="s4-data-value">MÍNIMO 0,5 G/KG · MÍN. 15% DAS CALORIAS</span>
+              <span class="s4-data-sub">ESSE PISO NÃO É ESTÉTICO — É FUNCIONAL</span>
+            </div>
+            <div class="s4-divider"></div>
+            <div class="s4-data-row">
+              <span class="s4-data-label">RECOMPOSIÇÃO</span>
+              <span class="s4-data-value">MESMO PISO DO CUTTING</span>
+              <span class="s4-data-sub">GORDURA HORMONAL NÃO É OPCIONAL</span>
+            </div>
+            <div class="s4-divider"></div>
+            <div class="s4-callout">
+              <p class="s4-callout-label">EVIDÊNCIA CLÍNICA</p>
+              <p class="s4-callout-text">DIETAS COM ~19% DE GORDURA REDUZIRAM TESTOSTERONA TOTAL, LIVRE E DHT. O PISO NÃO É ESTÉTICO — É HORMONAL.</p>
+            </div>
+          </div>
+          <footer class="s4-footer">
+            <span class="s4-footer-left">© DINO TEAM</span>
+            <span class="s4-footer-right">GUIA DE MACROS</span>
+          </footer>
+        </div>
+      </div>
+    </section>
+
+    <section data-slide="5" style="width:1080px;height:1350px;">
+      <style>
+        /* ESTILO: editorial-esportivo-monocromatico | CONCEITO: foto full-bleed P&B, overlay escuro gradiente, header 3 tags + número de seção + título Anton, dois blocos PRÉ/PÓS lado a lado, corpo Montserrat LABEL/valor, footer fixo */
+
+        .s5-slide {
+          position: relative;
+          width: 1080px;
+          height: 1350px;
+          overflow: hidden;
+          background: #1a1a1a;
+        }
+
+        .s5-bg-drop {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #222;
+          background-size: cover;
+          background-position: 50% 25%;
+          background-repeat: no-repeat;
+        }
+
+        .s5-bg-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to top,
+            rgba(0,0,0,0.92) 0%,
+            rgba(0,0,0,0.75) 50%,
+            rgba(0,0,0,0.3) 100%
+          );
+          z-index: 1;
+        }
+
+        .s5-content {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          padding: 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .s5-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .s5-header-tag {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.85);
+          text-transform: uppercase;
+        }
+
+        .s5-section-id {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.65);
+          text-transform: uppercase;
+          margin-bottom: 6px;
+        }
+
+        .s5-section-title {
+          font-family: 'Anton', sans-serif;
+          font-size: 72px;
+          line-height: 0.9;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.01em;
+          margin-bottom: 6px;
+        }
+
+        .s5-janela-nota {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 12px;
+          font-weight: 300;
+          color: rgba(255,255,255,0.6);
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          line-height: 1.4;
+          margin-bottom: 24px;
+        }
+
+        .s5-janela-nota strong {
+          font-weight: 700;
+          color: rgba(255,255,255,0.9);
+        }
+
+        .s5-body-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 0;
+        }
+
+        .s5-peri-grid {
+          display: grid;
+          grid-template-columns: 1fr 1px 1fr;
+          gap: 0;
+        }
+
+        .s5-peri-block {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          padding: 0 28px 0 0;
+        }
+
+        .s5-peri-block-right {
+          padding: 0 0 0 28px;
+        }
+
+        .s5-peri-divider-v {
+          width: 1px;
+          background: rgba(255,255,255,0.25);
+          align-self: stretch;
+        }
+
+        .s5-peri-block-title {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.25em;
+          color: rgba(255,255,255,0.85);
+          text-transform: uppercase;
+          margin-bottom: 14px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid rgba(255,255,255,0.25);
+        }
+
+        .s5-peri-timing {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 10px;
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          color: rgba(255,255,255,0.5);
+          text-transform: uppercase;
+          margin-bottom: 16px;
+        }
+
+        .s5-peri-row {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+          margin-bottom: 12px;
+        }
+
+        .s5-peri-label {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          color: rgba(255,255,255,0.55);
+          text-transform: uppercase;
+        }
+
+        .s5-peri-value {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 15px;
+          font-weight: 600;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.03em;
+          line-height: 1.15;
+        }
+
+        .s5-peri-phase-block {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+          margin-bottom: 10px;
+          padding-left: 8px;
+          border-left: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .s5-peri-phase-label {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.45);
+          text-transform: uppercase;
+        }
+
+        .s5-peri-phase-value {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 13px;
+          font-weight: 400;
+          color: rgba(255,255,255,0.85);
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          line-height: 1.3;
+        }
+
+        .s5-divider-h {
+          width: 100%;
+          height: 1px;
+          background: rgba(255,255,255,0.25);
+          margin: 18px 0;
+        }
+
+        .s5-nota-editorial {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 12px;
+          font-weight: 300;
+          color: rgba(255,255,255,0.55);
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          line-height: 1.5;
+          font-style: italic;
+        }
+
+        .s5-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+        }
+
+        .s5-footer-left,
+        .s5-footer-right {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          color: rgba(255,255,255,0.45);
+          text-transform: uppercase;
+        }
+      </style>
+      <div class="s5-slide">
+        <div class="s5-bg-drop" data-bg-drop="full"></div>
+        <div class="s5-bg-overlay"></div>
+        <div class="s5-content">
+          <header class="s5-header">
+            <span class="s5-header-tag">DINO TEAM</span>
+            <span class="s5-header-tag">GUIA DE MACROS</span>
+            <span class="s5-header-tag">4 DE 5</span>
+          </header>
+          <div class="s5-body-content">
+            <p class="s5-section-id">[NR. 4]</p>
+            <h2 class="s5-section-title">TIMING<br>PERI-TREINO</h2>
+            <p class="s5-janela-nota"><strong>JANELA REAL: 4–6 HORAS</strong> AO REDOR DO TREINO — NÃO 30 MIN</p>
+            <div class="s5-peri-grid">
+              <div class="s5-peri-block">
+                <p class="s5-peri-block-title">PRÉ-TREINO</p>
+                <p class="s5-peri-timing">1–2H ANTES</p>
+                <div class="s5-peri-row">
+                  <span class="s5-peri-label">PROTEÍNA</span>
+                  <span class="s5-peri-value">0,4–0,5 G/KG</span>
+                </div>
+                <div class="s5-peri-row">
+                  <span class="s5-peri-label">GORDURA</span>
+                  <span class="s5-peri-value">MÁX. 10G</span>
+                </div>
+                <div class="s5-peri-row">
+                  <span class="s5-peri-label">CARBOIDRATO</span>
+                </div>
+                <div class="s5-peri-phase-block">
+                  <span class="s5-peri-phase-label">HIPERTROFIA</span>
+                  <span class="s5-peri-phase-value">0,75–1,25 G/KG</span>
+                </div>
+                <div class="s5-peri-phase-block">
+                  <span class="s5-peri-phase-label">CUTTING</span>
+                  <span class="s5-peri-phase-value">REDUZIDO · MÍN. 15G</span>
+                </div>
+              </div>
+              <div class="s5-peri-divider-v"></div>
+              <div class="s5-peri-block s5-peri-block-right">
+                <p class="s5-peri-block-title">PÓS-TREINO</p>
+                <p class="s5-peri-timing">DENTRO DE 1–2H DEPOIS</p>
+                <div class="s5-peri-row">
+                  <span class="s5-peri-label">PROTEÍNA</span>
+                  <span class="s5-peri-value">0,4–0,5 G/KG</span>
+                </div>
+                <div class="s5-peri-row">
+                  <span class="s5-peri-label">CARBOIDRATO</span>
+                </div>
+                <div class="s5-peri-phase-block">
+                  <span class="s5-peri-phase-label">HIPERTROFIA</span>
+                  <span class="s5-peri-phase-value">0,75–1,25 G/KG</span>
+                </div>
+                <div class="s5-peri-phase-block">
+                  <span class="s5-peri-phase-label">CUTTING</span>
+                  <span class="s5-peri-phase-value">MÍN. 30G CARBO</span>
+                </div>
+              </div>
+            </div>
+            <div class="s5-divider-h"></div>
+            <p class="s5-nota-editorial">O QUE MUDA POR FASE É A COMPOSIÇÃO DA JANELA, NÃO O HORÁRIO.</p>
+          </div>
+          <footer class="s5-footer">
+            <span class="s5-footer-left">© DINO TEAM</span>
+            <span class="s5-footer-right">GUIA DE MACROS</span>
+          </footer>
+        </div>
+      </div>
+    </section>
+
+    <section data-slide="6" style="width:1080px;height:1350px;">
+      <style>
+        /* ESTILO: editorial-esportivo-monocromatico | CONCEITO: foto full-bleed P&B, overlay escuro gradiente, header 3 tags + número de seção + título Anton, tabela resumo 3x3 Montserrat, CTA destacado, footer fixo */
+
+        .s6-slide {
+          position: relative;
+          width: 1080px;
+          height: 1350px;
+          overflow: hidden;
+          background: #1a1a1a;
+        }
+
+        .s6-bg-drop {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #222;
+          background-size: cover;
+          background-position: 50% 25%;
+          background-repeat: no-repeat;
+        }
+
+        .s6-bg-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to top,
+            rgba(0,0,0,0.95) 0%,
+            rgba(0,0,0,0.82) 55%,
+            rgba(0,0,0,0.35) 100%
+          );
+          z-index: 1;
+        }
+
+        .s6-content {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          padding: 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .s6-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .s6-header-tag {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.85);
+          text-transform: uppercase;
+        }
+
+        .s6-section-id {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.65);
+          text-transform: uppercase;
+          margin-bottom: 6px;
+        }
+
+        .s6-section-title {
+          font-family: 'Anton', sans-serif;
+          font-size: 90px;
+          line-height: 0.9;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.01em;
+          margin-bottom: 28px;
+        }
+
+        .s6-body-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 0;
+        }
+
+        .s6-table-wrap {
+          width: 100%;
+        }
+
+        .s6-table-header {
+          display: grid;
+          grid-template-columns: 140px 1fr 1fr 1fr;
+          gap: 0;
+          border-bottom: 1px solid rgba(255,255,255,0.4);
+          padding-bottom: 10px;
+        }
+
+        .s6-table-header-cell {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          color: rgba(255,255,255,0.55);
+          text-transform: uppercase;
+          padding: 0 8px;
+        }
+
+        .s6-table-header-cell:first-child {
+          padding-left: 0;
+        }
+
+        .s6-table-row {
+          display: grid;
+          grid-template-columns: 140px 1fr 1fr 1fr;
+          gap: 0;
+          border-bottom: 1px solid rgba(255,255,255,0.15);
+          padding: 16px 0;
+          align-items: start;
+        }
+
+        .s6-table-row-label {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 0.15em;
+          color: rgba(255,255,255,0.85);
+          text-transform: uppercase;
+          padding-right: 8px;
+          line-height: 1.3;
+        }
+
+        .s6-table-row-value {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 12px;
+          font-weight: 300;
+          color: rgba(255,255,255,0.8);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          line-height: 1.4;
+          padding: 0 8px;
+        }
+
+        .s6-cta-divider {
+          width: 100%;
+          height: 1px;
+          background: rgba(255,255,255,0.3);
+          margin: 28px 0 24px;
+        }
+
+        .s6-cta-block {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .s6-cta-label {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.25em;
+          color: rgba(255,255,255,0.45);
+          text-transform: uppercase;
+        }
+
+        .s6-cta-text {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 17px;
+          font-weight: 600;
+          color: #FFFFFF;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          line-height: 1.45;
+        }
+
+        .s6-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+        }
+
+        .s6-footer-left,
+        .s6-footer-right {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 400;
+          letter-spacing: 0.15em;
+          color: rgba(255,255,255,0.45);
+          text-transform: uppercase;
+        }
+      </style>
+      <div class="s6-slide">
+        <div class="s6-bg-drop" data-bg-drop="full"></div>
+        <div class="s6-bg-overlay"></div>
+        <div class="s6-content">
+          <header class="s6-header">
+            <span class="s6-header-tag">DINO TEAM</span>
+            <span class="s6-header-tag">GUIA DE MACROS</span>
+            <span class="s6-header-tag">5 DE 5</span>
+          </header>
+          <div class="s6-body-content">
+            <p class="s6-section-id">[NR. 5]</p>
+            <h2 class="s6-section-title">RESUMO</h2>
+            <div class="s6-table-wrap">
+              <div class="s6-table-header">
+                <span class="s6-table-header-cell">MACRO</span>
+                <span class="s6-table-header-cell">HIPERTROFIA</span>
+                <span class="s6-table-header-cell">CUTTING</span>
+                <span class="s6-table-header-cell">RECOMP.</span>
+              </div>
+              <div class="s6-table-row">
+                <span class="s6-table-row-label">PROTEÍNA</span>
+                <span class="s6-table-row-value">1,6–2,2 G/KG</span>
+                <span class="s6-table-row-value">2,3–3,1 G/KG LBM</span>
+                <span class="s6-table-row-value">2,4–3,1 G/KG</span>
+              </div>
+              <div class="s6-table-row">
+                <span class="s6-table-row-label">CARBOIDRATO</span>
+                <span class="s6-table-row-value">3–5 G/KG</span>
+                <span class="s6-table-row-value">~3,8 G/KG (PERI PROTEGIDO)</span>
+                <span class="s6-table-row-value">PERI PROTEGIDO</span>
+              </div>
+              <div class="s6-table-row">
+                <span class="s6-table-row-label">GORDURA</span>
+                <span class="s6-table-row-value">0,5–1,5 G/KG</span>
+                <span class="s6-table-row-value">MÍN. 0,5 G/KG / 15% CAL</span>
+                <span class="s6-table-row-value">MESMO PISO</span>
+              </div>
+            </div>
+            <div class="s6-cta-divider"></div>
+            <div class="s6-cta-block">
+              <span class="s6-cta-label">AÇÃO</span>
+              <p class="s6-cta-text">SALVA ESSE POST E CONFERE SE O MACRO QUE VOCÊ ESTÁ PRIORIZANDO BATE COM A SUA FASE AGORA.</p>
+            </div>
+          </div>
+          <footer class="s6-footer">
+            <span class="s6-footer-left">© DINO TEAM</span>
+            <span class="s6-footer-right">GUIA DE MACROS</span>
+          </footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="dt-controls" id="dt-controls">
+    <button class="dt-prev" type="button" aria-label="Slide anterior">‹</button>
+    <div class="dt-dots"></div>
+    <button class="dt-next" type="button" aria-label="Próximo slide">›</button>
+    <span class="dt-counter">1 / 1</span>
+    <div class="dt-zoom-panel" id="dt-zoom-panel">
+      <span>Zoom</span>
+      <input type="number" id="dt-zoom-input" min="25" max="800" step="1" value="100">
+      <span>%</span>
+    </div>
+    <button class="dt-save" id="dt-save" type="button" aria-label="Salvar HTML com imagens">Salvar HTML</button>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      var carousel = document.getElementById("dt-carousel");
+      var slides = Array.prototype.slice.call(carousel.querySelectorAll("section[data-slide]"));
+      var total = slides.length; if (total === 0) return;
+      var controls = document.getElementById("dt-controls");
+      var prevBtn = controls.querySelector(".dt-prev");
+      var nextBtn = controls.querySelector(".dt-next");
+      var dotsEl = controls.querySelector(".dt-dots");
+      var counterEl = controls.querySelector(".dt-counter");
+      slides.forEach(function (_, i) {
+        var d = document.createElement("span"); d.className = "dt-dot";
+        d.addEventListener("click", function () { goTo(i); }); dotsEl.appendChild(d);
+      });
+      var dots = Array.prototype.slice.call(dotsEl.querySelectorAll(".dt-dot"));
+      var current = 0;
+      function update() {
+        counterEl.textContent = (current + 1) + " / " + total;
+        dots.forEach(function (d, i) { d.classList.toggle("is-active", i === current); });
+        prevBtn.disabled = current === 0; nextBtn.disabled = current === total - 1;
+      }
+      function goTo(idx) {
+        current = Math.max(0, Math.min(total - 1, idx));
+        slides[current].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        update();
+      }
+      prevBtn.addEventListener("click", function () { goTo(current - 1); });
+      nextBtn.addEventListener("click", function () { goTo(current + 1); });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight") { e.preventDefault(); goTo(current + 1); }
+        else if (e.key === "ArrowLeft") { e.preventDefault(); goTo(current - 1); }
+      });
+      var st;
+      carousel.addEventListener("scroll", function () {
+        clearTimeout(st);
+        st = setTimeout(function () {
+          var c = carousel.scrollLeft + carousel.clientWidth / 2;
+          var n = 0, m = Infinity;
+          slides.forEach(function (s, i) {
+            var sc = s.offsetLeft + s.offsetWidth / 2;
+            var d = Math.abs(sc - c);
+            if (d < m) { m = d; n = i; }
+          });
+          if (n !== current) { current = n; update(); }
+        }, 80);
+      });
+      update();
+
+      // Scaling: ajusta zoom de cada slide para caber na viewport; remove em export-mode
+      function computeScale(slide) {
+        var h = parseInt(slide.style.height, 10) || slide.offsetHeight;
+        var w = parseInt(slide.style.width, 10) || slide.offsetWidth;
+        if (!h || !w) return 1;
+        return Math.min((window.innerHeight - 80) / h, (window.innerWidth - 80) / w, 1);
+      }
+      function applyScaling() {
+        if (document.body.classList.contains("export-mode")) return;
+        slides.forEach(function (s) { s.style.zoom = computeScale(s); });
+      }
+      function removeScaling() {
+        slides.forEach(function (s) { s.style.zoom = ""; });
+      }
+      new MutationObserver(function () {
+        if (document.body.classList.contains("export-mode")) removeScaling();
+        else applyScaling();
+      }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+      applyScaling();
+      window.addEventListener("resize", applyScaling);
+
+      // Salvar HTML: serializa DOM atual (inline styles com base64) e dispara download
+      document.getElementById("dt-save").addEventListener("click", function () {
+        var title = document.title;
+        var html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = title.replace(/[^\w\s\-—()]/g, "").trim().replace(/\s+/g, " ") + ".html";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+      });
+
+      // Zoom panel: input numérico na barra de controles
+      var zoomPanel = document.getElementById("dt-zoom-panel");
+      var zoomInput = document.getElementById("dt-zoom-input");
+      var activeZone = null;
+
+      function setActiveZone(zone) {
+        activeZone = zone;
+        zoomPanel.classList.add("is-visible");
+        zoomInput.value = Math.round((zone._bgZoom || 1) * 100);
+      }
+
+      zoomInput.addEventListener("input", function () {
+        if (!activeZone) return;
+        var v = parseFloat(zoomInput.value);
+        if (isNaN(v) || v < 1) return;
+        activeZone._bgZoom = v / 100;
+        applyBgZoom(activeZone);
+      });
+      // Impede que setas do teclado no input naveguem o carrossel
+      zoomInput.addEventListener("keydown", function (e) { e.stopPropagation(); });
+
+      // Drop zones: [data-bg-drop] explícitas; fallback: slide inteiro
+      slides.forEach(function (slide) {
+        var zones = Array.prototype.slice.call(slide.querySelectorAll("[data-bg-drop]"));
+        if (zones.length === 0) { slide.setAttribute("data-bg-drop", "full"); zones = [slide]; }
+        zones.forEach(bindZone);
+      });
+
+      // Retorna as dimensões CSS reais da zone no espaço de design (antes do zoom do slide)
+      function getZoneDesignSize(zone) {
+        var slide = zone.closest("section[data-slide]") || zone;
+        var slideW = parseInt(slide.style.width, 10) || slide.offsetWidth;
+        var slideH = parseInt(slide.style.height, 10) || slide.offsetHeight;
+        var sr = slide.getBoundingClientRect();
+        var zr = zone.getBoundingClientRect();
+        return {
+          w: slideW * (zr.width / sr.width),
+          h: slideH * (zr.height / sr.height)
+        };
+      }
+
+      // Aplica zoom na background-image sem tocar no layout
+      function applyBgZoom(zone) {
+        var bw = (zone._bgNatW * zone._bgScale * zone._bgZoom).toFixed(1);
+        var bh = (zone._bgNatH * zone._bgScale * zone._bgZoom).toFixed(1);
+        zone.style.backgroundSize = bw + "px " + bh + "px";
+      }
+
+      // Drag state global: 1 par de listeners no document para todas as zonas
+      var dragState = null;
+      function readPos(zone) {
+        var p = zone.style.backgroundPosition || "50% 50%";
+        var pp = p.split(/\s+/); var x = parseFloat(pp[0]); var y = parseFloat(pp[1]);
+        return { x: isNaN(x) ? 50 : x, y: isNaN(y) ? 50 : y };
+      }
+      document.addEventListener("mousemove", function (e) {
+        if (!dragState) return;
+        var zone = dragState.zone;
+        var rect = zone.getBoundingClientRect();
+        var dx = ((dragState.sx - e.clientX) / rect.width) * 100;
+        var dy = ((dragState.sy - e.clientY) / rect.height) * 100;
+        var nx = Math.max(0, Math.min(100, dragState.sp.x + dx));
+        var ny = Math.max(0, Math.min(100, dragState.sp.y + dy));
+        zone.style.backgroundPosition = nx.toFixed(1) + "% " + ny.toFixed(1) + "%";
+      });
+      document.addEventListener("mouseup", function () {
+        if (!dragState) return;
+        dragState.zone.classList.remove("dt-grabbing");
+        dragState = null;
+      });
+
+      function bindZone(zone) {
+        zone.addEventListener("dragover", function (e) { e.preventDefault(); zone.classList.add("dt-drop-active"); });
+        zone.addEventListener("dragleave", function (e) { if (e.target === zone) zone.classList.remove("dt-drop-active"); });
+        zone.addEventListener("drop", function (e) {
+          e.preventDefault(); e.stopPropagation(); zone.classList.remove("dt-drop-active");
+          var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+          if (!f || f.type.indexOf("image/") !== 0) return;
+          var r = new FileReader();
+          r.onload = function () {
+            var dataUrl = r.result;
+            var img = new Image();
+            img.onload = function () {
+              var ds = getZoneDesignSize(zone);
+              var scale = Math.max(ds.w / img.naturalWidth, ds.h / img.naturalHeight);
+              zone._bgNatW = img.naturalWidth;
+              zone._bgNatH = img.naturalHeight;
+              zone._bgScale = scale;
+              zone._bgZoom = 1.0;
+              zone.style.backgroundImage = "url(" + dataUrl + ")";
+              zone.style.backgroundRepeat = "no-repeat";
+              zone.style.backgroundPosition = "50% 50%";
+              applyBgZoom(zone);
+              zone.setAttribute("data-has-bg", "1");
+              setActiveZone(zone);
+            };
+            img.src = dataUrl;
+          };
+          r.readAsDataURL(f);
+        });
+        zone.addEventListener("mousedown", function (e) {
+          if (!zone.hasAttribute("data-has-bg")) return;
+          e.preventDefault(); e.stopPropagation();
+          setActiveZone(zone);
+          dragState = { zone: zone, sx: e.clientX, sy: e.clientY, sp: readPos(zone) };
+          zone.classList.add("dt-grabbing");
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

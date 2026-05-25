@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Slide 1 — Capa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ESTILO: editorial-esportivo-monocromatico | CONCEITO: foto full-bleed P&B com overlay escuro, tipografia editorial Anton + Montserrat, header/footer fixos em branco */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+
+    /* Drop zone: foto P&B cobre 100% */
+    .bg-drop {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #2a2a2a;
+      background-size: cover;
+      background-position: 50% 30%;
+      background-repeat: no-repeat;
+    }
+
+    /* Overlay gradiente da capa */
+    .bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.85) 0%,
+        rgba(0,0,0,0.4) 60%,
+        rgba(0,0,0,0.2) 100%
+      );
+      z-index: 1;
+    }
+
+    /* Conteúdo sobre o overlay */
+    .content {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      padding: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .header-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+    }
+
+    /* Bloco central: título */
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding-bottom: 40px;
+    }
+
+    .main-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 140px;
+      line-height: 0.92;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+    }
+
+    .subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      font-size: 32px;
+      letter-spacing: 0.25em;
+      color: rgba(255,255,255,0.9);
+      text-transform: uppercase;
+    }
+
+    /* Footer */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .footer-left {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+    }
+
+    .footer-right {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+    }
+
+    /* Swipe cue */
+    .swipe-cue {
+      position: absolute;
+      bottom: 92px;
+      right: 80px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="bg-drop" data-bg-drop="full"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="content">
+      <header class="header">
+        <span class="header-tag">DINO TEAM</span>
+        <span class="header-tag">MÉTODO DINO</span>
+        <span class="header-tag">NUTRIÇÃO</span>
+      </header>
+
+      <div class="title-block">
+        <h1 class="main-title">MACROS<br>POR<br>OBJETIVO</h1>
+        <p class="subtitle">O QUE AJUSTAR EM CADA FASE</p>
+      </div>
+
+      <footer class="footer">
+        <span class="footer-left">© DINO TEAM</span>
+        <span class="footer-right">GUIA DE MACROS</span>
+      </footer>
+    </div>
+
+    <span class="swipe-cue">ARRASTE →</span>
+  </div>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Slide 6 — Resumo + CTA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ESTILO: editorial-esportivo-monocromatico | CONCEITO: foto full-bleed P&B, overlay escuro gradiente, header 3 tags + número de seção + título Anton, tabela resumo 3x3 Montserrat, CTA destacado, footer fixo */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+
+    .bg-drop {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #222;
+      background-size: cover;
+      background-position: 50% 25%;
+      background-repeat: no-repeat;
+    }
+
+    .bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.95) 0%,
+        rgba(0,0,0,0.82) 55%,
+        rgba(0,0,0,0.35) 100%
+      );
+      z-index: 1;
+    }
+
+    .content {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      padding: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .header-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+    }
+
+    .section-id {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 90px;
+      line-height: 0.9;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+      margin-bottom: 28px;
+    }
+
+    .body-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+    }
+
+    /* Tabela resumo */
+    .table-wrap {
+      width: 100%;
+    }
+
+    /* Cabeçalho da tabela */
+    .table-header {
+      display: grid;
+      grid-template-columns: 140px 1fr 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.4);
+      padding-bottom: 10px;
+      margin-bottom: 0;
+    }
+
+    .table-header-cell {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      padding: 0 8px;
+    }
+
+    .table-header-cell:first-child {
+      padding-left: 0;
+    }
+
+    /* Linhas de dados */
+    .table-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      padding: 16px 0;
+      align-items: start;
+    }
+
+    .table-row-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      padding-right: 8px;
+      line-height: 1.3;
+    }
+
+    .table-row-value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      line-height: 1.4;
+      padding: 0 8px;
+    }
+
+    /* Divisor antes do CTA */
+    .cta-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.3);
+      margin: 28px 0 24px;
+    }
+
+    /* CTA */
+    .cta-block {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cta-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+    }
+
+    .cta-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      line-height: 1.45;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .footer-left,
+    .footer-right {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="bg-drop" data-bg-drop="full"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="content">
+      <header class="header">
+        <span class="header-tag">DINO TEAM</span>
+        <span class="header-tag">GUIA DE MACROS</span>
+        <span class="header-tag">5 DE 5</span>
+      </header>
+
+      <div class="body-content">
+        <p class="section-id">[NR. 5]</p>
+        <h2 class="section-title">RESUMO</h2>
+
+        <div class="table-wrap">
+          <!-- Cabeçalho -->
+          <div class="table-header">
+            <span class="table-header-cell">MACRO</span>
+            <span class="table-header-cell">HIPERTROFIA</span>
+            <span class="table-header-cell">CUTTING</span>
+            <span class="table-header-cell">RECOMP.</span>
+          </div>
+
+          <!-- Proteína -->
+          <div class="table-row">
+            <span class="table-row-label">PROTEÍNA</span>
+            <span class="table-row-value">1,6–2,2 G/KG</span>
+            <span class="table-row-value">2,3–3,1 G/KG LBM</span>
+            <span class="table-row-value">2,4–3,1 G/KG</span>
+          </div>
+
+          <!-- Carboidrato -->
+          <div class="table-row">
+            <span class="table-row-label">CARBOIDRATO</span>
+            <span class="table-row-value">3–5 G/KG</span>
+            <span class="table-row-value">~3,8 G/KG (PERI PROTEGIDO)</span>
+            <span class="table-row-value">PERI PROTEGIDO</span>
+          </div>
+
+          <!-- Gordura -->
+          <div class="table-row">
+            <span class="table-row-label">GORDURA</span>
+            <span class="table-row-value">0,5–1,5 G/KG</span>
+            <span class="table-row-value">MÍN. 0,5 G/KG / 15% CAL</span>
+            <span class="table-row-value">MESMO PISO</span>
+          </div>
+        </div>
+
+        <div class="cta-divider"></div>
+
+        <div class="cta-block">
+          <span class="cta-label">AÇÃO</span>
+          <p class="cta-text">SALVA ESSE POST E CONFERE SE O MACRO QUE VOCÊ ESTÁ PRIORIZANDO BATE COM A SUA FASE AGORA.</p>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <span class="footer-left">© DINO TEAM</span>
+        <span class="footer-right">GUIA DE MACROS</span>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
