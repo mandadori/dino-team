@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Slide Carrossel — Dino Team / _rascunho</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* ESTILO: _rascunho | CONCEITO: foto full bleed + gradient bottom + logo centrada + narrativa editorial */
+
+    /* ====================================================================
+       BRAND DINO TEAM — Estilo _rascunho (foto-narrativa) — carrossel 4:5 (1080x1350)
+
+       Variantes (escolha uma na <section class="slide ...">):
+         .slide.capa   → slide 1: foto full bleed + gradient + logo acima do título (bloco v-bottom) + swipe cue
+         .slide.corpo  → slides intermediários: foto + gradient + logo centrada no topo + área editorial inferior
+         .slide.cta    → slide final: foto ou fundo preto + logo acima do título (bloco v-bottom) + sub
+
+       Tokens: paleta P&B + cinza exclusiva, Anton + Montserrat CAIXA ALTA
+       Margem padrão: 80px. Não altere width/height.
+    ==================================================================== */
+
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #7f7f7f;
+
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+
+      --pad: 80px;
+      --gradient-overlay: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0.15) 30%,
+        rgba(0,0,0,0.95) 75%,
+        rgba(0,0,0,1) 100%
+      );
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      color: var(--color-fg);
+    }
+
+    /* --------- Background fotográfico (todos os slides) --------- */
+    .slide-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: #1a1a1a; /* fallback enquanto a foto não está aplicada */
+    }
+    .slide-bg.placeholder {
+      background-image: repeating-linear-gradient(
+        45deg, #1a1a1a 0 24px, #222 24px 48px
+      );
+    }
+
+    /* --------- Gradient overlay de legibilidade --------- */
+    .img-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: var(--gradient-overlay);
+    }
+
+    /* --------- Logo no topo (apenas slides corpo) --------- */
+    .logo-center {
+      position: absolute;
+      top: var(--pad);
+      left: 0;
+      right: 0;
+      z-index: 4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+    .logo-center .logo-img {
+      height: 36px;
+      width: auto;
+      display: block;
+      opacity: 0.98;
+    }
+
+    /* --------- Barra de progresso (todos os slides) --------- */
+    .progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 36px 80px 56px;
+      z-index: 5;
+    }
+    .progress .track {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,.22);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress .fill {
+      height: 100%;
+      background: #ffffff;
+      border-radius: 2px;
+    }
+
+    /* --------- Swipe cue (capa e corpo) --------- */
+    .swipe-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-body);
+      font-size: 26px;
+      font-weight: 300;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.92);
+    }
+    .swipe-cue svg {
+      height: 0.72em;
+      width: auto;
+      display: block;
+    }
+
+    /* ============ VARIANTE: capa ============ */
+    /* Logo + título agrupados em bloco v-bottom ancorado no rodapé */
+    .slide.capa .title-block {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      z-index: 3;
+      bottom: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 22px;
+    }
+    /* Logo dentro do bloco — imediatamente acima do título */
+    .slide.capa .title-block .logo-img {
+      height: 36px;
+      width: auto;
+      display: block;
+      opacity: 0.98;
+      margin-bottom: 32px;
+    }
+    .slide.capa .big-title {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 140px;
+      line-height: 0.9;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    /* ============ VARIANTE: corpo ============ */
+    /* Área de conteúdo editorial inferior */
+    .slide.corpo .content-area {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      z-index: 3;
+      bottom: 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .slide.corpo .eyebrow {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      line-height: 1;
+    }
+    .slide.corpo .headline {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 88px;
+      line-height: 0.92;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .slide.corpo .body-text {
+      font-family: var(--font-body);
+      font-size: 30px;
+      font-weight: 300;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.4;
+      max-width: 920px; /* 1080 - 2*80 = 920 */
+    }
+    /* Swipe cue no rodapé do corpo, acima da barra de progresso */
+    .slide.corpo .swipe-wrap {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      bottom: 80px;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ============ VARIANTE: cta ============ */
+    /* Logo + título agrupados em bloco v-bottom — mesmo padrão da capa */
+    .slide.cta .title-block {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      z-index: 3;
+      bottom: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 22px;
+    }
+    /* Logo dentro do bloco — imediatamente acima do título */
+    .slide.cta .title-block .logo-img {
+      height: 36px;
+      width: auto;
+      display: block;
+      opacity: 0.98;
+      margin-bottom: 32px;
+    }
+    .slide.cta .cta-headline {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 140px;
+      line-height: 0.9;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .slide.cta .cta-sub {
+      font-family: var(--font-body);
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.3;
+    }
+  </style>
+</head>
+<body>
+  <!--
+    INSTRUÇÕES (para o Designer):
+    1. Cada slide usa UMA das variantes:
+       - slide-1.html  → <section class="slide capa">
+       - slides intermediários → <section class="slide corpo">
+       - último slide → <section class="slide cta">
+
+    2. A barra de progresso .fill width = (slide_atual / total_slides) * 100%
+
+    3. Capa e CTA: logo + título ficam juntos no .title-block ancorado no rodapé.
+       A logo (.logo-img) vai dentro do .title-block, acima do título, com margin-bottom: 32px.
+       NÃO usar .logo-center separado na capa e no CTA.
+
+    4. Corpo: logo centralizada no topo via .logo-center.
+       SEM pill/tag de tópico — apenas logo, content-area e swipe-cue.
+
+    5. CTA: sem swipe cue (último slide, não arrasta).
+       Estrutura: .title-block com logo + .cta-headline + .cta-sub.
+
+    6. Backgrounds com foto: o .slide-bg leva data-bg-drop="photo" para que o
+       preview.html aceite drop de imagem e reposicionamento por arraste.
+       Manter .placeholder até a foto ser aplicada.
+
+    7. Slide CTA sem foto: trocar .slide-bg.placeholder por background: #000 no inline
+       ou manter o .placeholder para edição posterior.
+
+    8. Fontes: Anton (títulos CAIXA ALTA) + Montserrat (corpo CAIXA ALTA).
+       Todo texto é text-transform: uppercase — NUNCA caixa baixa.
+
+    Exemplo abaixo: variante .capa (apague e troque pela variante do slide).
+  -->
+
+  <!-- ============ SLIDE ATIVO: variante .capa ============ -->
+  <section class="slide capa">
+    <div class="slide-bg placeholder" data-bg-drop="photo"></div>
+    <div class="img-overlay"></div>
+
+    <div class="title-block">
+      <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" />
+      <h1 class="big-title">DO ZERO<br>AO OLYMPIA</h1>
+      <div class="swipe-cue">
+        <span>ARRASTE</span>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.4"
+                stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track"><div class="fill" style="width: 33.33%"></div></div>
+    </div>
+  </section>
+
+  <!--
+    ============ EXEMPLO: variante .corpo ============
+    <section class="slide corpo">
+      <div class="slide-bg placeholder" data-bg-drop="photo"></div>
+      <div class="img-overlay"></div>
+
+      <div class="logo-center">
+        <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" />
+      </div>
+
+      <div class="content-area">
+        <span class="eyebrow">SEM ACADEMIA. SEM DINHEIRO.</span>
+        <h2 class="headline">A PRIMEIRA<br>DECISÃO</h2>
+        <p class="body-text">PLACEHOLDER — ATÉ 3 LINHAS DE TEXTO DE CORPO EM CAIXA ALTA. MÁXIMO 120 CARACTERES POR PARÁGRAFO.</p>
+      </div>
+
+      <div class="swipe-wrap">
+        <div class="swipe-cue">
+          <span>ARRASTE</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.4"
+                  stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="progress">
+        <div class="track"><div class="fill" style="width: 66.66%"></div></div>
+      </div>
+    </section>
+
+    ============ EXEMPLO: variante .cta ============
+    <section class="slide cta">
+      <div class="slide-bg placeholder" data-bg-drop="photo"></div>
+      <div class="img-overlay"></div>
+
+      <div class="title-block">
+        <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" />
+        <h2 class="cta-headline">COMECE<br>AGORA</h2>
+        <p class="cta-sub">CONSULTORIA DINO TEAM</p>
+      </div>
+
+      <div class="progress">
+        <div class="track"><div class="fill" style="width: 100%"></div></div>
+      </div>
+    </section>
+  -->
+</body>
+</html>
