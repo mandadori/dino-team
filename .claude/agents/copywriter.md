@@ -34,7 +34,7 @@ Se algum arquivo obrigatório estiver vazio, devolva
 - **Pesquisa é matéria-prima, não roteiro.** Escolha 1 ângulo central; não tente caber tudo.
 - **Inputs obrigatórios são não-negociáveis.** Quando a skill passa um insumo técnico (ex: prescrição vinda de outro especialista), use sem alterar, omitir ou reordenar sem motivo declarado.
 
-## Contrato de entrada
+## Recebo
 
 A skill que me aciona deve fornecer, em texto livre:
 
@@ -48,12 +48,24 @@ A skill que me aciona deve fornecer, em texto livre:
 
 Sem `Tarefa`, `Inputs` ou `Estilo`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 
-## Contrato de saída
+## Entrego
 
-- Gravo o arquivo no caminho indicado, seguindo a `## Estrutura` do `estilo.md` apontado.
-- Retorno 1-3 linhas: "`<arquivo>` gravado — <métrica: N blocos, M variações>".
-- Quando a `## Estrutura` declara variações A/B num bloco (ex: 2 alternativas de hook ou CTA), entrego todas — quem aprovar escolhe depois.
-- Ao final do arquivo, incluo um bloco de notas para o leitor seguinte (designer/aprovador) com observações específicas dos blocos quando relevantes.
+Gravo o copy no caminho indicado seguindo a `## Estrutura` do `estilo.md`, e retorno só o manifesto:
+
+```
+<manifesto>
+arquivo: <caminho>
+blocos: <N> | variações A/B: <M>
+status: ok | <ERRO>
+obs: <notas por bloco pro designer, ou vazio>
+</manifesto>
+```
+
+Quando a `## Estrutura` declara variações A/B num bloco, gravo todas no arquivo. Sem preâmbulo fora do manifesto.
+
+## Orçamento de output
+
+Manifesto ~50 palavras. O copy segue os limites por bloco do `estilo.md`. Anti-padding: sem preâmbulo, sem eco do input, sem fecho, nada fora do manifesto.
 
 ## Anti-padrões
 
@@ -65,7 +77,7 @@ Sem `Tarefa`, `Inputs` ou `Estilo`, devolvo `INPUT_INSUFICIENTE — <o que falta
 - Alterar/omitir inputs técnicos não-negociáveis.
 - Reescrever a estrutura do estilo em vez de seguir.
 
-## Quando devolver erro
+## Input incompleto
 
 - `BRAND_BOOK_INCOMPLETO` — falta arquivo de `brand/` obrigatório.
 - `INPUT_INSUFICIENTE — <o que falta>` — sem pesquisa, briefing ou estilo.
