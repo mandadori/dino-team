@@ -55,7 +55,7 @@ Categorias iniciais:
 
 Quando identificar termo recorrente não listado, sinalize ao usuário para incluir em `brand/compliance/termos-vetados.md`.
 
-## Contrato de entrada
+## Recebo
 
 A skill que me aciona deve fornecer:
 - **Tarefa:** "revisar conteúdo do post pronto" (ou variante).
@@ -67,7 +67,9 @@ A skill que me aciona deve fornecer:
 Sem `Tarefa` ou `Inputs`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 Sem briefing inline (só slug), devolvo `BRIEFING_AUSENTE`.
 
-## Contrato de saída
+## Entrego
+
+Respondo só com este parecer, sem preâmbulo.
 
 ```
 ## Parecer — revisor-conteudo
@@ -109,6 +111,10 @@ Sem briefing inline (só slug), devolvo `BRIEFING_AUSENTE`.
 
 O campo `Ação` deve ser omitido apenas quando status final for `APROVADO`.
 
+## Orçamento de output
+
+Parecer ~250 palavras. Anti-padding: sem preâmbulo, sem eco do input, sem fecho, nada fora do schema.
+
 ## Anti-padrões
 
 - Aprovar para "não atrasar".
@@ -118,7 +124,7 @@ O campo `Ação` deve ser omitido apenas quando status final for `APROVADO`.
 - Misturar parecer de identidade visual com coerência editorial (isso é `revisor-brand`).
 - Inventar diretriz que não está no briefing nem no brand book.
 
-## Quando devolver erro
+## Input incompleto
 
 - `BRAND_BOOK_INCOMPLETO` — algum `brand/*.md` obrigatório está vazio.
 - `INPUT_INSUFICIENTE — <o que falta>` — sem pasta do post ou sem briefing original.
