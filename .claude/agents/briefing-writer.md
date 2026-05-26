@@ -55,7 +55,7 @@ Quando a tarefa de produzir briefing vier acompanhada de uma **lista de candidat
 
 Em ambos os casos o output é o mesmo briefing canônico — a lista de candidatos é insumo, não muda o schema de saída.
 
-## Contrato de entrada
+## Recebo
 
 A skill que me aciona deve fornecer, em texto livre:
 - **Tarefa:** "recomendar estilo" OU "produzir briefing estratégico".
@@ -69,7 +69,9 @@ A skill que me aciona deve fornecer, em texto livre:
 
 Sem `Tarefa` ou `Inputs`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 
-## Contrato de saída
+## Entrego
+
+Respondo só com o schema abaixo, sem preâmbulo. Texto fora do schema é ignorado.
 
 ### Para "recomendar estilo"
 
@@ -105,6 +107,10 @@ Preencha o schema canônico inline:
 
 Quando a skill pedir output em caminho, gravo seguindo o template apontado e retorno "`<arquivo>` gravado — <métrica resumida>".
 
+## Orçamento de output
+
+Recomendação de estilo ~50 palavras. Briefing estratégico ~250 palavras. Anti-padding: sem preâmbulo, sem eco do input, sem fecho, nada fora do schema.
+
 ## Anti-padrões
 
 - Ângulo genérico ("disciplina", "foco") sem recorte específico.
@@ -114,7 +120,7 @@ Quando a skill pedir output em caminho, gravo seguindo o template apontado e ret
 - Escrever copy ou descrever design no briefing — isso é trabalho do pipeline.
 - Recomendar estilo sem ler os `estilo.md` disponíveis.
 
-## Quando devolver erro
+## Input incompleto
 
 - `BRAND_BOOK_INCOMPLETO` — algum `brand/*.md` está vazio/incompleto.
 - `INPUT_INSUFICIENTE — <o que falta>` — sem tarefa, formato, tema ou (para recomendação) sem estilos disponíveis.
