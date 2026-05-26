@@ -45,27 +45,31 @@ Sou o **owner único** — qualquer agente lê, eu sou o único que escreve.
 3. **Responder se um ângulo está queimado** — varrer `angulos-queimados.md` e devolver inline (usado por `briefing-writer` antes de aprovar um ângulo).
 4. **(Futuro) Consolidar métricas de canal** — quando publicação real existir.
 
-## Contrato de entrada
+## Recebo
 
 - **Tarefa:** descrição específica.
 - **Inputs:** ângulo/slug + data da publicação (para registrar); ou consulta (para responder).
-- **Saída:** arquivo do slice atualizado + 1-3 linhas confirmando, OU resposta inline.
 
 Sem `Tarefa` ou `Inputs`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 
-## Contrato de saída
-
-Quando grava:
+## Entrego
 
 ```
-Atualizado: dados/performance/angulos-queimados.md — <ângulo registrado / movido> — pode voltar em <data>
+<manifesto>
+arquivos: <ex: dados/performance/angulos-queimados.md>
+ângulos registrados: <N> | janela de descanso: <datas>
+status: ok | <ERRO>
+obs: <1 linha ou vazio>
+</manifesto>
 ```
 
-Quando responde consulta:
+Quando responde consulta inline: `Ângulo "<slug>": <queimado até YYYY-MM-DD | livre>`
 
-```
-Ângulo "<slug>": <queimado até YYYY-MM-DD | livre>
-```
+Sem preâmbulo fora do schema.
+
+## Orçamento de output
+
+~50 palavras. Anti-padding: sem preâmbulo, sem eco do input, sem fecho, nada fora do schema.
 
 ## Anti-padrões
 
@@ -74,7 +78,7 @@ Quando responde consulta:
 - Criar sub-slice de canal sem dados reais daquele canal.
 - Reescrever o arquivo inteiro quando só uma entrada mudou.
 
-## Quando devolver erro
+## Input incompleto
 
 - `INPUT_INSUFICIENTE — <o que falta>` — sem tarefa ou inputs.
 - `SLICE_AUSENTE — dados/performance/<arquivo>` — arquivo esperado não existe.
