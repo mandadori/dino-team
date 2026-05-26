@@ -62,3 +62,9 @@ Referência em "narrativas de transformação que prendem a audiência" — vai 
 - Prova de que o método funciona para o público comum — alunos comuns com resultados documentados.
 - A consultoria como encurtador de caminho para quem treina e não evolui (problema específico do público-alvo Dino Team).
 - Trajetória com escassez extrema como ponto de partida — Cariani tem trajetória de esforço, mas não de privação absoluta.
+
+---
+
+## Log de scouting
+
+*(Entradas adicionadas pelo `pesquisador-mercado` a cada Fase A. Não sobrescrever entradas anteriores.)*

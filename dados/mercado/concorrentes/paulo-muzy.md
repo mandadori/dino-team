@@ -59,3 +59,9 @@ Frases "viralizam regularmente" segundo fontes consultadas. Sem métrica especí
 - Classic Physique como estética e método específico para proporcão/controle de peso.
 - Comunidade como produto (grupo exclusivo de alunos).
 - Consultoria como encurtador de caminho — não teoria, é protocolo pessoal adaptado.
+
+---
+
+## Log de scouting
+
+*(Entradas adicionadas pelo `pesquisador-mercado` a cada Fase A. Não sobrescrever entradas anteriores.)*
