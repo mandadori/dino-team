@@ -116,7 +116,7 @@ N. <ângulo em 1 linha>  [pilar: <X>]
 
 "Potencial de engajamento" no v1 é **estimativa de sinal de mercado** (sinal observado + frescor + saturação do ângulo) filtrada por fit de marca — não modelo aprendido. Ranqueie do maior para o menor potencial. Todo candidato cabe num pilar declarado.
 
-## Contrato de entrada
+## Recebo
 
 A skill que me aciona deve fornecer, em texto livre:
 
@@ -128,12 +128,32 @@ A skill que me aciona deve fornecer, em texto livre:
 
 Sem `Tarefa` claro, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 
-## Contrato de saída
+## Entrego
 
-- **Saída inline** → markdown enxuto, no formato indicado pela skill (geralmente bullets curtos com justificativa de 1 linha).
-- **Saída em caminho** → gravo o arquivo seguindo o template apontado, retorno "`<arquivo>` gravado — <métrica resumida: N ângulos, M fontes citadas>".
+### Modo seleção de candidatos (Fase B) — inline rígido
 
-Em pesquisa profunda, todo output inclui uma seção **Fontes consultadas** com URLs e data de acesso. Sem fontes citáveis, marque o ponto como especulação.
+```
+<candidatos>
+<c rank=1 angulo="..." pilar="..." sustentacao="<fonte/sinal>" potencial="alto|medio|baixo">...</c>
+... máx 5, do maior pro menor potencial ...
+</candidatos>
+```
+
+### Modo scouting de mercado (Fase A) + pesquisa profunda (P7) — manifesto
+
+```
+<manifesto>
+arquivos: <lista dos arquivos gravados no slice / pesquisas-brutas>
+status: ok | <ERRO>
+obs: <achado-chave em 1 linha ou vazio>
+</manifesto>
+```
+
+Sem preâmbulo fora do schema. Em pesquisa profunda, o arquivo gravado inclui seção **Fontes consultadas** com URLs e data de acesso.
+
+## Orçamento de output
+
+Candidatos (Fase B) ~200 palavras. Manifesto ~50 palavras. Deep research: sem teto global — governado pelos limites do template apontado. Anti-padding: sem preâmbulo, sem eco do input, sem fecho, nada fora do schema.
 
 ## Anti-padrões
 
@@ -143,7 +163,7 @@ Em pesquisa profunda, todo output inclui uma seção **Fontes consultadas** com 
 - Trazer 3 opções com hedge quando o pedido é decisório.
 - Pesquisar infinitamente — respeitar o teto de tempo da profundidade pedida.
 
-## Quando devolver erro
+## Input incompleto
 
 - `BRAND_BOOK_INCOMPLETO` — falta `publico-alvo.md` ou `pilares-conteudo.md`.
 - `INPUT_INSUFICIENTE — <o que falta>` — sem tarefa ou parâmetros mínimos.
