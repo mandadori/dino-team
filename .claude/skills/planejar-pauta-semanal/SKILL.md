@@ -17,6 +17,16 @@ Toda semana, planejar **N briefings** que cubram os pilares ativos, evitem ângu
 
 - **`[N]`** — opcional, default **5** posts.
 
+## Fluxo
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ semana ativa | data | — | YYYY-Www |
+| 2 | pesquisador (Fase A) | N, semana, ângulos-queimados | 1 | pesquisa-tendencias.md |
+| 3 | briefing-writer (×N) | tendências ← 2 | 2 | N `<briefing>` |
+| 4 | ⚙ gravar manifest | briefings ← 3 | 3 | campanha |
+| 5 | ⚙ relatório | — | 4 | relatório inline |
+
 ## Quando dispara
 
 - Cron toda 2ª 9h via Vercel Cron (`orquestracao/rotas.yaml` rota id `pauta-semanal-cron`).
@@ -55,7 +65,6 @@ Profundidade: profunda.
 Inputs:
 - Semana ativa: <YYYY-Www> (de <data-início> a <data-fim>).
 - N: <N>
-- Pilares ativos: lê brand/pilares-conteudo.md
 - Ângulos queimados: lê dados/performance/angulos-queimados.md (não repetir nas próximas 4 semanas)
 
 Saída: gravar em campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md.
