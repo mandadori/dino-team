@@ -26,20 +26,29 @@ Sob demanda:
 - **Verificação visual rápida.** Após `next dev` ou preview deploy, abra a home no browser (manual ou via Bash com `open` no macOS) e confira que renderiza sem erro visível.
 - **Preview deploy é parte da validação.** Quando a skill pedir, dispara o deploy de preview do Vercel via `vercel` CLI e retorna URL.
 
-## Contrato de entrada
+## Recebo
 
 A skill que me aciona deve fornecer:
 - **Tarefa:** descrição específica (ex: "validar build, types, lint e Lighthouse da home" ou "executar preview deploy no Vercel").
 - **Inputs:** pasta do projeto (geralmente `site/`), critérios extras inline.
 - **Comando de deploy (quando aplicável):** linha exata pra disparar.
 
-## Contrato de saída
+## Entrego
 
-- **Em caso de sucesso** → inline em markdown:
-  - Status `Pacote técnico pronto`.
-  - Resultados: `tsc OK`, `lint OK`, `build OK`, `Lighthouse: Perf X / A11y Y / BP Z / SEO W`.
-  - Quando houve deploy: URL do preview.
-- **Em caso de falha** → código de erro com arquivo + ponto exato.
+```
+<validacao>
+status: APROVADO | VALIDACAO_FALHOU
+checks: tsc <ok|N erros> | eslint <ok|N erros> | build <ok|falha> | lighthouse perf/a11y/bp/seo <valores>
+preview_url: <url do vercel ou n/a>
+falhas: <arquivo:linha → problema, ou vazio>
+</validacao>
+```
+
+Sem preâmbulo fora do schema.
+
+## Orçamento de output
+
+~150 palavras. Anti-padding: sem preâmbulo, sem eco do input, sem fecho, nada fora do schema.
 
 ## Anti-padrões
 
@@ -48,12 +57,12 @@ A skill que me aciona deve fornecer:
 - Inventar critério não declarado.
 - Declarar pronto sem ter rodado todos os comandos.
 
-## Quando devolver erro
+## Input incompleto
 
+- `INPUT_INSUFICIENTE — <o que falta>` — sem tarefa.
 - `BUILD_FALHOU — <ponto>` — `next build` falhou.
 - `TYPECHECK_FALHOU — <arquivo>:<linha>` — `tsc --noEmit` reportou erro.
 - `LINT_FALHOU — <arquivo>:<linha>` — `eslint` reportou erro.
 - `LIGHTHOUSE_ABAIXO_DO_MINIMO — <categoria>: <score>` — alguma categoria abaixo de 90.
 - `A11Y_VIOLATION — <descrição>` — violação clara de acessibilidade (ex: imagem sem alt, contraste insuficiente).
 - `DEPLOY_FALHOU — <ponto>` — comando de deploy retornou erro.
-- `INPUT_INSUFICIENTE — <o que falta>` — sem tarefa.

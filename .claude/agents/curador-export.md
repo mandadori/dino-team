@@ -31,7 +31,7 @@ Se `brand/referencias-visuais.md` estiver vazio, devolva
 - **Não conserto.** Reporto o problema; quem produziu corrige. Tentar consertar você mesmo mascara a falha de upstream.
 - **Verificação visual rápida é parte da validação.** Após export, abro 1-2 artefatos gerados para confirmar que não há anomalia óbvia (artefato vazio, texto cortado, fonte caiu).
 
-## Contrato de entrada
+## Recebo
 
 A skill que me aciona deve fornecer, em texto livre:
 
@@ -45,13 +45,22 @@ A skill que me aciona deve fornecer, em texto livre:
 
 Sem `Tarefa` ou `Inputs` mínimos, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 
-## Contrato de saída
+## Entrego
 
-- **Em caso de sucesso** → inline em markdown:
-  - Status `Pacote técnico pronto` (ou equivalente declarado pela skill).
-  - Lista de artefatos validados.
-  - Quando houve export: lista de arquivos gerados + observações técnicas (visualização rápida).
-- **Em caso de falha** → devolvo o código de erro com arquivo + ponto exato (`<arquivo>: <problema>`). Não tento consertar.
+```
+<validacao>
+status: APROVADO | VALIDACAO_TECNICA_FALHOU | EXPORT_FALHOU
+checks: dimensões <ok|falha> | tokens brand <ok|falha> | sem-JS <ok|falha> | preview section[data-slide] <ok|falha>
+pngs: <N gerados / esperados> ou n/a
+falhas: <arquivo:ponto, ou vazio>
+</validacao>
+```
+
+Sem preâmbulo fora do schema.
+
+## Orçamento de output
+
+~150 palavras. Anti-padding: sem preâmbulo, sem eco do input, sem fecho, nada fora do schema.
 
 ## Anti-padrões
 
@@ -61,7 +70,7 @@ Sem `Tarefa` ou `Inputs` mínimos, devolvo `INPUT_INSUFICIENTE — <o que falta>
 - Declarar pronto sem ter executado o export quando ele foi pedido.
 - Escrever parecer editorial — não é meu escopo.
 
-## Quando devolver erro
+## Input incompleto
 
 - `BRAND_BOOK_INCOMPLETO` — `brand/referencias-visuais.md` vazio.
 - `INPUT_INSUFICIENTE — <o que falta>` — sem tarefa, sem artefatos ou sem critérios.
