@@ -62,7 +62,7 @@ Cada agente domina **uma função** e organiza-se em **setor × papel** apenas t
 
 Agentes não conhecem o fluxo nem outros agentes — recebem input num formato declarado, entregam output num formato declarado. Conhecimento específico de um fluxo vive nas skills e templates, não no agente.
 
-**Agentes atuais (16):**
+**Agentes atuais (15):**
 
 - **Marketing / Pesquisa**
   - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `dados/mercado/`.
@@ -73,12 +73,11 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
   - [`designer`](.claude/agents/designer.md) — HTML+CSS visual.
 - **Marketing / Revisão**
   - [`curador-export`](.claude/agents/curador-export.md) — validação técnica + export PNG.
-  - [`revisor-coerencia`](.claude/agents/revisor-coerencia.md) — coerência editorial do artefato com o briefing.
+  - [`revisor-conteudo`](.claude/agents/revisor-conteudo.md) — coerência editorial + compliance (promessas proibidas e claims sensíveis).
 - **Produto / Consultoria / Execução**
   - [`treinador`](.claude/agents/treinador.md) — decisões técnicas de treino.
 - **Transversais / Brand**
   - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca (decisão binária).
-  - [`revisor-compliance`](.claude/agents/revisor-compliance.md) — compliance: promessas proibidas e claims sensíveis.
 - **Transversais / Dados**
   - [`archivist-ramon`](.claude/agents/archivist-ramon.md) — owner único do slice `dados/ramon/`; consolida o contexto do Ramon (input do usuário + auto-sync de fontes públicas).
   - [`analista-performance`](.claude/agents/analista-performance.md) — owner único do slice `dados/performance/`; registra ângulos queimados e (futuro) métricas de canais.

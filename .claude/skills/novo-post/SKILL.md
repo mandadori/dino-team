@@ -446,12 +446,24 @@ Em `VALIDACAO_TECNICA_FALHOU` → corrija no Designer no ponto apontado. Em `EXP
 
 ### 11. Curadoria editorial final
 
-Três revisões em sequência. Toda reprovação **interrompe** a sequência e devolve a etapa apontada para refazer. Só após APROVADO em todos os três, o briefing institucional é consolidado.
+Duas revisões em sequência. Toda reprovação **interrompe** e devolve a etapa apontada para refazer. Só após APROVADO em ambas, o briefing institucional é consolidado.
 
-#### 11a. Coerência (`revisor-coerencia`)
+Controle de tentativas (rastrear por execução):
+- `tentativas_11a`: inicializar em 0; incrementar a cada re-rodada.
+- `tentativas_11b`: inicializar em 0; incrementar a cada re-rodada.
+
+Se `tentativas_11a ≥ 3` ou `tentativas_11b ≥ 2` → pausar e apresentar ao usuário:
 
 ```
-Tarefa: dar parecer editorial sobre o post pronto.
+Curadoria travada após N tentativas em [11a|11b].
+Parecer atual: <inline>
+Ação necessária: <instrução do revisor>
+```
+
+#### 11a. Conteúdo (`revisor-conteudo`)
+
+```
+Tarefa: revisar conteúdo do post pronto.
 
 Inputs:
 - Pasta do post: export/conteudos/<formato>/<data>-<slug>/
@@ -459,14 +471,15 @@ Inputs:
 - Briefing estratégico original (inline):
   <briefing guardado no Passo 4, na íntegra>
 
-Avalie 4 dimensões: alinhamento com brand book; coerência com briefing original (ângulo, pilar, objetivo, recorte); qualidade editorial (hook, 1 ideia por bloco, concreto > abstrato, CTA específico); integridade técnica (qtd. PNGs = qtd. assets; pesquisa-base.md presente).
+Avalie Seção 1 (coerência editorial: coerência com briefing — ângulo, pilar, objetivo, recorte; qualidade editorial — hook, 1 ideia por bloco, CTA específico; integridade técnica — qtd. PNGs = qtd. assets, pesquisa-base.md presente) e Seção 2 (compliance: saúde, jurídico, suplementação, promessas irreais).
 
-Saída: parecer inline.
-Status válidos: APROVADO | APROVADO COM AJUSTES | REPROVADO.
+Saída: parecer inline com status final + campo Ação quando não APROVADO.
+Status válidos: APROVADO | COM AJUSTES | REPROVADO.
 ```
 
-- **APROVADO** ou **APROVADO COM AJUSTES** → seguir para 11b. Se AJUSTES, anotar os pontos para aplicar depois ou em iteração rápida com `copywriter`/`designer` antes de seguir.
-- **REPROVADO** → reabra a etapa apontada, refaça, e re-rode 11a.
+- **APROVADO** → seguir para 11b.
+- **APROVADO COM AJUSTES** → aplicar instrução do campo `Ação` (acionar agente indicado com a instrução inline); seguir para 11b.
+- **REPROVADO** → acionar agente indicado no campo `Ação` com a instrução inline; incrementar `tentativas_11a`; re-rodar 11a.
 
 #### 11b. Brand (`revisor-brand`)
 
@@ -480,29 +493,12 @@ Inputs:
 
 Avalie tom de voz, paleta/tipografia, pilar, mood/identidade visual contra brand/. Decisão binária.
 
-Saída: parecer inline.
-Status válidos: APROVADO | REPROVADO.
-```
-
-- **APROVADO** → seguir para 11c.
-- **REPROVADO** → reabra a etapa apontada (em geral copy ou design) e re-rode 11a desde o início.
-
-#### 11c. Compliance (`revisor-compliance`)
-
-```
-Tarefa: validar compliance do post pronto.
-
-Inputs:
-- Pasta do post: export/conteudos/<formato>/<data>-<slug>/
-
-Varra saúde, jurídico, suplementação, promessas irreais. Decisão binária.
-
-Saída: parecer inline.
+Saída: parecer inline com campo Ação quando REPROVADO.
 Status válidos: APROVADO | REPROVADO.
 ```
 
 - **APROVADO** → consolidar briefing institucional usando `templates/briefing.md` (sem variações A/B, sem rastros de processo) e gravar em `export/conteudos/<formato>/<data>-<slug>/briefing.md`. **Este é o último passo da curadoria.**
-- **REPROVADO** → reabra `copy` ou `design` e re-rode 11a desde o início.
+- **REPROVADO** → acionar agente indicado no campo `Ação` com a instrução inline; incrementar `tentativas_11b`; re-rodar 11a desde o início.
 
 ### 13. Entregar ao usuário
 

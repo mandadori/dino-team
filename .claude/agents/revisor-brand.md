@@ -69,6 +69,10 @@ Parecer inline em markdown:
 - {arquivo}: {ponto} → {regra violada em brand/*.md}
 
 **Decisão:** {1 frase final, binária}
+
+**Ação** (quando REPROVADO):
+- agente: copywriter | designer | copywriter+designer
+- instrucao: {texto direto pronto para ser passado ao agente}
 ```
 
 ## Anti-padrões
