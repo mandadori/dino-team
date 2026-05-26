@@ -7,6 +7,28 @@ description: Dispara o pipeline completo de criação de um post Instagram (form
 
 Cria um post Instagram completo no formato pedido, do briefing à entrega das imagens.
 
+## Fluxo
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ parse input | input bruto | — | formato/estilo/tema |
+| 2a | pesquisador (Fase A, se stale) | mês, formato | 1 | slice mercado |
+| 2a.iii | pesquisador (Fase B) | formato, estilo | 2a | `<candidatos>` |
+| 2c | ⏸ usuário | candidatos ← 2a.iii | 2a.iii | escolha |
+| 3 | designer (ad-hoc, condic.) + ⏸ | descrição/refs | 2c | rascunho |
+| 4 | briefing-writer | escolha ← 2c | 2c | `<briefing>` |
+| 5 | ⚙ criar pasta | slug ← 4 | 4 | pasta |
+| 6 | treinador (condic.) | exercícios, objetivo ← 4 | 4 | prescrição |
+| 7 | pesquisador (P7) | briefing ← 4 | 4 | pesquisa-bruta |
+| 8 | copywriter + ⏸ | pesquisa ← 7, briefing ← 4 | 7 | copy.md |
+| 9 | designer + ⏸ | copy ← 8 | 8 | assets |
+| 10 | curador-export | pasta ← 9 | 9 | `<validacao>` + PNGs |
+| 11a | revisor-conteudo | pasta ← 10, briefing ← 4 | 10 | `<parecer>` |
+| 11b | revisor-brand | pasta ← 10 | 11a | parecer binário |
+| 13 | ⚙ entregar | tudo ← 11b | 11b | entrega |
+| 13.5 | designer (stories, condic.) + ⏸ | copy, estilo | 13 | frames |
+| 14 | ⚙ política publish | pasta ← 11b | 11b | publicado/pendente |
+
 ## Sintaxe
 
 ```
@@ -38,9 +60,8 @@ Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente
 | `treinador` | Prescrição técnica de treino | exercícios + objetivo + recorte | `treino.md` |
 | `copywriter` | Copy do post | pesquisa + briefing + `estilo.md` (+ `treino.md`) | `copy.md` |
 | `curador-export` | Validação técnica + export PNG | `design/` + `estilo.md` | status inline + `export/*.png` |
-| `revisor-coerencia` | Curadoria editorial (P11a) — coerência artefato vs. briefing; pode aprovar com ajustes | pasta + briefing | parecer inline |
+| `revisor-conteudo` | Curadoria editorial (P11a) — coerência com briefing + compliance; pode aprovar com ajustes | pasta + briefing | `<parecer>` inline |
 | `revisor-brand` | Validação de identidade da marca (P11b) — binário | pasta + briefing | APROVADO/REPROVADO inline |
-| `revisor-compliance` | Validação de compliance (P11c) — binário | pasta | APROVADO/REPROVADO inline |
 
 ## Pipeline
 
@@ -75,7 +96,6 @@ Tarefa: scouting de mercado (Fase A — inteligência durável).
 Profundidade: deep research.
 
 Inputs:
-- Pilares da marca: (de brand/pilares-conteudo.md)
 - Mês de referência: <YYYY-MM>
 
 Saída: gravar/atualizar dados/mercado/tendencias/<YYYY-MM>.md, dados/mercado/concorrentes/<slug>.md e dados/mercado/vocabulario-publico.md conforme a metodologia do modo scouting de mercado.
@@ -185,8 +205,7 @@ Inputs:
   - Imagem: <caminho ou "nenhuma">
   - Descrição: <texto do usuário ou "nenhuma">
 - Contrato canônico: templates/estilo.md (use como guia das seções obrigatórias e condicionais)
-- Regras inegociáveis: templates/formatos/README.md
-- Dimensões e arquivo principal: vêm das regras inegociáveis + convenção de nome (slide.html para carrossel, frame.html para stories)
+- Dimensões e arquivo principal: vêm das regras de brand + convenção de nome (slide.html para carrossel, frame.html para stories)
 
 Saída em _rascunho/:
 - estilo.md — preencher seções obrigatórias (Conceito visual, Estrutura, Quando usar, Quando NÃO usar, Variantes visuais) e condicionais que se apliquem
@@ -370,7 +389,6 @@ Acione `designer` com as duas tarefas no mesmo prompt:
 Tarefa 1 — produzir N assets visuais (um por bloco da ## Estrutura do estilo).
 
 Inputs:
-- Regras inegociáveis: templates/formatos/README.md
 - Estilo (visual + estrutura): <caminho do estilo.md>
 - Template visual: <pasta do estilo>/<arquivo principal HTML> (slide.html | frame.html)
 - Copy: export/conteudos/<formato>/<data>-<slug>/copy.md
@@ -431,7 +449,6 @@ Inputs:
 
 Critérios:
 - Dimensões dos assets = template visual.
-- Tipografia/paleta dentro de brand/referencias-visuais.md (+ extras autorizadas pelo estilo.md).
 - Sem JavaScript em assets individuais (JS só no wrapper).
 - preview.html tem section[data-slide="N"] para cada asset.
 
@@ -452,7 +469,7 @@ Controle de tentativas (rastrear por execução):
 - `tentativas_11a`: inicializar em 0; incrementar a cada re-rodada.
 - `tentativas_11b`: inicializar em 0; incrementar a cada re-rodada.
 
-Se `tentativas_11a ≥ 3` ou `tentativas_11b ≥ 2` → pausar e apresentar ao usuário:
+Se `tentativas_11a ≥ 1` ou `tentativas_11b ≥ 1` → pausar e apresentar ao usuário:
 
 ```
 Curadoria travada após N tentativas em [11a|11b].
@@ -470,11 +487,6 @@ Inputs:
   (pesquisa-base.md, copy.md, design/preview.html, design/*.html, export/*.png, treino.md quando aplicável)
 - Briefing estratégico original (inline):
   <briefing guardado no Passo 4, na íntegra>
-
-Avalie Seção 1 (coerência editorial: coerência com briefing — ângulo, pilar, objetivo, recorte; qualidade editorial — hook, 1 ideia por bloco, CTA específico; integridade técnica — qtd. PNGs = qtd. assets, pesquisa-base.md presente) e Seção 2 (compliance: saúde, jurídico, suplementação, promessas irreais).
-
-Saída: parecer inline com status final + campo Ação quando não APROVADO.
-Status válidos: APROVADO | COM AJUSTES | REPROVADO.
 ```
 
 - **APROVADO** → seguir para 11b.
@@ -538,7 +550,6 @@ Se "sim", acione `designer`:
 Tarefa: adaptar assets do carrossel para stories (9:16).
 
 Inputs:
-- Regras inegociáveis: templates/formatos/README.md
 - Estilo de referência: <caminho do estilo.md do carrossel>
 - Template de referência: <pasta do estilo>/slide.html
 - Copy: export/conteudos/carrossel/<data>-<slug>/copy.md
@@ -596,7 +607,6 @@ Inputs:
 
 Critérios:
 - Dimensões dos frames = 1080×1920.
-- Tipografia/paleta dentro de brand/referencias-visuais.md (+ extras autorizadas pelo estilo.md).
 - Sem JavaScript em assets individuais (JS só no wrapper).
 - preview.html tem section[data-slide="N"] para cada frame.
 
