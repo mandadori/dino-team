@@ -37,6 +37,33 @@ A skill checa `site/package.json`:
 | `briefing-writer` | Criação (Passo 3) + qualquer alteração editorial | spec, brand book, objetivo da página | briefing institucional escrito; consulta `dados/ramon/` | Marketing/Estratégia (externo) |
 | `revisor-brand` | Gate pré-deploy (Passo 7.5) + qualquer alteração que toque copy/identidade | componentes + globals + briefing | APROVADO/REPROVADO (binário) | Transversais/Brand (externo) |
 
+## Fluxo — modo criação
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ validar spec+brand | spec, brand | — | validado |
+| 2 | arquiteto-web | spec ← 1 | 1 | scaffold (manifesto) |
+| 3 | briefing-writer | spec, objetivo | 2 | `<briefing>` home |
+| 4 | designer-web | briefing ← 3 | 3 | 7 seções (manifesto) |
+| 5 | dev-frontend | seções ← 4 | 4 | home integrada |
+| 6 | curador-web | — | 5 | `<validacao>` |
+| 7 | ⏸ usuário | preview | 6 | ok/ajuste |
+| 7.5 | revisor-brand (bloqueante) | seções ← 5 | 7 | parecer binário |
+| 8 | ⚙ deploy preview (vercel) | — | 7.5 | URL |
+| 9 | ⚙ confirmar | — | 8 | confirmação |
+
+## Fluxo — modo alteração
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ estado atual | descrição da mudança | — | contexto |
+| 2 | ⚙ classificar alteração | — | 1 | tipo de mudança |
+| 3 | agente(s) pertinente(s) | escopo ← 2 | 2 | mudança aplicada |
+| 4 | curador-web | — | 3 | `<validacao>` |
+| 5 | revisor-brand (se tocou copy/identidade) | — | 4 | parecer binário |
+| 6 | ⏸ usuário | preview | 5 | confirmação |
+| 7 | ⚙ commit | — | 6 | commitado |
+
 ---
 
 ## Pipeline — modo CRIAÇÃO
@@ -70,8 +97,6 @@ Aguarde retorno com a lista de arquivos criados.
 Tarefa: produzir briefing institucional da home da consultoria Dino Team seguindo o template templates/briefing.md.
 Inputs:
 - Spec do site: docs/specs/2026-05-19-site-dino-team-design.md (descreve as 7 seções e o tom esperado).
-- Brand book (lido automaticamente os 5 arquivos de brand/).
-- Banco de Dados: dados/ramon/contexto.md e dados/performance/angulos-queimados.md (lidos automaticamente quando produzindo briefing).
 Saída: site/docs/home-briefing.md
 Estrutura esperada: objetivo único da página, persona alvo, tom, ângulo central da home (porta de entrada da marca), pilar dominante, e — por seção (Hero, Para quem é, Método, Resultados, Sobre Ramon, FAQ, CTA final) — propósito, copy sugerido, elementos visuais esperados, CTA (se houver).
 Referências visuais: stndrd.app, joinladder.com, brightscout.com. Estilo: minimalista premium escuro, alto contraste, animações ricas.
