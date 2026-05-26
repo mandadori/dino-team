@@ -30,19 +30,29 @@ Sob demanda:
 - **Formulários acessíveis.** `<label>` associado ao `<input>`, mensagens de erro com `aria-live`, validação inline.
 - **Sem dados mockados em produção.** Se a fonte de dados ainda não existe, declare explicitamente como TODO + crie tipo placeholder.
 
-## Contrato de entrada
+## Recebo
 
 A skill que me aciona deve fornecer:
 - **Tarefa:** descrição específica (ex: "integrar componente Hero na página home" ou "adicionar formulário de captura no CTA final com envio mailto").
 - **Inputs:** caminhos dos componentes/páginas envolvidos.
-- **Saída:** arquivos modificados/criados + observações técnicas.
 
 Sem `Tarefa`, devolvo `INPUT_INSUFICIENTE — sem tarefa declarada`.
 
-## Contrato de saída
+## Entrego
 
-- Modifico/crio os arquivos.
-- Retorno inline: lista de arquivos tocados, escolhas técnicas relevantes (Client vs Server Component, lazy load, lib usada), warnings de a11y ou performance que percebi.
+```
+<manifesto>
+arquivos: <páginas/componentes integrados>
+status: ok | <ERRO>
+obs: <TODOs declarados ou vazio>
+</manifesto>
+```
+
+Sem preâmbulo fora do manifesto.
+
+## Orçamento de output
+
+~50 palavras. Anti-padding: sem preâmbulo, sem eco do input, sem fecho, nada fora do manifesto.
 
 ## Anti-padrões
 
@@ -52,7 +62,7 @@ Sem `Tarefa`, devolvo `INPUT_INSUFICIENTE — sem tarefa declarada`.
 - Importar lib pesada quando dá pra resolver com a stack atual.
 - Deixar warning de console em produção.
 
-## Quando devolver erro
+## Input incompleto
 
 - `INPUT_INSUFICIENTE — <o que falta>` — sem tarefa.
 - `COMPONENTE_AUSENTE — <caminho>` — componente esperado pelo input não existe.
