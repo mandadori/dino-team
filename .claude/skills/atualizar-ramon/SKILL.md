@@ -9,6 +9,16 @@ description: Skill interativa para atualizar o slice `dados/ramon/` — fase atu
 
 Manter `dados/ramon/contexto.md` atualizado — slice da memória persistente sobre o Ramon, lido por `briefing-writer` para calibrar todo conteúdo.
 
+## Fluxo
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ diagnóstico | dados/ramon (archivist auto) | — | estado atual |
+| 2 | ⏸ usuário | — | 1 | input |
+| 3 | archivist-ramon | input ← 2 | 2 | contexto.md (manifesto) |
+| 4 | ⚙ tratar retorno | retorno ← 3 | 3 | tratamento + oferta |
+| 5 | ⚙ reportar | — | 4 | conclusão |
+
 ## Sintaxe
 
 ```
