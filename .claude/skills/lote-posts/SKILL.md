@@ -9,6 +9,21 @@ description: Gera N posts em um mesmo formato com variação de estilos e temas.
 
 Gerar N posts em um mesmo formato, com variação de estilos e temas dentro do lote. Reusa o pipeline do `/novo-post` por post, com pausa única de revisão de previews ao final do design (não pausa durante briefing, copy ou design).
 
+## Fluxo
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ parse input | input | — | N, estilos, tema |
+| 2 | ⚙ distribuição de estilos | — | 1 | estilos por post |
+| 3 | pesquisador (Fase A/B, condic.) | tema | 2 | distribuição+candidatos |
+| 4 | ⏸ usuário | plano ← 3 | 3 | confirmação |
+| 5 | sub-fluxo novo-post P4–8 (×posts) | plano ← 4 | 4 | copy por post |
+| 6 | ⏸ usuário | copies ← 5 | 5 | ok/ajuste em lote |
+| 7 | designer (×posts) | copy ← 5 | 6 | assets por post |
+| 8 | curador-export + revisores (×posts) | pasta ← 7 | 7 | validação por post |
+| 9 | ⚙ relatório do lote | — | 8 | relatório |
+| 10 | ⚙ política publish (×posts) | pasta ← 8 | 8 | publicado/pendente |
+
 ## Sintaxe
 
 ```
@@ -38,7 +53,7 @@ Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou 
 | Pipeline `/novo-post` (pesquisa → copy) | Executa pesquisa e copy de cada post. | Passo 5 |
 | Pipeline `/novo-post` (design) | Executa o design de cada post após aprovação da copy. | Passo 7 |
 | `curador-export` | Valida e exporta PNGs por post. | Passo 8 |
-| `revisor-coerencia` + `revisor-brand` + `revisor-compliance` | Curadoria editorial em 3 etapas por post. | Passo 8 |
+| `revisor-conteudo` + `revisor-brand` | Curadoria editorial por post. | Passo 8 |
 
 Cada agente lê o recorte de `brand/` que sua função exige antes de executar. Erro `BRAND_BOOK_INCOMPLETO` vindo de qualquer agente para o lote inteiro.
 
@@ -206,9 +221,8 @@ Para cada post confirmado:
 1. Snapshot da pesquisa em `<pasta>/pesquisa-base.md`.
 2. [Agente: `curador-export`] → valida assets e exporta PNGs.
 3. Curadoria editorial em sequência:
-   a. [Agente: `revisor-coerencia`] → parecer de coerência. APROVADO ou APROVADO COM AJUSTES → segue para 3b. REPROVADO → registra e marca o post como pulado (refazer é responsabilidade do `/novo-post`).
-   b. [Agente: `revisor-brand`] → parecer de identidade. APROVADO → segue para 3c. REPROVADO → registra e marca como pulado.
-   c. [Agente: `revisor-compliance`] → parecer de compliance. APROVADO → grava `briefing.md`. REPROVADO → registra e marca como pulado.
+   a. [Agente: `revisor-conteudo`] → parecer de coerência + compliance. APROVADO ou APROVADO COM AJUSTES → segue para 3b. REPROVADO → registra e marca o post como pulado (refazer é responsabilidade do `/novo-post`).
+   b. [Agente: `revisor-brand`] → parecer de identidade. APROVADO → grava `briefing.md`. REPROVADO → registra e marca como pulado.
 
 Erros técnicos (`EXPORT_FALHOU`, `VALIDACAO_TECNICA_FALHOU`) → registre e siga ao próximo.
 
