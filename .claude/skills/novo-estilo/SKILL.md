@@ -5,6 +5,20 @@ description: Cria ou edita um estilo visual para qualquer formato disponível em
 
 # /novo-estilo — Dino Team
 
+## Fluxo
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ parse + modo | input | — | modo, formato, slug |
+| 2 | ⚙ tratar _rascunho/ | — | 1 | rascunho pronto |
+| 3 | ⏸ usuário | contexto ← 2 | 2 | descrição/alterações |
+| 4 | ⚙ preparar pasta | — | 3 | pasta de trabalho |
+| 5 | designer | descrição/refs ← 3, modo | 4 | template+estilo.md+preview |
+| 6 | ⏸ usuário | preview ← 5 | 5 | confirmar/ajuste |
+| 7 | ⚙ slug (só criar) | — | 6 | slug |
+| 8 | ⚙ salvar | — | 7 | estilo salvo |
+| 9 | ⚙ confirmar | — | 8 | confirmação |
+
 ## Objetivo
 
 Criar um estilo visual novo ou editar um existente — `estilo.md` + template HTML + `preview.html` — prontos para uso pela skill `/novo-post`.
@@ -73,8 +87,6 @@ Descrição / Alterações:
 Referências visuais: {lista de caminhos ou "nenhuma"}
 
 Regras:
-- brand/referencias-visuais.md é lei (paleta, tipografia, mood).
-- Regras inegociáveis (dimensões, safe areas, fontes, paleta): templates/formatos/README.md.
 - Arquivo principal por convenção de formato: slide.html (carrossel) | frame.html (stories).
 - Contrato canônico do estilo.md: templates/estilo.md (seções obrigatórias e condicionais).
 - Conteúdo é PLACEHOLDER ("TÍTULO DE EXEMPLO", "CORPO — MÁX 40 PALAVRAS", etc.).
