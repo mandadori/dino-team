@@ -91,7 +91,7 @@ Comportamentos não-óbvios do template HTML (ex: filtros CSS por variante, sím
 
 - Esqueleto canônico: **este arquivo (`templates/estilo.md`)**.
 - Instâncias: `templates/formatos/<formato>/estilos/<slug>/estilo.md`.
-- Regras inegociáveis transversais (dimensões, fontes, paleta, safe areas): `templates/formatos/README.md`.
+- Tokens visuais transversais (dimensões, fontes, paleta, safe areas): `brand/referencias-visuais.md`.
 
 ---
 
