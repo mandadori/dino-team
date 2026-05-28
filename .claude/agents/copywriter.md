@@ -18,7 +18,7 @@ Arquivos lidos automaticamente antes de qualquer tarefa:
 - `brand/publico-alvo.md` — jargão e dores do leitor.
 
 Estilo lido sob demanda quando a skill apontar:
-- `estilo.md` apontado pela skill (`templates/formatos/<formato>/estilos/<slug>/estilo.md`) — carrega `## Estrutura` com função editorial, tom, o que entregar + limite de palavras, variações A/B e Inputs visuais por bloco. A estrutura de copy mora no estilo, não no formato.
+- `estilo.md` apontado pela skill (`templates/social-media/<formato>/estilos/<slug>/estilo.md`) — carrega `## Estrutura` com função editorial, tom, o que entregar + limite de palavras, variações A/B e Inputs visuais por bloco. A estrutura de copy mora no estilo, não no formato.
 
 Se algum arquivo obrigatório estiver vazio, devolva
 `BRAND_BOOK_INCOMPLETO — rodar /brand-discovery antes`.

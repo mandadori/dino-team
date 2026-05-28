@@ -1,6 +1,6 @@
 ---
 name: novo-post
-description: Dispara o pipeline completo de criação de um post Instagram (formato definido pelo usuário entre os disponíveis em templates/formatos/). Sintaxe livre — só formato é obrigatório; estilo e tema são opcionais e podem vir em qualquer ordem. Orquestra pesquisa, briefing, copy, design, curadoria técnica e curadoria editorial. Uso - /novo-post <formato> [estilo] [tema]. Requer brand book preenchido.
+description: Dispara o pipeline completo de criação de um post Instagram (formato definido pelo usuário entre os disponíveis em templates/social-media/). Sintaxe livre — só formato é obrigatório; estilo e tema são opcionais e podem vir em qualquer ordem. Orquestra pesquisa, briefing, copy, design, curadoria técnica e curadoria editorial. Uso - /novo-post <formato> [estilo] [tema]. Requer brand book preenchido.
 ---
 
 # /novo-post
@@ -35,8 +35,8 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 /novo-post <formato> [estilo] [tema...]
 ```
 
-- **`<formato>`** — obrigatório. Slug de diretório em `templates/formatos/`.
-- **`[estilo]`** — opcional. Slug em `templates/formatos/<formato>/estilos/`.
+- **`<formato>`** — obrigatório. Slug de diretório em `templates/social-media/`.
+- **`[estilo]`** — opcional. Slug em `templates/social-media/<formato>/estilos/`.
 - **`[tema...]`** — opcional, texto livre.
 - Ordem livre. Tokens são interpretados por correspondência com slugs; o resto vira tema.
 
@@ -69,7 +69,7 @@ Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente
 
 ### 1. Parsear input
 
-Liste `templates/formatos/` e `templates/formatos/<formato>/estilos/`. Tokenize a entrada: match com slug de estilo → estilo; resto → tema. Se formato ausente/inválido, pergunte ao usuário oferecendo a lista descoberta. Siga sempre para o Passo 2.
+Liste `templates/social-media/` e `templates/social-media/<formato>/estilos/`. Tokenize a entrada: match com slug de estilo → estilo; resto → tema. Se formato ausente/inválido, pergunte ao usuário oferecendo a lista descoberta. Siga sempre para o Passo 2.
 
 ### 2. Resolver tema → estilo (pausa)
 
@@ -144,7 +144,7 @@ Tarefa: recomendar UM estilo para o tema, ou propor ad-hoc se nenhum couber bem.
 Inputs:
 - Formato: <formato>
 - Tema: <tema>
-- Estilos disponíveis (leia todos): templates/formatos/<formato>/estilos/*/estilo.md
+- Estilos disponíveis (leia todos): templates/social-media/<formato>/estilos/*/estilo.md
 
 Avalie cada estilo contra o tema usando `## Quando usar` / `## Quando NÃO usar` de cada estilo.md.
 
@@ -188,7 +188,7 @@ Confirma? (responda "sim" para seguir, ou diga o que ajustar)
 **Só executa quando `modo_estilo = "ad-hoc"`.** Em modo definido, pule para o Passo 4.
 
 ```bash
-mkdir -p templates/formatos/<formato>/estilos/_rascunho/
+mkdir -p templates/social-media/<formato>/estilos/_rascunho/
 ```
 
 Se `_rascunho/` já existir, pergunte ao usuário antes de sobrescrever (sobrescrever / continuar do rascunho atual / abortar).
@@ -199,7 +199,7 @@ Acione `designer`:
 Tarefa: criar estilo (estilo.md + arquivo principal + preview.html) a partir das referências do usuário.
 
 Inputs:
-- Pasta de trabalho: templates/formatos/<formato>/estilos/_rascunho/
+- Pasta de trabalho: templates/social-media/<formato>/estilos/_rascunho/
 - Formato: <formato>
 - Referências:
   - Imagem: <caminho ou "nenhuma">
@@ -222,7 +222,7 @@ Regras críticas:
 **Pausa após gravação:**
 
 ```
-Rascunho do estilo ad-hoc em templates/formatos/<formato>/estilos/_rascunho/
+Rascunho do estilo ad-hoc em templates/social-media/<formato>/estilos/_rascunho/
 - estilo.md
 - <arquivo principal>
 - preview.html
@@ -243,7 +243,7 @@ Tarefa: produzir briefing estratégico para o post.
 Inputs:
 - Formato: <formato>
 - Estilo: <slug | "ad-hoc">
-- Caminho do estilo: <templates/formatos/<formato>/estilos/<slug>/ | templates/formatos/<formato>/estilos/_rascunho/>
+- Caminho do estilo: <templates/social-media/<formato>/estilos/<slug>/ | templates/social-media/<formato>/estilos/_rascunho/>
 - Tema: <tema>
 - Data: <YYYY-MM-DD>
 - Candidatos ranqueados: <lista da Fase B guardada no Passo 2a.iii | "nenhum — tema veio no input (sem scouting)">
@@ -342,7 +342,7 @@ Inputs:
 - Inputs técnicos (quando aplicável):
   export/conteudos/<formato>/<data>-<slug>/treino.md
 
-Estilo a seguir: <caminho do estilo.md — templates/formatos/<formato>/estilos/<slug>/estilo.md OU templates/formatos/<formato>/estilos/_rascunho/estilo.md>
+Estilo a seguir: <caminho do estilo.md — templates/social-media/<formato>/estilos/<slug>/estilo.md OU templates/social-media/<formato>/estilos/_rascunho/estilo.md>
 
 Saída: gravar em export/conteudos/<formato>/<data>-<slug>/copy.md.
 ```
@@ -626,15 +626,15 @@ Em `VALIDACAO_TECNICA_FALHOU` → corrija no designer no ponto apontado. Em `EXP
 **Só executa quando `modo_estilo = "ad-hoc"`.** Em modo definido, pule para o Passo 14.
 
 ```
-Estilo ad-hoc usado no post: templates/formatos/<formato>/estilos/_rascunho/
+Estilo ad-hoc usado no post: templates/social-media/<formato>/estilos/_rascunho/
 
 Quer salvar como estilo permanente?
 - "salvar <slug-em-kebab-case>" → mantém pasta, renomeia.
 - "descartar" → remove a pasta.
 ```
 
-- **Salvar:** valide kebab-case (`^[a-z0-9-]+$`). Se já existir `templates/formatos/<formato>/estilos/<slug>/`, peça outro slug. Então `mv templates/formatos/<formato>/estilos/_rascunho/ templates/formatos/<formato>/estilos/<slug>/`. O estilo é salvo somente em `templates/formatos/carrossel/estilos/<slug>/` — nenhum estilo é criado em `templates/formatos/stories/`.
-- **Descartar:** `rm -rf templates/formatos/<formato>/estilos/_rascunho/`.
+- **Salvar:** valide kebab-case (`^[a-z0-9-]+$`). Se já existir `templates/social-media/<formato>/estilos/<slug>/`, peça outro slug. Então `mv templates/social-media/<formato>/estilos/_rascunho/ templates/social-media/<formato>/estilos/<slug>/`. O estilo é salvo somente em `templates/social-media/carrossel/estilos/<slug>/` — nenhum estilo é criado em `templates/social-media/stories/`.
+- **Descartar:** `rm -rf templates/social-media/<formato>/estilos/_rascunho/`.
 
 ### 14. Publicação (opcional, gated por política)
 

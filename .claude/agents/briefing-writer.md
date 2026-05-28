@@ -27,7 +27,7 @@ Leitura adicional **obrigatória** antes de produzir briefing estratégico (não
 Se algum deles estiver ausente, **siga sem ele e declare a ausência no campo `## Sinalizações` do briefing** (ex: `"sinalizações: ausência de dados/ramon/contexto.md — briefing produzido sem este sinal"`). Não bloqueie por banco vazio.
 
 Sob demanda (quando a skill apontar):
-- `estilo.md` de cada estilo disponível em `templates/formatos/<formato>/estilos/*/estilo.md` — quando a tarefa é recomendar estilo.
+- `estilo.md` de cada estilo disponível em `templates/social-media/<formato>/estilos/*/estilo.md` — quando a tarefa é recomendar estilo.
 - Esqueleto em `templates/` (ex: `templates/briefing.md`) — quando a tarefa pede output estruturado.
 
 Se algum `brand/*.md` obrigatório estiver vazio, devolva
@@ -60,7 +60,7 @@ Em ambos os casos o output é o mesmo briefing canônico — a lista de candidat
 A skill que me aciona deve fornecer, em texto livre:
 - **Tarefa:** "recomendar estilo" OU "produzir briefing estratégico".
 - **Inputs:**
-  - Formato: slug em `templates/formatos/`.
+  - Formato: slug em `templates/social-media/`.
   - Tema: texto livre.
   - Estilo (quando aplicável): slug existente OU "ad-hoc" + caminho do estilo.md em uso.
   - Data: `YYYY-MM-DD` (quando produzindo briefing).

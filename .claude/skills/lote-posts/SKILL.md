@@ -30,9 +30,9 @@ Gerar N posts em um mesmo formato, com variação de estilos e temas dentro do l
 /lote-posts <formato> [N] [estilo[:K] ...] [tema-base...]
 ```
 
-- **`<formato>`** — obrigatório. Subpasta válida de `templates/formatos/`.
+- **`<formato>`** — obrigatório. Subpasta válida de `templates/social-media/`.
 - **`[N]`** — opcional. Quantidade total de posts. Default: **5**, ou somatório das distribuições por estilo.
-- **`[estilo[:K] ...]`** — opcional. Zero, um ou mais slugs em `templates/formatos/<formato>/estilos/`. Use `slug:K` para distribuição explícita; sem `:K` a skill pergunta.
+- **`[estilo[:K] ...]`** — opcional. Zero, um ou mais slugs em `templates/social-media/<formato>/estilos/`. Use `slug:K` para distribuição explícita; sem `:K` a skill pergunta.
 - **`[tema-base...]`** — opcional, texto livre. Se omitido, scouting distribui temas pelos pilares.
 
 Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou sem `:K`) → estilo; resto → tema-base.
@@ -63,7 +63,7 @@ Cada agente lê o recorte de `brand/` que sua função exige antes de executar. 
 
 ### 1. Parsear input
 
-Liste `templates/formatos/` e `templates/formatos/<formato>/estilos/`. Tokenize a entrada:
+Liste `templates/social-media/` e `templates/social-media/<formato>/estilos/`. Tokenize a entrada:
 
 - Token numérico solto → `N_total`.
 - Token bate com slug de estilo (com ou sem `:K`) → adicione ao mapa `distribuicao`.

@@ -1,6 +1,6 @@
 ---
 name: novo-estilo
-description: Cria ou edita um estilo visual para qualquer formato disponível em templates/formatos/. Em modo criação, recebe descrição livre (texto + refs visuais opcionais) e gera o template do zero. Em modo edição, detecta um slug existente no input, exibe o preview atual e aplica as alterações pedidas. Apresenta preview iterativo antes de salvar. Respeita a identidade visual da marca.
+description: Cria ou edita um estilo visual para qualquer formato disponível em templates/social-media/. Em modo criação, recebe descrição livre (texto + refs visuais opcionais) e gera o template do zero. Em modo edição, detecta um slug existente no input, exibe o preview atual e aplica as alterações pedidas. Apresenta preview iterativo antes de salvar. Respeita a identidade visual da marca.
 ---
 
 # /novo-estilo — Dino Team
@@ -29,8 +29,8 @@ Criar um estilo visual novo ou editar um existente — `estilo.md` + template HT
 /novo-estilo <formato> [slug-existente] [descrição / alterações]
 ```
 
-- **`<formato>`** — obrigatório. Qualquer subpasta válida de `templates/formatos/`.
-- **`[slug-existente]`** — opcional. Se bater com pasta em `templates/formatos/{formato}/estilos/`, entra em modo edição.
+- **`<formato>`** — obrigatório. Qualquer subpasta válida de `templates/social-media/`.
+- **`[slug-existente]`** — opcional. Se bater com pasta em `templates/social-media/{formato}/estilos/`, entra em modo edição.
 - **`[descrição / alterações]`** — opcional. Pode ser pedida no Passo 4.
 
 Ordem é livre. A skill identifica formato, slug e trata o restante como descrição.
@@ -52,24 +52,24 @@ Ordem é livre. A skill identifica formato, slug e trata o restante como descri�
 
 ### 1. Parsear input e determinar modo
 
-Extraia o formato e valide contra as subpastas de `templates/formatos/`. Se ausente ou inválido, pergunte e pare. Liste `templates/formatos/{formato}/estilos/`. Se algum token do input (case-insensitive) bater com um slug existente (exceto `_rascunho`), modo = **editar** com `slug_alvo = {slug}`; senão, modo = **criar**. O restante do input vira `descricao_alteracoes` (pode estar vazio).
+Extraia o formato e valide contra as subpastas de `templates/social-media/`. Se ausente ou inválido, pergunte e pare. Liste `templates/social-media/{formato}/estilos/`. Se algum token do input (case-insensitive) bater com um slug existente (exceto `_rascunho`), modo = **editar** com `slug_alvo = {slug}`; senão, modo = **criar**. O restante do input vira `descricao_alteracoes` (pode estar vazio).
 
 ### 2. Tratar `_rascunho/` existente
 
-Se `templates/formatos/{formato}/estilos/_rascunho/` existir, pergunte: continuar de onde parou (pula para o Passo 6) ou descartar (`rm -rf _rascunho/` e segue).
+Se `templates/social-media/{formato}/estilos/_rascunho/` existir, pergunte: continuar de onde parou (pula para o Passo 6) ou descartar (`rm -rf _rascunho/` e segue).
 
 ### 3. Mostrar contexto e coletar descrição/alterações
 
 - **Modo editar**: o usuário precisa ver o estilo atual antes de descrever mudanças.
-  - Se `templates/formatos/{formato}/estilos/{slug_alvo}/preview.html` existir, mostre o caminho.
+  - Se `templates/social-media/{formato}/estilos/{slug_alvo}/preview.html` existir, mostre o caminho.
   - Se não existir, acione [Agente: `designer`] → input: `regenerar-preview` para `{slug_alvo}`. Output: `preview.html` regenerado na pasta do estilo. Mostre o caminho.
   - Peça ao usuário que abra o preview no Claude Design e descreva as alterações (ou confirme as que já vieram no input).
 - **Modo criar**: se `descricao_alteracoes` for menor que uma frase clara, peça detalhes — posicionamento, variantes, uso de foto de fundo, elementos esperados.
 
 ### 4. Preparar pasta de trabalho
 
-- Criar: `mkdir -p templates/formatos/{formato}/estilos/_rascunho/`
-- Editar: `cp -r templates/formatos/{formato}/estilos/{slug_alvo}/ templates/formatos/{formato}/estilos/_rascunho/` — preserva o original intacto até o Passo 8.
+- Criar: `mkdir -p templates/social-media/{formato}/estilos/_rascunho/`
+- Editar: `cp -r templates/social-media/{formato}/estilos/{slug_alvo}/ templates/social-media/{formato}/estilos/_rascunho/` — preserva o original intacto até o Passo 8.
 
 ### 5. Acionar designer
 
@@ -78,7 +78,7 @@ Se `templates/formatos/{formato}/estilos/_rascunho/` existir, pergunte: continua
 ```
 Modo: {criar-template-de-estilo | editar-template-de-estilo}
 Formato: {formato}
-Pasta de trabalho: templates/formatos/{formato}/estilos/_rascunho/
+Pasta de trabalho: templates/social-media/{formato}/estilos/_rascunho/
 Slug alvo (só edição): {slug_alvo}
 
 Descrição / Alterações:
@@ -108,7 +108,7 @@ Entregáveis em _rascunho/:
 Mostre ao usuário:
 
 ```
-Rascunho em templates/formatos/{formato}/estilos/_rascunho/preview.html
+Rascunho em templates/social-media/{formato}/estilos/_rascunho/preview.html
 Abra no Claude Design e responda "confirmar" — ou descreva o ajuste.
 ```
 
@@ -116,12 +116,12 @@ Se houver ajuste, volte ao Passo 5 passando o estado atual de `_rascunho/` como 
 
 ### 7. Definir slug (só modo criar)
 
-Pergunte o slug. Valide kebab-case (`^[a-z0-9-]+$`). Se já existir pasta com esse nome em `templates/formatos/{formato}/estilos/`, peça outro. Em modo editar, `slug_final = slug_alvo` — pule.
+Pergunte o slug. Valide kebab-case (`^[a-z0-9-]+$`). Se já existir pasta com esse nome em `templates/social-media/{formato}/estilos/`, peça outro. Em modo editar, `slug_final = slug_alvo` — pule.
 
 ### 8. Salvar
 
-- Criar: `mv templates/formatos/{formato}/estilos/_rascunho templates/formatos/{formato}/estilos/{slug_final}`
-- Editar: `cp -r templates/formatos/{formato}/estilos/_rascunho/. templates/formatos/{formato}/estilos/{slug_alvo}/` && `rm -rf templates/formatos/{formato}/estilos/_rascunho/`
+- Criar: `mv templates/social-media/{formato}/estilos/_rascunho templates/social-media/{formato}/estilos/{slug_final}`
+- Editar: `cp -r templates/social-media/{formato}/estilos/_rascunho/. templates/social-media/{formato}/estilos/{slug_alvo}/` && `rm -rf templates/social-media/{formato}/estilos/_rascunho/`
 
 ### 9. Confirmar ao usuário
 
@@ -134,7 +134,7 @@ Use com: /novo-post {formato} {slug_final} [tema]
 
 ## Critério de conclusão
 
-- Arquivo principal do template do formato + `estilo.md` + `preview.html` presentes em `templates/formatos/{formato}/estilos/{slug_final}/`.
+- Arquivo principal do template do formato + `estilo.md` + `preview.html` presentes em `templates/social-media/{formato}/estilos/{slug_final}/`.
 - Usuário confirmou explicitamente o preview no Passo 6.
 - `_rascunho/` foi removido.
 - Em modo editar, o estilo original só foi sobrescrito após a confirmação do Passo 6.
