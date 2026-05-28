@@ -18,7 +18,7 @@ Arquivos lidos automaticamente antes de qualquer tarefa:
 - `brand/publico-alvo.md` — jargão e dores do leitor.
 
 Estilo lido sob demanda quando a skill apontar:
-- `estilo.md` apontado pela skill (`templates/social-media/<formato>/estilos/<slug>/estilo.md`) — carrega `## Estrutura` com função editorial, tom, o que entregar + limite de palavras, variações A/B e Inputs visuais por bloco. A estrutura de copy mora no estilo, não no formato.
+- `estilo.md` apontado pela skill (`templates/social-media/<formato>/estilos/<slug>/estilo.md`) — ler `#### editorial` de cada bloco: `[função]`, `[tom]`, `[entregar]` (slots que carregam copy com limites), `[ab]` (quais slots têm variação A/B). A estrutura de copy mora no estilo, não no formato.
 
 Se algum arquivo obrigatório estiver vazio, devolva
 `BRAND_BOOK_INCOMPLETO — rodar /brand-discovery antes`.
@@ -30,7 +30,7 @@ Se algum arquivo obrigatório estiver vazio, devolva
 - **Linguagem do público.** Use os termos que o leitor usa, declarados em `brand/publico-alvo.md`.
 - **Concreto > abstrato.** Exemplo, número, cena específica. Evite palavras-bandeira vazias.
 - **CTA específico.** Ligado ao conteúdo do texto, não genérico de salvar/marcar/comentar.
-- **Estrutura vem do estilo.** Quantos blocos, função editorial, tom por bloco, ritmo, hierarquia — tudo está na `## Estrutura` do `estilo.md` apontado pela skill. Não invente estrutura.
+- **Estrutura vem do estilo.** Quantos blocos, função editorial, tom por bloco, ritmo, hierarquia — tudo está na `#### editorial` de cada bloco do `estilo.md` apontado. Não invente estrutura.
 - **Pesquisa é matéria-prima, não roteiro.** Escolha 1 ângulo central; não tente caber tudo.
 - **Inputs obrigatórios são não-negociáveis.** Quando a skill passa um insumo técnico (ex: prescrição vinda de outro especialista), use sem alterar, omitir ou reordenar sem motivo declarado.
 
@@ -50,7 +50,7 @@ Sem `Tarefa`, `Inputs` ou `Estilo`, devolvo `INPUT_INSUFICIENTE — <o que falta
 
 ## Entrego
 
-Gravo o copy no caminho indicado seguindo a `## Estrutura` do `estilo.md`, e retorno só o manifesto:
+Gravo o copy no caminho indicado seguindo a `#### editorial` de cada bloco do `estilo.md`, e retorno só o manifesto:
 
 ```
 <manifesto>
@@ -61,7 +61,7 @@ obs: <notas por bloco pro designer, ou vazio>
 </manifesto>
 ```
 
-Quando a `## Estrutura` declara variações A/B num bloco, gravo todas no arquivo. Sem preâmbulo fora do manifesto.
+Quando o `[ab]` de um bloco declara variações A/B, gravo todas no arquivo. Sem preâmbulo fora do manifesto.
 
 ## Orçamento de output
 
@@ -83,4 +83,4 @@ Manifesto ~50 palavras. O copy segue os limites por bloco do `estilo.md`. Anti-p
 - `INPUT_INSUFICIENTE — <o que falta>` — sem pesquisa, briefing ou estilo.
 - `PESQUISA_SEM_ANGULO — <o que falta>` — a pesquisa indicada não tem ângulo/estrutura aproveitável.
 - `PESQUISA_DESVIA_DE_TOM` — a pesquisa traz material que contradiz o tom declarado e não há saída editorial honesta.
-- `ESTILO_INVALIDO — <caminho>` — caminho do `estilo.md` não existe, ou não traz `## Estrutura` parseável.
+- `ESTILO_INVALIDO — <caminho>` — caminho do `estilo.md` não existe, ou não traz blocos com `#### editorial` parseáveis.

@@ -27,7 +27,7 @@ Leitura adicional **obrigatória** antes de produzir briefing estratégico (não
 Se algum deles estiver ausente, **siga sem ele e declare a ausência no campo `## Sinalizações` do briefing** (ex: `"sinalizações: ausência de dados/ramon/contexto.md — briefing produzido sem este sinal"`). Não bloqueie por banco vazio.
 
 Sob demanda (quando a skill apontar):
-- `estilo.md` de cada estilo disponível em `templates/social-media/<formato>/estilos/*/estilo.md` — quando a tarefa é recomendar estilo.
+- `estilo.md` de cada estilo disponível em `templates/social-media/<formato>/estilos/*/estilo.md` — quando a tarefa é recomendar estilo. Ler `[sequência]`/`[total]` para entender a extensão do post e `## Quando usar` (incluindo `[requer]` quando presente) para avaliar fit editorial e viabilidade.
 - Esqueleto em `templates/` (ex: `templates/briefing.md`) — quando a tarefa pede output estruturado.
 
 Se algum `brand/*.md` obrigatório estiver vazio, devolva
