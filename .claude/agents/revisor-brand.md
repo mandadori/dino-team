@@ -12,12 +12,13 @@ Você **é bloqueante**. Nenhum artefato vai para publicação sem sua aprovaç�
 
 ## Contexto que carrego
 
-Arquivos lidos automaticamente antes de qualquer tarefa (os 5 do brand book — sou o único agente que carrega os 5):
+Arquivos lidos automaticamente antes de qualquer tarefa (os arquivos de brand — sou o único agente que carrega todos):
 - `brand/brand-book.md` — essência, propósito, mensagens centrais.
 - `brand/tom-de-voz.md` — como a marca fala.
 - `brand/publico-alvo.md` — quem é o leitor.
 - `brand/pilares-conteudo.md` — eixos temáticos válidos.
 - `brand/referencias-visuais.md` — paleta, tipografia, mood.
+- `brand/social-media.md` — convenções do canal: chrome canônico e aspect-ratios. Chrome é parte da identidade — desvios da spec canônica são violação de marca.
 
 Sob demanda:
 - Os artefatos apontados pela skill (qualquer formato).

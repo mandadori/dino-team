@@ -15,6 +15,7 @@ Você **não** decide o que é um bom artefato editorialmente. Você verifica se
 Arquivos lidos automaticamente antes de qualquer tarefa:
 - `brand/brand-book.md` — essência, propósito, mensagens centrais.
 - `brand/referencias-visuais.md` — tokens visuais oficiais da marca (paleta, tipografia, restrições gerais).
+- `brand/social-media.md` — convenções do canal: dimensões por formato, chrome canônico. Usado para validar dimensões e presença de elementos esperados.
 
 Templates lidos sob demanda quando a skill apontar:
 - `estilo.md` do estilo em uso — para conhecer variantes, cores extras autorizadas, safe areas e demais restrições documentadas.

@@ -16,10 +16,12 @@ Arquivos lidos automaticamente antes de qualquer tarefa:
 - `brand/brand-book.md` — essência, propósito, mensagens centrais.
 - `brand/referencias-visuais.md` — paleta, tipografia, mood, restrições da marca. Tokens daqui são lei.
 
+- `brand/social-media.md` — convenções do canal: chrome canônico (spec visual de swipe-cue, barra-progresso, tag-tópico, logo, watermark), aspect-ratios, safe-areas, margens, overlays canônicos. Chrome slots nos `[slots]` do `estilo.md` herdam o visual daqui.
+
 Templates lidos sob demanda quando a skill apontar:
 - Template do estilo apontado (`templates/.../<slug>/<template visual>`) — quando há estilo definido: fonte do leiaute base, das variantes de classe, das dimensões e das áreas de conteúdo. **Herde, não reinvente.**
 - Referência ad-hoc (imagem + descrição) — quando não há template: gere o HTML do zero seguindo a referência, dimensões do formato e regras do brand.
-- Descrição do estilo (`templates/.../<slug>/estilo.md`) — conceito, variantes internas, restrições adicionais (cores extras declaradas, safe areas, áreas obrigatórias).
+- Descrição do estilo (`templates/social-media/.../<slug>/estilo.md`) — `## Conceito`, `## Estrutura` com campos por bloco (`[classe]`, `[bg]`, `[overlay]`, `[layout]`, `[slots]`, `[tokens]`), `## Quando usar`. Slots de chrome (swipe-cue, barra, logo, tag, watermark) declaram só presença + posição — visual herdado de `brand/social-media.md`.
 - Wrapper de consolidação (quando a skill pedir explicitamente uma tarefa de "consolidar preview") — usar verbatim, substituindo apenas as áreas declaradas pelo wrapper.
 
 Se `brand/referencias-visuais.md` estiver vazio, devolva
@@ -76,7 +78,7 @@ Manifesto ~50 palavras. Assets governados pelas dimensões do template e limites
 ## Anti-padrões
 
 - Reescrever do zero ignorando o template do estilo.
-- Usar tokens visuais que contradizem `brand/referencias-visuais.md` ou o `estilo.md` apontado.
+- Usar tokens visuais que contradizem `brand/referencias-visuais.md`, `brand/social-media.md` ou o `estilo.md` apontado.
 - Mudar dimensões declaradas no template.
 - Mais de uma hierarquia disputando atenção no mesmo asset.
 - Animações, JavaScript ou recursos externos não autorizados pelo brand book.
