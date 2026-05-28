@@ -12,9 +12,9 @@ Wordmark "DINO" em estilo angular/itálico, com tratamento moderno e atlético.
 
 **Uso da logo:**
 - **Não é obrigatória em todos os estilos.** Cada estilo decide se usa logo no slide e como.
-- Quando aparece, posição padrão é **topo-esquerdo do slide** alinhado a uma tag textual de tópico no topo-direito.
 - Sobre fundos com foto: aplicar `drop-shadow` sutil para legibilidade.
 - Em fundos claros pode ser necessária versão alternativa em preto (a definir).
+- Posicionamento em posts e convenções por formato estão em `brand/social-media.md`.
 
 ---
 
@@ -38,22 +38,6 @@ Wordmark "DINO" em estilo angular/itálico, com tratamento moderno e atlético.
 **Texto secundário / Subtítulos:** **Montserrat** — sempre em **CAIXA ALTA**
 
 > **Regra absoluta:** todo texto em peças visuais (capa, slides, frames) é em **CAIXA ALTA**. Anton para títulos, Montserrat para subtítulos e apoio. Sem misturas com caixa baixa em layout.
-
-Hierarquia sugerida em carrosséis:
-- **Capa e títulos de slide:** Anton, peso visual forte
-- **Subtítulos / nomes de exercícios / chamadas:** Montserrat (300/400/600/700)
-- **Apoio / créditos / tags de tópico:** Montserrat em tamanho reduzido com letter-spacing aberto
-
----
-
-## Margens e grid
-
-**Margem padrão de carrossel:** **80px** em todos os lados.
-- Aplicada no container interno do slide (`padding: 80px`).
-- Conteúdo crítico nunca encosta nas bordas.
-- Excepcionalmente, imagens de fundo e barras de progresso podem ocupar bleed total (0 → 1080).
-
-**Stories:** safe area de **250px no topo e na base** (UI do Instagram sobrepõe).
 
 ---
 
@@ -80,10 +64,7 @@ Hierarquia sugerida em carrosséis:
 
 ## Elementos gráficos recorrentes
 
-- **Tag de tópico no topo-direito** — Montserrat, ~5–10px no preview (proporcional em 1080), letter-spacing aberto, em CAIXA ALTA. Identifica a categoria do conteúdo (ex: `BACK DAY`, `O TREINO`, `PRIMEIRO EXERCÍCIO`).
-- **Barra de progresso inferior** — fina (3px), branca translúcida com fill cheio. Indica posição na sequência de slides.
-- **Swipe cue ("Arraste →")** — só na capa, sinaliza continuidade.
-- **Watermark "DINO" gigante** — opcional em alguns estilos, baixa opacidade (5–6%) atrás do conteúdo.
+Spec visual completa de cada elemento recorrente (swipe-cue, barra de progresso, tag de tópico, logo em post, watermark) está em `brand/social-media.md`.
 
 ---
 
@@ -96,25 +77,6 @@ Hierarquia sugerida em carrosséis:
 - Stock photos
 - Estética de "academia de bairro" — a marca é de elite, não popular
 - Composições poluídas — sempre buscar respiro e hierarquia clara
-
----
-
-## Aplicação em carrossel
-
-- **Aspect ratio:** **4:5** (1080×1350)
-- **Padding interno:** 80px todos os lados (com exceções pontuais para bleed)
-- **Capa:** título Anton em caixa alta, foto do Ramon como background com overlay, swipe cue
-- **Slides internos:** título Anton + corpo Montserrat (caixa alta) — manter respiro
-- **CTA:** quebra padrão visual se necessário; pode usar branco sobre preto ou inverter
-
----
-
-## Aplicação em stories
-
-- **Aspect ratio:** **9:16** (1080×1920)
-- **Safe area:** 250px topo e base
-- **Hierarquia:** 1 ideia dominante por frame, tipografia protagoniza
-- **Backgrounds:** foto do Ramon ou cor sólida da paleta
 
 ---
 
