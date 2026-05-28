@@ -48,7 +48,7 @@ Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente
 
 ## Princípio central
 
-**Estrutura de copy é propriedade do estilo, não do formato.** Cada `estilo.md` carrega `## Estrutura` (blocos, função editorial, tom, variações A/B, inputs visuais). Em modo ad-hoc, criamos um estilo temporário em `_rascunho/` **antes** da pesquisa+copy, para que o pipeline inteiro rode sobre um estilo concreto.
+**Estrutura de copy é propriedade do estilo, não do formato.** Cada `estilo.md` carrega `## Estrutura` com blocos declarativos (campo `#### visual` para o designer, campo `#### editorial` para o copywriter). Em modo ad-hoc, criamos um estilo temporário em `_rascunho/` **antes** da pesquisa+copy, para que o pipeline inteiro rode sobre um estilo concreto.
 
 ## Agentes
 
@@ -208,14 +208,14 @@ Inputs:
 - Dimensões e arquivo principal: vêm das regras de brand + convenção de nome (slide.html para carrossel, frame.html para stories)
 
 Saída em _rascunho/:
-- estilo.md — preencher seções obrigatórias (Conceito visual, Estrutura, Quando usar, Quando NÃO usar, Variantes visuais) e condicionais que se apliquem
+- estilo.md — seguindo o esqueleto canônico em templates/estilo.md: seções obrigatórias (Conceito, Estrutura com [sequência]/[total]/blocos com #### visual e #### editorial, Quando usar, Quando NÃO usar) e condicionais que se apliquem
 - arquivo principal do template (slide.html ou frame.html)
 - preview.html — copiar templates/wrappers/preview-wrapper.html verbatim, substituir <!-- SLIDES_HERE --> por uma section[data-slide="N"] por variante, atualizar apenas o <title>
 
 Regras críticas:
 - Referências fotográficas são guia de mood/composição/tratamento — NUNCA conteúdo final.
 - Backgrounds com intenção fotográfica = sempre drop zone (data-bg-drop="<nome>").
-- Declarar drop zones no campo "Inputs visuais" de cada bloco da ## Estrutura do estilo.md.
+- Declarar drop zones no campo [bg] e [slots] de cada bloco da ## Estrutura do estilo.md.
 - Conteúdo dos blocos é PLACEHOLDER ("TÍTULO DE EXEMPLO", "FRASE — MÁX 12 PALAVRAS", etc.).
 ```
 
@@ -249,7 +249,7 @@ Inputs:
 - Candidatos ranqueados: <lista da Fase B guardada no Passo 2a.iii | "nenhum — tema veio no input (sem scouting)">
 - Candidato escolhido pelo humano: <o selecionado no Passo 2a.iii | "nenhum">
 
-Leia o estilo.md no caminho indicado (## Estrutura é fonte da modulação de tom por bloco).
+Leia o estilo.md no caminho indicado (## Conceito e #### editorial de cada bloco são fonte da modulação de tom).
 Avalie tema/formato/estilo contra o brand book; decida ângulo central; selecione 1 pilar; defina objetivo; descreva recorte de público; gere slug em kebab-case (2-5 palavras, captura o ângulo, não o tema bruto).
 
 Preencha o esqueleto inline:
@@ -329,7 +329,7 @@ Saída: gravar em dados/pesquisas-brutas/<data>-tendencias-<slug>.md.
 Acione `copywriter`:
 
 ```
-Tarefa: escrever copy do post seguindo a ## Estrutura do estilo.
+Tarefa: escrever copy do post seguindo a #### editorial de cada bloco do estilo.
 
 Inputs:
 - Pesquisa: dados/pesquisas-brutas/<data>-tendencias-<slug>.md
@@ -347,7 +347,7 @@ Estilo a seguir: <caminho do estilo.md — templates/social-media/<formato>/esti
 Saída: gravar em export/conteudos/<formato>/<data>-<slug>/copy.md.
 ```
 
-Critério: arquivo gravado seguindo a `## Estrutura` declarada no estilo (blocos, função, tom, variações A/B nos pontos pedidos).
+Critério: arquivo gravado seguindo os campos `#### editorial` de cada bloco do estilo (função, tom, [entregar], [ab]).
 
 #### Pausa para revisão da copy
 
@@ -375,7 +375,7 @@ Inputs:
 - Estilo a seguir: <caminho do estilo.md>
 
 Regras:
-- Preserve a ## Estrutura do estilo e blocos que não foram pedidos para mudar.
+- Preserve os blocos do estilo que não foram pedidos para mudar.
 - Aplique apenas o ajuste solicitado.
 
 Saída: sobrescrever export/conteudos/<formato>/<data>-<slug>/copy.md.
@@ -386,7 +386,7 @@ Saída: sobrescrever export/conteudos/<formato>/<data>-<slug>/copy.md.
 Acione `designer` com as duas tarefas no mesmo prompt:
 
 ```
-Tarefa 1 — produzir N assets visuais (um por bloco da ## Estrutura do estilo).
+Tarefa 1 — produzir N assets visuais (um por bloco declarado em ## Estrutura do estilo).
 
 Inputs:
 - Estilo (visual + estrutura): <caminho do estilo.md>
@@ -396,7 +396,7 @@ Inputs:
 
 Saída: um HTML standalone por bloco em design/, nome sequencial seguindo o padrão do template visual (slide-1.html, frame-1.html, ...).
 
-Drop zones: respeite o campo "Inputs visuais" de cada bloco no estilo.md.
+Drop zones: respeite o campo [bg] e [slots] de cada bloco no estilo.md.
 - data-bg-drop="full" se asset preenche tudo com foto
 - data-bg-drop="<nome>" por zona fotográfica
 - não marcar se puramente tipográfico ou se for placeholder técnico (ex: chroma)
@@ -557,7 +557,7 @@ Inputs:
 - Formato de saída: stories (1080×1920)
 
 Saída em export/conteudos/carrossel/<data>-<slug>/stories/design/:
-- frame-N.html por bloco da ## Estrutura do estilo
+- frame-N.html por bloco declarado em ## Estrutura do estilo
 - preview.html usando templates/wrappers/preview-wrapper.html verbatim
 
 Drop zones: manter as declaradas no estilo de referência.
@@ -589,7 +589,7 @@ Inputs:
 - Estilo a seguir: <caminho do estilo.md do carrossel>
 
 Regras:
-- Preserve a ## Estrutura do estilo e blocos não pedidos para mudar.
+- Preserve os blocos do estilo que não foram pedidos para mudar.
 - Aplique apenas o ajuste solicitado.
 
 Saída: gravar em export/conteudos/carrossel/<data>-<slug>/stories/copy.md.

@@ -90,8 +90,8 @@ Regras:
 - Arquivo principal por convenção de formato: slide.html (carrossel) | frame.html (stories).
 - Contrato canônico do estilo.md: templates/estilo.md (seções obrigatórias e condicionais).
 - Conteúdo é PLACEHOLDER ("TÍTULO DE EXEMPLO", "CORPO — MÁX 40 PALAVRAS", etc.).
-- Zonas fotográficas marcadas com [data-bg-drop="..."]. Declarar essas zonas no campo "Inputs visuais" de cada bloco da ## Estrutura.
-- Cada variante em bloco identificável por classe + comentário HTML.
+- Zonas fotográficas marcadas com [data-bg-drop="..."]. Declarar essas zonas no campo [bg] e [slots] de cada bloco da ## Estrutura.
+- Cada variante em bloco identificável por [classe] + comentário HTML.
 
 Comportamento por modo:
 - criar: gere o template do zero a partir da descrição e refs visuais, respeitando o contrato em templates/estilo.md e as regras inegociáveis.
@@ -99,7 +99,7 @@ Comportamento por modo:
 
 Entregáveis em _rascunho/:
 - arquivo principal do template (slide.html para carrossel, frame.html para stories)
-- estilo.md — seções obrigatórias (Conceito visual, Estrutura com blocos/função/tom/entrega/A-B/Inputs visuais, Quando usar, Quando NÃO usar, Variantes visuais) e condicionais (Inputs obrigatórios externos, Cores adicionais/Tokens, Notas técnicas) que se apliquem
+- estilo.md — seguindo o esqueleto canônico em templates/estilo.md: seções obrigatórias (Conceito, Estrutura com [sequência]/[total]/blocos com #### visual e #### editorial, Quando usar, Quando NÃO usar) e condicionais (Inputs obrigatórios externos, Notas técnicas) que se apliquem
 - preview.html — copie templates/wrappers/preview-wrapper.html verbatim, substitua <!-- SLIDES_HERE --> por uma section[data-slide="N"] por variante, atualize apenas o <title>
 ```
 
