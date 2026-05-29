@@ -1,8 +1,8 @@
 ---
 slice: mercado
 owner: usuario
-ultima_atualizacao: 2026-05-26
-versao: 1
+ultima_atualizacao: 2026-05-29
+versao: 2
 nota: Este arquivo é escrito exclusivamente pelo usuário. O pesquisador-mercado lê como orientação — não como regra. Explore além dele quando relevante.
 ---
 
@@ -15,12 +15,22 @@ Use como ponto de partida, não como limite.
 
 ## Concorrentes prioritários
 
-Monitore estes concorrentes em cada Fase A. Use o slug como âncora de busca inicial.
+Monitore em cada Fase A, organizados por camada de relevância estratégica. Use o slug como âncora de busca inicial.
 
+### Espelho estratégico (estudo profundo, recorrente)
+- `stndrd` — marca premium internacional construída sobre atleta-âncora (CBum). Espelho direto da jogada disponível com Ramon Dino: atleta-âncora + produto. Estudar em profundidade a cada Fase A — funil, sign-off, oferta, formato.
+
+### Referências BR de conteúdo (contexto e teto de audiência)
 - `renato-cariani` — maior referência em narrativa de transformação e comunidade fitness no Brasil; 11 mi IG. Pilar: motivacional/lifestyle.
 - `paulo-muzy` — autoridade técnico-científica do nicho; 8 mi IG; médico + fisiculturista. Pilar: educacional.
 - `toguro` — fenômeno cultural do fitness brasileiro; #1 Favikon; referência do que NÃO é a Dino Team, mas importante para entender o teto de audiência do nicho.
-- `stndrd` — marca premium internacional construída sobre atleta-âncora (CBum). Espelho direto da jogada disponível com Ramon Dino.
+
+### Concorrentes de produto (consultoria/coaching — a mapear)
+Inteligência de quem vende a *mesma coisa* que a Dino Team — consultoria personalizada pro mesmo segmento. Alvos a descobrir:
+- Consultorias/coachings de hipertrofia e Classic Physique no Brasil — quem são, oferta, preço, funil, formato de acompanhamento.
+- Prioridade: existe concorrente direto focado em **Classic Physique BR**?
+
+> **Lente de produto:** ao registrar qualquer concorrente, capture além do conteúdo — **oferta, preço, funil de conversão e formato de acompanhamento**. Essa fatia alimenta hoje o posicionamento (marketing); quando o setor de **Produto** existir, ela **gradua para `dados/produto/`** (concorrentes-de-produto, precificação, oferta).
 
 ---
 
