@@ -96,17 +96,51 @@ Excluído explicitamente, com motivo.
 
 ## Traceability
 
-Preenchido na criação do roadmap.
+Mapeado na criação do roadmap (2026-05-31). Cada requisito v1 → exatamente uma fase.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (a mapear pelo roadmapper) | — | Pending |
+| DSGN-01 | Phase 1 | Pending |
+| DSGN-02 | Phase 1 | Pending |
+| DSGN-03 | Phase 1 | Pending |
+| DSGN-04 | Phase 1 | Pending |
+| DSGN-05 | Phase 1 | Pending |
+| RDSN-01 | Phase 1 | Pending |
+| RDSN-02 | Phase 1 | Pending |
+| CONV-01 | Phase 2 | Pending |
+| CONV-02 | Phase 2 | Pending |
+| CONV-03 | Phase 2 | Pending |
+| CONF-01 | Phase 2 | Pending |
+| LEGAL-01 | Phase 3 | Pending |
+| LEGAL-02 | Phase 3 | Pending |
+| LEGAL-03 | Phase 3 | Pending |
+| BLOG-01 | Phase 4 | Pending |
+| BLOG-02 | Phase 4 | Pending |
+| BLOG-03 | Phase 4 | Pending |
+| BLOG-04 | Phase 4 | Pending |
+| BLOG-05 | Phase 4 | Pending |
+| BLOG-06 | Phase 4 | Pending |
+| BLOG-07 | Phase 4 | Pending |
+| BLOG-08 | Phase 4 | Pending |
+| BLOG-09 | Phase 4 | Pending |
+| BLOG-10 | Phase 4 | Pending |
+| SEO-01 | Phase 4 | Pending |
+| SEO-02 | Phase 4 | Pending |
+| SEO-03 | Phase 4 | Pending |
+| SEO-04 | Phase 4 | Pending |
+| SEO-05 | Phase 4 | Pending |
+| SEO-06 | Phase 4 | Pending |
+| LEAD-01 | Phase 5 | Pending |
+| LEAD-02 | Phase 5 | Pending |
+| BLOG-11 | Phase 6 | Pending |
 
 **Coverage:**
-- v1 requirements: 30 total
-- Mapped to phases: 0 (pendente roadmap)
-- Unmapped: 30 ⚠️
+- v1 requirements: 33 total
+- Mapped to phases: 33 ✓
+- Unmapped: 0
+
+(Nota: a contagem anterior dizia "30"; a enumeração real dos IDs v1 soma 33 — DSGN×5, RDSN×2, CONV×3, BLOG×11, SEO×6, LEAD×2, LEGAL×3, CONF×1. Todos mapeados, sem órfãos nem duplicatas.)
 
 ---
 *Requirements defined: 2026-05-31*
-*Last updated: 2026-05-31 after initial definition*
+*Last updated: 2026-05-31 after roadmap traceability mapping*
