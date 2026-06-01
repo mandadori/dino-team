@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 const FAQS: ReadonlyArray<{ q: string; a: string }> = [
   {
@@ -29,11 +29,12 @@ const FAQS: ReadonlyArray<{ q: string; a: string }> = [
 
 export function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
+  const reduce = useReducedMotion();
 
   return (
-    <section className="border-t border-line px-6 py-24 md:py-32">
+    <section className="border-t border-line px-6 py-24 sm:py-32">
       <div className="mx-auto max-w-3xl">
-        <h2 className="font-display text-4xl uppercase leading-tight md:text-6xl">
+        <h2 className="font-display text-4xl uppercase leading-tight sm:text-5xl">
           Perguntas que todo mundo faz
         </h2>
 
@@ -59,22 +60,38 @@ export function FAQ() {
                     )}
                   </button>
                 </h3>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
+
+                {/* Gate de reduced-motion: quando reduce=true, painel abre instantaneamente
+                    sem animar height — renderiza div estático. Sob no-preference, usa
+                    AnimatePresence + motion.div com height 0↔auto (exceção permitida do accordion). */}
+                {reduce ? (
+                  isOpen && (
+                    <div
                       id={`faq-panel-${i}`}
                       role="region"
                       aria-labelledby={`faq-trigger-${i}`}
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                      className="overflow-hidden"
                     >
                       <p className="pb-6 font-body text-muted">{f.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                    </div>
+                  )
+                ) : (
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        id={`faq-panel-${i}`}
+                        role="region"
+                        aria-labelledby={`faq-trigger-${i}`}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <p className="pb-6 font-body text-muted">{f.a}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
               </div>
             );
           })}
