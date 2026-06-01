@@ -25,15 +25,6 @@ export function Resultados() {
           ))}
         </div>
 
-        {/* PLACEHOLDER: depoimentos / antes-e-depois reais entram aqui.
-            Sem material real ainda — não usar stock nem inventar resultado. */}
-        <Reveal delay={0.1}>
-          <div className="mt-px border-x border-b border-dashed border-line p-8 text-center">
-            <p className="font-body text-sm uppercase tracking-[0.2em] text-muted">
-              Depoimentos e transformações de alunos entram aqui
-            </p>
-          </div>
-        </Reveal>
       </div>
     </section>
   );
