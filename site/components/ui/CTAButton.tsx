@@ -32,9 +32,11 @@ export function CTAButton({
       rel="noopener noreferrer"
       className={cn(
         "inline-flex items-center justify-center gap-2 px-8 py-4 font-body text-sm font-semibold uppercase tracking-wide",
-        "transition-colors duration-200",
+        // transition-all covers both color and transform; avoids the conflict where
+        // transition-transform would override transition-colors (both set transition-property).
+        "transition-all duration-200",
         // Microinteração de hover via CSS puro (D-09, RESEARCH A2): auto-respeita reduced-motion
-        "hover:scale-[1.04] transition-transform",
+        "hover:scale-[1.04]",
         // Focus ring monocromático — branco sobre fundo escuro (contextualizável via className)
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-fg focus-visible:ring-offset-bg",
         styles[variant],
