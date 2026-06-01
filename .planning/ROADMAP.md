@@ -47,7 +47,9 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Um visitante lê depoimentos nomeados estruturados como contexto→mudança→resultado (sem nome real, o depoimento não é publicado)
   3. Um visitante encontra a seção Comunidade enquadrada como parte do método ("não estar sozinho no processo"), sem gamificação nem contador falso
   4. Todo CTA de WhatsApp abre uma conversa real (via `NEXT_PUBLIC_WHATSAPP_URL`), não mais o placeholder `wa.me/0000000000`
-**Plans**: TBD
+**Plans**: 2 plans
+- [ ] 02-01-PLAN.md — Fundação de dados de conversão + slice Planos (PLANS/TESTIMONIALS/COMMUNITY constants, Planos.tsx, cleanup Resultados)
+- [ ] 02-02-PLAN.md — Slice prova social + pertencimento: Depoimentos + Comunidade, ordem final D-01, reconciliação CtaFinal
 **UI hint**: yes
 
 ### Phase 3: Conformidade Legal & LGPD
@@ -106,7 +108,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Landing Editorial + Fundação | 3/3 | Complete   | 2026-06-01 |
-| 2. Conversão Completa | 0/TBD | Not started | - |
+| 2. Conversão Completa | 0/2 | Planned | - |
 | 3. Conformidade Legal & LGPD | 0/TBD | Not started | - |
 | 4. Blog SEO Production-Ready | 0/TBD | Not started | - |
 | 5. Captura de E-mail | 0/TBD | Not started | - |
