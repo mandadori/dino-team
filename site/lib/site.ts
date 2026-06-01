@@ -34,9 +34,10 @@ export const TIMELINE: ReadonlyArray<{ marco: string; texto: string }> = [
 // Constantes de conversão — Fase 2
 // ---------------------------------------------------------------------------
 
-// PLACEHOLDER até o número real ser fornecido pelo usuário (D-06/D-19).
-// Não requer env var — o build passa com este placeholder.
-const WA_NUMBER = "0000000000";
+// Número extraído de NEXT_PUBLIC_WHATSAPP_URL (espelha WHATSAPP_URL).
+// Fallback: "0000000000" enquanto o env var não estiver configurado (D-06/D-19).
+const _waBase = process.env.NEXT_PUBLIC_WHATSAPP_URL ?? "";
+const WA_NUMBER = _waBase.match(/wa\.me\/([^?]+)/)?.[1] ?? "0000000000";
 
 // Builder de deeplink por plano — espelha o padrão de WHATSAPP_URL.
 // Texto pré-preenchido: "Quero o Plano X", facilitando identificação no WhatsApp.
