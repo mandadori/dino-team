@@ -35,14 +35,14 @@ export function SobreRamon() {
 
           <ol className="mt-10 space-y-6">
             {TIMELINE.map((t, i) => (
-              <Reveal key={t.marco} delay={0.06 * i}>
-                <li className="border-l border-line pl-5">
+              <li key={t.marco} className="border-l border-line pl-5">
+                <Reveal delay={0.06 * i}>
                   <p className="font-body text-sm font-semibold uppercase tracking-[0.2em] text-fg">
                     {t.marco}
                   </p>
                   <p className="mt-2 font-body text-muted">{t.texto}</p>
-                </li>
-              </Reveal>
+                </Reveal>
+              </li>
             ))}
           </ol>
 
