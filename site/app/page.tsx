@@ -3,6 +3,7 @@ import { ParaQuemE } from "@/components/sections/ParaQuemE";
 import { Metodo } from "@/components/sections/Metodo";
 import { Resultados } from "@/components/sections/Resultados";
 import { SobreRamon } from "@/components/sections/SobreRamon";
+import { Planos } from "@/components/sections/Planos";
 import { FAQ } from "@/components/sections/FAQ";
 import { CtaFinal } from "@/components/sections/CtaFinal";
 import { CTAButton } from "@/components/ui/CTAButton";
@@ -28,6 +29,7 @@ export default function Home() {
         <Metodo />
         <Resultados />
         <SobreRamon />
+        <Planos />
         <FAQ />
         <CtaFinal />
       </main>
