@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-06-01T19:03:40.851Z"
-last_activity: 2026-06-01 -- Phase 02 planning complete
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-06-01T19:10:39.587Z"
+last_activity: 2026-06-01
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
   percent: 17
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-31)
 
 **Core value:** O site converte o público certo em lead qualificado de consultoria via WhatsApp, carregado pela credibilidade do método de um campeão mundial; o blog sustenta autoridade e tráfego orgânico no topo do funil.
-**Current focus:** Phase 2 — conversão completa
+**Current focus:** Phase 02 — convers-o-completa
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
+Phase: 02 (convers-o-completa) — EXECUTING
+Plan: 2 of 2
 Status: Ready to execute
-Last activity: 2026-06-01 -- Phase 02 planning complete
+Last activity: 2026-06-01
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 02-convers-o-completa P01 | 2 | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,8 @@ Recent decisions affecting current work:
 - [Roadmap]: Fundação de design/animação (DSGN-*) embutida na Phase 1 (landing) em vez de fase pura de infra — MVP-vertical entrega valor visível já no primeiro slice.
 - [Roadmap]: three.js/WebGL (DSGN-06) e repurpose `export/`→MDX (PIPE-01) ficam fora deste milestone (v2/stretch); blog lança com `novo-artigo` + MDX manual.
 - [Roadmap]: SEO técnico construído junto com as rotas do blog (Phase 4), não remediado depois.
+- [Phase ?]: 02-01-SUMMARY.md
+- [Phase ?]: 02-01-SUMMARY.md
 
 ### Pending Todos
 
@@ -93,6 +96,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-01T18:41:28.754Z
-Stopped at: Phase 2 UI-SPEC approved
-Resume file: .planning/phases/02-convers-o-completa/02-UI-SPEC.md
+Last session: 2026-06-01T19:10:39.580Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
