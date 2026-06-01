@@ -52,25 +52,27 @@ Inalterada em relação à Fase 1. Escala de 4px restrita aos degraus: **4, 8, 1
 **Container:** `max-w-6xl` (1152px) para Depoimentos e Planos (grades). `max-w-4xl` para Comunidade (bloco textual centralizado). Gutter `px-6` (24px) em todas as larguras.
 **Touch target mínimo:** 44×44px. CTAButton já é `px-8 py-4` (~56px). CTA por plano e CTA da Comunidade usam o mesmo componente — OK.
 
-Exceptions: nenhuma.
+Exceptions: 96px e 128px — padding vertical de seção (`py-24`/`sm:py-32`), herdados da Fase 1, justificados pelo respiro editorial da marca e alinhados ao vocabulário de espaçamento de seção do Tailwind CSS 4. Ambos são múltiplos de 4.
 
 ---
 
 ## Typography
 
-Escala herdada da Fase 1, sem novos tamanhos. As 3 seções usam apenas papéis já definidos.
+Escala herdada da Fase 1, sem novos tamanhos. As 3 seções usam apenas papéis já definidos. **Exatamente 4 tamanhos lógicos distintos** nesta fase: 14px / 16px / 36px→48px / 48px→60px.
 
 | Role | Font | Size (mobile → desktop) | Weight | Line Height |
 |------|------|-------------------------|--------|-------------|
 | Section title (H2) | Anton (uppercase) | `text-4xl` 36px → `sm:text-5xl` 48px | 400 | 1.1 |
-| Sub-bloco / nome do plano (H3) | Anton (uppercase) | `text-2xl` 24px | 400 | 1.2 |
 | Preço do plano (numeral display) | Anton | `text-5xl` 48px → `sm:text-6xl` 60px | 400 | 1.0 |
-| Eyebrow / kicker | Montserrat (uppercase, `tracking-[0.3em]`) | `text-sm` 14px | 600 | 1.4 |
 | Body (depoimento, benefício, incluso) | Montserrat | `text-base` 16px | 400 | 1.6 |
+| Sub-bloco / nome do plano (H3) | Montserrat (uppercase, `tracking-wider`) | `text-base` 16px | 600 | 1.2 |
+| Eyebrow / kicker | Montserrat (uppercase, `tracking-[0.3em]`) | `text-sm` 14px | 600 | 1.4 |
 | Nome do aluno / label do incluso | Montserrat (uppercase, `tracking-wider`) | `text-sm` 14px | 600 | 1.4 |
 
+**4 tamanhos lógicos:** `text-sm` 14px → `text-base` 16px → `text-4xl/5xl` 36–48px → `text-5xl/6xl` 48–60px. O "nome do plano (H3)" **não** introduz um quinto tamanho: compartilha o degrau `text-base` 16px do Body e diferencia-se **por peso e caixa** (Montserrat 600 + uppercase + `tracking-wider`), não por tamanho. Hierarquia de sub-bloco é tonal/de peso, nunca de escala.
+
 **Weights:** exatamente **2** — Montserrat 400 (regular) e 600 (semibold). Anton ignora peso (fonte de peso único). Sem 500/700/800.
-**Caixa:** títulos display (Anton), eyebrows, nomes de aluno e labels sempre uppercase. Corpo de depoimento e benefício em caixa baixa (leitura de parágrafo prevalece, igual Fase 1).
+**Caixa:** títulos display (Anton), eyebrows, nome do plano (H3), nomes de aluno e labels sempre uppercase. Corpo de depoimento e benefício em caixa baixa (leitura de parágrafo prevalece, igual Fase 1).
 
 ---
 
@@ -136,6 +138,14 @@ Tom sereno, íntimo, direto, anti-espetáculo (`tom-de-voz.md`). Body em segunda
 | `CtaFinal` (`sections/CtaFinal.tsx`) | custom (existente, EDITAR copy) | bloco de reforço emocional (D-04) | inalterado estruturalmente; só copy + WhatsApp real |
 
 **Sem dependências novas:** sem carrossel, sem lib de cards (D-13). Grades via Tailwind `grid`.
+
+---
+
+## Visuals
+
+**Primary visual anchor:** o **preço numeral em Anton no PlanCard** (`text-5xl`→`text-6xl`, 48→60px) é o ponto focal primário da fase — é o maior elemento tipográfico e fecha o argumento de conversão. Em seguida vem o **CTAButton sólido branco** (único uso do accent), que carrega a ação. A hierarquia visual de cada PlanCard é: preço (anchor) → nome do plano → lista de inclusos → CTA. Nas demais seções, o Section title (Anton) é o anchor local, e o CTAButton branco é a única ênfase de ação.
+
+**Tom visual:** monocromático estrito, denso, editorial e sereno (anti-espetáculo). Generoso em respiro vertical (`py-24`/`sm:py-32`). Sem ornamentos, sem aspas decorativas grandes, sem ícones de estrela/score, sem glow. A ênfase nasce de tipografia (Anton vs Montserrat, peso, caixa) e tonalidade (`bg` vs `surface`), nunca de cor.
 
 ---
 
