@@ -29,7 +29,7 @@ export function RamonPhoto({
 
   if (src) {
     return (
-      <div className={`relative overflow-hidden ${className ?? ""}`}>
+      <div className={`overflow-hidden ${className ?? ""}`}>
         {/* Foto P&B: grayscale + contrast-125 para alto contraste mesmo se origem for colorida (D-05) */}
         <Image
           src={src}
@@ -56,7 +56,7 @@ export function RamonPhoto({
     <div
       role="img"
       aria-label={alt}
-      className={`relative flex flex-col items-center justify-center overflow-hidden border border-line bg-surface ${className ?? ""}`}
+      className={`flex flex-col items-center justify-center overflow-hidden border border-line bg-surface ${className ?? ""}`}
     >
       <span
         aria-hidden="true"

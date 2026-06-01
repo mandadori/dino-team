@@ -57,7 +57,7 @@ export function ParallaxImage({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div ref={scope} className="will-change-transform">
+    <div ref={scope} className="relative will-change-transform">
       {children}
     </div>
   );
