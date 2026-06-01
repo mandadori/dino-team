@@ -16,21 +16,22 @@ const NAO_E = [
 
 export function ParaQuemE() {
   return (
-    <section className="border-t border-line px-6 py-24 md:py-32">
+    <section className="border-t border-line px-6 py-24 sm:py-32">
       <div className="mx-auto max-w-6xl">
         <Reveal>
-          <h2 className="font-display text-4xl uppercase leading-tight md:text-6xl">
-            Pra quem é<span className="text-muted"> (e pra quem não é)</span>
+          <h2 className="font-display text-4xl uppercase leading-tight sm:text-5xl">
+            Pra quem é
+            <span className="text-muted"> (e pra quem não é)</span>
           </h2>
         </Reveal>
 
-        <div className="mt-14 grid gap-10 md:grid-cols-2">
+        <div className="mt-14 grid gap-px overflow-hidden border border-line bg-line md:grid-cols-2">
           <Reveal delay={0.08}>
-            <div className="h-full border border-line bg-surface p-8">
-              <p className="font-body text-sm font-semibold uppercase tracking-[0.2em] text-fg">
+            <div className="h-full bg-bg p-8">
+              <p className="font-body text-sm font-semibold uppercase tracking-[0.2em] text-muted">
                 É pra você se
               </p>
-              <ul className="mt-6 space-y-4">
+              <ul className="mt-6 space-y-5">
                 {PRA_VOCE.map((item) => (
                   <li key={item} className="flex gap-3 font-body text-muted">
                     <Check className="mt-0.5 size-5 shrink-0 text-fg" aria-hidden />
@@ -42,11 +43,11 @@ export function ParaQuemE() {
           </Reveal>
 
           <Reveal delay={0.16}>
-            <div className="h-full border border-line p-8">
+            <div className="h-full bg-surface p-8">
               <p className="font-body text-sm font-semibold uppercase tracking-[0.2em] text-muted">
                 Não é pra você se
               </p>
-              <ul className="mt-6 space-y-4">
+              <ul className="mt-6 space-y-5">
                 {NAO_E.map((item) => (
                   <li key={item} className="flex gap-3 font-body text-muted">
                     <X className="mt-0.5 size-5 shrink-0 text-muted" aria-hidden />
