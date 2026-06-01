@@ -17,7 +17,7 @@ export default function Home() {
             Dino Team
           </span>
           <CTAButton href={WHATSAPP_URL} className="px-5 py-2.5 text-xs">
-            Quero minha consultoria
+            Quero minha direção
           </CTAButton>
         </div>
       </header>
