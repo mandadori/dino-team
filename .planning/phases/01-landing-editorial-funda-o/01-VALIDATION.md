@@ -2,7 +2,7 @@
 phase: 1
 slug: landing-editorial-funda-o
 status: draft
-nyquist_compliant: false
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-06-01
 ---
@@ -38,7 +38,14 @@ created: 2026-06-01
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| TBD | — | — | DSGN-01..05, RDSN-01..02 | — | N/A (frontend, no auth surface) | build/lint/typecheck + manual | `cd site && npm run build` | ✅ | ⬜ pending |
+| 01-T1 tokens+@gsap/react+public/ramon | 01 | 1 | DSGN-01, DSGN-02, DSGN-04 | T-01-SC, T-01-IMG | next/image same-origin; sem remotePatterns | automated + manual | `cd site && grep -q color-muted-on-light app/globals.css && npm ls @gsap/react` | ✅ | ⬜ pending |
+| 01-T2 legitimidade @gsap/react | 01 | 1 | DSGN-04 | T-01-SC | checkpoint humano (slopcheck indisponível → [ASSUMED]) | manual checkpoint | n/a (blocking-human) | n/a | ⬜ pending |
+| 01-T3 hook + gates Reveal/Counter/CTA | 01 | 1 | DSGN-03 | — | N/A | automated + manual | `cd site && npm run lint && npx tsc --noEmit` | ✅ | ⬜ pending |
+| 01-T4 RamonPhoto + ParallaxImage | 01 | 1 | DSGN-05, RDSN-02 | T-01-IMG | foto same-origin; island não importa three | automated + manual | `cd site && npm run lint && npx tsc --noEmit` | ✅ | ⬜ pending |
+| 02-T1 Hero foto-conduzido | 02 | 2 | RDSN-01, RDSN-02, DSGN-01 | T-02-IMG | alt estático; foto same-origin | automated + manual | `cd site && npm run build` (First Load JS <200KB) | ✅ | ⬜ pending |
+| 02-T2 SobreRamon + CtaFinal | 02 | 2 | RDSN-01, RDSN-02 | T-02-IMG | foto same-origin | automated + manual | `cd site && npm run lint && npx tsc --noEmit` | ✅ | ⬜ pending |
+| 03-T1 ParaQuemE + Metodo (white-block) | 03 | 2 | RDSN-01, DSGN-01 | T-03-XSS | conteúdo estático | automated + manual (contraste sobre branco) | `cd site && npm run lint && npx tsc --noEmit` | ✅ | ⬜ pending |
+| 03-T2 Resultados + FAQ gate | 03 | 2 | RDSN-01, DSGN-03 | T-03-CLIENT | só estado UI local | automated + manual (reduced-motion) | `cd site && npm run build` | ✅ | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 *Per-task rows filled by the planner — every visual/animation task maps to a build gate + a manual verification line below.*
