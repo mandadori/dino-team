@@ -108,7 +108,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Landing Editorial + Fundação | 3/3 | Complete   | 2026-06-01 |
-| 2. Conversão Completa | 2/2 | Complete   | 2026-06-01 |
+| 2. Conversão Completa | 3/3 | Complete   | 2026-06-01 |
 | 3. Conformidade Legal & LGPD | 0/TBD | Not started | - |
 | 4. Blog SEO Production-Ready | 0/TBD | Not started | - |
 | 5. Captura de E-mail | 0/TBD | Not started | - |
