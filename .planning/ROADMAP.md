@@ -12,7 +12,7 @@ Este milestone leva o protótipo Next.js existente (home de 7 seções, design m
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Landing Editorial + Fundação** - Landing redesenhada com fotos reais do Ramon sobre tokens de contraste AA e gates de animação corretos
+- [x] **Phase 1: Landing Editorial + Fundação** - Landing redesenhada com fotos reais do Ramon sobre tokens de contraste AA e gates de animação corretos (completed 2026-06-01)
 - [ ] **Phase 2: Conversão Completa** - Planos com preço, Comunidade, Depoimentos e WhatsApp real fecham o funil de lead
 - [ ] **Phase 3: Conformidade Legal & LGPD** - Páginas legais + cookie consent que de fato gateia os scripts de tracking
 - [ ] **Phase 4: Blog SEO Production-Ready** - Listagem + artigo MDX com EEAT completo e SEO técnico (sitemap, OG, JSON-LD)
@@ -33,8 +33,8 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. As animações usam a lib certa para cada papel (GSAP=scroll, anime.js=microinteração, Framer=legado) e o first-load JS da home permanece abaixo do budget definido (<200KB)
 **Plans**: 3 plans
 - [x] 01-01-PLAN.md — Fundação: tokens reconciliados + scrims, hook reduced-motion + gates (Reveal/Counter/CTA), @gsap/react, RamonPhoto + ParallaxImage, public/ramon/
-- [ ] 01-02-PLAN.md — Slice foto-conduzido: Hero + SobreRamon + CtaFinal redesenhados com foto P&B/scrim, tipografia contida e copy reconciliada
-- [ ] 01-03-PLAN.md — Slice editorial: ParaQuemE + Metodo (passos numerados, bloco branco) + Resultados + FAQ (gate reduced-motion)
+- [x] 01-02-PLAN.md — Slice foto-conduzido: Hero + SobreRamon + CtaFinal redesenhados com foto P&B/scrim, tipografia contida e copy reconciliada
+- [x] 01-03-PLAN.md — Slice editorial: ParaQuemE + Metodo (passos numerados, bloco branco) + Resultados + FAQ (gate reduced-motion)
 **UI hint**: yes
 
 ### Phase 2: Conversão Completa
@@ -105,7 +105,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Landing Editorial + Fundação | 1/3 | In Progress|  |
+| 1. Landing Editorial + Fundação | 3/3 | Complete   | 2026-06-01 |
 | 2. Conversão Completa | 0/TBD | Not started | - |
 | 3. Conformidade Legal & LGPD | 0/TBD | Not started | - |
 | 4. Blog SEO Production-Ready | 0/TBD | Not started | - |
