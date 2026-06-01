@@ -32,7 +32,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Com `prefers-reduced-motion` ativo no navegador, nenhuma animação scroll-driven ou microinteração dispara — o conteúdo aparece estático e completo
   4. As animações usam a lib certa para cada papel (GSAP=scroll, anime.js=microinteração, Framer=legado) e o first-load JS da home permanece abaixo do budget definido (<200KB)
 **Plans**: 3 plans
-- [ ] 01-01-PLAN.md — Fundação: tokens reconciliados + scrims, hook reduced-motion + gates (Reveal/Counter/CTA), @gsap/react, RamonPhoto + ParallaxImage, public/ramon/
+- [x] 01-01-PLAN.md — Fundação: tokens reconciliados + scrims, hook reduced-motion + gates (Reveal/Counter/CTA), @gsap/react, RamonPhoto + ParallaxImage, public/ramon/
 - [ ] 01-02-PLAN.md — Slice foto-conduzido: Hero + SobreRamon + CtaFinal redesenhados com foto P&B/scrim, tipografia contida e copy reconciliada
 - [ ] 01-03-PLAN.md — Slice editorial: ParaQuemE + Metodo (passos numerados, bloco branco) + Resultados + FAQ (gate reduced-motion)
 **UI hint**: yes
@@ -105,7 +105,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Landing Editorial + Fundação | 0/3 | Planned | - |
+| 1. Landing Editorial + Fundação | 1/3 | In Progress|  |
 | 2. Conversão Completa | 0/TBD | Not started | - |
 | 3. Conformidade Legal & LGPD | 0/TBD | Not started | - |
 | 4. Blog SEO Production-Ready | 0/TBD | Not started | - |
