@@ -3,6 +3,8 @@ import { ParaQuemE } from "@/components/sections/ParaQuemE";
 import { Metodo } from "@/components/sections/Metodo";
 import { Resultados } from "@/components/sections/Resultados";
 import { SobreRamon } from "@/components/sections/SobreRamon";
+import { Depoimentos } from "@/components/sections/Depoimentos";
+import { Comunidade } from "@/components/sections/Comunidade";
 import { Planos } from "@/components/sections/Planos";
 import { FAQ } from "@/components/sections/FAQ";
 import { CtaFinal } from "@/components/sections/CtaFinal";
@@ -29,6 +31,8 @@ export default function Home() {
         <Metodo />
         <Resultados />
         <SobreRamon />
+        <Depoimentos />
+        <Comunidade />
         <Planos />
         <FAQ />
         <CtaFinal />

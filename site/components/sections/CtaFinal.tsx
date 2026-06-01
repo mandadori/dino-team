@@ -19,6 +19,11 @@ export function CtaFinal() {
             ambiente que te puxa pra cima — sem fórmula mágica.
           </p>
         </Reveal>
+        <Reveal delay={0.12}>
+          <p className="mt-4 font-body text-sm uppercase tracking-widest text-muted">
+            O topo exige direção.
+          </p>
+        </Reveal>
         <Reveal delay={0.16}>
           <div className="mt-10 flex justify-center">
             <CTAButton href={WHATSAPP_URL}>Quero minha direção</CTAButton>
