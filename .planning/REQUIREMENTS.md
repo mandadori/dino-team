@@ -22,9 +22,9 @@ Requisitos deste milestone. Cada um mapeia para fases do roadmap.
 
 ### Seções de Conversão (novas)
 
-- [ ] **CONV-01**: Seção Planos com preço visível na página, inclusos por plano e CTA WhatsApp por plano (cards sóbrios, sem badge "popular")
-- [ ] **CONV-02**: Seção Depoimentos nomeados (estrutura contexto→mudança→resultado), foto P&B quando o acervo chegar; sem nome real não publica
-- [ ] **CONV-03**: Seção Comunidade enquadrada como parte do método ("não estar sozinho no processo"), sem gamificação
+- [x] **CONV-01**: Seção Planos com preço visível na página, inclusos por plano e CTA WhatsApp por plano (cards sóbrios, sem badge "popular")
+- [x] **CONV-02**: Seção Depoimentos nomeados (estrutura contexto→mudança→resultado), foto P&B quando o acervo chegar; sem nome real não publica
+- [x] **CONV-03**: Seção Comunidade enquadrada como parte do método ("não estar sozinho no processo"), sem gamificação
 
 ### Blog
 
@@ -62,7 +62,7 @@ Requisitos deste milestone. Cada um mapeia para fases do roadmap.
 
 ### Configuração de Conversão
 
-- [ ] **CONF-01**: WhatsApp real substituindo o placeholder `wa.me/0000000000` (via `NEXT_PUBLIC_WHATSAPP_URL`)
+- [x] **CONF-01**: WhatsApp real substituindo o placeholder `wa.me/0000000000` (via `NEXT_PUBLIC_WHATSAPP_URL`)
 
 ## v2 Requirements
 
@@ -107,10 +107,10 @@ Mapeado na criação do roadmap (2026-05-31). Cada requisito v1 → exatamente u
 | DSGN-05 | Phase 1 | Pending |
 | RDSN-01 | Phase 1 | Pending |
 | RDSN-02 | Phase 1 | Pending |
-| CONV-01 | Phase 2 | Pending |
-| CONV-02 | Phase 2 | Pending |
-| CONV-03 | Phase 2 | Pending |
-| CONF-01 | Phase 2 | Pending |
+| CONV-01 | Phase 2 | Complete |
+| CONV-02 | Phase 2 | Complete |
+| CONV-03 | Phase 2 | Complete |
+| CONF-01 | Phase 2 | Complete |
 | LEGAL-01 | Phase 3 | Pending |
 | LEGAL-02 | Phase 3 | Pending |
 | LEGAL-03 | Phase 3 | Pending |

@@ -13,7 +13,7 @@ Este milestone leva o protótipo Next.js existente (home de 7 seções, design m
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Landing Editorial + Fundação** - Landing redesenhada com fotos reais do Ramon sobre tokens de contraste AA e gates de animação corretos (completed 2026-06-01)
-- [ ] **Phase 2: Conversão Completa** - Planos com preço, Comunidade, Depoimentos e WhatsApp real fecham o funil de lead
+- [x] **Phase 2: Conversão Completa** - Planos com preço, Comunidade, Depoimentos e WhatsApp real fecham o funil de lead (completed 2026-06-01)
 - [ ] **Phase 3: Conformidade Legal & LGPD** - Páginas legais + cookie consent que de fato gateia os scripts de tracking
 - [ ] **Phase 4: Blog SEO Production-Ready** - Listagem + artigo MDX com EEAT completo e SEO técnico (sitemap, OG, JSON-LD)
 - [ ] **Phase 5: Captura de E-mail** - Form inline pós-artigo via Resend com consentimento e estados acessíveis
@@ -49,7 +49,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Todo CTA de WhatsApp abre uma conversa real (via `NEXT_PUBLIC_WHATSAPP_URL`), não mais o placeholder `wa.me/0000000000`
 **Plans**: 2 plans
 - [x] 02-01-PLAN.md — Fundação de dados de conversão + slice Planos (PLANS/TESTIMONIALS/COMMUNITY constants, Planos.tsx, cleanup Resultados)
-- [ ] 02-02-PLAN.md — Slice prova social + pertencimento: Depoimentos + Comunidade, ordem final D-01, reconciliação CtaFinal
+- [x] 02-02-PLAN.md — Slice prova social + pertencimento: Depoimentos + Comunidade, ordem final D-01, reconciliação CtaFinal
 **UI hint**: yes
 
 ### Phase 3: Conformidade Legal & LGPD
@@ -108,7 +108,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Landing Editorial + Fundação | 3/3 | Complete   | 2026-06-01 |
-| 2. Conversão Completa | 1/2 | In Progress|  |
+| 2. Conversão Completa | 2/2 | Complete   | 2026-06-01 |
 | 3. Conformidade Legal & LGPD | 0/TBD | Not started | - |
 | 4. Blog SEO Production-Ready | 0/TBD | Not started | - |
 | 5. Captura de E-mail | 0/TBD | Not started | - |
