@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Landing Editorial + Fundação** - Landing redesenhada com fotos reais do Ramon sobre tokens de contraste AA e gates de animação corretos (completed 2026-06-01)
 - [x] **Phase 2: Conversão Completa** - Planos com preço, Comunidade, Depoimentos e WhatsApp real fecham o funil de lead (completed 2026-06-01)
-- [ ] **Phase 3: Conformidade Legal & LGPD** - Páginas legais + cookie consent que de fato gateia os scripts de tracking
+- [x] **Phase 3: Conformidade Legal & LGPD** - Páginas legais + cookie consent que de fato gateia os scripts de tracking (completed 2026-06-02)
 - [ ] **Phase 4: Blog SEO Production-Ready** - Listagem + artigo MDX com EEAT completo e SEO técnico (sitemap, OG, JSON-LD)
 - [ ] **Phase 5: Captura de E-mail** - Form inline pós-artigo via Resend com consentimento e estados acessíveis
 - [ ] **Phase 6: Pipeline de Artigos** - Skill `novo-artigo` que produz MDX versionado no contrato do schema
@@ -63,7 +63,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Após conceder consentimento, os `TrackingScripts` passam a carregar; o visitante consegue revogar o consentimento depois
 **Plans**: 2 plans
 - [x] 03-01-PLAN.md — Slice de consentimento: ConsentProvider + CookieBanner + gate TrackingScripts + wire layout (LEGAL-03)
-- [ ] 03-02-PLAN.md — Slice de páginas legais: /privacidade + /termos (editorial da marca) + links no footer (LEGAL-01, LEGAL-02)
+- [x] 03-02-PLAN.md — Slice de páginas legais: /privacidade + /termos (editorial da marca) + links no footer (LEGAL-01, LEGAL-02)
 **UI hint**: yes
 
 ### Phase 4: Blog SEO Production-Ready
@@ -111,7 +111,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Landing Editorial + Fundação | 3/3 | Complete   | 2026-06-01 |
 | 2. Conversão Completa | 3/3 | Complete   | 2026-06-01 |
-| 3. Conformidade Legal & LGPD | 1/2 | In Progress|  |
+| 3. Conformidade Legal & LGPD | 2/2 | Complete   | 2026-06-02 |
 | 4. Blog SEO Production-Ready | 0/TBD | Not started | - |
 | 5. Captura de E-mail | 0/TBD | Not started | - |
 | 6. Pipeline de Artigos | 0/TBD | Not started | - |

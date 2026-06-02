@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: "Plan 03-01 complete — consent slice verified in browser; ready to execute 03-02 (páginas legais)"
-last_updated: "2026-06-02T12:22:54.160Z"
-last_activity: 2026-06-02 -- Plan 03-01 complete (Task 3 human-verify approved); LEGAL-03 satisfied
+status: verifying
+stopped_at: Plan 03-02 complete — /privacidade + /termos shipped; Phase 3 done, ready for verification
+last_updated: "2026-06-02T12:28:17.986Z"
+last_activity: 2026-06-02
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 8
-  completed_plans: 7
-  percent: 88
+  completed_plans: 8
+  percent: 50
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-05-31)
 
 ## Current Position
 
-Phase: 3 (conformidade-legal-lgpd) — EXECUTING
-Plan: 2 of 2 (03-01 complete; 03-02 ready to execute)
-Status: Ready to execute 03-02 — páginas legais (/privacidade + /termos)
-Last activity: 2026-06-02 -- Plan 03-01 complete (consent slice verified)
+Phase: 3 (conformidade-legal-lgpd) — COMPLETE (ready for verification)
+Plan: 2 of 2 (03-01 + 03-02 complete)
+Status: Phase complete — LEGAL-01/02/03 satisfied; ready for verification
+Last activity: 2026-06-02 -- Plan 03-02 complete (/privacidade + /termos + footer legal links)
 
-Progress: [█████████░] 88%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Progress: [█████████░] 88%
 | Phase 02-convers-o-completa P02 | 8 | 3 tasks | 4 files |
 | Phase 02-convers-o-completa P03 | 4 | 1 task | 1 file |
 | Phase 03 P01 | 4 | 3 tasks | 5 files |
+| Phase 03 P02 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,7 @@ Recent decisions affecting current work:
 - [Phase ?]: 02-01-SUMMARY.md
 - [Phase ?]: .planning/phases/02-convers-o-completa/02-02-SUMMARY.md
 - [Phase 02]: WA_NUMBER deriva de NEXT_PUBLIC_WHATSAPP_URL via regex, espelhando WHATSAPP_URL; fallback '0000000000' mantido (CONF-01).
+- [Phase ?]: [Phase 03]: Páginas legais inline header/footer (sem SiteShell extraído); identificadores da empresa como placeholders bracketed [RAZÃO SOCIAL]/[CNPJ]/[E-MAIL DO ENCARREGADO DE DADOS]/[COMARCA-UF]/[DATA], swap-in sem tocar código (D-01).
 
 ### Pending Todos
 
@@ -102,6 +104,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-02T12:22:44.032Z
+Last session: 2026-06-02T12:28:10.610Z
 Stopped at: Plan 03-01 complete — consent slice verified (Task 3 human-verify approved)
-Resume file: .planning/phases/03-conformidade-legal-lgpd/03-02-PLAN.md
+Resume file: None
