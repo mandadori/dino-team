@@ -246,10 +246,75 @@
       zones.forEach(bindBgZone);
     });
 
+    // ---------- Contrato + seleção + painel ----------
+    var panel = document.getElementById("dt-panel");
+    var panelTitle = document.getElementById("dt-panel-title");
+    var panelBody = document.getElementById("dt-panel-body");
+    var contract = null;      // { estilo, blocks:[{name, bg, slots:[...]}] }
+    var selected = null;      // elemento [data-slot] selecionado
+    var edits = [];           // deltas acumulados
+
+    fetch("/contract").then(function (r) { return r.status === 200 ? r.json() : null; })
+      .then(function (c) { contract = c; }).catch(function () { contract = null; });
+
+    function slotDef(el) {
+      if (!contract) return null;
+      var section = el.closest("section[data-slide]");
+      var blockName = section && section.getAttribute("data-block");
+      var slotName = el.getAttribute("data-slot");
+      var block = contract.blocks.find(function (b) { return b.name === blockName; });
+      if (!block) return null;
+      return block.slots.find(function (s) { return s.name === slotName; }) || null;
+    }
+
+    function selectEl(el) {
+      if (selected) selected.classList.remove("dt-selected");
+      selected = el; el.classList.add("dt-selected");
+      buildPanel(el);
+      panel.classList.add("is-open");
+    }
+    function deselect() {
+      if (selected) selected.classList.remove("dt-selected");
+      selected = null; panel.classList.remove("is-open");
+    }
+
+    function field(label, inputHtml) {
+      return '<div class="dt-field"><label>' + label + '</label>' + inputHtml + '</div>';
+    }
+
+    function buildPanel(el) {
+      var def = slotDef(el);
+      var slotName = el.getAttribute("data-slot");
+      panelTitle.textContent = slotName + (def ? "" : " (livre)");
+      // Os controles concretos entram na Task 11; aqui só o título + remover.
+      panelBody.innerHTML = "";
+      var rm = document.createElement("button");
+      rm.className = "dt-remove"; rm.textContent = "Remover elemento";
+      rm.addEventListener("click", function () { window.__DT.removeSelected(); });
+      panelBody.appendChild(rm);
+    }
+
+    // Clique em elemento editável seleciona; clique no fundo/controles deseleciona.
+    slides.forEach(function (slide) {
+      slide.querySelectorAll("[data-slot]").forEach(function (el) {
+        if (el.hasAttribute("data-bg-drop")) return; // bg tem fluxo próprio
+        el.addEventListener("click", function (e) { e.stopPropagation(); selectEl(el); });
+      });
+    });
+    document.addEventListener("click", function (e) {
+      if (e.target.closest(".dt-panel") || e.target.closest(".dt-controls") ||
+          e.target.closest("[data-slot]")) return;
+      deselect();
+    });
+
     // Pontos de extensão preenchidos nas próximas tasks:
     window.__DT = {
       slides: slides, current: function () { return current; },
-      applyBgZoom: applyBgZoom, readPos: readPos
+      applyBgZoom: applyBgZoom, readPos: readPos,
+      getContract: function () { return contract; },
+      getEdits: function () { return edits; },
+      slotDef: slotDef, selectEl: selectEl,
+      removeSelected: function () {}, onBgChanged: null
     };
   })();
   </script>
