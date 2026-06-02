@@ -22,6 +22,7 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 7 | pesquisador (P7) | briefing ← 4 | 4 | pesquisa-bruta |
 | 8 | copywriter + ⏸ | pesquisa ← 7, briefing ← 4 | 7 | copy.md |
 | 9 | designer + ⏸ | copy ← 8 | 8 | assets + edits.json (via estúdio) |
+| 9.5 | ⚙ loop aprendizado + ⏸ (condic.) | edits.json ← 9 | 9 | estilo.md/slide.html atualizados |
 | 10 | curador-export | pasta ← 9 | 9 | `<validacao>` + PNGs |
 | 11a | revisor-conteudo | pasta ← 10, briefing ← 4 | 10 | `<parecer>` |
 | 11b | revisor-brand | pasta ← 10 | 11a | parecer binário |
@@ -433,7 +434,56 @@ Opções de resposta:
 - Peça ajustes que prefira que eu (Designer) faça → repasso ao Designer.
 ```
 
-**Aguarde resposta.** Ajustes visuais agora são feitos pelo usuário no estúdio (zero token). Se o usuário pedir explicitamente um ajuste via Designer, repasse o ponto específico. Quando confirmar, siga para o Passo 10.
+**Aguarde resposta.** Ajustes visuais agora são feitos pelo usuário no estúdio (zero token). Se o usuário pedir explicitamente um ajuste via Designer, repasse o ponto específico. Quando confirmar, siga para o Passo 9.5.
+
+### 9.5. Loop de aprendizado de estilo (condicional)
+
+Após o usuário salvar no estúdio (Passo 9), leia `export/conteudos/<formato>/<data>-<slug>/design/edits.json` se existir e rode a extração:
+
+```bash
+node -e '
+import("./scripts/studio/extract-structural.js").then(async (m) => {
+  const fs = await import("node:fs");
+  const p = "export/conteudos/<formato>/<data>-<slug>/design/edits.json";
+  if (!fs.existsSync(p)) { console.log(JSON.stringify({hasStructural:false})); return; }
+  console.log(JSON.stringify(m.extractStructural(JSON.parse(fs.readFileSync(p,"utf8")))));
+});
+'
+```
+
+Se `hasStructural` for `false` (ou o arquivo não existir), **pule** este passo sem mensagem.
+
+Se `hasStructural` for `true`, **pause** e apresente:
+
+```
+Detectei mudanças estruturais no estilo '<estilo>':
+<para cada bloco em byBlock>
+- bloco <block>: <lines unidas por " · ">
+
+Promover ao estilo.md? Isso atualiza o estilo para posts futuros.
+- "tudo"            → promove todos os deltas
+- "<bloco/slot>"    → promove só os escolhidos
+- "não"             → fica só neste post (estilo intacto)
+```
+
+**Aguarde resposta.** Se "não", siga para o Passo 10 sem alterar o estilo.
+
+Se "tudo" ou seleção, acione `designer` em modo promoção:
+
+```
+Tarefa: promover deltas estruturais ao estilo.
+
+Inputs:
+- estilo.md: <estilo_path do edits.json>
+- slide.html: <pasta do estilo>/slide.html
+- Deltas a aplicar (por bloco):
+  <lista filtrada de byBlock[].deltas — bloco, target, prop, from, to>
+
+Aplique cada delta nos dois arquivos atomicamente conforme o modo promoção do seu contrato.
+Saída: manifesto com os arquivos alterados.
+```
+
+Em `DELTA_NAO_MAPEAVEL`, reporte ao usuário o delta problemático e siga com os demais (não trave o pipeline). Após a promoção, siga para o Passo 10.
 
 ### 10. Validação técnica + export PNG
 
