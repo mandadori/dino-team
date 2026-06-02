@@ -11,7 +11,7 @@
 
 import http from "node:http";
 import { resolve, basename } from "node:path";
-import { servePreview, serveContract, saveEdits, runExport } from "./studio/handlers.js";
+import { servePreview, serveContract, saveEdits, runExport, serveSuggestions } from "./studio/handlers.js";
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -53,6 +53,9 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === "GET" && url.pathname === "/contract") {
       return send(res, await serveContract({ estiloPath, postSlug: basename(absPost) }));
+    }
+    if (req.method === "GET" && url.pathname === "/suggestions") {
+      return send(res, await serveSuggestions({ postDir: absPost }));
     }
     if (req.method === "POST" && url.pathname === "/save") {
       const raw = await readBody(req);
