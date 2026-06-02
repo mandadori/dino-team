@@ -13,8 +13,28 @@
 //     --estilo templates/social-media/carrossel/estilos/editorial/estilo.md
 
 import http from "node:http";
-import { resolve, basename } from "node:path";
+import { resolve, basename, join, extname, normalize } from "node:path";
+import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { servePreview, serveContract, saveEdits, runExport, serveSuggestions } from "./studio/handlers.js";
+
+// Tipos servidos pelo fallback estático (assets referenciados pelo preview: logo, etc.)
+const STATIC_MIME = {
+  ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp",
+  ".svg": "image/svg+xml", ".gif": "image/gif", ".css": "text/css", ".js": "text/javascript",
+  ".woff": "font/woff", ".woff2": "font/woff2", ".ico": "image/x-icon",
+};
+
+// Serve um arquivo da raiz do repo (process.cwd()) com proteção contra path traversal.
+async function serveStatic(pathname) {
+  const root = process.cwd();
+  const target = normalize(join(root, decodeURIComponent(pathname)));
+  if (!target.startsWith(root) || !existsSync(target)) {
+    return { status: 404, type: "text/plain", body: "not found" };
+  }
+  const buf = await readFile(target);
+  return { status: 200, type: STATIC_MIME[extname(target).toLowerCase()] || "application/octet-stream", body: buf };
+}
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -79,6 +99,10 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === "POST" && url.pathname === "/export") {
       return send(res, await runExport({ postDir: absPost }));
+    }
+    // Fallback estático: serve assets do repo referenciados pelo preview (logo etc.)
+    if (req.method === "GET") {
+      return send(res, await serveStatic(url.pathname));
     }
     send(res, { status: 404, type: "text/plain", body: "not found" });
   } catch (err) {
