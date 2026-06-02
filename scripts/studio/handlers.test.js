@@ -73,3 +73,35 @@ test("runExport invoca o export-png.js com o postDir", async () => {
   assert.equal(calls[0].cmd, "node");
   assert.deepEqual(calls[0].args, ["scripts/export-png.js", "/tmp/post"]);
 });
+
+test("serveSuggestions resolve imagens em base64", async () => {
+  const { mkdtemp, mkdir, writeFile } = await import("node:fs/promises");
+  const { tmpdir } = await import("node:os");
+  const { join } = await import("node:path");
+  const { serveSuggestions } = await import("./handlers.js");
+
+  const base = await mkdtemp(join(tmpdir(), "sugg-"));
+  const design = join(base, "design");
+  await mkdir(design, { recursive: true });
+  const bank = await mkdtemp(join(tmpdir(), "bank-"));
+  await writeFile(join(bank, "f.png"), Buffer.from([0x89, 0x50, 0x4e, 0x47]));
+  await writeFile(join(design, "suggestions.json"), JSON.stringify({
+    "1": { drop: "photo", image: join(bank, "f.png") },
+  }));
+
+  const r = await serveSuggestions({ postDir: base });
+  assert.equal(r.status, 200);
+  const body = JSON.parse(r.body);
+  assert.equal(body["1"].drop, "photo");
+  assert.match(body["1"].dataUrl, /^data:image\/png;base64,/);
+});
+
+test("serveSuggestions devolve 204 sem suggestions.json", async () => {
+  const { mkdtemp } = await import("node:fs/promises");
+  const { tmpdir } = await import("node:os");
+  const { join } = await import("node:path");
+  const { serveSuggestions } = await import("./handlers.js");
+  const base = await mkdtemp(join(tmpdir(), "sugg-empty-"));
+  const r = await serveSuggestions({ postDir: base });
+  assert.equal(r.status, 204);
+});

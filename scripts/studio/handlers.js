@@ -3,7 +3,7 @@
 
 import { readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { join, extname } from "node:path";
 import { spawn as nodeSpawn } from "node:child_process";
 import { parseEstilo } from "./parse-estilo.js";
 import { validateEdits } from "./validate-edits.js";
@@ -32,6 +32,23 @@ export async function saveEdits({ postDir, html, edits }) {
   await writeFile(join(design, "preview.html"), html, "utf8");
   await writeFile(join(design, "edits.json"), JSON.stringify(edits, null, 2), "utf8");
   return { status: 200, type: "application/json", body: JSON.stringify({ ok: true }) };
+}
+
+const MIME = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp" };
+
+export async function serveSuggestions({ postDir }) {
+  const file = join(postDir, "design", "suggestions.json");
+  if (!existsSync(file)) return { status: 204, type: "application/json", body: "" };
+  const sugg = JSON.parse(await readFile(file, "utf8"));
+  const out = {};
+  for (const slide of Object.keys(sugg)) {
+    const { drop, image } = sugg[slide];
+    if (!image || !existsSync(image)) continue;
+    const buf = await readFile(image);
+    const mime = MIME[extname(image).toLowerCase()] || "image/jpeg";
+    out[slide] = { drop, dataUrl: `data:${mime};base64,${buf.toString("base64")}` };
+  }
+  return { status: 200, type: "application/json", body: JSON.stringify(out) };
 }
 
 export function runExport({ postDir, spawn = nodeSpawn }) {
