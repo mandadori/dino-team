@@ -1,18 +1,44 @@
 // scripts/editor/handlers.js
 // Handlers puros das rotas do estúdio. Sem http aqui — apenas lógica testável.
 
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, extname } from "node:path";
 import { spawn as nodeSpawn } from "node:child_process";
 import { parseEstilo } from "./parse-estilo.js";
 import { validateEdits } from "./validate-edits.js";
 
-export async function servePreview({ postDir }) {
-  const file = join(postDir, "design", "preview.html");
-  if (!existsSync(file)) return { status: 404, type: "text/plain", body: "preview.html não encontrado" };
-  const body = await readFile(file, "utf8");
-  return { status: 200, type: "text/html; charset=utf-8", body };
+const STYLE_RE = /<style>([\s\S]*?)<\/style>/;
+const SECTION_RE = /<section[\s\S]*<\/section>/;
+
+function slideNumber(file) {
+  const m = file.match(/slide-(\d+)\.html$/);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+// Lista os slide-N.html do post, ordenados por N.
+async function listSlideFiles(design) {
+  if (!existsSync(design)) return [];
+  const files = (await readdir(design)).filter((f) => /^slide-\d+\.html$/.test(f));
+  return files.sort((a, b) => slideNumber(a) - slideNumber(b));
+}
+
+// Serve os slides para o canvas: CSS do estilo (uma vez) + a <section> de cada slide.
+export async function serveSlides({ postDir }) {
+  const design = join(postDir, "design");
+  const files = await listSlideFiles(design);
+  if (files.length === 0) return { status: 404, type: "text/plain", body: "nenhum slide-N.html encontrado" };
+
+  let css = "";
+  const slides = [];
+  for (const file of files) {
+    const html = await readFile(join(design, file), "utf8");
+    if (!css) css = (html.match(STYLE_RE) || [, ""])[1];
+    const section = (html.match(SECTION_RE) || [""])[0];
+    const block = (section.match(/data-block="([^"]*)"/) || [, null])[1];
+    slides.push({ n: slideNumber(file), block, html: section });
+  }
+  return { status: 200, type: "application/json", body: JSON.stringify({ css, slides }) };
 }
 
 export async function serveContract({ estiloPath, postSlug }) {
@@ -23,15 +49,26 @@ export async function serveContract({ estiloPath, postSlug }) {
   return { status: 200, type: "application/json", body: JSON.stringify(enriched) };
 }
 
-export async function saveEdits({ postDir, html, edits }) {
+// Salva os slides editados de volta nos slide-N.html: troca só a <section>
+// (preserva head/fonts/CSS do arquivo) e grava edits.json. CSS não muda — as
+// edições vivem como estilos inline na própria <section>.
+export async function saveSlides({ postDir, slides, edits }) {
   const result = validateEdits(edits);
   if (!result.valid) {
     return { status: 400, type: "application/json", body: JSON.stringify({ errors: result.errors }) };
   }
   const design = join(postDir, "design");
-  await writeFile(join(design, "preview.html"), html, "utf8");
+  const written = [];
+  for (const s of slides || []) {
+    const file = join(design, `slide-${s.n}.html`);
+    if (!existsSync(file)) continue;
+    const original = await readFile(file, "utf8");
+    const updated = original.replace(SECTION_RE, s.html);
+    await writeFile(file, updated, "utf8");
+    written.push(`slide-${s.n}.html`);
+  }
   await writeFile(join(design, "edits.json"), JSON.stringify(edits, null, 2), "utf8");
-  return { status: 200, type: "application/json", body: JSON.stringify({ ok: true }) };
+  return { status: 200, type: "application/json", body: JSON.stringify({ ok: true, written }) };
 }
 
 const MIME = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp" };

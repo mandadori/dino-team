@@ -3,26 +3,38 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, writeFile, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { servePreview, serveContract, saveEdits, runExport } from "./handlers.js";
+import { serveSlides, serveContract, saveSlides, runExport } from "./handlers.js";
 
 async function fixturePost() {
-  const base = await mkdtemp(join(tmpdir(), "studio-"));
+  const base = await mkdtemp(join(tmpdir(), "editor-"));
   const design = join(base, "design");
   await mkdir(design, { recursive: true });
-  await writeFile(join(design, "preview.html"), "<html><body>old</body></html>");
+  const doc = (block, title) =>
+    `<!doctype html><html><head><style>.slide{width:1080px}</style></head>` +
+    `<body><section class="slide ${block}" data-block="${block}">` +
+    `<h1 data-slot="título">${title}</h1></section></body></html>`;
+  await writeFile(join(design, "slide-1.html"), doc("capa", "UM"));
+  await writeFile(join(design, "slide-2.html"), doc("corpo", "DOIS"));
   return { base, design };
 }
 
-test("servePreview devolve o preview.html", async () => {
+test("serveSlides devolve css uma vez + a section de cada slide", async () => {
   const { base } = await fixturePost();
-  const r = await servePreview({ postDir: base });
+  const r = await serveSlides({ postDir: base });
   assert.equal(r.status, 200);
-  assert.match(r.body, /old/);
+  const { css, slides } = JSON.parse(r.body);
+  assert.match(css, /\.slide\{width:1080px\}/);
+  assert.equal(slides.length, 2);
+  assert.equal(slides[0].n, 1);
+  assert.equal(slides[0].block, "capa");
+  assert.match(slides[0].html, /data-slot="título"/);
+  assert.equal(slides[1].n, 2);
 });
 
-test("servePreview devolve 404 sem preview", async () => {
-  const base = await mkdtemp(join(tmpdir(), "studio-empty-"));
-  const r = await servePreview({ postDir: base });
+test("serveSlides devolve 404 sem slides", async () => {
+  const base = await mkdtemp(join(tmpdir(), "editor-empty-"));
+  await mkdir(join(base, "design"), { recursive: true });
+  const r = await serveSlides({ postDir: base });
   assert.equal(r.status, 404);
 });
 
@@ -41,23 +53,24 @@ test("serveContract devolve 204 sem estiloPath", async () => {
   assert.equal(r.status, 204);
 });
 
-test("saveEdits grava preview.html e edits.json válidos", async () => {
+test("saveSlides troca só a section e preserva o CSS; grava edits.json", async () => {
   const { base, design } = await fixturePost();
-  const payload = {
-    estilo: "editorial",
-    post: "p",
-    slides: [{ slide: 1, block: "capa", edits: [] }],
-  };
-  const r = await saveEdits({ postDir: base, html: "<html>new</html>", edits: payload });
+  const novaSection =
+    '<section class="slide capa" data-block="capa"><h1 data-slot="título" style="font-size:120px">EDITADO</h1></section>';
+  const edits = { estilo: "editorial", post: "p", slides: [{ slide: 1, block: "capa", edits: [] }] };
+  const r = await saveSlides({ postDir: base, slides: [{ n: 1, html: novaSection }], edits });
   assert.equal(r.status, 200);
-  assert.equal(await readFile(join(design, "preview.html"), "utf8"), "<html>new</html>");
-  const written = JSON.parse(await readFile(join(design, "edits.json"), "utf8"));
-  assert.equal(written.estilo, "editorial");
+  const saved = await readFile(join(design, "slide-1.html"), "utf8");
+  assert.match(saved, /EDITADO/);
+  assert.match(saved, /<style>\.slide\{width:1080px\}<\/style>/); // CSS preservado
+  assert.match(saved, /font-size:120px/);
+  const ej = JSON.parse(await readFile(join(design, "edits.json"), "utf8"));
+  assert.equal(ej.estilo, "editorial");
 });
 
-test("saveEdits rejeita payload inválido com 400", async () => {
+test("saveSlides rejeita edits inválido com 400", async () => {
   const { base } = await fixturePost();
-  const r = await saveEdits({ postDir: base, html: "<html>x</html>", edits: { estilo: "e", post: "p" } });
+  const r = await saveSlides({ postDir: base, slides: [], edits: { estilo: "e", post: "p" } });
   assert.equal(r.status, 400);
   assert.ok(r.body.includes("slides"));
 });

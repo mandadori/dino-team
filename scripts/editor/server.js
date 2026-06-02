@@ -13,10 +13,21 @@
 //     --estilo templates/social-media/carrossel/estilos/editorial/estilo.md
 
 import http from "node:http";
-import { resolve, basename, join, extname, normalize } from "node:path";
+import { resolve, basename, join, extname, normalize, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { servePreview, serveContract, saveEdits, runExport, serveSuggestions } from "./handlers.js";
+import { serveSlides, serveContract, saveSlides, runExport, serveSuggestions } from "./handlers.js";
+
+// Diretório do próprio editor (index.html + app.js vivem aqui, ao lado deste server).
+const EDITOR_DIR = dirname(fileURLToPath(import.meta.url));
+
+// Serve um arquivo do editor (index.html, app.js).
+async function serveEditorFile(name, type) {
+  const file = join(EDITOR_DIR, name);
+  if (!existsSync(file)) return { status: 404, type: "text/plain", body: `${name} não encontrado` };
+  return { status: 200, type, body: await readFile(file, "utf8") };
+}
 
 // Tipos servidos pelo fallback estático (assets referenciados pelo preview: logo, etc.)
 const STATIC_MIME = {
@@ -84,7 +95,13 @@ const server = http.createServer(async (req, res) => {
       return res.end();
     }
     if (req.method === "GET" && url.pathname === "/") {
-      return send(res, await servePreview({ postDir: absPost }));
+      return send(res, await serveEditorFile("index.html", "text/html; charset=utf-8"));
+    }
+    if (req.method === "GET" && url.pathname === "/app.js") {
+      return send(res, await serveEditorFile("app.js", "text/javascript; charset=utf-8"));
+    }
+    if (req.method === "GET" && url.pathname === "/slides") {
+      return send(res, await serveSlides({ postDir: absPost }));
     }
     if (req.method === "GET" && url.pathname === "/contract") {
       return send(res, await serveContract({ estiloPath, postSlug: basename(absPost) }));
@@ -94,8 +111,8 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === "POST" && url.pathname === "/save") {
       const raw = await readBody(req);
-      const { html, edits } = JSON.parse(raw || "{}");
-      return send(res, await saveEdits({ postDir: absPost, html, edits }));
+      const { slides, edits } = JSON.parse(raw || "{}");
+      return send(res, await saveSlides({ postDir: absPost, slides, edits }));
     }
     if (req.method === "POST" && url.pathname === "/export") {
       return send(res, await runExport({ postDir: absPost }));
