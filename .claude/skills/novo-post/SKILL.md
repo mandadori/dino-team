@@ -441,10 +441,12 @@ Design gerado em export/conteudos/<formato>/<data>-<slug>/design/ (estilo: <slug
 - preview.html
 - <assets individuais>
 
-Abra o estúdio local para revisar e ajustar (texto, tamanho, posição, foto, estilo):
+Suba o backend do estúdio (fica rodando na porta 4321) e abra o preview pra revisar e ajustar (texto, tamanho, posição, foto, estilo):
 
   node scripts/studio.js export/conteudos/<formato>/<data>-<slug> \
     --estilo <caminho do estilo.md>
+
+Depois abra export/conteudos/<formato>/<data>-<slug>/design/preview.html — pelo Live Preview do VS Code (origin separado; o estúdio tem CORS) ou em http://localhost:4321. O editor chama o backend em http://localhost:4321 (rode o studio na porta padrão 4321).
 
 No estúdio: edite, clique "Salvar" (grava preview.html + edits.json) e "Exportar" quando estiver pronto.
 

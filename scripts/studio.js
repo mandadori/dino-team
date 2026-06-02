@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 // scripts/studio.js
-// Estúdio local de edição: serve o preview, expõe /contract, /save, /export.
+// Estúdio local de edição: serve o preview e expõe o backend /contract, /save,
+// /export, /suggestions (com CORS). O preview pode ser aberto pelo próprio studio
+// (http://localhost:4321) OU pelo Live Preview do VS Code — o editor chama o
+// backend por URL absoluta http://localhost:4321, então rode na porta padrão 4321.
 //
 // Uso:
 //   node scripts/studio.js <pasta-do-post> --estilo <caminho-do-estilo.md> [--port 4321]
@@ -33,8 +36,16 @@ function readBody(req) {
   });
 }
 
+// CORS liberado: o studio é só backend local; a página pode ser servida por
+// outro origin (ex.: Live Preview do VS Code) e ainda chamar /save, /contract, etc.
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
 function send(res, r) {
-  res.writeHead(r.status, { "Content-Type": r.type || "text/plain" });
+  res.writeHead(r.status, { "Content-Type": r.type || "text/plain", ...CORS });
   res.end(r.body || "");
 }
 
@@ -48,6 +59,10 @@ const absPost = resolve(postDir);
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, `http://localhost:${port}`);
+    if (req.method === "OPTIONS") {
+      res.writeHead(204, CORS);
+      return res.end();
+    }
     if (req.method === "GET" && url.pathname === "/") {
       return send(res, await servePreview({ postDir: absPost }));
     }
