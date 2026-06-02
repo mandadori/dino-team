@@ -9,8 +9,9 @@ async function fixturePost() {
   const base = await mkdtemp(join(tmpdir(), "editor-"));
   const design = join(base, "design");
   await mkdir(design, { recursive: true });
+  // estilo com a string "<section" num comentário — regressão do bug que comia o <style>
   const doc = (block, title) =>
-    `<!doctype html><html><head><style>.slide{width:1080px}</style></head>` +
+    `<!doctype html><html><head><style>/* aplica em <section data-slide> */ .slide{width:1080px}</style></head>` +
     `<body><section class="slide ${block}" data-block="${block}">` +
     `<h1 data-slot="título">${title}</h1></section></body></html>`;
   await writeFile(join(design, "slide-1.html"), doc("capa", "UM"));
@@ -28,6 +29,7 @@ test("serveSlides devolve css uma vez + a section de cada slide", async () => {
   assert.equal(slides[0].n, 1);
   assert.equal(slides[0].block, "capa");
   assert.match(slides[0].html, /data-slot="título"/);
+  assert.ok(!slides[0].html.includes("aplica em"), "section não deve conter o comentário do <style>");
   assert.equal(slides[1].n, 2);
 });
 
@@ -62,7 +64,8 @@ test("saveSlides troca só a section e preserva o CSS; grava edits.json", async 
   assert.equal(r.status, 200);
   const saved = await readFile(join(design, "slide-1.html"), "utf8");
   assert.match(saved, /EDITADO/);
-  assert.match(saved, /<style>\.slide\{width:1080px\}<\/style>/); // CSS preservado
+  assert.match(saved, /aplica em <section data-slide>/); // <style>/comentário preservado
+  assert.match(saved, /\.slide\{width:1080px\}/);          // CSS preservado
   assert.match(saved, /font-size:120px/);
   const ej = JSON.parse(await readFile(join(design, "edits.json"), "utf8"));
   assert.equal(ej.estilo, "editorial");

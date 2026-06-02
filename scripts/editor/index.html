@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Dino Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ---------- Chrome do Dino Editor (isolado dos slides via iframe) ---------- */
+    :root { --accent: #00e051; --accent-d: #00b140; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; background: #111; font-family: "Montserrat", sans-serif; }
+
+    #dt-canvas {
+      display: flex; align-items: center; gap: 40px; padding: 0 40px;
+      height: 100vh; overflow-x: auto; overflow-y: hidden;
+      scroll-snap-type: x mandatory; scrollbar-width: none;
+    }
+    #dt-canvas::-webkit-scrollbar { display: none; }
+
+    iframe.dt-frame {
+      flex: 0 0 auto; border: 0; background: #1a1a1a;
+      box-shadow: 0 12px 40px rgba(0,0,0,.6); scroll-snap-align: center;
+    }
+
+    /* Toolbar inferior */
+    .dt-toolbar {
+      position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 12px; padding: 10px 16px;
+      background: rgba(0,0,0,.78); backdrop-filter: blur(10px);
+      border-radius: 999px; color: #fff; z-index: 9999; user-select: none;
+    }
+    .dt-toolbar button {
+      background: transparent; border: 1px solid rgba(255,255,255,.28); color: #fff;
+      height: 34px; min-width: 34px; border-radius: 999px; cursor: pointer;
+      font: 600 13px "Montserrat", sans-serif; padding: 0 12px;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .dt-toolbar button:hover { background: rgba(255,255,255,.12); }
+    .dt-toolbar button:disabled { opacity: .3; cursor: default; }
+    .dt-toolbar .dt-counter { font-size: 12px; letter-spacing: .12em; min-width: 52px; text-align: center; }
+    .dt-act { font-weight: 700 !important; letter-spacing: .05em; }
+    .dt-save { background: rgba(0,177,64,.18) !important; border-color: var(--accent-d) !important; color: var(--accent) !important; }
+    .dt-save:hover { background: rgba(0,177,64,.34) !important; }
+
+    /* Painel lateral de propriedades */
+    .dt-panel {
+      position: fixed; top: 0; right: 0; width: 280px; height: 100vh;
+      background: rgba(18,18,18,.97); border-left: 1px solid rgba(255,255,255,.12);
+      color: #fff; padding: 18px; transform: translateX(100%); transition: transform .16s;
+      z-index: 9998; overflow-y: auto;
+    }
+    .dt-panel.is-open { transform: translateX(0); }
+    .dt-panel h3 { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 4px; }
+    .dt-panel .dt-sub { font-size: 11px; opacity: .55; margin: 0 0 16px; }
+    .dt-field { margin-bottom: 13px; }
+    .dt-field label { display: block; font-size: 10px; letter-spacing: .08em; opacity: .65; margin-bottom: 4px; text-transform: uppercase; }
+    .dt-field select, .dt-field input {
+      width: 100%; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+      color: #fff; border-radius: 6px; padding: 6px 8px; font: 600 13px "Montserrat", sans-serif;
+    }
+    .dt-row { display: flex; gap: 8px; }
+    .dt-row > * { flex: 1; }
+    .dt-remove {
+      width: 100%; margin-top: 10px; background: rgba(220,40,40,.16); border: 1px solid #d33;
+      color: #ff6b6b; border-radius: 6px; padding: 9px; cursor: pointer; font-weight: 700; letter-spacing: .05em;
+    }
+    .dt-hint { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.5);
+      font-size: 11px; letter-spacing: .06em; z-index: 9990; }
+  </style>
+</head>
+<body>
+  <div class="dt-hint" id="dt-hint">carregando…</div>
+  <div id="dt-canvas"></div>
+
+  <aside class="dt-panel" id="dt-panel">
+    <h3 id="dt-panel-title">elemento</h3>
+    <p class="dt-sub" id="dt-panel-sub"></p>
+    <div id="dt-panel-body"></div>
+  </aside>
+
+  <div class="dt-toolbar" id="dt-toolbar">
+    <button id="dt-prev" aria-label="anterior">‹</button>
+    <span class="dt-counter" id="dt-counter">1 / 1</span>
+    <button id="dt-next" aria-label="próximo">›</button>
+    <button class="dt-act dt-save" id="dt-save">Salvar</button>
+    <button class="dt-act" id="dt-export">Exportar</button>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

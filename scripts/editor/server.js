@@ -128,7 +128,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`Dino Studio em http://localhost:${port}`);
+  console.log(`Dino Editor em http://localhost:${port}`);
   console.log(`  post:   ${absPost}`);
   console.log(`  estilo: ${estiloPath || "(nenhum — painel em modo livre)"}`);
 });

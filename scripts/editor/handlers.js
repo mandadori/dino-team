@@ -9,7 +9,15 @@ import { parseEstilo } from "./parse-estilo.js";
 import { validateEdits } from "./validate-edits.js";
 
 const STYLE_RE = /<style>([\s\S]*?)<\/style>/;
+const BODY_RE = /(<body[^>]*>)([\s\S]*?)(<\/body>)/i;
 const SECTION_RE = /<section[\s\S]*<\/section>/;
+
+// A <section> real fica no <body>; o <head>/<style> do estilo pode conter a string
+// "<section" em comentários, então sempre operamos dentro do body.
+function sectionOf(html) {
+  const body = (html.match(BODY_RE) || [, , ""])[2];
+  return (body.match(SECTION_RE) || [body])[0].trim();
+}
 
 function slideNumber(file) {
   const m = file.match(/slide-(\d+)\.html$/);
@@ -34,7 +42,7 @@ export async function serveSlides({ postDir }) {
   for (const file of files) {
     const html = await readFile(join(design, file), "utf8");
     if (!css) css = (html.match(STYLE_RE) || [, ""])[1];
-    const section = (html.match(SECTION_RE) || [""])[0];
+    const section = sectionOf(html);
     const block = (section.match(/data-block="([^"]*)"/) || [, null])[1];
     slides.push({ n: slideNumber(file), block, html: section });
   }
@@ -63,7 +71,8 @@ export async function saveSlides({ postDir, slides, edits }) {
     const file = join(design, `slide-${s.n}.html`);
     if (!existsSync(file)) continue;
     const original = await readFile(file, "utf8");
-    const updated = original.replace(SECTION_RE, s.html);
+    // Substitui o conteúdo do <body> pela section editada (preserva head/style).
+    const updated = original.replace(BODY_RE, (m, open, _inner, close) => open + "\n" + s.html + "\n" + close);
     await writeFile(file, updated, "utf8");
     written.push(`slide-${s.n}.html`);
   }
