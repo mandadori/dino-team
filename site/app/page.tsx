@@ -10,6 +10,7 @@ import { FAQ } from "@/components/sections/FAQ";
 import { CtaFinal } from "@/components/sections/CtaFinal";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { WHATSAPP_URL } from "@/lib/site";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -47,6 +48,20 @@ export default function Home() {
             Consultoria de treino e dieta · O método do mais alto nível, adaptado
             para você.
           </p>
+          <nav className="flex gap-5 font-body text-sm text-muted">
+            <Link
+              href="/privacidade"
+              className="hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-fg focus-visible:ring-offset-bg"
+            >
+              Política de Privacidade
+            </Link>
+            <Link
+              href="/termos"
+              className="hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-fg focus-visible:ring-offset-bg"
+            >
+              Termos de Uso
+            </Link>
+          </nav>
         </div>
       </footer>
     </>
