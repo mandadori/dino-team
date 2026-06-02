@@ -21,7 +21,7 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 6 | treinador (condic.) | exercícios, objetivo ← 4 | 4 | prescrição |
 | 7 | pesquisador (P7) | briefing ← 4 | 4 | pesquisa-bruta |
 | 8 | copywriter + ⏸ | pesquisa ← 7, briefing ← 4 | 7 | copy.md |
-| 9 | designer + ⏸ | copy ← 8 | 8 | assets |
+| 9 | designer + ⏸ | copy ← 8 | 8 | assets + edits.json (via estúdio) |
 | 10 | curador-export | pasta ← 9 | 9 | `<validacao>` + PNGs |
 | 11a | revisor-conteudo | pasta ← 10, briefing ← 4 | 10 | `<parecer>` |
 | 11b | revisor-brand | pasta ← 10 | 11a | parecer binário |
@@ -56,7 +56,7 @@ Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente
 |---|---|---|---|
 | `pesquisador-mercado` | Fase A (scouting de mercado → slice) + Fase B (seleção ranqueada) + pesquisa profunda (P7) | modo + formato/estilo (P2a) / briefing (P7) | slice `dados/mercado/` atualizado (Fase A) / candidatos ranqueados inline (Fase B) / `dados/pesquisas-brutas/<data>-tendencias-<slug>.md` (P7) |
 | `briefing-writer` | Recomendação de estilo (P2b) + briefing estratégico (P4) | formato+tema (P2b) / formato+estilo+tema (P4) | recomendação inline (P2b) / briefing inline (P4) |
-| `designer` | Estilo ad-hoc em `_rascunho/` (P3) + assets do post + preview consolidado (P9) | refs visuais + contrato (P3) / estilo + copy (P9) | `estilo.md` + arquivo principal + `preview.html` (P3) / `design/*.html` + `design/preview.html` (P9) |
+| `designer` | Estilo ad-hoc em `_rascunho/` (P3) + assets do post + preview consolidado (P9) | refs visuais + contrato (P3) / estilo + copy (P9) | `estilo.md` + arquivo principal + `preview.html` (P3) / `design/*.html` + `design/preview.html` (P9; edição visual posterior feita no estúdio local, não no Claude Design) |
 | `treinador` | Prescrição técnica de treino | exercícios + objetivo + recorte | `treino.md` |
 | `copywriter` | Copy do post | pesquisa + briefing + `estilo.md` (+ `treino.md`) | `copy.md` |
 | `curador-export` | Validação técnica + export PNG | `design/` + `estilo.md` | status inline + `export/*.png` |
@@ -414,20 +414,26 @@ Regras:
 Saída: export/conteudos/<formato>/<data>-<slug>/design/preview.html.
 ```
 
-#### Pausa para revisão do preview
+#### Pausa para revisão e edição no estúdio
 
 ```
 Design gerado em export/conteudos/<formato>/<data>-<slug>/design/ (estilo: <slug | ad-hoc>):
 - preview.html
 - <assets individuais>
 
-Opções:
-- "exportar" → exporto o preview.html em disco como está.
-- Anexe preview.html editado → sobrescrevo e exporto.
-- Peça ajustes → repasso ao Designer.
+Abra o estúdio local para revisar e ajustar (texto, tamanho, posição, foto, estilo):
+
+  node scripts/studio.js export/conteudos/<formato>/<data>-<slug> \
+    --estilo <caminho do estilo.md>
+
+No estúdio: edite, clique "Salvar" (grava preview.html + edits.json) e "Exportar" quando estiver pronto.
+
+Opções de resposta:
+- "ok" / "exportei" → sigo para a validação técnica (Passo 10).
+- Peça ajustes que prefira que eu (Designer) faça → repasso ao Designer.
 ```
 
-**Aguarde resposta.** Se vier arquivo anexado, sobrescreva `design/preview.html`. Se vier pedido de ajuste, repasse ao `designer` com o ponto específico. Se vier confirmação, siga para o Passo 10.
+**Aguarde resposta.** Ajustes visuais agora são feitos pelo usuário no estúdio (zero token). Se o usuário pedir explicitamente um ajuste via Designer, repasse o ponto específico. Quando confirmar, siga para o Passo 10.
 
 ### 10. Validação técnica + export PNG
 
