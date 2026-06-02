@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 03 planned (2 plans, ready to execute)
-last_updated: "2026-06-01T00:00:00.000Z"
-last_activity: 2026-06-01
+status: executing
+stopped_at: Plan 03-01 paused at Task 3 (checkpoint:human-verify) — consent slice implemented, awaiting browser verification
+last_updated: "2026-06-02T12:06:21.000Z"
+last_activity: 2026-06-02 -- Plan 03-01 tasks 1-2 executed; checkpoint reached
 progress:
   total_phases: 6
   completed_phases: 2
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-31)
 
 **Core value:** O site converte o público certo em lead qualificado de consultoria via WhatsApp, carregado pela credibilidade do método de um campeão mundial; o blog sustenta autoridade e tráfego orgânico no topo do funil.
-**Current focus:** Phase 3 — conformidade legal & lgpd
+**Current focus:** Phase 3 — conformidade-legal-lgpd
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
-Status: Ready to execute (2 plans planned)
-Last activity: 2026-06-01
+Phase: 3 (conformidade-legal-lgpd) — EXECUTING
+Plan: 1 of 2 (paused at Task 3 checkpoint:human-verify)
+Status: Executing Phase 3 — awaiting human verification of consent gating
+Last activity: 2026-06-02 -- Plan 03-01 tasks 1-2 executed; checkpoint reached
 
 Progress: [██████████] 100%
 
@@ -101,6 +101,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-01T00:00:00.000Z
-Stopped at: Phase 03 planned — 2 plans (03-01 consent slice, 03-02 legal pages)
-Resume file: .planning/phases/03-conformidade-legal-lgpd/
+Last session: 2026-06-02T12:06:21.000Z
+Stopped at: Plan 03-01 Task 3 — checkpoint:human-verify (consent gating behavior in browser)
+Resume file: .planning/phases/03-conformidade-legal-lgpd/03-01-PLAN.md
