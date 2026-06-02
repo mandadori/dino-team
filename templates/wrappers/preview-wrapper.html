@@ -275,6 +275,7 @@
     }
     function deselect() {
       if (selected) selected.classList.remove("dt-selected");
+      if (selected) { var s = selected.closest("section[data-slide]"); if (s) clearGuides(s); }
       selected = null; panel.classList.remove("is-open");
     }
 
@@ -348,10 +349,47 @@
       bindSel("dt-c-weight", function (v) { var f = el.style.fontWeight; el.style.fontWeight = v; recordEdit(el, "weight", f || null, v); });
       bindSel("dt-c-align", function (v) { var f = el.style.textAlign; el.style.textAlign = v; recordEdit(el, "align", f || null, v); });
       bindSel("dt-c-color", function (v) { var f = el.style.color; el.style.color = v; recordEdit(el, "color", f || null, v); });
-      bindNum("dt-c-bottom", function (v) { var f = el.style.bottom; el.style.position = "absolute"; el.style.bottom = v + "px"; recordEdit(el, "position.bottom", f || null, v + "px"); });
+      bindNum("dt-c-bottom", function (v) {
+        var snapped = snapBottom(el, v);
+        var f = el.style.bottom; el.style.position = "absolute"; el.style.bottom = snapped + "px";
+        recordEdit(el, "position.bottom", f || null, snapped + "px");
+      });
     }
     function bindNum(id, fn) { var i = document.getElementById(id); if (i) i.addEventListener("input", function () { if (i.value !== "") fn(parseInt(i.value, 10)); }); }
     function bindSel(id, fn) { var i = document.getElementById(id); if (i) i.addEventListener("change", function () { fn(i.value); }); }
+
+    // ---------- Guias inteligentes ----------
+    var SAFE = 80; // safe-area do brand (margem padrão em brand/social-media.md)
+    var SNAP = 8;  // limiar de snap em px (espaço de design)
+    function clearGuides(slide) {
+      slide.querySelectorAll(".dt-guide").forEach(function (g) { g.remove(); });
+    }
+    function showGuide(slide, axis, posPx) {
+      var g = document.createElement("div");
+      g.className = "dt-guide " + axis;
+      if (axis === "h") g.style.top = posPx + "px"; else g.style.left = posPx + "px";
+      slide.appendChild(g);
+    }
+    // Retorna a posição-alvo "bottom" snapada (em px do espaço de design) + desenha guias.
+    function snapBottom(el, bottomPx) {
+      var slide = el.closest("section[data-slide]");
+      var slideH = parseInt(slide.style.height, 10) || slide.offsetHeight;
+      clearGuides(slide);
+      var anchors = [SAFE, slideH / 2, slideH - SAFE]; // safe-bottom, centro, safe-top(espelhado)
+      slide.querySelectorAll("[data-slot]").forEach(function (o) {
+        if (o === el) return;
+        var b = parseInt(o.style.bottom, 10); if (!isNaN(b)) anchors.push(b);
+      });
+      var snapped = bottomPx;
+      for (var i = 0; i < anchors.length; i++) {
+        if (Math.abs(bottomPx - anchors[i]) <= SNAP) {
+          snapped = anchors[i];
+          showGuide(slide, "h", slideH - snapped); // linha na altura correspondente
+          break;
+        }
+      }
+      return snapped;
+    }
 
     // Clique em elemento editável seleciona; clique no fundo/controles deseleciona.
     slides.forEach(function (slide) {
