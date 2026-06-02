@@ -1,10 +1,10 @@
-# Dino Studio — Plano 1: Servidor `studio.js` + Editor reescrito
+# Dino Editor — Plano 1: Servidor + Editor Figma-like
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **STATUS: CONCLUÍDO** — tasks 1–3 implementadas no branch `dino-studio-editor` (commits 44139b6, 8b11d48, 3bbfe0d). Re-arquitetura pós-plano: editor separado (não wrapper reescrito), sem `preview.html`, sem `curador-export`.
 
-**Goal:** Substituir o ciclo "preview no Claude Design → ajuste via agente designer → reanexar arquivo" por uma sessão de estúdio local: um servidor node leve serve um editor canvas preso-ao-contrato, e ao salvar grava `preview.html` + `edits.json` direto no disco — edição visual com zero token.
+**Goal original:** Substituir o ciclo "preview no Claude Design → ajuste via agente designer → reanexar arquivo" por um editor local preso-ao-contrato, editando `slide-N.html` diretamente, com zero token.
 
-**Architecture:** Quatro módulos node testáveis (`parse-estilo`, `validate-edits`, `handlers`) por trás de um entry CLI/HTTP (`studio.js`), mais a reescrita do wrapper `preview-wrapper.html` num editor com seleção de elemento, painel lateral preso aos slots do `estilo.md`, guias inteligentes de alinhamento, drop de foto e botão Salvar que faz `POST /save`. O mapeamento DOM→contrato é determinístico via `data-block`/`data-slot`, exigindo tagging nos templates e no contrato do agente `designer`.
+**Architecture final:** Módulos node testáveis (`parse-estilo`, `validate-edits`, `handlers`, `extract-structural`, `banco`) em `scripts/editor/`, servidor em `scripts/editor/server.js`, editor Figma-like em `scripts/editor/index.html` + `app.js`. Sem wrapper; sem `preview.html`; `curador-export` aposentado. Export determinístico via `export-png.js` (valida dimensões + contagem).
 
 **Tech Stack:** Node ≥20 (ESM), módulo de teste embutido `node:test` + `node:assert` (zero dependência nova), `http`/`fs` nativos, Puppeteer (já instalado, reusado pelo `export-png.js`), HTML/CSS/JS vanilla no wrapper.
 

@@ -1,7 +1,9 @@
-# Dino Studio: preview + edição local com aprendizado de estilo
+# Dino Editor: editor visual Figma-like + aprendizado de estilo
 
-> Spec de design — 2026-06-02
-> Substitui a etapa "preview no Claude Design → ajuste via agente designer → reanexar" por uma **sessão de estúdio local** (preview + edição constrained-to-contract), com **aprendizado de estrutura** de volta ao `estilo.md` e **gestão de materiais** (banco de imagens) pré-preenchendo as drop zones.
+> Spec de design — 2026-06-02 · Revisado 2026-06-02
+> Substitui a etapa "preview no Claude Design → ajuste via agente designer → reanexar" por uma **sessão no Dino Editor** (editor Figma-like separado, operando sobre `slide-N.html` standalone), com **aprendizado de estrutura** de volta ao `estilo.md` e **gestão de materiais** (banco de imagens) pré-preenchendo as drop zones.
+>
+> **Mudanças pós-spec:** O editor foi construído como aplicação separada (`scripts/editor/`) — não como reescrita do wrapper. Não há mais `preview.html` nem `curador-export`. A nova ordem de pipeline é: design → export determinístico → revisão → edição opcional no Dino Editor → re-export → publicação.
 
 ---
 
@@ -35,26 +37,20 @@ Avaliado e rejeitado. Penpot tem modelo de objeto próprio (SVG): criaria duas f
 
 | Componente | Owner | Entrada | Saída (contrato) |
 |---|---|---|---|
-| **A. Editor** (wrapper reescrito) | front (HTML/JS vanilla) | `preview.html` + `estilo.md` (slots/tokens) | `preview.html` editado + `edits.json` |
+| **A. Dino Editor** (`scripts/editor/index.html` + `app.js`) | front (HTML/JS vanilla, Figma-like) | `slide-N.html` via `GET /slides` + `estilo.md` (slots/tokens) | `slide-N.html` limpos + `edits.json` via `POST /save` |
 | **B. Loop de aprendizado** | skill `/novo-post` (Claude Code) | `edits.json` | `estilo.md` + `slide.html` atualizados (gated por confirmação) |
-| **C. Gerenciador de materiais** | agente `gerenciador-materiais` + `scripts/index-banco.js` | `copy.md` + drop zones do `estilo.md` + banco indexado | sugestões nas drop zones + marcação de uso no índice |
-| **D. Servidor `studio.js`** | `scripts/studio.js` (cola) | pasta do post | serve preview · `POST /save` · `POST /export` |
+| **C. Gerenciador de materiais** | agente `gerenciador-materiais` + `scripts/index-banco.js` | `copy.md` + drop zones do `estilo.md` + banco indexado | `design/suggestions.json` + marcação de uso no índice |
+| **D. Servidor** (`scripts/editor/server.js`) | Node HTTP | pasta do post | serve editor shell · `GET /slides` · `POST /save` · `GET /contract` · `GET /suggestions` |
 
 Cada componente é construível e testável isoladamente; conversam só por contratos de arquivo (`preview.html`, `edits.json`, `.banco-index.json`).
 
 ---
 
-## Componente A — Editor (reescrita do wrapper)
+## Componente A — Dino Editor (aplicação separada)
 
-`templates/wrappers/preview-wrapper.html` é **reescrito do zero**, enxuto, desenhado pro novo processo. Mantém o essencial do atual e adiciona o modo de edição.
+`scripts/editor/index.html` + `scripts/editor/app.js` — aplicação standalone servida pelo servidor em `localhost:4321`. Opera sobre os `slide-N.html` do post (lidos via `GET /slides`); **nunca** lê nem escreve `preview.html`.
 
-### Mantém (do wrapper atual)
-- Carrossel arrastável com scroll-snap, dots, contador, navegação prev/next.
-- Drop de foto em `[data-bg-drop]`, reposicionar por arrasto, zoom por slide.
-- `body.export-mode` (layout linear sem chrome) para o `export-png.js`.
-- `section[data-slide="N"]` por slide (o `export-png.js` depende disso).
-
-### Adiciona — modo edição
+### Funcionalidades implementadas
 - **Seleção de elemento:** clicar num elemento editável abre um **painel lateral**. O painel expõe **apenas os slots/tokens que o `estilo.md` daquele bloco declara** (preso ao contrato). Ex.: selecionar a headline de um bloco `corpo` → painel mostra texto, tamanho (dentro da faixa do token, ex. Anton ~88px), posição (dentro da zona declarada), estilo de texto.
 - **Controles do painel:** texto (`contenteditable`), tamanho, posição, background (trocar/reposicionar a foto da drop zone), estilo de texto (peso, alinhamento, cor restrita à paleta do brand).
 - **Remover elemento** (ex.: tirar o `corpo` de um bloco específico).
@@ -174,14 +170,17 @@ Pasta local ou **Drive sincronizado localmente** (Google Drive for Desktop → c
 
 ---
 
-## Componente D — Servidor `studio.js`
+## Componente D — Servidor (`scripts/editor/server.js`)
 
-`node scripts/studio.js export/conteudos/<formato>/<data>-<slug>/`:
-- **serve** o `preview.html` (abre no navegador / Live Preview do VS Code);
-- `POST /save` → grava `design/preview.html` + `design/edits.json` + imagens no disco;
-- `POST /export` → dispara o `export-png.js` existente.
+`npm run editor -- export/conteudos/<formato>/<data>-<slug> --estilo <estilo_path>`:
+- `GET /` → serve o shell do editor (`index.html`).
+- `GET /slides` → lê `design/slide-N.html`, extrai CSS do estilo (uma vez) + cada `<section data-slide>`; devolve `{ css, slides }`.
+- `POST /save` → reescreve cada `slide-N.html` limpo (sem scaffolding do editor) + `edits.json`.
+- `GET /contract` → `parse-estilo` → contrato JSON de blocos/slots.
+- `GET /suggestions` → sugestões de imagens do banco.
+- CORS + fallback estático (logo, assets).
 
-Unifica serve + save + export numa sessão local única: editar → salvar → exportar, sem reanexar arquivo e sem round-trip ao designer para ajuste visual. O `curador-export` continua validando os critérios técnicos; só o **gatilho** de export passa a ser local.
+Export de PNGs é separado: `node scripts/export-png.js <pasta>/` (valida dimensões + contagem automaticamente). O agente `curador-export` foi aposentado — a validação é determinística no script.
 
 ---
 
@@ -190,9 +189,9 @@ Unifica serve + save + export numa sessão local única: editar → salvar → e
 Passos que mudam (numeração do `SKILL.md` atual):
 
 - **Passo 9 (Design):** após o `designer` gerar os assets, aciona `gerenciador-materiais` → drop zones pré-preenchidas com sugestões.
-- **Passo 9 (pausa):** mensagem reescrita → "rode `node scripts/studio.js <post>`, edite no estúdio e salve" (não mais "abra no Claude Design / peça ajuste ao designer").
+- **Passo 9 (pausa):** mensagem reescrita → "rode `npm run editor -- <post> --estilo <estilo>`, edite no Dino Editor (`localhost:4321`) e salve".
 - **Passo 9.5 (novo — loop de aprendizado):** lê `edits.json`; se houver `scope: structural`, oferece promover ao `estilo.md`.
-- **Passo 10 (export):** gatilhável do próprio estúdio (`POST /export`); `curador-export` valida.
+- **Passo 10 (export):** `node scripts/export-png.js <pasta>/` — determinístico, valida dimensões + contagem. `curador-export` aposentado.
 - **Passo 13.5 (stories):** mesma mecânica de estúdio/edição/manifesto para `stories/design/`.
 - **Passo 14 / marcação de uso:** ao aprovar/exportar, `gerenciador-materiais` marca as imagens usadas no índice.
 

@@ -5,15 +5,11 @@
  * Uso:
  *   node scripts/export-png.js <pasta-do-post> [--format=carrossel|stories]
  *
- * Fonte de design (detectada automaticamente em design/):
- *   - preview.html existir → extrai section[data-slide] do preview editado no Claude Design
- *   - caso contrário       → renderiza slide-N.html individuais
- *
- * Saída:
- *   <pasta>/export/slide-N.png
+ * Lê design/slide-N.html e exporta para export/slide-N.png.
+ * Valida dimensões e contagem após o export.
  */
 
-import { readdir, mkdir } from "node:fs/promises";
+import { readdir, mkdir, readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -56,58 +52,42 @@ async function listSlides(designDir) {
     });
 }
 
-// Extrai e renderiza cada section[data-slide] do preview.html combinado
-async function exportFromPreview(browser, previewPath, exportDir, width, height) {
-  const page = await browser.newPage();
-  await page.setViewport({ width, height, deviceScaleFactor: 1 });
-  await page.goto(pathToFileURL(previewPath).href, { waitUntil: "load", timeout: 60000 });
-  // Aguarda o bundle do Claude Design terminar de desempacotar o DOM (async pós-DOMContentLoaded)
-  await page.waitForSelector("section[data-slide]", { timeout: 30000 }).catch(() => {});
-  await page.evaluate(() => document.fonts.ready);
-
-  const slideCount = await page.$$eval("section[data-slide]", (sections) => sections.length);
-  if (slideCount === 0) {
-    await page.close();
-    return 0;
-  }
-
-  for (let i = 1; i <= slideCount; i++) {
-    // Mostra apenas o slide i, reseta o body para posição 0,0
-    await page.evaluate((slideN) => {
-      // Aciona modo export do wrapper Dino Team (oculta controles, neutraliza carrossel).
-      // Se o preview não usar o wrapper (formato antigo), a classe é inerte — o fallback abaixo cobre.
-      document.body.classList.add("export-mode");
-
-      // Oculta todas as sections e labels de slide
-      document.querySelectorAll("section[data-slide]").forEach((s) => {
-        s.style.display = "none";
-      });
-      document.querySelectorAll(".slide-label").forEach((l) => {
-        l.style.display = "none";
-      });
-      // Exibe apenas o slide alvo
-      const target = document.querySelector(`section[data-slide="${slideN}"]`);
-      if (target) target.style.display = "";
-
-      // Fallback para previews antigos sem o wrapper Dino Team:
-      document.body.style.cssText = "margin:0;padding:0;overflow:hidden;";
-    }, i);
-
-    const pngPath = join(exportDir, `slide-${i}.png`);
-    await page.screenshot({
-      path: pngPath,
-      type: "png",
-      clip: { x: 0, y: 0, width, height },
-      omitBackground: false,
-    });
-    console.log(`  slide-${i} (preview.html)  →  slide-${i}.png`);
-  }
-
-  await page.close();
-  return slideCount;
+// Lê dimensões do cabeçalho PNG (bytes 16-19 = largura, 20-23 = altura, big-endian uint32)
+function readPngDimensions(buffer) {
+  if (buffer.length < 24) return null;
+  return {
+    width: buffer.readUInt32BE(16),
+    height: buffer.readUInt32BE(20),
+  };
 }
 
-// Renderiza cada slide-N.html individual
+async function validateExports(exportDir, slides, expectedWidth, expectedHeight) {
+  const errors = [];
+  for (const slide of slides) {
+    const pngName = slide.replace(/\.html$/i, ".png");
+    const pngPath = join(exportDir, pngName);
+
+    if (!existsSync(pngPath)) {
+      errors.push(`  ${pngName}: arquivo não gerado`);
+      continue;
+    }
+
+    const buf = await readFile(pngPath);
+    const dims = readPngDimensions(buf);
+    if (!dims) {
+      errors.push(`  ${pngName}: arquivo inválido ou corrompido`);
+      continue;
+    }
+
+    if (dims.width !== expectedWidth || dims.height !== expectedHeight) {
+      errors.push(
+        `  ${pngName}: dimensão inválida ${dims.width}×${dims.height} (esperado ${expectedWidth}×${expectedHeight})`
+      );
+    }
+  }
+  return errors;
+}
+
 async function exportFromIndividuals(browser, slides, designDir, exportDir, width, height) {
   for (const slide of slides) {
     const htmlPath = join(designDir, slide);
@@ -163,11 +143,14 @@ async function main() {
   const exportDir = join(postDir, "export");
   await mkdir(exportDir, { recursive: true });
 
-  const previewPath = join(designDir, "preview.html");
-  const usePreview = existsSync(previewPath);
+  const slides = await listSlides(designDir);
+  if (slides.length === 0) {
+    console.error(`erro: nenhum slide-N.html encontrado em ${designDir}`);
+    process.exit(1);
+  }
 
-  console.log(`formato: ${label}  ·  ${width}x${height}`);
-  console.log(`fonte:   ${usePreview ? "preview.html (editado no Claude Design)" : "slide-N.html individuais"}`);
+  console.log(`formato: ${label}  ·  ${width}×${height}`);
+  console.log(`slides:  ${slides.length}`);
   console.log(`destino: ${exportDir}`);
   console.log("");
 
@@ -177,28 +160,19 @@ async function main() {
   });
 
   try {
-    if (usePreview) {
-      const count = await exportFromPreview(browser, previewPath, exportDir, width, height);
-      if (count === 0) {
-        console.error("erro: nenhuma section[data-slide] encontrada em preview.html");
-        process.exit(1);
-      }
-      console.log("");
-      console.log(`pronto: ${count} png(s) em ${exportDir}`);
-    } else {
-      const slides = await listSlides(designDir);
-      if (slides.length === 0) {
-        console.error(`erro: nenhum slide-N.html encontrado em ${designDir}`);
-        process.exit(1);
-      }
-      console.log(`slides:  ${slides.length}`);
-      await exportFromIndividuals(browser, slides, designDir, exportDir, width, height);
-      console.log("");
-      console.log(`pronto: ${slides.length} png(s) em ${exportDir}`);
-    }
+    await exportFromIndividuals(browser, slides, designDir, exportDir, width, height);
   } finally {
     await browser.close();
   }
+
+  const errors = await validateExports(exportDir, slides, width, height);
+  if (errors.length > 0) {
+    console.error("\nerro: validação falhou:");
+    errors.forEach((e) => console.error(e));
+    process.exit(1);
+  }
+
+  console.log(`\npronto: ${slides.length} png(s) — validados ${width}×${height}`);
 }
 
 main().catch((err) => {

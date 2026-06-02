@@ -13,7 +13,7 @@ description: Cria ou edita um estilo visual para qualquer formato disponível em
 | 2 | ⚙ tratar _rascunho/ | — | 1 | rascunho pronto |
 | 3 | ⏸ usuário | contexto ← 2 | 2 | descrição/alterações |
 | 4 | ⚙ preparar pasta | — | 3 | pasta de trabalho |
-| 5 | designer | descrição/refs ← 3, modo | 4 | template+estilo.md+preview |
+| 5 | designer | descrição/refs ← 3, modo | 4 | template+estilo.md |
 | 6 | ⏸ usuário | preview ← 5 | 5 | confirmar/ajuste |
 | 7 | ⚙ slug (só criar) | — | 6 | slug |
 | 8 | ⚙ salvar | — | 7 | estilo salvo |
@@ -21,7 +21,7 @@ description: Cria ou edita um estilo visual para qualquer formato disponível em
 
 ## Objetivo
 
-Criar um estilo visual novo ou editar um existente — `estilo.md` + template HTML + `preview.html` — prontos para uso pela skill `/novo-post`.
+Criar um estilo visual novo ou editar um existente — `estilo.md` + template HTML — prontos para uso pela skill `/novo-post`.
 
 ## Sintaxe
 
@@ -44,7 +44,7 @@ Ordem é livre. A skill identifica formato, slug e trata o restante como descri�
 
 | Agente | Responsabilidade | Input | Output |
 |---|---|---|---|
-| `designer` | Gerar ou editar template HTML, `estilo.md` e `preview.html` numa pasta destino. | Modo (`criar-template-de-estilo` \| `editar-template-de-estilo` \| `regenerar-preview`), formato, pasta destino, slug-alvo (edição), descrição/alterações, refs visuais. | Arquivo principal do template do formato + `estilo.md` + `preview.html` na pasta destino. |
+| `designer` | Gerar ou editar template HTML e `estilo.md` numa pasta destino. | Modo (`criar-template-de-estilo` \| `editar-template-de-estilo`), formato, pasta destino, slug-alvo (edição), descrição/alterações, refs visuais. | Arquivo principal do template do formato + `estilo.md` na pasta destino. |
 
 ---
 
@@ -61,9 +61,8 @@ Se `templates/social-media/{formato}/estilos/_rascunho/` existir, pergunte: cont
 ### 3. Mostrar contexto e coletar descrição/alterações
 
 - **Modo editar**: o usuário precisa ver o estilo atual antes de descrever mudanças.
-  - Se `templates/social-media/{formato}/estilos/{slug_alvo}/preview.html` existir, mostre o caminho.
-  - Se não existir, acione [Agente: `designer`] → input: `regenerar-preview` para `{slug_alvo}`. Output: `preview.html` regenerado na pasta do estilo. Mostre o caminho.
-  - Peça ao usuário que abra o preview no Claude Design e descreva as alterações (ou confirme as que já vieram no input).
+  - Mostre o caminho do arquivo principal (`slide.html` ou `frame.html`) em `templates/social-media/{formato}/estilos/{slug_alvo}/`.
+  - Peça ao usuário que abra o arquivo via Live Preview (ou render rápido com `export-png.js`) e descreva as alterações (ou confirme as que já vieram no input).
 - **Modo criar**: se `descricao_alteracoes` for menor que uma frase clara, peça detalhes — posicionamento, variantes, uso de foto de fundo, elementos esperados.
 
 ### 4. Preparar pasta de trabalho
@@ -100,16 +99,21 @@ Comportamento por modo:
 Entregáveis em _rascunho/:
 - arquivo principal do template (slide.html para carrossel, frame.html para stories)
 - estilo.md — seguindo o esqueleto canônico em templates/estilo.md: seções obrigatórias (Conceito, Estrutura com [sequência]/[total]/blocos com #### visual e #### editorial, Quando usar, Quando NÃO usar) e condicionais (Inputs obrigatórios externos, Notas técnicas) que se apliquem
-- preview.html — copie templates/wrappers/preview-wrapper.html verbatim, substitua <!-- SLIDES_HERE --> por uma section[data-slide="N"] por variante, atualize apenas o <title>
 ```
 
-### 6. Revisar preview
+### 6. Revisar template
 
 Mostre ao usuário:
 
 ```
-Rascunho em templates/social-media/{formato}/estilos/_rascunho/preview.html
-Abra no Claude Design e responda "confirmar" — ou descreva o ajuste.
+Rascunho em templates/social-media/{formato}/estilos/_rascunho/
+- <arquivo principal: slide.html | frame.html>
+- estilo.md
+
+Para revisar o visual, abra o arquivo principal via Live Preview ou:
+  node scripts/export-png.js <qualquer pasta de post com design/> --format={formato}
+
+Responda "confirmar" — ou descreva o ajuste.
 ```
 
 Se houver ajuste, volte ao Passo 5 passando o estado atual de `_rascunho/` como input do designer. Repita até confirmação.
@@ -134,11 +138,7 @@ Use com: /novo-post {formato} {slug_final} [tema]
 
 ## Critério de conclusão
 
-- Arquivo principal do template do formato + `estilo.md` + `preview.html` presentes em `templates/social-media/{formato}/estilos/{slug_final}/`.
-- Usuário confirmou explicitamente o preview no Passo 6.
+- Arquivo principal do template do formato + `estilo.md` presentes em `templates/social-media/{formato}/estilos/{slug_final}/`.
+- Usuário confirmou explicitamente o template no Passo 6.
 - `_rascunho/` foi removido.
 - Em modo editar, o estilo original só foi sobrescrito após a confirmação do Passo 6.
-
-## Wrapper de preview
-
-O wrapper (carrossel arrastável, drop de imagem, reposicionamento) vive em `templates/wrappers/preview-wrapper.html` — fonte única, lida do disco pelo `designer`. Editar somente lá.

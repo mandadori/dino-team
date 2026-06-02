@@ -1,6 +1,6 @@
 ---
 name: novo-post
-description: Dispara o pipeline completo de criação de um post Instagram (formato definido pelo usuário entre os disponíveis em templates/social-media/). Sintaxe livre — só formato é obrigatório; estilo e tema são opcionais e podem vir em qualquer ordem. Orquestra pesquisa, briefing, copy, design, curadoria técnica e curadoria editorial. Uso - /novo-post <formato> [estilo] [tema]. Requer brand book preenchido.
+description: Dispara o pipeline completo de criação de um post Instagram (formato definido pelo usuário entre os disponíveis em templates/social-media/). Sintaxe livre — só formato é obrigatório; estilo e tema são opcionais e podem vir em qualquer ordem. Orquestra pesquisa, briefing, copy, design, export e curadoria editorial. Uso - /novo-post <formato> [estilo] [tema]. Requer brand book preenchido.
 ---
 
 # /novo-post
@@ -21,11 +21,11 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 6 | treinador (condic.) | exercícios, objetivo ← 4 | 4 | prescrição |
 | 7 | pesquisador (P7) | briefing ← 4 | 4 | pesquisa-bruta |
 | 8 | copywriter + ⏸ | pesquisa ← 7, briefing ← 4 | 7 | copy.md |
-| 9 | designer + ⏸ | copy ← 8 | 8 | assets + edits.json (via estúdio); suggestions.json (se banco) |
+| 9 | designer + ⏸ | copy ← 8 | 8 | slide-N.html + edits.json (via editor); suggestions.json (se banco) |
 | 9.5 | ⚙ loop aprendizado + ⏸ (condic.) | edits.json ← 9 | 9 | estilo.md/slide.html atualizados |
-| 10 | curador-export | pasta ← 9 | 9 | `<validacao>` + PNGs |
-| 11a | revisor-conteudo | pasta ← 10, briefing ← 4 | 10 | `<parecer>` |
-| 11b | revisor-brand | pasta ← 10 | 11a | parecer binário |
+| 10 | ⚙ export-png.js | slide-N.html ← 9 | 9 | PNGs (auto-validados) |
+| 11a | revisor-conteudo | design/slide-*.html + PNGs + briefing ← 4 | 10 | `<parecer>` |
+| 11b | revisor-brand | design/slide-*.html + PNGs | 11a | parecer binário |
 | 13 | ⚙ entregar | tudo ← 11b | 11b | entrega |
 | 13.5 | designer (stories, condic.) + ⏸ | copy, estilo | 13 | frames |
 | 14 | ⚙ política publish + gerenciador-materiais (condic.) | pasta ← 11b | 11b | publicado/pendente; índice atualizado (se banco) |
@@ -57,10 +57,9 @@ Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente
 |---|---|---|---|
 | `pesquisador-mercado` | Fase A (scouting de mercado → slice) + Fase B (seleção ranqueada) + pesquisa profunda (P7) | modo + formato/estilo (P2a) / briefing (P7) | slice `dados/mercado/` atualizado (Fase A) / candidatos ranqueados inline (Fase B) / `dados/pesquisas-brutas/<data>-tendencias-<slug>.md` (P7) |
 | `briefing-writer` | Recomendação de estilo (P2b) + briefing estratégico (P4) | formato+tema (P2b) / formato+estilo+tema (P4) | recomendação inline (P2b) / briefing inline (P4) |
-| `designer` | Estilo ad-hoc em `_rascunho/` (P3) + assets do post + preview consolidado (P9) | refs visuais + contrato (P3) / estilo + copy (P9) | `estilo.md` + arquivo principal + `preview.html` (P3) / `design/*.html` + `design/preview.html` (P9; edição visual posterior feita no estúdio local, não no Claude Design) |
+| `designer` | Estilo ad-hoc em `_rascunho/` (P3) + assets do post (P9) | refs visuais + contrato (P3) / estilo + copy (P9) | `estilo.md` + `slide.html` (P3) / `design/slide-N.html` (P9; edição posterior no Dino Editor) |
 | `treinador` | Prescrição técnica de treino | exercícios + objetivo + recorte | `treino.md` |
 | `copywriter` | Copy do post | pesquisa + briefing + `estilo.md` (+ `treino.md`) | `copy.md` |
-| `curador-export` | Validação técnica + export PNG | `design/` + `estilo.md` | status inline + `export/*.png` |
 | `gerenciador-materiais` | Indexa/seleciona/marca imagens do banco | banco + copy + estilo (P9) / imagens usadas (P14) | `design/suggestions.json` (P9) / índice atualizado (P14) |
 | `revisor-conteudo` | Curadoria editorial (P11a) — coerência com briefing + compliance; pode aprovar com ajustes | pasta + briefing | `<parecer>` inline |
 | `revisor-brand` | Validação de identidade da marca (P11b) — binário | pasta + briefing | APROVADO/REPROVADO inline |
@@ -198,7 +197,7 @@ Se `_rascunho/` já existir, pergunte ao usuário antes de sobrescrever (sobresc
 Acione `designer`:
 
 ```
-Tarefa: criar estilo (estilo.md + arquivo principal + preview.html) a partir das referências do usuário.
+Tarefa: criar estilo (estilo.md + arquivo principal) a partir das referências do usuário.
 
 Inputs:
 - Pasta de trabalho: templates/social-media/<formato>/estilos/_rascunho/
@@ -212,7 +211,6 @@ Inputs:
 Saída em _rascunho/:
 - estilo.md — seguindo o esqueleto canônico em templates/estilo.md: seções obrigatórias (Conceito, Estrutura com [sequência]/[total]/blocos com #### visual e #### editorial, Quando usar, Quando NÃO usar) e condicionais que se apliquem
 - arquivo principal do template (slide.html ou frame.html)
-- preview.html — copiar templates/wrappers/preview-wrapper.html verbatim, substituir <!-- SLIDES_HERE --> por uma section[data-slide="N"] por variante, atualizar apenas o <title>
 
 Regras críticas:
 - Referências fotográficas são guia de mood/composição/tratamento — NUNCA conteúdo final.
@@ -227,9 +225,10 @@ Regras críticas:
 Rascunho do estilo ad-hoc em templates/social-media/<formato>/estilos/_rascunho/
 - estilo.md
 - <arquivo principal>
-- preview.html
 
-Abra preview.html no Claude Design e revise estrutura/visual.
+Para revisar o visual, abra o arquivo principal (slide.html/frame.html) via Live Preview ou:
+  node scripts/export-png.js <pasta-do-post> --format=<formato>
+
 Confirma? ("ok" para seguir ao briefing, ou descreva o ajuste)
 ```
 
@@ -385,10 +384,10 @@ Saída: sobrescrever export/conteudos/<formato>/<data>-<slug>/copy.md.
 
 ### 9. Design (pausa)
 
-Acione `designer` com as duas tarefas no mesmo prompt:
+Acione `designer`:
 
 ```
-Tarefa 1 — produzir N assets visuais (um por bloco declarado em ## Estrutura do estilo).
+Tarefa: produzir N slides visuais (um por bloco declarado em ## Estrutura do estilo).
 
 Inputs:
 - Estilo (visual + estrutura): <caminho do estilo.md>
@@ -402,18 +401,6 @@ Drop zones: respeite o campo [bg] e [slots] de cada bloco no estilo.md.
 - data-bg-drop="full" se asset preenche tudo com foto
 - data-bg-drop="<nome>" por zona fotográfica
 - não marcar se puramente tipográfico ou se for placeholder técnico (ex: chroma)
-
-Tarefa 2 — consolidar em preview.html.
-
-Inputs:
-- Pasta dos assets: export/conteudos/<formato>/<data>-<slug>/design/
-- Wrapper (VERBATIM, não altere CSS/JS): templates/wrappers/preview-wrapper.html
-
-Regras:
-- Substituir APENAS <!-- SLIDES_HERE --> por <section data-slide="N" style="width:{W}px;height:{H}px;"> para cada asset, contendo o <style> do <head> + o conteúdo do <body> (sem o wrapper <body>). W/H das dimensões do template visual. data-slide="N" obrigatório (o script de export usa).
-- Atualizar APENAS o <title> para "Preview — <tema> (<estilo>)".
-
-Saída: export/conteudos/<formato>/<data>-<slug>/design/preview.html.
 ```
 
 #### Pré-preenchimento de imagens (condicional)
@@ -434,28 +421,27 @@ Saída: design/suggestions.json com a melhor imagem disponível por drop zone.
 
 Se não houver banco apontado, pule — o usuário dropa as fotos manualmente no estúdio.
 
-#### Pausa para revisão e edição no estúdio
+#### Pausa para revisão e edição no Dino Editor
 
 ```
 Design gerado em export/conteudos/<formato>/<data>-<slug>/design/ (estilo: <slug | ad-hoc>):
-- preview.html
-- <assets individuais>
+- <slides individuais: slide-1.html, slide-2.html...>
 
-Suba o backend do estúdio (fica rodando na porta 4321) e abra o preview pra revisar e ajustar (texto, tamanho, posição, foto, estilo):
+Para revisar e editar (texto, tamanho, posição, foto, estilo), suba o Dino Editor:
 
-  node scripts/studio.js export/conteudos/<formato>/<data>-<slug> \
+  npm run editor -- export/conteudos/<formato>/<data>-<slug> \
     --estilo <caminho do estilo.md>
 
-Depois abra export/conteudos/<formato>/<data>-<slug>/design/preview.html — pelo Live Preview do VS Code (origin separado; o estúdio tem CORS) ou em http://localhost:4321. O editor chama o backend em http://localhost:4321 (rode o studio na porta padrão 4321).
+Acesse http://localhost:4321 no navegador. Edite no canvas, clique "Salvar" (grava slide-N.html + edits.json). Quando pronto, clique "Exportar" ou use:
 
-No estúdio: edite, clique "Salvar" (grava preview.html + edits.json) e "Exportar" quando estiver pronto.
+  node scripts/export-png.js export/conteudos/<formato>/<data>-<slug>/
 
 Opções de resposta:
-- "ok" / "exportei" → sigo para a validação técnica (Passo 10).
+- "ok" / "exportei" → sigo para a revisão editorial (Passo 11).
 - Peça ajustes que prefira que eu (Designer) faça → repasso ao Designer.
 ```
 
-**Aguarde resposta.** Ajustes visuais agora são feitos pelo usuário no estúdio (zero token). Se o usuário pedir explicitamente um ajuste via Designer, repasse o ponto específico. Quando confirmar, siga para o Passo 9.5.
+**Aguarde resposta.** Edições visuais são feitas pelo usuário no Dino Editor (zero token). Se o usuário pedir explicitamente um ajuste via Designer, repasse o ponto específico. Quando confirmar, siga para o Passo 9.5.
 
 ### 9.5. Loop de aprendizado de estilo (condicional)
 
@@ -463,7 +449,7 @@ Após o usuário salvar no estúdio (Passo 9), leia `export/conteudos/<formato>/
 
 ```bash
 node -e '
-import("./scripts/studio/extract-structural.js").then(async (m) => {
+import("./scripts/editor/extract-structural.js").then(async (m) => {
   const fs = await import("node:fs");
   const p = "export/conteudos/<formato>/<data>-<slug>/design/edits.json";
   if (!fs.existsSync(p)) { console.log(JSON.stringify({hasStructural:false})); return; }
@@ -506,7 +492,7 @@ Saída: manifesto com os arquivos alterados.
 
 Em `DELTA_NAO_MAPEAVEL`, reporte ao usuário o delta problemático e siga com os demais (não trave o pipeline). Após a promoção, siga para o Passo 10.
 
-### 10. Validação técnica + export PNG
+### 10. Export PNG (determinístico)
 
 Snapshot da pesquisa na pasta do post:
 
@@ -515,28 +501,15 @@ cp -n dados/pesquisas-brutas/<data>-tendencias-<slug>.md \
       export/conteudos/<formato>/<data>-<slug>/pesquisa-base.md
 ```
 
-Acione `curador-export`:
+Execute o export:
 
-```
-Tarefa: validar assets e executar export para PNG.
-
-Inputs:
-- Pasta: export/conteudos/<formato>/<data>-<slug>/design/
-- Estilo: <caminho do estilo.md>
-
-Critérios:
-- Dimensões dos assets = template visual.
-- Sem JavaScript em assets individuais (JS só no wrapper).
-- preview.html tem section[data-slide="N"] para cada asset.
-
-Comando: node scripts/export-png.js export/conteudos/<formato>/<data>-<slug>/
-
-Pós-export: verificar que qtd. de PNGs em export/ = qtd. de assets HTML em design/; inspeção visual rápida (capa + último asset).
-
-Saída: inline com status, lista de PNGs, observações.
+```bash
+node scripts/export-png.js export/conteudos/<formato>/<data>-<slug>/
 ```
 
-Em `VALIDACAO_TECNICA_FALHOU` → corrija no Designer no ponto apontado. Em `EXPORT_FALHOU` → resolva a causa (dependência, HTML quebrado) e re-rode.
+O script renderiza cada `slide-N.html` e valida automaticamente dimensões e contagem. Se a validação falhar, leia o erro (ex: dimensão incorreta num slide gerado pelo designer), corrija no arquivo apontado e re-rode.
+
+Em caso de erro de dependência (Puppeteer não instalado): `npm install` na raiz.
 
 ### 11. Curadoria editorial final
 
@@ -561,7 +534,7 @@ Tarefa: revisar conteúdo do post pronto.
 
 Inputs:
 - Pasta do post: export/conteudos/<formato>/<data>-<slug>/
-  (pesquisa-base.md, copy.md, design/preview.html, design/*.html, export/*.png, treino.md quando aplicável)
+  (pesquisa-base.md, copy.md, design/slide-*.html, export/*.png, treino.md quando aplicável)
 - Briefing estratégico original (inline):
   <briefing guardado no Passo 4, na íntegra>
 ```
@@ -635,21 +608,21 @@ Inputs:
 
 Saída em export/conteudos/carrossel/<data>-<slug>/stories/design/:
 - frame-N.html por bloco declarado em ## Estrutura do estilo
-- preview.html usando templates/wrappers/preview-wrapper.html verbatim
 
 Drop zones: manter as declaradas no estilo de referência.
 ```
 
-#### Pausa para revisão do preview stories
+#### Pausa para revisão dos frames stories
 
 ```
 Stories gerado em export/conteudos/carrossel/<data>-<slug>/stories/design/:
-- preview.html
-- <frames individuais>
+- <frames individuais: frame-1.html, frame-2.html...>
+
+Para revisar, abra os frames via Live Preview ou exporte diretamente:
+  node scripts/export-png.js export/conteudos/carrossel/<data>-<slug>/stories/ --format=stories
 
 Opções:
 - "exportar" → exporto como está
-- Anexe preview.html editado → sobrescrevo e exporto
 - Peça ajustes visuais → repasso ao designer
 - Ajuste de copy → re-aciono copywriter; salvo em stories/copy.md (copy.md original intacto)
 ```
@@ -673,30 +646,15 @@ Saída: gravar em export/conteudos/carrossel/<data>-<slug>/stories/copy.md.
 NÃO alterar export/conteudos/carrossel/<data>-<slug>/copy.md.
 ```
 
-Repita até "exportar" ou confirmação. Após aprovação, acione `curador-export`:
+Repita até "exportar" ou confirmação. Após aprovação, execute o export:
 
-```
-Tarefa: validar assets e executar export para PNG.
-
-Inputs:
-- Pasta: export/conteudos/carrossel/<data>-<slug>/stories/design/
-- Estilo: <caminho do estilo.md do carrossel>
-
-Critérios:
-- Dimensões dos frames = 1080×1920.
-- Sem JavaScript em assets individuais (JS só no wrapper).
-- preview.html tem section[data-slide="N"] para cada frame.
-
-Comando: node scripts/export-png.js export/conteudos/carrossel/<data>-<slug>/stories/
-
-Pós-export: verificar que qtd. de PNGs em stories/export/ = qtd. de frame-N.html em stories/design/.
-
-Saída: inline com status, lista de PNGs, observações.
+```bash
+node scripts/export-png.js export/conteudos/carrossel/<data>-<slug>/stories/ --format=stories
 ```
 
-**Curadoria não se repete** — copy e briefing já foram aprovados nos Passos 11a/b/c.
+O script valida dimensões e contagem automaticamente. Em caso de erro, corrija o frame apontado e re-rode.
 
-Em `VALIDACAO_TECNICA_FALHOU` → corrija no designer no ponto apontado. Em `EXPORT_FALHOU` → resolva a causa e re-rode.
+**Curadoria não se repete** — copy e briefing já foram aprovados nos Passos 11a/b.
 
 ### 13.6. Salvar/descartar `_rascunho/` (pausa)
 
@@ -768,25 +726,23 @@ export/conteudos/<formato>/<data>-<slug>/
 ├── copy.md
 ├── treino.md                     (quando aplicável)
 ├── design/
-│   ├── <assets HTML>
-│   └── preview.html
+│   └── slide-N.html              (um por bloco)
 ├── export/
-│   └── <PNGs>
+│   └── slide-N.png
 ├── briefing.md
 └── stories/                      (quando adaptação stories executada)
     ├── copy.md                   (só existe se houver ajuste de copy no stories)
     ├── design/
-    │   ├── <frames HTML>
-    │   └── preview.html
+    │   └── frame-N.html
     └── export/
-        └── <PNGs>
+        └── frame-N.png
 ```
 
 ## Critério de conclusão
 
-- A pasta `export/conteudos/<formato>/<data>-<slug>/` contém `pesquisa-base.md`, `copy.md`, `design/` com assets + `preview.html`, `export/` com PNGs e `briefing.md`.
-- Quantidade de PNGs em `export/` é igual à de assets HTML em `design/`.
+- A pasta `export/conteudos/<formato>/<data>-<slug>/` contém `pesquisa-base.md`, `copy.md`, `design/slide-N.html`, `export/slide-N.png` e `briefing.md`.
+- Quantidade de PNGs em `export/` é igual à de `slide-N.html` em `design/` (validado pelo export-png.js).
 - `briefing.md` foi gerado por curadoria editorial com status APROVADO.
 - Em modo ad-hoc, `_rascunho/` foi salvo com slug definitivo ou removido (não deve sobrar entre execuções) — a decisão ocorre no Passo 13.6, após o Passo 13.5.
 - Usuário recebeu a mensagem final do Passo 13 com lista de PNGs e caminho do briefing.
-- Quando adaptação stories executada: `stories/design/` contém `frame-N.html` + `preview.html`; `stories/export/` contém um PNG por frame; quantidade de PNGs = quantidade de frames HTML; `copy.md` raiz não foi alterado.
+- Quando adaptação stories executada: `stories/design/` contém `frame-N.html`; `stories/export/` contém um PNG por frame; quantidade de PNGs = quantidade de frames HTML; `copy.md` raiz não foi alterado.

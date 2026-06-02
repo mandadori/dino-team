@@ -20,7 +20,7 @@ Gerar N posts em um mesmo formato, com variação de estilos e temas dentro do l
 | 5 | sub-fluxo novo-post P4–8 (×posts) | plano ← 4 | 4 | copy por post |
 | 6 | ⏸ usuário | copies ← 5 | 5 | ok/ajuste em lote |
 | 7 | designer (×posts) | copy ← 5 | 6 | assets por post |
-| 8 | curador-export + revisores (×posts) | pasta ← 7 | 7 | validação por post |
+| 8 | export-png.js + revisores (×posts) | slide-N.html ← 7 | 7 | PNGs + validação por post |
 | 9 | ⚙ relatório do lote | — | 8 | relatório |
 | 10 | ⚙ política publish (×posts) | pasta ← 8 | 8 | publicado/pendente |
 
@@ -52,7 +52,6 @@ Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou 
 | `briefing-writer` | Briefing estratégico por post. | Passo 5 |
 | Pipeline `/novo-post` (pesquisa → copy) | Executa pesquisa e copy de cada post. | Passo 5 |
 | Pipeline `/novo-post` (design) | Executa o design de cada post após aprovação da copy. | Passo 7 |
-| `curador-export` | Valida e exporta PNGs por post. | Passo 8 |
 | `revisor-conteudo` + `revisor-brand` | Curadoria editorial por post. | Passo 8 |
 
 Cada agente lê o recorte de `brand/` que sua função exige antes de executar. Erro `BRAND_BOOK_INCOMPLETO` vindo de qualquer agente para o lote inteiro.
@@ -193,33 +192,34 @@ A pausa só avança ao Passo 7 quando o usuário confirmar que não há mais aju
 
 **Modo agendado:** pule a pausa. Siga direto ao Passo 7.
 
-### 7. Design + revisão de previews por post
+### 7. Design + revisão de slides por post
 
-Para cada post aprovado no Passo 6, execute o **Design (assets + preview consolidado)** do `/novo-post` (`designer`).
+Para cada post aprovado no Passo 6, execute o **Design (slide-N.html)** do `/novo-post` (`designer`).
 
-Após o design de todos os posts, apresente os previews **um por um**, na ordem da lista:
+Após o design de todos os posts, apresente **um por um**, na ordem da lista:
 
 ```
 Post <n> de <N> — <slug-do-post> (estilo: <slug>)
 Tema: <subtema>
-Preview: export/conteudos/<formato>/<data>-<slug>/design/preview.html
+Slides: export/conteudos/<formato>/<data>-<slug>/design/
+
+Para revisar: abra via Live Preview ou exporte (node scripts/export-png.js <pasta>)
 
 Opções:
 - "ok" / "confirmar" → segue para o próximo
 - "ajustar: <descrição>" → reaciona o designer; reapresenta este post
-- Anexe preview.html editado → sobrescreve e segue
 ```
 
 Aguarde decisão antes de passar ao próximo. Quando todos forem confirmados, siga ao Passo 8.
 
-**Modo agendado:** pule o loop. Siga direto ao Passo 8 com os previews gerados.
+**Modo agendado:** pule o loop. Siga direto ao Passo 8 com os slides gerados.
 
 ### 8. Validação, export e curadoria editorial
 
 Para cada post confirmado:
 
 1. Snapshot da pesquisa em `<pasta>/pesquisa-base.md`.
-2. [Agente: `curador-export`] → valida assets e exporta PNGs.
+2. Executar `node scripts/export-png.js export/conteudos/<formato>/<data>-<slug>/` — renderiza e valida dimensões/contagem automaticamente. Em caso de erro, registre e marque o post como pulado.
 3. Curadoria editorial em sequência:
    a. [Agente: `revisor-conteudo`] → parecer de coerência + compliance. APROVADO ou APROVADO COM AJUSTES → segue para 3b. REPROVADO → registra e marca o post como pulado (refazer é responsabilidade do `/novo-post`).
    b. [Agente: `revisor-brand`] → parecer de identidade. APROVADO → grava `briefing.md`. REPROVADO → registra e marca como pulado.
