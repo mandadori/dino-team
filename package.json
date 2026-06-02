@@ -7,7 +7,7 @@
   "scripts": {
     "export": "node scripts/export-png.js",
     "studio": "node scripts/studio.js",
-    "test": "node --test scripts/studio"
+    "test": "node --test scripts/studio/*.test.js"
   },
   "engines": {
     "node": ">=20"
