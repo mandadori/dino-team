@@ -282,17 +282,76 @@
       return '<div class="dt-field"><label>' + label + '</label>' + inputHtml + '</div>';
     }
 
+    // Mapa de propriedade -> scope (content = só este post; structural = candidato a estilo)
+    var SCOPE = {
+      text: "content", "bg": "content",
+      size: "structural", weight: "structural", align: "structural",
+      color: "structural", "position.bottom": "structural", removed: "structural"
+    };
+    function slideIndexOf(el) {
+      var section = el.closest("section[data-slide]");
+      return section ? parseInt(section.getAttribute("data-slide"), 10) : 0;
+    }
+    function blockOf(el) {
+      var section = el.closest("section[data-slide]");
+      return section ? section.getAttribute("data-block") : null;
+    }
+    function recordEdit(el, prop, from, to) {
+      var slide = slideIndexOf(el), target = el.getAttribute("data-slot");
+      var existing = edits.find(function (e) {
+        return e._slide === slide && e.target === target && e.prop === prop;
+      });
+      if (existing) { existing.to = to; return; }
+      edits.push({
+        _slide: slide, _block: blockOf(el),
+        target: target, prop: prop, from: from, to: to,
+        scope: SCOPE[prop] || "content"
+      });
+    }
+
     function buildPanel(el) {
       var def = slotDef(el);
-      var slotName = el.getAttribute("data-slot");
-      panelTitle.textContent = slotName + (def ? "" : " (livre)");
-      // Os controles concretos entram na Task 11; aqui só o título + remover.
-      panelBody.innerHTML = "";
+      panelTitle.textContent = el.getAttribute("data-slot") + (def ? "" : " (livre)");
+      var cs = window.getComputedStyle(el);
+      var html = "";
+      var hasText = el.children.length === 0 || /H1|H2|H3|P|SPAN/.test(el.tagName);
+      if (hasText) {
+        html += field("Texto", '<textarea id="dt-c-text">' + el.textContent.trim() + '</textarea>');
+      }
+      html += field("Tamanho (px)", '<input id="dt-c-size" type="number" value="' + parseInt(cs.fontSize, 10) + '">');
+      html += field("Peso", '<select id="dt-c-weight">' +
+        ["300", "400", "500", "600", "700"].map(function (w) {
+          return '<option value="' + w + '"' + (cs.fontWeight === w ? " selected" : "") + '>' + w + '</option>';
+        }).join("") + '</select>');
+      html += field("Alinhamento", '<select id="dt-c-align">' +
+        ["left", "center", "right"].map(function (a) {
+          return '<option value="' + a + '"' + (cs.textAlign === a ? " selected" : "") + '>' + a + '</option>';
+        }).join("") + '</select>');
+      html += field("Cor", '<select id="dt-c-color">' +
+        [["#ffffff", "branco"], ["#000000", "preto"], ["#7f7f7f", "cinza"]].map(function (c) {
+          return '<option value="' + c[0] + '">' + c[1] + '</option>';
+        }).join("") + '</select>');
+      html += field("Posição inferior (px)",
+        '<input id="dt-c-bottom" type="number" value="' + (parseInt(el.style.bottom, 10) || "") + '" placeholder="auto">');
+      panelBody.innerHTML = html;
+
       var rm = document.createElement("button");
       rm.className = "dt-remove"; rm.textContent = "Remover elemento";
       rm.addEventListener("click", function () { window.__DT.removeSelected(); });
       panelBody.appendChild(rm);
+
+      var t = document.getElementById("dt-c-text");
+      if (t) t.addEventListener("input", function () {
+        var from = el.textContent; el.textContent = t.value; recordEdit(el, "text", from, t.value);
+      });
+      bindNum("dt-c-size", function (v) { var f = el.style.fontSize; el.style.fontSize = v + "px"; recordEdit(el, "size", f || null, v + "px"); });
+      bindSel("dt-c-weight", function (v) { var f = el.style.fontWeight; el.style.fontWeight = v; recordEdit(el, "weight", f || null, v); });
+      bindSel("dt-c-align", function (v) { var f = el.style.textAlign; el.style.textAlign = v; recordEdit(el, "align", f || null, v); });
+      bindSel("dt-c-color", function (v) { var f = el.style.color; el.style.color = v; recordEdit(el, "color", f || null, v); });
+      bindNum("dt-c-bottom", function (v) { var f = el.style.bottom; el.style.position = "absolute"; el.style.bottom = v + "px"; recordEdit(el, "position.bottom", f || null, v + "px"); });
     }
+    function bindNum(id, fn) { var i = document.getElementById(id); if (i) i.addEventListener("input", function () { if (i.value !== "") fn(parseInt(i.value, 10)); }); }
+    function bindSel(id, fn) { var i = document.getElementById(id); if (i) i.addEventListener("change", function () { fn(i.value); }); }
 
     // Clique em elemento editável seleciona; clique no fundo/controles deseleciona.
     slides.forEach(function (slide) {
@@ -314,7 +373,13 @@
       getContract: function () { return contract; },
       getEdits: function () { return edits; },
       slotDef: slotDef, selectEl: selectEl,
-      removeSelected: function () {}, onBgChanged: null
+      removeSelected: function () {
+        if (!selected) return;
+        recordEdit(selected, "removed", "present", "removed");
+        selected.style.display = "none"; // oculta (não destrói) — preserva no DOM salvo? Ver nota.
+        deselect();
+      },
+      onBgChanged: null
     };
   })();
   </script>
