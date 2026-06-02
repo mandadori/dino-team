@@ -338,20 +338,25 @@
     7. Logo: img src deve apontar para brand/assets/logo.png (path relativo
        à pasta do post). Em preview standalone, pode usar caminho absoluto.
 
+    8. Tagging para o editor: a <section> leva data-block="<capa|lista|exercicio|cta>" e
+       cada slot leva data-slot="<nome exatamente como no estilo.md>". O .slide-bg leva
+       data-slot="bg" além do data-bg-drop. Nos slides .exercicio (chroma), o .chroma-bg
+       leva data-slot="bg".
+
     Exemplo abaixo: variante .capa (apague e troque pela variante do slide).
   -->
-  <section class="slide capa">
-    <div class="slide-bg placeholder" data-bg-drop="photo"></div>
+  <section class="slide capa" data-block="capa">
+    <div class="slide-bg placeholder" data-bg-drop="photo" data-slot="bg"></div>
     <div class="img-overlay"></div>
 
     <div class="topbar">
-      <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" />
-      <span class="topic">BACK DAY</span>
+      <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" data-slot="logo" />
+      <span class="topic" data-slot="tag-tópico">BACK DAY</span>
     </div>
 
     <div class="title-block">
-      <h1 class="big-title">TREINO PARA<br />COSTAS EM V</h1>
-      <div class="swipe-cue">
+      <h1 class="big-title" data-slot="título">TREINO PARA<br />COSTAS EM V</h1>
+      <div class="swipe-cue" data-slot="swipe-cue">
         <span>Arraste</span>
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.4"
@@ -360,21 +365,21 @@
       </div>
     </div>
 
-    <div class="progress">
+    <div class="progress" data-slot="barra-progresso">
       <div class="track"><div class="fill" style="width: 11.11%"></div></div>
     </div>
   </section>
 
   <!--
     ============ EXEMPLO: variante .lista ============
-    <section class="slide lista">
-      <div class="slide-bg placeholder" data-bg-drop="photo"></div>
+    <section class="slide lista" data-block="lista">
+      <div class="slide-bg placeholder" data-bg-drop="photo" data-slot="bg"></div>
       <div class="img-overlay"></div>
       <div class="topbar">
-        <img src="..." alt="DINO" class="logo-img" />
-        <span class="topic">O TREINO</span>
+        <img src="..." alt="DINO" class="logo-img" data-slot="logo" />
+        <span class="topic" data-slot="tag-tópico">O TREINO</span>
       </div>
-      <div class="lista-content">
+      <div class="lista-content" data-slot="lista-exercicios">
         <div class="ex-list">
           <div class="ex-group">
             <div class="ex-item">
@@ -387,38 +392,38 @@
           </div>
         </div>
       </div>
-      <div class="progress"><div class="track"><div class="fill" style="width:22.22%"></div></div></div>
+      <div class="progress" data-slot="barra-progresso"><div class="track"><div class="fill" style="width:22.22%"></div></div></div>
     </section>
 
     ============ EXEMPLO: variante .exercicio ============
-    <section class="slide exercicio">
-      <div class="chroma-bg"></div>
+    <section class="slide exercicio" data-block="exercício">
+      <div class="chroma-bg" data-slot="bg"></div>
       <div class="topbar">
-        <img src="..." alt="DINO" class="logo-img" />
-        <span class="topic">PRIMEIRO EXERCÍCIO</span>
+        <img src="..." alt="DINO" class="logo-img" data-slot="logo" />
+        <span class="topic" data-slot="tag-ordinal">PRIMEIRO EXERCÍCIO</span>
       </div>
       <div class="exercise-corner">
-        <div class="ex-name"><span class="code">1.</span>SUPINO INCLINADO NA MÁQUINA</div>
-        <div class="ex-reps">
+        <div class="ex-name" data-slot="nome-exercicio"><span class="code">1.</span>SUPINO INCLINADO NA MÁQUINA</div>
+        <div class="ex-reps" data-slot="reps">
           <span class="sets">4 SÉRIES</span>
           <span class="reps"><span>12</span><span>10</span><span>Ⓕ</span><span>Ⓕ</span></span>
         </div>
       </div>
-      <div class="progress"><div class="track"><div class="fill" style="width:33.33%"></div></div></div>
+      <div class="progress" data-slot="barra-progresso"><div class="track"><div class="fill" style="width:33.33%"></div></div></div>
     </section>
 
     ============ EXEMPLO: variante .cta ============
-    <section class="slide cta">
-      <div class="slide-bg placeholder" data-bg-drop="photo"></div>
+    <section class="slide cta" data-block="cta">
+      <div class="slide-bg placeholder" data-bg-drop="photo" data-slot="bg"></div>
       <div class="img-overlay"></div>
       <div class="topbar">
-        <img src="..." alt="DINO" class="logo-img" />
-        <span class="topic">DIRECIONE SEU ESFORÇO</span>
+        <img src="..." alt="DINO" class="logo-img" data-slot="logo" />
+        <span class="topic" data-slot="tag-tópico">DIRECIONE SEU ESFORÇO</span>
       </div>
       <div class="cta-block">
-        <h1 class="big-title">JUNTOS VAMOS<br />MAIS LONGE.</h1>
+        <h1 class="big-title" data-slot="título">JUNTOS VAMOS<br />MAIS LONGE.</h1>
       </div>
-      <div class="progress"><div class="track"><div class="fill" style="width:100%"></div></div></div>
+      <div class="progress" data-slot="barra-progresso"><div class="track"><div class="fill" style="width:100%"></div></div></div>
     </section>
   -->
 </body>

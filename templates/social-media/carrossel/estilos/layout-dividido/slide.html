@@ -206,17 +206,47 @@
     4. NÃO altere width/height (1080x1350).
     5. NÃO inclua barra de progresso, swipe cue, logo ou watermark — o estilo
        é minimalista: só as duas metades + texto + stamp "DINO TEAM".
+
+    6. Tagging para o editor: a <section> leva data-block="<capa|dividido|cta>" e cada
+       slot leva data-slot="<nome exatamente como no estilo.md>". Zonas de drop de foto
+       (.half[data-bg-drop]) levam data-slot="bg" no elemento que recebe a foto (metade
+       topo).
   -->
 
   <!-- Variante principal: DIVIDIDO (tensão -> resolução) -->
-  <section class="slide dividido">
-    <div class="half top" data-bg-drop="topo" data-label="[FOTO SUPERIOR]">
-      <div class="half-text">FRASE DE TENSÃO...</div>
+  <section class="slide dividido" data-block="dividido">
+    <div class="half top" data-bg-drop="topo" data-slot="bg" data-label="[FOTO SUPERIOR]">
+      <div class="half-text" data-slot="título-topo">FRASE DE TENSÃO...</div>
     </div>
     <div class="half bottom" data-bg-drop="base" data-label="[FOTO INFERIOR]">
-      <div class="half-text">MAS A VERDADE.</div>
+      <div class="half-text" data-slot="título-base">MAS A VERDADE.</div>
     </div>
-    <div class="brand-stamp">DINO TEAM</div>
+    <div class="brand-stamp" data-slot="stamp">DINO TEAM</div>
   </section>
+
+  <!--
+    ============ EXEMPLO: variante .capa ============
+    <section class="slide capa" data-block="capa">
+      <div class="half top" data-bg-drop="topo" data-slot="bg" data-label="[FOTO SUPERIOR]">
+        <div class="half-text" data-slot="título-topo">TEMA DO POST...</div>
+      </div>
+      <div class="half bottom" data-bg-drop="base" data-label="[FOTO INFERIOR]">
+        <div class="half-text" data-slot="título-base">ÂNGULO DO POST.</div>
+      </div>
+      <div class="brand-stamp" data-slot="stamp">DINO TEAM</div>
+    </section>
+
+    ============ EXEMPLO: variante .cta ============
+    <section class="slide cta" data-block="cta">
+      <div class="half top" data-bg-drop="topo" data-slot="bg" data-label="[FOTO SUPERIOR]">
+        <div class="half-text" data-slot="título-topo">REFLITA...</div>
+      </div>
+      <div class="half bottom">
+        <p class="cta-eyebrow" data-slot="eyebrow?">DINO TEAM</p>
+        <div class="half-text" data-slot="cta">COMECE AGORA.</div>
+      </div>
+      <div class="brand-stamp" data-slot="stamp">DINO TEAM</div>
+    </section>
+  -->
 </body>
 </html>

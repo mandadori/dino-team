@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <title>Slide Carrossel — Dino Team / _rascunho</title>
+  <title>Slide Carrossel — Dino Team / editorial</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -10,10 +10,10 @@
     rel="stylesheet"
   />
   <style>
-    /* ESTILO: _rascunho | CONCEITO: foto full bleed + gradient bottom + logo centrada + narrativa editorial */
+    /* ESTILO: editorial | CONCEITO: foto full bleed + gradient bottom + logo centrada + narrativa editorial */
 
     /* ====================================================================
-       BRAND DINO TEAM — Estilo _rascunho (foto-narrativa) — carrossel 4:5 (1080x1350)
+       BRAND DINO TEAM — Estilo editorial (foto-narrativa) — carrossel 4:5 (1080x1350)
 
        Variantes (escolha uma na <section class="slide ...">):
          .slide.capa   → slide 1: foto full bleed + gradient + logo acima do título (bloco v-bottom) + swipe cue
@@ -299,18 +299,22 @@
     8. Fontes: Anton (títulos CAIXA ALTA) + Montserrat (corpo CAIXA ALTA).
        Todo texto é text-transform: uppercase — NUNCA caixa baixa.
 
+    9. Tagging para o editor: a <section> leva data-block="<capa|corpo|cta>" e cada
+       slot leva data-slot="<nome exatamente como no estilo.md>". O .slide-bg leva
+       data-slot="bg" além do data-bg-drop.
+
     Exemplo abaixo: variante .capa (apague e troque pela variante do slide).
   -->
 
   <!-- ============ SLIDE ATIVO: variante .capa ============ -->
-  <section class="slide capa">
-    <div class="slide-bg placeholder" data-bg-drop="photo"></div>
+  <section class="slide capa" data-block="capa">
+    <div class="slide-bg placeholder" data-bg-drop="photo" data-slot="bg"></div>
     <div class="img-overlay"></div>
 
     <div class="title-block">
-      <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" />
-      <h1 class="big-title">DO ZERO<br>AO OLYMPIA</h1>
-      <div class="swipe-cue">
+      <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" data-slot="logo" />
+      <h1 class="big-title" data-slot="título">DO ZERO<br>AO OLYMPIA</h1>
+      <div class="swipe-cue" data-slot="swipe-cue">
         <span>ARRASTE</span>
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.4"
@@ -319,29 +323,29 @@
       </div>
     </div>
 
-    <div class="progress">
+    <div class="progress" data-slot="barra-progresso">
       <div class="track"><div class="fill" style="width: 33.33%"></div></div>
     </div>
   </section>
 
   <!--
     ============ EXEMPLO: variante .corpo ============
-    <section class="slide corpo">
-      <div class="slide-bg placeholder" data-bg-drop="photo"></div>
+    <section class="slide corpo" data-block="corpo">
+      <div class="slide-bg placeholder" data-bg-drop="photo" data-slot="bg"></div>
       <div class="img-overlay"></div>
 
       <div class="logo-center">
-        <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" />
+        <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" data-slot="logo" />
       </div>
 
       <div class="content-area">
-        <span class="eyebrow">SEM ACADEMIA. SEM DINHEIRO.</span>
-        <h2 class="headline">A PRIMEIRA<br>DECISÃO</h2>
-        <p class="body-text">PLACEHOLDER — ATÉ 3 LINHAS DE TEXTO DE CORPO EM CAIXA ALTA. MÁXIMO 120 CARACTERES POR PARÁGRAFO.</p>
+        <span class="eyebrow" data-slot="eyebrow">SEM ACADEMIA. SEM DINHEIRO.</span>
+        <h2 class="headline" data-slot="headline">A PRIMEIRA<br>DECISÃO</h2>
+        <p class="body-text" data-slot="corpo">PLACEHOLDER — ATÉ 3 LINHAS DE TEXTO DE CORPO EM CAIXA ALTA. MÁXIMO 120 CARACTERES POR PARÁGRAFO.</p>
       </div>
 
       <div class="swipe-wrap">
-        <div class="swipe-cue">
+        <div class="swipe-cue" data-slot="swipe-cue">
           <span>ARRASTE</span>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.4"
@@ -350,23 +354,23 @@
         </div>
       </div>
 
-      <div class="progress">
+      <div class="progress" data-slot="barra-progresso">
         <div class="track"><div class="fill" style="width: 66.66%"></div></div>
       </div>
     </section>
 
     ============ EXEMPLO: variante .cta ============
-    <section class="slide cta">
-      <div class="slide-bg placeholder" data-bg-drop="photo"></div>
+    <section class="slide cta" data-block="cta">
+      <div class="slide-bg placeholder" data-bg-drop="photo" data-slot="bg"></div>
       <div class="img-overlay"></div>
 
       <div class="title-block">
-        <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" />
-        <h2 class="cta-headline">COMECE<br>AGORA</h2>
-        <p class="cta-sub">CONSULTORIA DINO TEAM</p>
+        <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" data-slot="logo" />
+        <h2 class="cta-headline" data-slot="título">COMECE<br>AGORA</h2>
+        <p class="cta-sub" data-slot="sub">CONSULTORIA DINO TEAM</p>
       </div>
 
-      <div class="progress">
+      <div class="progress" data-slot="barra-progresso">
         <div class="track"><div class="fill" style="width: 100%"></div></div>
       </div>
     </section>
