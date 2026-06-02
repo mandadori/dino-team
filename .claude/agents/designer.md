@@ -57,6 +57,20 @@ A skill que me aciona deve fornecer, em texto livre:
 
 Sem `Tarefa` ou guia visual (nem template nem referência), devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 
+### Modo promoção (aplicar deltas estruturais ao estilo)
+
+Quando a `Tarefa` for "promover deltas estruturais ao estilo", recebo:
+- Caminho do `estilo.md` e do `slide.html` do estilo.
+- Lista de deltas por bloco (cada um: `bloco`, `target` = nome do slot, `prop`, `from`, `to`).
+
+Aplico cada delta **atomicamente nos dois arquivos**, mantendo contrato e implementação coerentes:
+- `size` num slot → atualizo o token/hint do slot no `## Estrutura` do `estilo.md` (ex.: `~140px`→`~120px`) **e** o CSS correspondente no `slide.html`.
+- `position.bottom` → atualizo o `[layout]`/hint de posição do slot no `estilo.md` **e** o CSS no `slide.html`.
+- `removed` → removo o slot da `## Estrutura` do bloco no `estilo.md` (ou marco como opcional, se ainda fizer sentido) **e** removo/comento o elemento no `slide.html`.
+- `weight`/`align`/`color` → atualizo o hint do slot no `estilo.md` **e** o CSS no `slide.html`.
+
+Não aplico deltas `scope: content` (texto, foto) — esses são do post, não do estilo. Se um delta não tiver mapeamento claro no estilo, devolvo `DELTA_NAO_MAPEAVEL — <bloco/slot/prop>` em vez de adivinhar.
+
 ## Entrego
 
 Gravo cada asset no caminho indicado e retorno só o manifesto:
@@ -94,3 +108,4 @@ Manifesto ~50 palavras. Assets governados pelas dimensões do template e limites
 - `REFERENCIA_INSUFICIENTE — <motivo>` — modo ad-hoc com imagem e descrição ambas ausentes ou inutilizáveis.
 - `COPY_AUSENTE_OU_INCONSISTENTE` — copy apontado não tem os blocos esperados pelo template.
 - `ESTILO_NAO_ACOMODA — <motivo>` — a mensagem não cabe nas variantes existentes; precisa de novo estilo ou ajuste editorial antes.
+- `DELTA_NAO_MAPEAVEL — <bloco/slot/prop>` — delta estrutural sem correspondência clara no estilo.md/slide.html.
