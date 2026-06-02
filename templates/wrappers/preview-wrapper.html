@@ -190,6 +190,22 @@
       var bh = (zone._bgNatH * zone._bgScale * zone._bgZoom).toFixed(1);
       zone.style.backgroundSize = bw + "px " + bh + "px";
     }
+    function applyBgFromDataUrl(zone, dataUrl, cb) {
+      var img = new Image();
+      img.onload = function () {
+        var ds = getZoneDesignSize(zone);
+        zone._bgNatW = img.naturalWidth; zone._bgNatH = img.naturalHeight;
+        zone._bgScale = Math.max(ds.w / img.naturalWidth, ds.h / img.naturalHeight);
+        zone._bgZoom = 1.0;
+        zone.style.backgroundImage = "url(" + dataUrl + ")";
+        zone.style.backgroundRepeat = "no-repeat";
+        zone.style.backgroundPosition = "50% 50%";
+        applyBgZoom(zone);
+        zone.setAttribute("data-has-bg", "1");
+        if (cb) cb();
+      };
+      img.src = dataUrl;
+    }
     function readPos(zone) {
       var pp = (zone.style.backgroundPosition || "50% 50%").split(/\s+/);
       var x = parseFloat(pp[0]), y = parseFloat(pp[1]);
@@ -216,20 +232,9 @@
         if (!f || f.type.indexOf("image/") !== 0) return;
         var r = new FileReader();
         r.onload = function () {
-          var img = new Image();
-          img.onload = function () {
-            var ds = getZoneDesignSize(zone);
-            zone._bgNatW = img.naturalWidth; zone._bgNatH = img.naturalHeight;
-            zone._bgScale = Math.max(ds.w / img.naturalWidth, ds.h / img.naturalHeight);
-            zone._bgZoom = 1.0;
-            zone.style.backgroundImage = "url(" + r.result + ")";
-            zone.style.backgroundRepeat = "no-repeat";
-            zone.style.backgroundPosition = "50% 50%";
-            applyBgZoom(zone);
-            zone.setAttribute("data-has-bg", "1");
+          applyBgFromDataUrl(zone, r.result, function () {
             if (window.__DT.onBgChanged) window.__DT.onBgChanged(zone);
-          };
-          img.src = r.result;
+          });
         };
         r.readAsDataURL(f);
       });
@@ -470,6 +475,19 @@
         .then(function (r) { exportBtn.textContent = r.ok ? "Exportado ✓" : "Erro"; setTimeout(function () { exportBtn.textContent = "Exportar"; }, 2000); })
         .catch(function () { exportBtn.textContent = "Offline"; setTimeout(function () { exportBtn.textContent = "Exportar"; }, 2000); });
     });
+
+    // ---------- Sugestões de imagem (gerenciador-materiais) ----------
+    fetch("/suggestions").then(function (r) { return r.status === 200 ? r.json() : null; })
+      .then(function (sugg) {
+        if (!sugg) return;
+        slides.forEach(function (slide) {
+          var n = slide.getAttribute("data-slide");
+          var s = sugg[n]; if (!s) return;
+          var zone = slide.querySelector('[data-bg-drop="' + s.drop + '"]') ||
+                     slide.querySelector("[data-bg-drop]");
+          if (zone && !zone.hasAttribute("data-has-bg")) applyBgFromDataUrl(zone, s.dataUrl);
+        });
+      }).catch(function () {});
 
     window.__DT = {
       slides: slides, current: function () { return current; },
