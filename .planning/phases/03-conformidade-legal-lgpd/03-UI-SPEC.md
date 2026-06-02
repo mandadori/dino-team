@@ -43,23 +43,27 @@ Plus: legal links added to the existing `<footer>` in `app/page.tsx` (D-04).
 
 ## Spacing Scale
 
-Inherited from 01-UI-SPEC.md. 4px base; restricted to: **4, 8, 16, 24, 32, 48, 64, 96, 128**.
+Base 4px. The standard 8-point set is **{4, 8, 16, 24, 32, 48, 64}**.
 
-| Token | Value | Usage this phase |
-|-------|-------|------------------|
-| xs | 4px | Inline icon/text gaps (none expected) |
-| sm | 8px | Gap between banner text and button row on mobile stack |
-| md | 16px | Default paragraph spacing in legal pages; banner inner gap |
-| lg | 24px | Page gutter `px-6` (banner + legal pages); banner vertical padding `py-6` (desktop) / `py-4` (mobile, ~16px) |
-| xl | 32px | Legal-page heading → body block spacing |
-| 2xl | 48px | Between major legal sections (e.g. "1. Coleta de dados" blocks) |
-| 3xl+ | 64 / 96 / 128px | Legal-page top/bottom rhythm: `py-24` mobile → `sm:py-32` desktop (matches landing section rhythm so the page sits under the same fixed header) |
+**Extended scale (inherited, justified):** `96` (`py-24`) and `128` (`py-32`) are **inherited from `01-UI-SPEC.md`** (approved spacing scale, lines 69/80–81: `py-24` = 96px section padding mobile, `py-32` = 128px section padding desktop). This phase reuses them **exclusively for page-level vertical rhythm** so the legal pages sit under the same fixed header with the same section cadence as the landing. They are not introduced new here and are not used for component-internal spacing.
+
+| Token | Value | In standard set? | Usage this phase |
+|-------|-------|------------------|------------------|
+| xs | 4px | yes | Inline icon/text gaps (none expected) |
+| sm | 8px | yes | Gap between banner text and button row on mobile stack |
+| md | 16px | yes | Default paragraph spacing in legal pages; banner inner gap; banner vertical padding `py-4` (mobile) |
+| lg | 24px | yes | Page gutter `px-6` (banner + legal pages); banner vertical padding `py-6` (desktop) |
+| xl | 32px | yes | Legal-page heading → body block spacing |
+| 2xl | 48px | yes | Between major legal sections (e.g. "1. Coleta de dados" blocks) |
+| 3xl | 64px | yes | Legal-page title block → first section |
+| — | 96px | no — **extended (inherited from 01-UI-SPEC.md)** | Legal-page top/bottom rhythm mobile: `py-24` |
+| — | 128px | no — **extended (inherited from 01-UI-SPEC.md)** | Legal-page top/bottom rhythm desktop: `sm:py-32` (matches landing section rhythm under the same fixed header) |
 
 **Container:** `max-w-3xl` (768px, ~65ch) for legal-page prose readability — narrower than the landing's `max-w-6xl` because long legal text needs a tight measure. Banner content centered within `max-w-6xl` to align with the landing's content width. Gutter `px-6` (24px) at all widths.
 
 **Touch target minimum:** 44×44px. "Aceitar" reuses `CTAButton` geometry (`px-8 py-4` ≈ 56px tall — OK). "Recusar" must also clear 44px height even as outline/link.
 
-Exceptions: none.
+Exceptions: 96px and 128px are out of the standard 8-point set, used only for page-level vertical rhythm and inherited from the approved 01-UI-SPEC.md extended scale (see justification above). No other exceptions.
 
 ---
 
@@ -67,18 +71,20 @@ Exceptions: none.
 
 Inherited from 01-UI-SPEC.md. Display = **Anton** (always `uppercase`). Body = **Montserrat**. Exactly **2 weights**: Montserrat 400 (regular) + 600 (semibold). Anton is single-weight (ignores weight).
 
+**Type scale — exactly 4 size steps for this phase:** `text-sm` 14px, `text-base` 16px, `text-2xl` 24px, `text-4xl` 36px (→ `sm:text-5xl` 48px is the responsive top of the H1 step, not a separate scale step). The H3/sub-section level uses **no new size** — it is Montserrat 600 at `text-base` 16px with `uppercase tracking-wide` to create distinction without adding a fifth step.
+
 | Role | Font | Size (mobile → desktop) | Weight | Line height |
 |------|------|-------------------------|--------|-------------|
 | Legal page H1 (title) | Anton | `text-4xl` 36px → `sm:text-5xl` 48px | 400 | 1.1 |
 | Legal page H2 (section) | Anton | `text-2xl` 24px | 400 | 1.2 |
-| Legal page H3 (sub-section, if needed) | Montserrat | `text-lg` 18px, uppercase, `tracking-wide` | 600 | 1.4 |
+| Legal page H3 (sub-section, if needed) | Montserrat | `text-base` 16px, `uppercase`, `tracking-wide` | 600 | 1.4 |
 | Legal body / paragraph | Montserrat | `text-base` 16px | 400 | 1.6 (relaxed — long-form reading) |
 | Legal meta ("Última atualização: …") | Montserrat | `text-sm` 14px | 400 (muted) | 1.4 |
 | Banner body text | Montserrat | `text-sm` 14px → `sm:text-base` 16px | 400 | 1.5 |
 | Banner inline link ("Política de Privacidade") | Montserrat | inherits banner body size | 600 + `underline underline-offset-4` | inherits |
 | Button label ("Aceitar" / "Recusar") | Montserrat | `text-sm` 14px, uppercase, `tracking-wide` | 600 | 1 |
 
-3 effective sizes in play per surface (14/16 + one display step) — within the 3–4 limit. No 500/700/800.
+**Size-step count:** 4 distinct values across the whole phase — **14, 16, 24, 36** (`text-5xl` 48px is the desktop end of the H1 step, not an independent step). The H3 sub-section level is differentiated by weight + uppercase + tracking, not by a new size. Weights: exactly 2 (Montserrat 400 / 600). No 500/700/800.
 
 ---
 
@@ -114,7 +120,7 @@ Accent reserved for: **the "Aceitar" button fill and legal-page display titles o
 | "Aceitar" button | reuse `CTAButton` primary geometry/style | white fill, black text, uppercase, `tracking-wide`, 600 (D-06). In-page action (not a link) → button-rendered. | default, hover (`bg-muted` per CTAButton, scale 1.04 via CSS — auto-respects reduced-motion), focus-visible (white ring, inherited global), active |
 | "Recusar" button | custom outline/link, sober | `outline` style (`border border-fg/40 text-fg hover:border-fg hover:bg-fg/5`) OR plain underlined link — **lower visual weight than Aceitar** (D-06), but not destructive, not hidden, not disabled-looking. | default, hover, focus-visible (white ring), active |
 | Banner inline link → `/privacidade` | `next/link` | `underline underline-offset-4`, weight 600, inherits text color (`text-fg`), focus-visible ring. (D-09) | default, hover (no color change — underline already present), focus-visible |
-| `/privacidade` page | NEW `app/privacidade/page.tsx` (RSC) | Inherits fixed header + footer (D-02). Black bg, Anton H1/H2, Montserrat 16px/1.6 prose, `max-w-3xl`, `py-24 sm:py-32`. Static legal copy with `[RAZÃO SOCIAL]`/`[CNPJ]`/`[E-MAIL DO ENCARREGADO DE DADOS]` placeholders (D-01). | static (no interactive state) |
+| `/privacidade` page | NEW `app/privacidade/page.tsx` (RSC) | Inherits fixed header + footer (D-02). Black bg, Anton H1/H2, Montserrat-600 uppercase 16px H3, Montserrat 16px/1.6 prose, `max-w-3xl`, `py-24 sm:py-32`. Static legal copy with `[RAZÃO SOCIAL]`/`[CNPJ]`/`[E-MAIL DO ENCARREGADO DE DADOS]` placeholders (D-01). | static (no interactive state) |
 | `/termos` page | NEW `app/termos/page.tsx` (RSC) | Same shell/typography/spacing as `/privacidade`. | static |
 | Footer legal links | EDIT existing `<footer>` in `app/page.tsx` (D-04) | `next/link` to `/privacidade` and `/termos`. `text-sm`, `text-muted hover:text-fg`, focus-visible ring. Match existing footer link styling. | default, hover, focus-visible |
 | `TrackingScripts` | EDIT existing `components/TrackingScripts.tsx` (D-10/D-11) | No visual change. Renders its `<Script>` tags **only when consent === true**. Visual contract: nothing renders to the DOM visually either way. | gated (consent true → mounts), suppressed (consent false/undecided → renders nothing) |
@@ -151,7 +157,7 @@ Accent reserved for: **the "Aceitar" button fill and legal-page display titles o
 - **Focus indicators:** inherited global `:focus-visible` white ring (`outline: 2px solid #fff; offset 3px`). Applies to both buttons, the inline link, and footer links. Never reset without replacement; never the browser blue default (violates monochrome).
 - **Banner semantics:** the banner is a complementary region — use a `<div role="region" aria-label="Consentimento de cookies">` (or a `<dialog>`-free landmark). It must **not** trap focus and must **not** be `aria-modal` (it does not block the page). Do not auto-move focus into it on load (would hijack first-visit reading).
 - **Inline link:** descriptive text ("Política de Privacidade"), not "clique aqui".
-- **Legal pages:** semantic heading hierarchy (single H1, ordered H2/H3), prose readable at 16px/1.6, `max-w-3xl` measure. RSC — no motion, no JS needed to read.
+- **Legal pages:** semantic heading hierarchy (single H1, ordered H2/H3 — note H3 is a weight/case treatment of the 16px body step, not a distinct size). Prose readable at 16px/1.6, `max-w-3xl` measure. RSC — no motion, no JS needed to read.
 - **Screen reader:** when consent is granted/refused and the banner is removed, removal of an off-focus region needs no announcement; do not add a disruptive live-region toast (anti-espetáculo).
 - **`prefers-reduced-motion`:** banner transitions disabled; content present/absent immediately.
 
