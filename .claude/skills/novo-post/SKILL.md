@@ -21,14 +21,14 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 6 | treinador (condic.) | exercícios, objetivo ← 4 | 4 | prescrição |
 | 7 | pesquisador (P7) | briefing ← 4 | 4 | pesquisa-bruta |
 | 8 | copywriter + ⏸ | pesquisa ← 7, briefing ← 4 | 7 | copy.md |
-| 9 | designer + ⏸ | copy ← 8 | 8 | assets + edits.json (via estúdio) |
+| 9 | designer + ⏸ | copy ← 8 | 8 | assets + edits.json (via estúdio); suggestions.json (se banco) |
 | 9.5 | ⚙ loop aprendizado + ⏸ (condic.) | edits.json ← 9 | 9 | estilo.md/slide.html atualizados |
 | 10 | curador-export | pasta ← 9 | 9 | `<validacao>` + PNGs |
 | 11a | revisor-conteudo | pasta ← 10, briefing ← 4 | 10 | `<parecer>` |
 | 11b | revisor-brand | pasta ← 10 | 11a | parecer binário |
 | 13 | ⚙ entregar | tudo ← 11b | 11b | entrega |
 | 13.5 | designer (stories, condic.) + ⏸ | copy, estilo | 13 | frames |
-| 14 | ⚙ política publish | pasta ← 11b | 11b | publicado/pendente |
+| 14 | ⚙ política publish + gerenciador-materiais (condic.) | pasta ← 11b | 11b | publicado/pendente; índice atualizado (se banco) |
 
 ## Sintaxe
 
@@ -61,6 +61,7 @@ Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente
 | `treinador` | Prescrição técnica de treino | exercícios + objetivo + recorte | `treino.md` |
 | `copywriter` | Copy do post | pesquisa + briefing + `estilo.md` (+ `treino.md`) | `copy.md` |
 | `curador-export` | Validação técnica + export PNG | `design/` + `estilo.md` | status inline + `export/*.png` |
+| `gerenciador-materiais` | Indexa/seleciona/marca imagens do banco | banco + copy + estilo (P9) / imagens usadas (P14) | `design/suggestions.json` (P9) / índice atualizado (P14) |
 | `revisor-conteudo` | Curadoria editorial (P11a) — coerência com briefing + compliance; pode aprovar com ajustes | pasta + briefing | `<parecer>` inline |
 | `revisor-brand` | Validação de identidade da marca (P11b) — binário | pasta + briefing | APROVADO/REPROVADO inline |
 
@@ -415,6 +416,24 @@ Regras:
 Saída: export/conteudos/<formato>/<data>-<slug>/design/preview.html.
 ```
 
+#### Pré-preenchimento de imagens (condicional)
+
+Se o usuário tiver apontado um banco de imagens (variável de fluxo `banco`), acione `gerenciador-materiais`:
+
+```
+Tarefa: indexar (se houver imagens novas) e depois selecionar.
+
+Inputs:
+- Banco: <caminho do banco>
+- copy.md: export/conteudos/<formato>/<data>-<slug>/copy.md
+- estilo.md: <caminho do estilo.md>
+- Pasta do post: export/conteudos/<formato>/<data>-<slug>/
+
+Saída: design/suggestions.json com a melhor imagem disponível por drop zone.
+```
+
+Se não houver banco apontado, pule — o usuário dropa as fotos manualmente no estúdio.
+
 #### Pausa para revisão e edição no estúdio
 
 ```
@@ -723,6 +742,21 @@ Política exige aprovação humana antes de publicar (regra: <id>, motivo: <moti
 Para publicar, rode manualmente:
   node scripts/integrations/publish_instagram.js --post export/conteudos/<formato>/<data>-<slug>/
 ```
+
+#### Marcação de uso de materiais (condicional)
+
+Se houve pré-preenchimento via banco, marque as imagens efetivamente presentes no preview final (drop zones com foto) acionando `gerenciador-materiais`:
+
+```
+Tarefa: marcar.
+
+Inputs:
+- Banco: <caminho do banco>
+- Imagens usadas: <lista dos arquivos efetivamente aplicados nas drop zones>
+- Post: <data>-<slug>
+```
+
+Isso registra `used_in` + `rest_until` no índice — evita repetir a mesma foto cedo demais.
 
 ## Entregável final
 
