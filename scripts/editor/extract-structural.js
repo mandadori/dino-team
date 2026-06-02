@@ -1,4 +1,4 @@
-// scripts/studio/extract-structural.js
+// scripts/editor/extract-structural.js
 // Filtra deltas scope=structural do edits.json e agrupa por bloco, com linhas legíveis.
 
 function lineFor(d) {

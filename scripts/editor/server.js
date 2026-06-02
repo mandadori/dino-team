@@ -1,22 +1,22 @@
 #!/usr/bin/env node
-// scripts/studio.js
-// Estúdio local de edição: serve o preview e expõe o backend /contract, /save,
-// /export, /suggestions (com CORS). O preview pode ser aberto pelo próprio studio
-// (http://localhost:4321) OU pelo Live Preview do VS Code — o editor chama o
-// backend por URL absoluta http://localhost:4321, então rode na porta padrão 4321.
+// scripts/editor/server.js
+// Dino Editor — servidor local. Serve o editor (index.html + app.js) e expõe o
+// backend /slides, /contract, /save, /export, /suggestions (com CORS). O editor
+// pode ser aberto pelo próprio server (http://localhost:4321) ou pelo Live Preview
+// do VS Code — o app chama o backend por URL absoluta http://localhost:4321.
 //
 // Uso:
-//   node scripts/studio.js <pasta-do-post> --estilo <caminho-do-estilo.md> [--port 4321]
+//   node scripts/editor/server.js <pasta-do-post> --estilo <caminho-do-estilo.md> [--port 4321]
 //
 // Ex.:
-//   node scripts/studio.js export/conteudos/carrossel/2026-06-02-do-zero-ao-topo \
+//   node scripts/editor/server.js export/conteudos/carrossel/2026-06-02-do-zero-ao-topo \
 //     --estilo templates/social-media/carrossel/estilos/editorial/estilo.md
 
 import http from "node:http";
 import { resolve, basename, join, extname, normalize } from "node:path";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { servePreview, serveContract, saveEdits, runExport, serveSuggestions } from "./studio/handlers.js";
+import { servePreview, serveContract, saveEdits, runExport, serveSuggestions } from "./handlers.js";
 
 // Tipos servidos pelo fallback estático (assets referenciados pelo preview: logo, etc.)
 const STATIC_MIME = {
@@ -71,7 +71,7 @@ function send(res, r) {
 
 const { postDir, estiloPath, port } = parseArgs(process.argv);
 if (!postDir) {
-  console.error("Uso: node scripts/studio.js <pasta-do-post> --estilo <estilo.md> [--port N]");
+  console.error("Uso: node scripts/editor/server.js <pasta-do-post> --estilo <estilo.md> [--port N]");
   process.exit(1);
 }
 const absPost = resolve(postDir);

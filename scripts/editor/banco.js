@@ -1,4 +1,4 @@
-// scripts/studio/banco.js
+// scripts/editor/banco.js
 // Helpers puros do índice do banco de imagens (.banco-index.json).
 
 const IMG_RE = /\.(jpe?g|png|webp)$/i;

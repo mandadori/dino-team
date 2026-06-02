@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "export": "node scripts/export-png.js",
-    "studio": "node scripts/studio.js",
-    "test": "node --test scripts/studio/*.test.js"
+    "editor": "node scripts/editor/server.js",
+    "test": "node --test scripts/editor/*.test.js"
   },
   "engines": {
     "node": ">=20"

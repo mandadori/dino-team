@@ -1,4 +1,4 @@
-// scripts/studio/handlers.js
+// scripts/editor/handlers.js
 // Handlers puros das rotas do estúdio. Sem http aqui — apenas lógica testável.
 
 import { readFile, writeFile } from "node:fs/promises";

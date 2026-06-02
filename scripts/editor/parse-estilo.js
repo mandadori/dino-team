@@ -1,4 +1,4 @@
-// scripts/studio/parse-estilo.js
+// scripts/editor/parse-estilo.js
 // Parser do contrato declarativo estilo.md → JSON consumido pelo editor.
 
 const POSICOES = [

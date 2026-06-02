@@ -10,7 +10,7 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { scanNew, upsertCaption, markUsed } from "./studio/banco.js";
+import { scanNew, upsertCaption, markUsed } from "./editor/banco.js";
 
 async function loadIndex(dir) {
   const p = join(dir, ".banco-index.json");

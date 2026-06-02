@@ -1,4 +1,4 @@
-// scripts/studio/validate-edits.js
+// scripts/editor/validate-edits.js
 // Valida o payload de edição antes de gravar design/edits.json.
 
 const SCOPES = new Set(["content", "structural"]);
