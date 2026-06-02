@@ -10,7 +10,7 @@
 //     --estilo templates/social-media/carrossel/estilos/editorial/estilo.md
 
 import http from "node:http";
-import { resolve } from "node:path";
+import { resolve, basename } from "node:path";
 import { servePreview, serveContract, saveEdits, runExport } from "./studio/handlers.js";
 
 function parseArgs(argv) {
@@ -52,7 +52,7 @@ const server = http.createServer(async (req, res) => {
       return send(res, await servePreview({ postDir: absPost }));
     }
     if (req.method === "GET" && url.pathname === "/contract") {
-      return send(res, await serveContract({ estiloPath }));
+      return send(res, await serveContract({ estiloPath, postSlug: basename(absPost) }));
     }
     if (req.method === "POST" && url.pathname === "/save") {
       const raw = await readBody(req);

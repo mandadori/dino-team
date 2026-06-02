@@ -26,14 +26,14 @@ test("servePreview devolve 404 sem preview", async () => {
   assert.equal(r.status, 404);
 });
 
-test("serveContract roda parseEstilo sobre o estilo apontado", async () => {
-  const { base } = await fixturePost();
-  const r = await serveContract({
-    estiloPath: "templates/social-media/carrossel/estilos/editorial/estilo.md",
-  });
+test("serveContract roda parseEstilo e inclui estilo_path + post", async () => {
+  const estiloPath = "templates/social-media/carrossel/estilos/editorial/estilo.md";
+  const r = await serveContract({ estiloPath, postSlug: "2026-06-02-do-zero-ao-topo" });
   assert.equal(r.status, 200);
   const c = JSON.parse(r.body);
   assert.ok(c.blocks.length >= 3);
+  assert.equal(c.estilo_path, estiloPath);
+  assert.equal(c.post, "2026-06-02-do-zero-ao-topo");
 });
 
 test("serveContract devolve 204 sem estiloPath", async () => {

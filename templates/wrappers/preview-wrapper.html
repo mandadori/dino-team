@@ -310,6 +310,14 @@
       });
     }
 
+    function escapeHtml(s) {
+      return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+    // Texto do elemento com quebras como \n (preserva <br> ao editar).
+    function elTextToEditable(el) {
+      return el.innerHTML.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "").trim();
+    }
+
     function buildPanel(el) {
       var def = slotDef(el);
       panelTitle.textContent = el.getAttribute("data-slot") + (def ? "" : " (livre)");
@@ -317,7 +325,7 @@
       var html = "";
       var hasText = el.children.length === 0 || /H1|H2|H3|P|SPAN/.test(el.tagName);
       if (hasText) {
-        html += field("Texto", '<textarea id="dt-c-text">' + el.textContent.trim() + '</textarea>');
+        html += field("Texto", '<textarea id="dt-c-text">' + escapeHtml(elTextToEditable(el)) + '</textarea>');
       }
       html += field("Tamanho (px)", '<input id="dt-c-size" type="number" value="' + parseInt(cs.fontSize, 10) + '">');
       html += field("Peso", '<select id="dt-c-weight">' +
@@ -343,7 +351,9 @@
 
       var t = document.getElementById("dt-c-text");
       if (t) t.addEventListener("input", function () {
-        var from = el.textContent; el.textContent = t.value; recordEdit(el, "text", from, t.value);
+        var from = elTextToEditable(el);
+        el.innerHTML = escapeHtml(t.value).replace(/\n/g, "<br>");
+        recordEdit(el, "text", from, t.value);
       });
       bindNum("dt-c-size", function (v) { var f = el.style.fontSize; el.style.fontSize = v + "px"; recordEdit(el, "size", f || null, v + "px"); });
       bindSel("dt-c-weight", function (v) { var f = el.style.fontWeight; el.style.fontWeight = v; recordEdit(el, "weight", f || null, v); });
@@ -428,7 +438,8 @@
       var c = contract || {};
       return {
         estilo: c.estilo || "desconhecido",
-        post: document.title,
+        estilo_path: c.estilo_path || null,
+        post: c.post || document.title,
         slides: Object.keys(bySlide).map(function (k) { return bySlide[k]; })
       };
     }

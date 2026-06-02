@@ -15,11 +15,12 @@ export async function servePreview({ postDir }) {
   return { status: 200, type: "text/html; charset=utf-8", body };
 }
 
-export async function serveContract({ estiloPath }) {
+export async function serveContract({ estiloPath, postSlug }) {
   if (!estiloPath || !existsSync(estiloPath)) return { status: 204, type: "application/json", body: "" };
   const md = await readFile(estiloPath, "utf8");
   const contract = parseEstilo(md);
-  return { status: 200, type: "application/json", body: JSON.stringify(contract) };
+  const enriched = { ...contract, estilo_path: estiloPath, post: postSlug || null };
+  return { status: 200, type: "application/json", body: JSON.stringify(enriched) };
 }
 
 export async function saveEdits({ postDir, html, edits }) {
