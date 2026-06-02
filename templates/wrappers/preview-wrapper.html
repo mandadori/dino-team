@@ -404,7 +404,62 @@
       deselect();
     });
 
-    // Pontos de extensão preenchidos nas próximas tasks:
+    // ---------- Salvar / Exportar ----------
+    function buildPayload() {
+      var bySlide = {};
+      edits.forEach(function (e) {
+        var k = e._slide;
+        if (!bySlide[k]) bySlide[k] = { slide: e._slide, block: e._block, edits: [] };
+        bySlide[k].edits.push({ target: e.target, prop: e.prop, from: e.from, to: e.to, scope: e.scope });
+      });
+      // Background por slide (zona com foto aplicada)
+      slides.forEach(function (slide) {
+        var n = parseInt(slide.getAttribute("data-slide"), 10);
+        var zone = slide.querySelector("[data-bg-drop][data-has-bg]");
+        if (zone) {
+          if (!bySlide[n]) bySlide[n] = { slide: n, block: slide.getAttribute("data-block"), edits: [] };
+          bySlide[n].background = {
+            drop: zone.getAttribute("data-bg-drop"),
+            position: zone.style.backgroundPosition || "50% 50%",
+            zoom: zone._bgZoom || 1
+          };
+        }
+      });
+      var c = contract || {};
+      return {
+        estilo: c.estilo || "desconhecido",
+        post: document.title,
+        slides: Object.keys(bySlide).map(function (k) { return bySlide[k]; })
+      };
+    }
+    function serializeHtml() {
+      // Remove artefatos de UI antes de serializar (seleção/guias).
+      if (selected) selected.classList.remove("dt-selected");
+      document.querySelectorAll(".dt-guide").forEach(function (g) { g.remove(); });
+      return "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    }
+    var saveBtn = document.getElementById("dt-save");
+    var exportBtn = document.getElementById("dt-export");
+    saveBtn.addEventListener("click", function () {
+      var payload = { html: serializeHtml(), edits: buildPayload() };
+      saveBtn.textContent = "Salvando…";
+      fetch("/save", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(function (r) { return r.json().then(function (b) { return { ok: r.ok, b: b }; }); })
+        .then(function (res) {
+          saveBtn.textContent = res.ok ? "Salvo ✓" : "Erro";
+          if (!res.ok) console.error("save errors:", res.b.errors);
+          setTimeout(function () { saveBtn.textContent = "Salvar"; }, 1500);
+        }).catch(function () { saveBtn.textContent = "Offline"; setTimeout(function () { saveBtn.textContent = "Salvar"; }, 1500); });
+    });
+    exportBtn.addEventListener("click", function () {
+      exportBtn.textContent = "Exportando…";
+      fetch("/export", { method: "POST" })
+        .then(function (r) { exportBtn.textContent = r.ok ? "Exportado ✓" : "Erro"; setTimeout(function () { exportBtn.textContent = "Exportar"; }, 2000); })
+        .catch(function () { exportBtn.textContent = "Offline"; setTimeout(function () { exportBtn.textContent = "Exportar"; }, 2000); });
+    });
+
     window.__DT = {
       slides: slides, current: function () { return current; },
       applyBgZoom: applyBgZoom, readPos: readPos,
