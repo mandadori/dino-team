@@ -14,8 +14,10 @@
 
     #dt-canvas {
       display: flex; align-items: center; gap: 40px; padding: 0 40px;
+      width: 100vw; box-sizing: border-box;
       height: 100vh; overflow-x: auto; overflow-y: hidden;
-      scroll-snap-type: x mandatory; scrollbar-width: none;
+      scroll-snap-type: x mandatory; scroll-padding-inline: 50%;
+      scrollbar-width: none;
     }
     #dt-canvas::-webkit-scrollbar { display: none; }
 

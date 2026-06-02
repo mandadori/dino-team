@@ -75,6 +75,8 @@
       frames.push(frame);
     });
     updateNav();
+    // Centraliza o primeiro slide após o layout ser calculado pelo browser.
+    requestAnimationFrame(function () { goTo(0); });
   }
 
   // ---------- wiring por iframe ----------

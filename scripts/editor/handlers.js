@@ -3,7 +3,16 @@
 
 import { readFile, writeFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { join, extname } from "node:path";
+import { join, extname, resolve } from "node:path";
+
+// Strips file:// absolute paths to relative HTTP paths so browsers can load
+// assets when the slide HTML is embedded via srcdoc in an HTTP context.
+const PROJECT_ROOT = resolve(".");
+const FILE_PREFIX_PLAIN = "file://" + PROJECT_ROOT;
+const FILE_PREFIX_ENCODED = "file://" + encodeURI(PROJECT_ROOT);
+function rewriteFilePaths(html) {
+  return html.replace(new RegExp(FILE_PREFIX_ENCODED, "g"), "").replace(new RegExp(FILE_PREFIX_PLAIN, "g"), "");
+}
 import { spawn as nodeSpawn } from "node:child_process";
 import { parseEstilo } from "./parse-estilo.js";
 import { validateEdits } from "./validate-edits.js";
@@ -40,7 +49,8 @@ export async function serveSlides({ postDir }) {
   let css = "";
   const slides = [];
   for (const file of files) {
-    const html = await readFile(join(design, file), "utf8");
+    let html = await readFile(join(design, file), "utf8");
+    html = rewriteFilePaths(html);
     if (!css) css = (html.match(STYLE_RE) || [, ""])[1];
     const section = sectionOf(html);
     const block = (section.match(/data-block="([^"]*)"/) || [, null])[1];
