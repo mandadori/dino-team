@@ -176,8 +176,81 @@
     applyScaling();
     window.addEventListener("resize", applyScaling);
 
+    // ---------- Background fotográfico (drop / reposicionar / zoom) ----------
+    var dragBg = null;
+    function getZoneDesignSize(zone) {
+      var slide = zone.closest("section[data-slide]") || zone;
+      var slideW = parseInt(slide.style.width, 10) || slide.offsetWidth;
+      var slideH = parseInt(slide.style.height, 10) || slide.offsetHeight;
+      var sr = slide.getBoundingClientRect(), zr = zone.getBoundingClientRect();
+      return { w: slideW * (zr.width / sr.width), h: slideH * (zr.height / sr.height) };
+    }
+    function applyBgZoom(zone) {
+      var bw = (zone._bgNatW * zone._bgScale * zone._bgZoom).toFixed(1);
+      var bh = (zone._bgNatH * zone._bgScale * zone._bgZoom).toFixed(1);
+      zone.style.backgroundSize = bw + "px " + bh + "px";
+    }
+    function readPos(zone) {
+      var pp = (zone.style.backgroundPosition || "50% 50%").split(/\s+/);
+      var x = parseFloat(pp[0]), y = parseFloat(pp[1]);
+      return { x: isNaN(x) ? 50 : x, y: isNaN(y) ? 50 : y };
+    }
+    document.addEventListener("mousemove", function (e) {
+      if (!dragBg) return;
+      var zone = dragBg.zone, rect = zone.getBoundingClientRect();
+      var dx = ((dragBg.sx - e.clientX) / rect.width) * 100;
+      var dy = ((dragBg.sy - e.clientY) / rect.height) * 100;
+      var nx = Math.max(0, Math.min(100, dragBg.sp.x + dx));
+      var ny = Math.max(0, Math.min(100, dragBg.sp.y + dy));
+      zone.style.backgroundPosition = nx.toFixed(1) + "% " + ny.toFixed(1) + "%";
+    });
+    document.addEventListener("mouseup", function () {
+      if (!dragBg) return; dragBg.zone.classList.remove("dt-grabbing"); dragBg = null;
+    });
+    function bindBgZone(zone) {
+      zone.addEventListener("dragover", function (e) { e.preventDefault(); zone.classList.add("dt-drop-active"); });
+      zone.addEventListener("dragleave", function (e) { if (e.target === zone) zone.classList.remove("dt-drop-active"); });
+      zone.addEventListener("drop", function (e) {
+        e.preventDefault(); e.stopPropagation(); zone.classList.remove("dt-drop-active");
+        var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (!f || f.type.indexOf("image/") !== 0) return;
+        var r = new FileReader();
+        r.onload = function () {
+          var img = new Image();
+          img.onload = function () {
+            var ds = getZoneDesignSize(zone);
+            zone._bgNatW = img.naturalWidth; zone._bgNatH = img.naturalHeight;
+            zone._bgScale = Math.max(ds.w / img.naturalWidth, ds.h / img.naturalHeight);
+            zone._bgZoom = 1.0;
+            zone.style.backgroundImage = "url(" + r.result + ")";
+            zone.style.backgroundRepeat = "no-repeat";
+            zone.style.backgroundPosition = "50% 50%";
+            applyBgZoom(zone);
+            zone.setAttribute("data-has-bg", "1");
+            if (window.__DT.onBgChanged) window.__DT.onBgChanged(zone);
+          };
+          img.src = r.result;
+        };
+        r.readAsDataURL(f);
+      });
+      zone.addEventListener("mousedown", function (e) {
+        if (!zone.hasAttribute("data-has-bg")) return;
+        e.preventDefault();
+        dragBg = { zone: zone, sx: e.clientX, sy: e.clientY, sp: readPos(zone) };
+        zone.classList.add("dt-grabbing");
+      });
+    }
+    slides.forEach(function (slide) {
+      var zones = Array.prototype.slice.call(slide.querySelectorAll("[data-bg-drop]"));
+      if (zones.length === 0) { slide.setAttribute("data-bg-drop", "full"); zones = [slide]; }
+      zones.forEach(bindBgZone);
+    });
+
     // Pontos de extensão preenchidos nas próximas tasks:
-    window.__DT = { slides: slides, current: function () { return current; } };
+    window.__DT = {
+      slides: slides, current: function () { return current; },
+      applyBgZoom: applyBgZoom, readPos: readPos
+    };
   })();
   </script>
 </body>
