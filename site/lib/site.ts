@@ -103,3 +103,14 @@ export const COMMUNITY_BENEFITS: ReadonlyArray<string> = [
   "PLACEHOLDER — Comunidade fechada: entra quem contrata, permanece quem executa.",
   "PLACEHOLDER — Direção coletiva: o ambiente reforça o compromisso com o processo.",
 ];
+
+// ---------------------------------------------------------------------------
+// Cookie consent — Fase 3 (LEGAL-03)
+// ---------------------------------------------------------------------------
+
+// Chave de localStorage onde a escolha de consentimento é persistida.
+export const COOKIE_CONSENT_KEY = "dino-consent";
+
+// Validade da escolha: 6 meses em milissegundos (D-08).
+// 6 × 30 dias × 24h × 60min × 60s × 1000ms.
+export const COOKIE_CONSENT_TTL_MS = 6 * 30 * 24 * 60 * 60 * 1000;
