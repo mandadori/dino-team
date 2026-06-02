@@ -3,7 +3,7 @@ phase: 03-conformidade-legal-lgpd
 plan: 01
 subsystem: site
 tags: [lgpd, consent, cookies, tracking, privacy]
-status: awaiting-checkpoint
+status: complete
 requires:
   - site/components/TrackingScripts.tsx (existing)
   - site/app/layout.tsx (existing)
@@ -37,7 +37,7 @@ decisions:
 metrics:
   duration_min: 4
   completed: 2026-06-02
-  tasks_completed: 2
+  tasks_completed: 3
   tasks_total: 3
   files_touched: 5
 ---
@@ -60,7 +60,7 @@ Consent-gated tracking for LGPD: a sober fixed bottom banner lets the visitor ac
 | ---- | ---- | ------ | ----- |
 | 1 | Consent constants + ConsentProvider client boundary | b069abf | site/lib/site.ts, site/components/ConsentProvider.tsx |
 | 2 | CookieBanner UI + gate TrackingScripts + wire layout | b2d5547 | site/components/CookieBanner.tsx, site/components/TrackingScripts.tsx, site/app/layout.tsx |
-| 3 | Verify consent gating behavior in the browser | — | checkpoint:human-verify (PENDING) |
+| 3 | Verify consent gating behavior in the browser | — | checkpoint:human-verify (APPROVED) |
 
 ## Verification
 
@@ -74,7 +74,7 @@ Consent-gated tracking for LGPD: a sober fixed bottom banner lets the visitor ac
 
 ## Threat Model Coverage
 
-- **T-03-02 (Information Disclosure — tracking pre-consent):** mitigated. `if (!consent) return null` ensures GA4/Meta/Clarity never mount before explicit consent. Runtime confirmation deferred to Task 3 step 2.
+- **T-03-02 (Information Disclosure — tracking pre-consent):** mitigated. `if (!consent) return null` ensures GA4/Meta/Clarity never mount before explicit consent. Runtime-confirmed in Task 3 step 2 (no tracking script tags/requests before a choice is made).
 - **T-03-03 (Repudiation — choice not persisted):** mitigated. Choice written to localStorage with a 6-month `expiresAt`; banner suppressed while valid.
 - **T-03-01 (Tampering — localStorage value):** accepted. Client-side only; impact limited to the visitor's own tracking state.
 - **T-03-SC (package installs):** accepted. No new packages installed.
@@ -89,7 +89,7 @@ None. The consent gate is fully wired; tracking scripts read live consent state.
 
 ## Status
 
-Stopped at **Task 3 — checkpoint:human-verify** (gate="blocking"). The implementation is complete and committed; runtime browser verification of the consent lifecycle (banner visibility, pre-consent suppression, accept/refuse persistence, keyboard + reduced-motion) requires a human and cannot be auto-tested without a browser test runner (out of scope this phase). Awaiting user approval to mark the plan complete.
+**Complete.** Task 3 — checkpoint:human-verify (gate="blocking") was **approved** by the user on 2026-06-02: all seven browser verification steps passed (banner shows on first visit, no tracking pre-consent, /privacidade link works, accept loads tracking + persists, refuse suppresses + persists, both buttons keyboard-reachable with visible focus ring, reduced-motion instant). The consent slice is implemented, committed, and runtime-verified. LEGAL-03 satisfied.
 
 ## Self-Check: PASSED
 

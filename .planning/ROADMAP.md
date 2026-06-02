@@ -62,7 +62,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. No primeiro acesso, um banner de cookie consent bloqueia o disparo de GA4/Meta/Clarity até o visitante decidir — recusar mantém os scripts desativados
   3. Após conceder consentimento, os `TrackingScripts` passam a carregar; o visitante consegue revogar o consentimento depois
 **Plans**: 2 plans
-- [ ] 03-01-PLAN.md — Slice de consentimento: ConsentProvider + CookieBanner + gate TrackingScripts + wire layout (LEGAL-03)
+- [x] 03-01-PLAN.md — Slice de consentimento: ConsentProvider + CookieBanner + gate TrackingScripts + wire layout (LEGAL-03)
 - [ ] 03-02-PLAN.md — Slice de páginas legais: /privacidade + /termos (editorial da marca) + links no footer (LEGAL-01, LEGAL-02)
 **UI hint**: yes
 
@@ -111,7 +111,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Landing Editorial + Fundação | 3/3 | Complete   | 2026-06-01 |
 | 2. Conversão Completa | 3/3 | Complete   | 2026-06-01 |
-| 3. Conformidade Legal & LGPD | 0/2 | Not started | - |
+| 3. Conformidade Legal & LGPD | 1/2 | In Progress|  |
 | 4. Blog SEO Production-Ready | 0/TBD | Not started | - |
 | 5. Captura de E-mail | 0/TBD | Not started | - |
 | 6. Pipeline de Artigos | 0/TBD | Not started | - |

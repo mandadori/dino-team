@@ -58,7 +58,7 @@ Requisitos deste milestone. Cada um mapeia para fases do roadmap.
 
 - [ ] **LEGAL-01**: Página de Política de Privacidade
 - [ ] **LEGAL-02**: Página de Termos de Uso
-- [ ] **LEGAL-03**: Banner de cookie consent que condiciona o disparo de `TrackingScripts` (GA4/Meta/Clarity)
+- [x] **LEGAL-03**: Banner de cookie consent que condiciona o disparo de `TrackingScripts` (GA4/Meta/Clarity)
 
 ### Configuração de Conversão
 
@@ -113,7 +113,7 @@ Mapeado na criação do roadmap (2026-05-31). Cada requisito v1 → exatamente u
 | CONF-01 | Phase 2 | Complete |
 | LEGAL-01 | Phase 3 | Pending |
 | LEGAL-02 | Phase 3 | Pending |
-| LEGAL-03 | Phase 3 | Pending |
+| LEGAL-03 | Phase 3 | Complete |
 | BLOG-01 | Phase 4 | Pending |
 | BLOG-02 | Phase 4 | Pending |
 | BLOG-03 | Phase 4 | Pending |
