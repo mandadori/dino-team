@@ -62,22 +62,16 @@ Cada agente domina **uma função** e organiza-se em **setor × papel** apenas t
 
 Agentes não conhecem o fluxo nem outros agentes — recebem input num formato declarado, entregam output num formato declarado. Conhecimento específico de um fluxo vive nas skills e templates, não no agente.
 
-**Agentes atuais (15):**
+**Agentes atuais (11):**
 
 - **Marketing / Pesquisa**
   - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `dados/mercado/`.
-- **Marketing / Estratégia**
-  - [`briefing-writer`](.claude/agents/briefing-writer.md) — recomendação de estilo e briefing estratégico canônico.
-- **Marketing / Execução**
-  - [`copywriter`](.claude/agents/copywriter.md) — copy persuasiva.
-  - [`designer`](.claude/agents/designer.md) — HTML+CSS visual.
 - **Marketing / Revisão**
   - [`curador-export`](.claude/agents/curador-export.md) — validação técnica + export PNG.
-  - [`revisor-conteudo`](.claude/agents/revisor-conteudo.md) — coerência editorial + compliance (promessas proibidas e claims sensíveis).
 - **Produto / Consultoria / Execução**
   - [`treinador`](.claude/agents/treinador.md) — decisões técnicas de treino.
 - **Transversais / Brand**
-  - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca (decisão binária).
+  - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca e compliance; gate em 2 momentos (identidade visual em criação de estilo; copy + compliance em criação de post).
 - **Transversais / Dados**
   - [`archivist-ramon`](.claude/agents/archivist-ramon.md) — owner único do slice `dados/ramon/`; consolida o contexto do Ramon (input do usuário + auto-sync de fontes públicas).
   - [`analista-performance`](.claude/agents/analista-performance.md) — owner único do slice `dados/performance/`; registra ângulos queimados e (futuro) métricas de canais.
@@ -106,7 +100,7 @@ Memória persistente compartilhada — markdown + frontmatter YAML, versionada e
 
 Site institucional + comercial do Dino Team — Next.js 16 + Tailwind 4 + Framer Motion + Lucide + MDX. Construído e mantido pelo setor de Engenharia. Identidade monocromática (preto/branco/cinza) fiel ao brand book.
 
-- [`/novo-site`](.claude/skills/novo-site/SKILL.md) — skill dual-mode (criação vs. alteração). Aciona `briefing-writer` para o briefing institucional e exige aprovação de `revisor-brand` antes de cada deploy.
+- [`/novo-site`](.claude/skills/novo-site/SKILL.md) — skill dual-mode (criação vs. alteração). Produz briefing institucional inline e exige aprovação de `revisor-brand` antes de cada deploy.
 - MVP: home da consultoria com 7 seções (Hero, ParaQuemE, Método, Resultados, SobreRamon, FAQ, CtaFinal). Briefing em `site/docs/home-briefing.md`.
 
 ### 6. Orquestração + Dashboard
