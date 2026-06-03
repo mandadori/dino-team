@@ -34,7 +34,7 @@ A skill checa `site/package.json`:
 | `designer-web` | Criação (Passo 4) + alteração visual | briefing, arquivo destino | componente React | Engenharia/Execução/Web |
 | `dev-frontend` | Criação (Passo 5) + alteração de integração/lógica | componentes, página destino | integração no app | Engenharia/Execução/Web |
 | `curador-web` | Criação (Passo 6) + qualquer alteração antes de finalizar | pasta `site/` + critérios | relatório técnico ou preview URL | Engenharia/Revisão |
-| `briefing-writer` | Criação (Passo 3) + qualquer alteração editorial | spec, brand book, objetivo da página | briefing institucional escrito; consulta `dados/ramon/` | Marketing/Estratégia (externo) |
+| ⚙ briefing inline | Criação (Passo 3) + qualquer alteração editorial | spec, brand book, dados/ramon/, objetivo da página | `site/docs/home-briefing.md` | skill escreve diretamente |
 | `revisor-brand` | Gate pré-deploy (Passo 7.5) + qualquer alteração que toque copy/identidade | componentes + globals + briefing | APROVADO/REPROVADO (binário) | Transversais/Brand (externo) |
 
 ## Fluxo — modo criação
@@ -43,7 +43,7 @@ A skill checa `site/package.json`:
 |---|---|---|---|---|
 | 1 | ⚙ validar spec+brand | spec, brand | — | validado |
 | 2 | arquiteto-web | spec ← 1 | 1 | scaffold (manifesto) |
-| 3 | briefing-writer | spec, objetivo | 2 | `<briefing>` home |
+| 3 | ⚙ briefing inline | spec, objetivo | 2 | `site/docs/home-briefing.md` |
 | 4 | designer-web | briefing ← 3 | 3 | 7 seções (manifesto) |
 | 5 | dev-frontend | seções ← 4 | 4 | home integrada |
 | 6 | curador-web | — | 5 | `<validacao>` |
@@ -89,20 +89,21 @@ Saída: site/ com package.json, tsconfig.json, next.config.ts, postcss.config.mj
 
 Aguarde retorno com a lista de arquivos criados.
 
-### 3. Acionar briefing-writer — briefing da home
+### 3. Escrever briefing da home (inline)
 
-[Agente: `briefing-writer`] → input:
+A própria skill produz `site/docs/home-briefing.md` seguindo `templates/briefing.md`.
 
-```
-Tarefa: produzir briefing institucional da home da consultoria Dino Team seguindo o template templates/briefing.md.
-Inputs:
-- Spec do site: docs/specs/2026-05-19-site-dino-team-design.md (descreve as 7 seções e o tom esperado).
-Saída: site/docs/home-briefing.md
-Estrutura esperada: objetivo único da página, persona alvo, tom, ângulo central da home (porta de entrada da marca), pilar dominante, e — por seção (Hero, Para quem é, Método, Resultados, Sobre Ramon, FAQ, CTA final) — propósito, copy sugerido, elementos visuais esperados, CTA (se houver).
-Referências visuais: stndrd.app, joinladder.com, brightscout.com. Estilo: minimalista premium escuro, alto contraste, animações ricas.
-```
+Inputs a ler:
+- `docs/specs/2026-05-19-site-dino-team-design.md` — descreve as 7 seções e o tom esperado.
+- `brand/brand-book.md`, `brand/tom-de-voz.md`, `brand/publico-alvo.md`, `brand/referencias-visuais.md` — identidade da marca.
+- `dados/ramon/contexto.md` — fase atual + conquistas + falas do Ramon (para ângulo/contexto biográfico).
 
-Aguarde retorno com o briefing. Mostre ao usuário e aguarde aprovação antes de seguir.
+Estrutura do briefing a produzir em `site/docs/home-briefing.md`:
+- Objetivo único da página, persona alvo, tom, ângulo central da home (porta de entrada da marca), pilar dominante.
+- Por seção (Hero, Para quem é, Método, Resultados, Sobre Ramon, FAQ, CTA final): propósito, copy sugerido, elementos visuais esperados, CTA (se houver).
+- Referências visuais: stndrd.app, joinladder.com, brightscout.com. Estilo: minimalista premium escuro, alto contraste, animações ricas.
+
+Escreva o arquivo e mostre ao usuário. Aguarde aprovação explícita antes de seguir para o Passo 4.
 
 ### 4. Acionar designer-web — implementar as 7 seções
 
@@ -205,7 +206,7 @@ Triagem rápida baseada na descrição:
 - **Estrutural** (nova pasta, lib nova, reorganização) → `arquiteto-web`.
 - **Visual** (estilo, layout, animação) → `designer-web`.
 - **Lógica/integração** (estado, formulário, navegação) → `dev-frontend`.
-- **Editorial** (copy, microcopy, CTA) → `copywriter` + `briefing-writer` se mudar narrativa/ângulo.
+- **Editorial** (copy, microcopy, CTA) → editado inline pela skill (copy + ângulo), com gate `revisor-brand` se mudar narrativa/ângulo.
 - **Combinação** → rodar agentes em sequência.
 
 ### 3. Acionar agente(s) pertinente(s)
