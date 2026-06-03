@@ -1,7 +1,7 @@
 # Esqueleto canônico de `estilo.md`
 
 > Contrato que todo `estilo.md` deve cumprir.
-> Lido pelo `designer` em `/novo-estilo` e em `/novo-post` (modo ad-hoc).
+> Lido inline pela skill `/novo-estilo` e por `/novo-post` (modo ad-hoc).
 > Copie as seções, substitua o conteúdo entre `{...}`, remova o que não se aplica.
 
 ---
@@ -13,6 +13,8 @@
 - **Tokens da marca** (Anton, Montserrat, paleta, CAIXA ALTA, 80px) vivem em `brand/referencias-visuais.md`. Nunca re-declare.
 - **Chrome** (swipe-cue, barra-progresso, tag-tópico, logo, watermark) tem spec visual em `brand/social-media.md`. O estilo declara só presença + posição nos `[slots]`.
 - **`[tokens]`** = somente valores que **desviam** do padrão de marca. Se ficaria vazio — omita o campo.
+- **Papéis, não números.** A quantidade de slides do corpo vem da copy (bloco N-dinâmico). Nunca hardcodar "10 slides" ou qualquer número fixo de instâncias do corpo.
+- **Pasta do estilo contém apenas `estilo.md` + `slide.html`** (ou `frame.html` para stories). `preview.html` não é gerado — preview = abrir `slide.html` no Live Preview do VS Code ou no Dino Editor.
 
 ---
 
@@ -43,13 +45,15 @@ Seguido dos blocos:
 
 ```
 ### bloco: <id> — <nome-curto>
-[instâncias]: 1 | N-dinâmico (fonte: <arquivo → campo>) | 0..N-opcional
+[instâncias]: 1 | N-dinâmico (fonte: copy → <bloco>) | 0..N-opcional
 
 #### visual
 [classe]: <nome-da-classe-css>
 [bg]: foto(drop:<nome>) | foto(drop:<a>) + foto(drop:<b>) | cor(#hex) | gradiente(<spec>) | chroma(#hex) | nenhum
 [overlay]: gradiente-escuro-base | gradiente-escuro-topo | filtro(<css>) | nenhum
 [layout]: <custom>                ← omitir se full-bleed padrão
+[alternância]: <regra de variação par/ímpar>   ← opcional; só em bloco N-dinâmico que varia layout/fundo por posição
+  Ex: bg #000 ↔ #fff (ímpar/par); layout texto-esquerda ↔ texto-direita
 [slots]:
   <nome>: <font/size se conteúdo> | <posição> | <alinhamento>
 [tokens]: <delta1>; <delta2>      ← omitir se vazio
@@ -61,6 +65,8 @@ Seguido dos blocos:
   <nome>: max <N> palavras        ← sufixo ? = opcional (ex: eyebrow?: max 4 palavras)
 [ab]: <slots com variação A/B> | não
 ```
+
+**`[alternância]` — regra de variação par/ímpar:** campo opcional, usado apenas em blocos N-dinâmico que alternam layout ou fundo de slide para slide. O designer inline aplica a variante conforme a posição do slide na sequência do corpo: ímpar recebe a variante A, par recebe a variante B. Garante ritmo visual sem hardcodar número de slides — a quantidade de instâncias vem da copy, não do estilo.
 
 **Regras dos slots:**
 - **Chrome** (`logo`, `tag-tópico`, `swipe-cue`, `barra-progresso`, `watermark`): declara só `posição`. Visual herdado de `brand/social-media.md`.
@@ -107,7 +113,10 @@ Comportamentos não-óbvios do template HTML. Bullets curtos.
 - [ ] `## Conceito` com 2-3 frases de DNA.
 - [ ] `[sequência]` + `[total]` presentes.
 - [ ] Cada bloco tem `[classe]`, `[bg]`, `[slots]`, `[função]`, `[tom]`, `[entregar]`, `[ab]`.
+- [ ] Bloco N-dinâmico com variação de layout/fundo usa `[alternância]` em vez de hardcodar posições.
+- [ ] Nenhum bloco hardcoda número fixo de slides (quantidade vem da copy).
 - [ ] Nenhum token de marca re-declarado (Anton/Montserrat/paleta/80px/CAIXA ALTA).
 - [ ] Chrome slots declaram só posição.
 - [ ] `## Quando usar` e `## Quando NÃO usar` presentes.
 - [ ] Seções condicionais incluídas só quando aplicáveis.
+- [ ] Pasta do estilo NÃO contém `preview.html`.
