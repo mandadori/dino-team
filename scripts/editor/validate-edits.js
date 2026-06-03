@@ -18,7 +18,9 @@ export function validateEdits(payload) {
   p.slides.forEach((s, i) => {
     const ctx = `slides[${i}]`;
     if (typeof s.slide !== "number") errors.push(`${ctx}.slide: número obrigatório`);
-    if (typeof s.block !== "string" || !s.block) errors.push(`${ctx}.block: string obrigatória`);
+    // block é opcional: slides sem data-block (não-taggeados) são editáveis;
+    // apenas não casam com o aprendizado estrutural de estilo.
+    if (s.block != null && typeof s.block !== "string") errors.push(`${ctx}.block: string ou nulo`);
     if (!Array.isArray(s.edits)) {
       errors.push(`${ctx}.edits: array obrigatório`);
     } else {

@@ -7,89 +7,126 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    /* ---------- Chrome do Dino Editor (isolado dos slides via iframe) ---------- */
-    :root { --accent: #00e051; --accent-d: #00b140; }
+    /* ===================== Chrome do Dino Editor ===================== *
+     * Cada slide renderiza num iframe (CSS isolado). Sobre cada iframe há uma
+     * SUPERFÍCIE de captura (.dt-surface) no top-level: ela recebe todo o
+     * ponteiro, faz hit-test com elementFromPoint dentro do iframe e usa
+     * setPointerCapture — o gesto nunca nasce dentro do iframe, então o iframe
+     * não captura o mouse. Seleção/handles/guias vivem na camada #dt-overlay. */
+    :root {
+      --accent: #00e051; --accent-d: #00b140;
+      --guide: #ff2d55;
+      --panel-bg: #2c2c2c; --panel-line: #3d3d3d; --ink: #e6e6e6; --ink-dim: #9a9a9a;
+      --field-bg: #383838; --field-line: #4a4a4a;
+    }
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; height: 100%; background: #111; font-family: "Montserrat", sans-serif; }
+    html, body { margin: 0; padding: 0; height: 100%; background: #1e1e1e; font-family: "Montserrat", sans-serif; overflow: hidden; }
+    body { display: flex; flex-direction: row; }
 
-    #dt-canvas {
-      display: flex; align-items: center; gap: 40px; padding: 0 40px;
-      width: 100vw; box-sizing: border-box;
-      height: 100vh; overflow-x: auto; overflow-y: hidden;
+    #dt-stage {
+      flex: 1 1 auto; height: 100vh; min-width: 0;
+      display: flex; align-items: center; gap: 60px; padding: 0 12vw;
+      overflow-x: auto; overflow-y: hidden;
       scroll-snap-type: x mandatory; scroll-padding-inline: 50%;
-      scrollbar-width: none;
+      scrollbar-width: thin; scrollbar-color: #444 transparent;
     }
-    #dt-canvas::-webkit-scrollbar { display: none; }
+    #dt-stage.is-dragging { overflow: hidden; scroll-snap-type: none; }
+    #dt-stage::-webkit-scrollbar { height: 8px; }
+    #dt-stage::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
 
-    iframe.dt-frame {
-      flex: 0 0 auto; border: 0; background: #1a1a1a;
-      box-shadow: 0 12px 40px rgba(0,0,0,.6); scroll-snap-align: center;
-    }
+    .dt-wrap { position: relative; flex: 0 0 auto; scroll-snap-align: center; background: #000; box-shadow: 0 18px 60px rgba(0,0,0,.6); border-radius: 2px; overflow: hidden; }
+    .dt-wrap iframe { position: absolute; top: 0; left: 0; border: 0; background: #000; transform-origin: top left; pointer-events: none; }
+    .dt-surface { position: absolute; inset: 0; z-index: 2; touch-action: none; cursor: default; }
 
-    /* Toolbar inferior */
-    .dt-toolbar {
-      position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
-      display: flex; align-items: center; gap: 12px; padding: 10px 16px;
-      background: rgba(0,0,0,.78); backdrop-filter: blur(10px);
-      border-radius: 999px; color: #fff; z-index: 9999; user-select: none;
-    }
-    .dt-toolbar button {
-      background: transparent; border: 1px solid rgba(255,255,255,.28); color: #fff;
-      height: 34px; min-width: 34px; border-radius: 999px; cursor: pointer;
-      font: 600 13px "Montserrat", sans-serif; padding: 0 12px;
-      display: inline-flex; align-items: center; justify-content: center;
-    }
+    #dt-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 500; }
+    .dt-selbox { position: fixed; border: 1.5px solid var(--accent); pointer-events: none; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+    .dt-hoverbox { position: fixed; border: 1px solid rgba(0,224,81,.6); pointer-events: none; }
+    .dt-handle { position: fixed; width: 11px; height: 11px; margin: -6px 0 0 -6px; background: #fff; border: 1.5px solid var(--accent); border-radius: 2px; pointer-events: auto; z-index: 520; touch-action: none; }
+    .dt-handle[data-pos="nw"], .dt-handle[data-pos="se"] { cursor: nwse-resize; }
+    .dt-handle[data-pos="ne"], .dt-handle[data-pos="sw"] { cursor: nesw-resize; }
+    .dt-handle[data-pos="n"],  .dt-handle[data-pos="s"]  { cursor: ns-resize; }
+    .dt-handle[data-pos="e"],  .dt-handle[data-pos="w"]  { cursor: ew-resize; }
+    .dt-guide { position: fixed; background: var(--guide); z-index: 510; pointer-events: none; }
+    .dt-guide.v { width: 1px; } .dt-guide.h { height: 1px; }
+    .dt-dist { position: fixed; z-index: 515; pointer-events: none; transform: translate(-50%, -50%); background: var(--guide); color: #fff; font: 600 10px/1 "Montserrat", sans-serif; padding: 2px 4px; border-radius: 2px; white-space: nowrap; }
+
+    .dt-hint { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.5); font-size: 11px; letter-spacing: .06em; z-index: 600; pointer-events: none; }
+
+    .dt-toolbar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: rgba(0,0,0,.82); backdrop-filter: blur(10px); border-radius: 999px; color: #fff; z-index: 600; user-select: none; }
+    .dt-toolbar button { background: transparent; border: 1px solid rgba(255,255,255,.26); color: #fff; height: 32px; min-width: 32px; border-radius: 999px; cursor: pointer; font: 600 13px "Montserrat", sans-serif; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; }
     .dt-toolbar button:hover { background: rgba(255,255,255,.12); }
     .dt-toolbar button:disabled { opacity: .3; cursor: default; }
-    .dt-toolbar .dt-counter { font-size: 12px; letter-spacing: .12em; min-width: 52px; text-align: center; }
-    .dt-act { font-weight: 700 !important; letter-spacing: .05em; }
-    .dt-save { background: rgba(0,177,64,.18) !important; border-color: var(--accent-d) !important; color: var(--accent) !important; }
+    .dt-sep { width: 1px; height: 22px; background: rgba(255,255,255,.18); }
+    .dt-counter { font-size: 12px; letter-spacing: .1em; min-width: 50px; text-align: center; }
+    .dt-save { background: rgba(0,177,64,.2) !important; border-color: var(--accent-d) !important; color: var(--accent) !important; font-weight: 700 !important; }
     .dt-save:hover { background: rgba(0,177,64,.34) !important; }
+    .dt-export { font-weight: 700 !important; }
+    .dt-icon svg { width: 16px; height: 16px; display: block; }
 
-    /* Painel lateral de propriedades */
-    .dt-panel {
-      position: fixed; top: 0; right: 0; width: 280px; height: 100vh;
-      background: rgba(18,18,18,.97); border-left: 1px solid rgba(255,255,255,.12);
-      color: #fff; padding: 18px; transform: translateX(100%); transition: transform .16s;
-      z-index: 9998; overflow-y: auto;
-    }
-    .dt-panel.is-open { transform: translateX(0); }
-    .dt-panel h3 { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 4px; }
-    .dt-panel .dt-sub { font-size: 11px; opacity: .55; margin: 0 0 16px; }
-    .dt-field { margin-bottom: 13px; }
-    .dt-field label { display: block; font-size: 10px; letter-spacing: .08em; opacity: .65; margin-bottom: 4px; text-transform: uppercase; }
-    .dt-field select, .dt-field input {
-      width: 100%; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
-      color: #fff; border-radius: 6px; padding: 6px 8px; font: 600 13px "Montserrat", sans-serif;
-    }
-    .dt-row { display: flex; gap: 8px; }
-    .dt-row > * { flex: 1; }
-    .dt-remove {
-      width: 100%; margin-top: 10px; background: rgba(220,40,40,.16); border: 1px solid #d33;
-      color: #ff6b6b; border-radius: 6px; padding: 9px; cursor: pointer; font-weight: 700; letter-spacing: .05em;
-    }
-    .dt-hint { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.5);
-      font-size: 11px; letter-spacing: .06em; z-index: 9990; }
+    /* Painel de propriedades (dockado) */
+    #dt-panel { flex: 0 0 0; width: 0; height: 100vh; overflow: hidden auto; background: var(--panel-bg); border-left: 1px solid #000; color: var(--ink); transition: width .14s ease, flex-basis .14s ease; }
+    #dt-panel.is-open { flex-basis: 264px; width: 264px; }
+    .pnl-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--panel-line); }
+    .pnl-head h2 { margin: 0; font-size: 14px; font-weight: 600; }
+    .pnl-head .sub { font-size: 10px; color: var(--ink-dim); letter-spacing: .04em; margin-top: 2px; }
+    .pnl-sec { padding: 14px 16px; border-bottom: 1px solid var(--panel-line); }
+    .pnl-sec h3 { margin: 0 0 12px; font-size: 13px; font-weight: 600; color: var(--ink); }
+    .pnl-label { font-size: 10px; color: var(--ink-dim); letter-spacing: .04em; margin: 0 0 6px; }
+    .pnl-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+    .pnl-row:last-child { margin-bottom: 0; }
+    .pnl-row > .grow { flex: 1; min-width: 0; }
+    .pnl-btns { display: inline-flex; background: var(--field-bg); border-radius: 6px; overflow: hidden; }
+    .pnl-btns.group { flex: 1; }
+    .pnl-btns button { flex: 1; background: transparent; border: 0; color: var(--ink-dim); height: 30px; min-width: 34px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0; }
+    .pnl-btns button:hover { color: var(--ink); background: rgba(255,255,255,.06); }
+    .pnl-btns button.on { color: #fff; background: rgba(255,255,255,.14); }
+    .pnl-btns svg { width: 16px; height: 16px; display: block; }
+    .pnl-field { display: flex; align-items: center; gap: 6px; background: var(--field-bg); border: 1px solid transparent; border-radius: 6px; padding: 0 8px; height: 30px; }
+    .pnl-field:focus-within { border-color: var(--accent); }
+    .pnl-field .k { font-size: 11px; color: var(--ink-dim); flex: 0 0 auto; }
+    .pnl-field input, .pnl-field select { flex: 1; min-width: 0; background: transparent; border: 0; color: var(--ink); font: 500 12px "Montserrat", sans-serif; outline: none; padding: 0; }
+    .pnl-field input:disabled { color: var(--ink-dim); }
+    .pnl-field select { cursor: pointer; }
+    .pnl-field select option { background: #2c2c2c; }
+    .pnl-lock { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--field-line); background: var(--field-bg); color: var(--ink-dim); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+    .pnl-lock.on { color: var(--accent); border-color: var(--accent-d); }
+    .pnl-lock svg { width: 14px; height: 14px; }
+    .pnl-swatch { flex: 0 0 auto; width: 20px; height: 20px; border-radius: 4px; border: 1px solid rgba(255,255,255,.25); }
+    .pnl-img-btn { width: 100%; height: 34px; border-radius: 6px; border: 1px dashed var(--field-line); background: var(--field-bg); color: var(--ink); cursor: pointer; font: 600 12px "Montserrat", sans-serif; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+    .pnl-img-btn:hover { border-color: var(--accent); color: #fff; }
+    .pnl-img-btn svg { width: 16px; height: 16px; }
+    .pnl-remove { width: 100%; background: rgba(220,40,40,.14); border: 1px solid #b33; color: #ff7a7a; border-radius: 6px; height: 34px; cursor: pointer; font: 600 12px "Montserrat", sans-serif; }
+    .pnl-remove:hover { background: rgba(220,40,40,.26); }
+    input[type=range] { accent-color: var(--accent); width: 100%; }
+    input[type=color] { -webkit-appearance: none; appearance: none; width: 30px; height: 30px; border: 1px solid var(--field-line); border-radius: 6px; background: var(--field-bg); padding: 2px; cursor: pointer; }
+    input[type=color]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type=color]::-webkit-color-swatch { border: none; border-radius: 4px; }
   </style>
 </head>
 <body>
-  <div class="dt-hint" id="dt-hint">carregando…</div>
-  <div id="dt-canvas"></div>
+  <div id="dt-stage"></div>
 
-  <aside class="dt-panel" id="dt-panel">
-    <h3 id="dt-panel-title">elemento</h3>
-    <p class="dt-sub" id="dt-panel-sub"></p>
-    <div id="dt-panel-body"></div>
-  </aside>
+  <div id="dt-overlay"></div>
+  <div class="dt-hint" id="dt-hint">carregando…</div>
+
+  <aside id="dt-panel"></aside>
 
   <div class="dt-toolbar" id="dt-toolbar">
+    <button class="dt-icon" id="dt-undo" title="Desfazer (⌘Z)" disabled><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 4 2.5 7.5 6 11"/><path d="M2.5 7.5H10a3.5 3.5 0 0 1 0 7H7"/></svg></button>
+    <button class="dt-icon" id="dt-redo" title="Refazer (⌘⇧Z)" disabled><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4l3.5 3.5L10 11"/><path d="M13.5 7.5H6a3.5 3.5 0 0 0 0 7h3"/></svg></button>
+    <span class="dt-sep"></span>
     <button id="dt-prev" aria-label="anterior">‹</button>
     <span class="dt-counter" id="dt-counter">1 / 1</span>
     <button id="dt-next" aria-label="próximo">›</button>
-    <button class="dt-act dt-save" id="dt-save">Salvar</button>
-    <button class="dt-act" id="dt-export">Exportar</button>
+    <span class="dt-sep"></span>
+    <button class="dt-save" id="dt-save">Salvar</button>
+    <button class="dt-export" id="dt-export">Exportar</button>
   </div>
 
-  <script src="/app.js"></script>
+  <script src="./edits.js"></script>
+  <script src="./history.js"></script>
+  <script src="./overlay.js"></script>
+  <script src="./panel.js"></script>
+  <script src="./app.js"></script>
 </body>
 </html>

@@ -76,7 +76,9 @@ const CORS = {
 };
 
 function send(res, r) {
-  res.writeHead(r.status, { "Content-Type": r.type || "text/plain", ...CORS });
+  // no-store: ferramenta local — toda recarga deve pegar app.js/overlay.js/etc.
+  // frescos. Sem isso o browser pode servir JS antigo do cache e mascarar fixes.
+  res.writeHead(r.status, { "Content-Type": r.type || "text/plain", "Cache-Control": "no-store", ...CORS });
   res.end(r.body || "");
 }
 
@@ -97,8 +99,9 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && url.pathname === "/") {
       return send(res, await serveEditorFile("index.html", "text/html; charset=utf-8"));
     }
-    if (req.method === "GET" && url.pathname === "/app.js") {
-      return send(res, await serveEditorFile("app.js", "text/javascript; charset=utf-8"));
+    // Qualquer módulo JS do editor (app.js, overlay.js, panel.js, edits.js…).
+    if (req.method === "GET" && /^\/[\w.-]+\.js$/.test(url.pathname)) {
+      return send(res, await serveEditorFile(url.pathname.slice(1), "text/javascript; charset=utf-8"));
     }
     if (req.method === "GET" && url.pathname === "/slides") {
       return send(res, await serveSlides({ postDir: absPost }));
