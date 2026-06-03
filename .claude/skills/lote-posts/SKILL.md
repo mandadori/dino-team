@@ -28,12 +28,14 @@ Gerar N posts em um mesmo formato, com variação de estilos e temas dentro do l
 
 ```
 /lote-posts <formato> [N] [estilo[:K] ...] [tema-base...]
+/lote-posts <formato> --pauta <caminho-da-pasta-da-campanha>
 ```
 
 - **`<formato>`** — obrigatório. Subpasta válida de `templates/social-media/`.
 - **`[N]`** — opcional. Quantidade total de posts. Default: **5**, ou somatório das distribuições por estilo.
 - **`[estilo[:K] ...]`** — opcional. Zero, um ou mais slugs em `templates/social-media/<formato>/estilos/`. Use `slug:K` para distribuição explícita; sem `:K` a skill pergunta.
 - **`[tema-base...]`** — opcional, texto livre. Se omitido, scouting distribui temas pelos pilares.
+- **`--pauta <caminho>`** — opcional. Pasta de uma campanha de pauta semanal (ex: `campanhas/2026-W23-pauta-semanal/`). Quando presente, lê os briefings pré-prontos de `output/posts/*.md` e pula os Passos 2, 3 e 4 (distribuição, scouting e confirmação do plano). Cada briefing pré-pronto substitui a decisão inline do Passo 5b para aquele post.
 
 Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou sem `:K`) → estilo; resto → tema-base.
 
@@ -42,6 +44,7 @@ Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou 
 /lote-posts carrossel 6 layout-dividido mindset
 /lote-posts carrossel treino-dino layout-dividido pernas
 /lote-posts carrossel 5
+/lote-posts carrossel --pauta campanhas/2026-W23-pauta-semanal/
 ```
 
 ## Princípio de produção inline
@@ -65,9 +68,12 @@ Liste `templates/social-media/` e `templates/social-media/<formato>/estilos/`. T
 
 - Token numérico solto → `N_total`.
 - Token bate com slug de estilo (com ou sem `:K`) → adicione ao mapa `distribuicao`.
+- `--pauta <caminho>` → `pauta_path` (pasta da campanha pré-planejada).
 - Restante → `tema_base` (texto livre).
 
 Se formato ausente/inválido, pergunte oferecendo a lista descoberta.
+
+**Quando `--pauta` presente:** leia `<pauta_path>/output/posts/*.md` em ordem. Para cada briefing, extraia Formato, Estilo, Tema, Ângulo central, Pilar, Objetivo, Recorte de público, Slug do post. Construa a lista de pares `(briefing_prepronto, estilo)` substituindo o plano dos Passos 2-4. `N_total = quantidade de briefings lidos`. **Pule os Passos 2, 3 e 4** e vá direto ao Passo 5. No Passo 5b, para cada post com briefing pré-pronto, use os campos já extraídos (não decida inline).
 
 ### 2. Resolver distribuição de estilos
 
