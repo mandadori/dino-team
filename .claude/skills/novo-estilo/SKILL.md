@@ -1,6 +1,6 @@
 ---
 name: novo-estilo
-description: Cria ou edita um estilo visual para qualquer formato disponível em templates/social-media/. Em modo criação, recebe descrição livre (texto + refs visuais opcionais) e gera o template do zero. Em modo edição, detecta um slug existente no input, exibe o preview atual e aplica as alterações pedidas. Apresenta preview iterativo antes de salvar. Respeita a identidade visual da marca.
+description: Cria ou edita um estilo visual para qualquer formato disponível em templates/social-media/. Em modo criação, recebe descrição livre (texto + refs visuais opcionais) e gera o template do zero inline. Em modo edição, detecta um slug existente no input, exibe o preview atual e aplica as alterações pedidas inline. Apresenta preview iterativo antes de salvar. Gate de marca (revisor-brand) valida identidade visual antes de salvar.
 ---
 
 # /novo-estilo — Dino Team
@@ -13,15 +13,16 @@ description: Cria ou edita um estilo visual para qualquer formato disponível em
 | 2 | ⚙ tratar _rascunho/ | — | 1 | rascunho pronto |
 | 3 | ⏸ usuário | contexto ← 2 | 2 | descrição/alterações |
 | 4 | ⚙ preparar pasta | — | 3 | pasta de trabalho |
-| 5 | designer | descrição/refs ← 3, modo | 4 | template+estilo.md |
+| 5 | ⚙ gerar/editar inline | descrição/refs ← 3, modo | 4 | estilo.md + slide.html |
 | 6 | ⏸ usuário | preview ← 5 | 5 | confirmar/ajuste |
-| 7 | ⚙ slug (só criar) | — | 6 | slug |
-| 8 | ⚙ salvar | — | 7 | estilo salvo |
-| 9 | ⚙ confirmar | — | 8 | confirmação |
+| 7 | revisor-brand (gate visual) | estilo.md + slide.html ← 5/6 | 6 | APROVADO/REPROVADO |
+| 8 | ⚙ slug (só criar) | — | 7 | slug |
+| 9 | ⚙ salvar | — | 8 | estilo salvo |
+| 10 | ⚙ confirmar | — | 9 | confirmação |
 
 ## Objetivo
 
-Criar um estilo visual novo ou editar um existente — `estilo.md` + template HTML — prontos para uso pela skill `/novo-post`.
+Criar um estilo visual novo ou editar um existente — `estilo.md` + template HTML — prontos para uso pela skill `/novo-post`. Não há subagente de design: a skill gera/edita os artefatos inline.
 
 ## Sintaxe
 
@@ -31,7 +32,7 @@ Criar um estilo visual novo ou editar um existente — `estilo.md` + template HT
 
 - **`<formato>`** — obrigatório. Qualquer subpasta válida de `templates/social-media/`.
 - **`[slug-existente]`** — opcional. Se bater com pasta em `templates/social-media/{formato}/estilos/`, entra em modo edição.
-- **`[descrição / alterações]`** — opcional. Pode ser pedida no Passo 4.
+- **`[descrição / alterações]`** — opcional. Pode ser pedida no Passo 3.
 
 Ordem é livre. A skill identifica formato, slug e trata o restante como descrição.
 
@@ -39,12 +40,6 @@ Ordem é livre. A skill identifica formato, slug e trata o restante como descri�
 /novo-estilo stories texto centralizado, sem header, fonte grande
 /novo-estilo carrossel layout-dividido reduzir o stamp do rodapé
 ```
-
-## Agentes
-
-| Agente | Responsabilidade | Input | Output |
-|---|---|---|---|
-| `designer` | Gerar ou editar template HTML e `estilo.md` numa pasta destino. | Modo (`criar-template-de-estilo` \| `editar-template-de-estilo`), formato, pasta destino, slug-alvo (edição), descrição/alterações, refs visuais. | Arquivo principal do template do formato + `estilo.md` na pasta destino. |
 
 ---
 
@@ -68,42 +63,32 @@ Se `templates/social-media/{formato}/estilos/_rascunho/` existir, pergunte: cont
 ### 4. Preparar pasta de trabalho
 
 - Criar: `mkdir -p templates/social-media/{formato}/estilos/_rascunho/`
-- Editar: `cp -r templates/social-media/{formato}/estilos/{slug_alvo}/ templates/social-media/{formato}/estilos/_rascunho/` — preserva o original intacto até o Passo 8.
+- Editar: `cp -r templates/social-media/{formato}/estilos/{slug_alvo}/ templates/social-media/{formato}/estilos/_rascunho/` — preserva o original intacto até o Passo 9.
 
-### 5. Acionar designer
+### 5. Gerar ou editar estilo inline
 
-[Agente: `designer`] → input abaixo. Output: arquivo principal do template do formato + `estilo.md` + `preview.html` em `_rascunho/`. Encaminha para o usuário no Passo 6.
+Leia os seguintes arquivos antes de produzir:
+- `templates/estilo.md` — contrato canônico (seções obrigatórias e condicionais).
+- `brand/referencias-visuais.md` — tokens de marca (paleta, tipografia, CAIXA ALTA, 80px).
+- `brand/social-media.md` — dimensões, chrome canônico, aspect-ratios.
 
-```
-Modo: {criar-template-de-estilo | editar-template-de-estilo}
-Formato: {formato}
-Pasta de trabalho: templates/social-media/{formato}/estilos/_rascunho/
-Slug alvo (só edição): {slug_alvo}
+**Modo criar:** gere do zero, a partir da descrição e refs visuais do usuário:
+- `estilo.md` — seguindo o esqueleto canônico em `templates/estilo.md`: seções obrigatórias (Conceito, Estrutura com `[sequência]`/`[total]`/blocos com `#### visual` e `#### editorial`; `[alternância]` quando bloco N-dinâmico varia layout/fundo, Quando usar, Quando NÃO usar) e condicionais que se apliquem.
+- `slide.html` (carrossel) ou `frame.html` (stories) — HTML standalone com `<body>` contendo as seções de exemplo taggeadas (`data-block`, `data-slot`, `data-bg-drop`).
+- Conteúdo dos blocos é PLACEHOLDER ("TÍTULO DE EXEMPLO", "FRASE — MÁX 12 PALAVRAS", etc.).
+- Backgrounds com intenção fotográfica = sempre drop zone (`data-bg-drop="<nome>"`).
+- **Não gerar `preview.html`** — preview = abrir `slide.html` via Live Preview ou Dino Editor.
 
-Descrição / Alterações:
-{texto do usuário}
+**Modo editar:** leia os arquivos já copiados em `_rascunho/`. Aplique APENAS as alterações pedidas; preserve variantes, tokens, estrutura e documentação não mencionada.
 
-Referências visuais: {lista de caminhos ou "nenhuma"}
+Regras críticas:
+- Referências fotográficas são guia de mood/composição/tratamento — NUNCA conteúdo final.
+- Nunca re-declare tokens de marca que já vivem em `brand/referencias-visuais.md`.
+- Nunca hardcodar número de instâncias do corpo — quantidade vem da copy (bloco N-dinâmico).
 
-Regras:
-- Arquivo principal por convenção de formato: slide.html (carrossel) | frame.html (stories).
-- Contrato canônico do estilo.md: templates/estilo.md (seções obrigatórias e condicionais).
-- Conteúdo é PLACEHOLDER ("TÍTULO DE EXEMPLO", "CORPO — MÁX 40 PALAVRAS", etc.).
-- Zonas fotográficas marcadas com [data-bg-drop="..."]. Declarar essas zonas no campo [bg] e [slots] de cada bloco da ## Estrutura.
-- Cada variante em bloco identificável por [classe] + comentário HTML.
+### 6. Revisar template (pausa iterativa)
 
-Comportamento por modo:
-- criar: gere o template do zero a partir da descrição e refs visuais, respeitando o contrato em templates/estilo.md e as regras inegociáveis.
-- editar: leia os arquivos já copiados em _rascunho/. Aplique APENAS as alterações pedidas; preserve variantes, tokens, estrutura e documentação não mencionada.
-
-Entregáveis em _rascunho/:
-- arquivo principal do template (slide.html para carrossel, frame.html para stories)
-- estilo.md — seguindo o esqueleto canônico em templates/estilo.md: seções obrigatórias (Conceito, Estrutura com [sequência]/[total]/blocos com #### visual e #### editorial, Quando usar, Quando NÃO usar) e condicionais (Inputs obrigatórios externos, Notas técnicas) que se apliquem
-```
-
-### 6. Revisar template
-
-Mostre ao usuário:
+Mostre ao usuário (⏸):
 
 ```
 Rascunho em templates/social-media/{formato}/estilos/_rascunho/
@@ -116,18 +101,46 @@ Para revisar o visual, abra o arquivo principal via Live Preview ou:
 Responda "confirmar" — ou descreva o ajuste.
 ```
 
-Se houver ajuste, volte ao Passo 5 passando o estado atual de `_rascunho/` como input do designer. Repita até confirmação.
+Se houver ajuste, volte ao Passo 5 editando os arquivos em `_rascunho/` inline conforme o pedido. Repita até confirmação.
 
-### 7. Definir slug (só modo criar)
+### 7. Gate de marca (`revisor-brand`)
+
+Após confirmação do usuário, acione `revisor-brand`:
+
+```
+Tarefa: validar identidade visual do estilo (momento: criação/edição de estilo).
+
+Inputs:
+- estilo.md: templates/social-media/{formato}/estilos/_rascunho/estilo.md
+- Arquivo principal: templates/social-media/{formato}/estilos/_rascunho/<slide.html | frame.html>
+
+Avaliar: paleta, tipografia, layout, mood — alinhamento com brand/referencias-visuais.md e brand/social-media.md.
+```
+
+Controle de tentativas:
+- `tentativas_7`: inicializar em 0; incrementar a cada re-rodada.
+
+Se `tentativas_7 ≥ 1` → pausar e apresentar ao usuário:
+
+```
+Gate de identidade visual travado após N tentativa(s).
+Parecer atual: <inline>
+Ação necessária: <instrução do revisor>
+```
+
+- **APROVADO** → siga para o Passo 8.
+- **REPROVADO** → aplique a instrução inline (edite `_rascunho/estilo.md` e/ou `_rascunho/slide.html` conforme apontado); incrementar `tentativas_7`; volte ao Passo 6 para nova revisão do usuário.
+
+### 8. Definir slug (só modo criar)
 
 Pergunte o slug. Valide kebab-case (`^[a-z0-9-]+$`). Se já existir pasta com esse nome em `templates/social-media/{formato}/estilos/`, peça outro. Em modo editar, `slug_final = slug_alvo` — pule.
 
-### 8. Salvar
+### 9. Salvar
 
 - Criar: `mv templates/social-media/{formato}/estilos/_rascunho templates/social-media/{formato}/estilos/{slug_final}`
 - Editar: `cp -r templates/social-media/{formato}/estilos/_rascunho/. templates/social-media/{formato}/estilos/{slug_alvo}/` && `rm -rf templates/social-media/{formato}/estilos/_rascunho/`
 
-### 9. Confirmar ao usuário
+### 10. Confirmar ao usuário
 
 ```
 Estilo {criado | atualizado}: {slug_final} ({formato})
@@ -139,6 +152,8 @@ Use com: /novo-post {formato} {slug_final} [tema]
 ## Critério de conclusão
 
 - Arquivo principal do template do formato + `estilo.md` presentes em `templates/social-media/{formato}/estilos/{slug_final}/`.
+- Pasta do estilo NÃO contém `preview.html`.
+- `revisor-brand` aprovou a identidade visual (gate no Passo 7).
 - Usuário confirmou explicitamente o template no Passo 6.
 - `_rascunho/` foi removido.
-- Em modo editar, o estilo original só foi sobrescrito após a confirmação do Passo 6.
+- Em modo editar, o estilo original só foi sobrescrito após a confirmação do Passo 6 e aprovação do Passo 7.
