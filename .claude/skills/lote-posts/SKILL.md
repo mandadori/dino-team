@@ -49,7 +49,7 @@ Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou 
 
 ## Princípio de produção inline
 
-**Cada post é um contexto independente.** A skill produz briefing, copy e design inline por post. Não há subagentes de produção (briefing-writer, copywriter, designer). A variação de tema/estilo dentro do lote é garantida pelo planejamento do Passo 3-4, não por anti-repetição automática entre posts.
+**Cada post é um contexto independente.** A skill produz briefing, copy e design inline por post — sem subagentes de produção. A variação de tema/estilo dentro do lote é garantida pelo planejamento do Passo 3-4, não por anti-repetição automática entre posts.
 
 **Contexto de leitura por post (Passo 5):**
 - **Briefing:** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `dados/ramon/contexto.md` + `dados/performance/angulos-queimados.md` + `dados/mercado/tendencias/<mês>.md` + `estilo.md` do estilo atribuído.

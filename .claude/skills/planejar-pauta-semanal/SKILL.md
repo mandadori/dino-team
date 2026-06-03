@@ -1,6 +1,6 @@
 ---
 name: planejar-pauta-semanal
-description: Skill L2 (composta). Produz N briefings estratégicos para a semana corrente sem executar os posts — a execução fica por conta de /lote-posts ou /novo-post posteriores. Output em `campanhas/<YYYY-Www>-pauta-semanal/`. Acionada por cron (toda 2ª 9h) ou manualmente. Briefings escritos inline pela skill (não mais via briefing-writer).
+description: Skill L2 (composta). Produz N briefings estratégicos para a semana corrente sem executar os posts — a execução fica por conta de /lote-posts ou /novo-post posteriores. Output em `campanhas/<YYYY-Www>-pauta-semanal/`. Acionada por cron (toda 2ª 9h) ou manualmente. Briefings escritos inline pela skill.
 ---
 
 # /planejar-pauta-semanal — Dino Team
@@ -41,7 +41,7 @@ Os briefings são artefatos gravados em `campanhas/.../output/posts/` — são h
 |---|---|
 | `pesquisador-mercado` | Levantar tendências da semana corrente + sugerir distribuição de pilares (1 chamada profunda) |
 
-Briefings são escritos inline pela skill no Passo 3 (não mais via `briefing-writer`).
+Briefings são escritos inline pela skill no Passo 3.
 
 ---
 

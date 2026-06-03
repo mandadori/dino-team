@@ -7,7 +7,7 @@ description: Skill interativa para atualizar o slice `dados/ramon/` — fase atu
 
 ## Objetivo
 
-Manter `dados/ramon/contexto.md` atualizado — slice da memória persistente sobre o Ramon, lido por `briefing-writer` para calibrar todo conteúdo.
+Manter `dados/ramon/contexto.md` atualizado — slice da memória persistente sobre o Ramon, lido inline pelas skills de post para calibrar todo conteúdo.
 
 ## Fluxo
 
