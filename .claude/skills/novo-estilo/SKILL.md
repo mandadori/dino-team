@@ -14,7 +14,8 @@ description: Cria ou edita um estilo visual para qualquer formato disponível em
 | 3 | ⏸ usuário | contexto ← 2 | 2 | descrição/alterações |
 | 4 | ⚙ preparar pasta | — | 3 | pasta de trabalho |
 | 5 | ⚙ gerar/editar inline | descrição/refs ← 3, modo | 4 | estilo.md + slide.html |
-| 6 | ⏸ usuário | preview ← 5 | 5 | confirmar/ajuste |
+| 6 | ⚙ editor auto + ⏸ usuário | _rascunho ← 5 | 5 | confirmar/ajuste |
+| 6.5 | ⚙ promover edits → estilo (editar) | edits.json ← 6 | 6 | estilo.md/slide.html |
 | 7 | revisor-brand (gate visual) | estilo.md + slide.html ← 5/6 | 6 | APROVADO/REPROVADO |
 | 8 | ⚙ slug (só criar) | — | 7 | slug |
 | 9 | ⚙ salvar | — | 8 | estilo salvo |
@@ -55,9 +56,9 @@ Se `templates/social-media/{formato}/estilos/_rascunho/` existir, pergunte: cont
 
 ### 3. Mostrar contexto e coletar descrição/alterações
 
-- **Modo editar**: o usuário precisa ver o estilo atual antes de descrever mudanças.
-  - Mostre o caminho do arquivo principal (`slide.html` ou `frame.html`) em `templates/social-media/{formato}/estilos/{slug_alvo}/`.
-  - Peça ao usuário que abra o arquivo via Live Preview (ou render rápido com `export-png.js`) e descreva as alterações (ou confirme as que já vieram no input).
+- **Modo editar**: a edição visual acontece no Dino Editor, que abre automaticamente no Passo 6 — **não** peça ao usuário para abrir Live Preview aqui.
+  - Se o usuário já trouxe alterações em texto no input, confirme-as e siga.
+  - Se não, avise que o editor abrirá com o estilo atual instanciado para edição visual direta, e siga (sem exigir descrição em texto).
 - **Modo criar**: se `descricao_alteracoes` for menor que uma frase clara, peça detalhes — posicionamento, variantes, uso de foto de fundo, elementos esperados.
 
 ### 4. Preparar pasta de trabalho
@@ -86,22 +87,47 @@ Regras críticas:
 - Nunca re-declare tokens de marca que já vivem em `brand/referencias-visuais.md`.
 - Nunca hardcodar número de instâncias do corpo — quantidade vem da copy (bloco N-dinâmico).
 
-### 6. Revisar template (pausa iterativa)
+### 6. Revisar no Dino Editor (auto-start + pausa iterativa)
 
-Mostre ao usuário (⏸):
+A revisão visual roda no **Dino Editor**, que a skill **sobe automaticamente** — o usuário nunca executa o backend. (O editor suporta `slide-N.html` / carrossel; para formatos baseados em `frame.html` — ex. stories — caia no fallback: render com `export-png.js`.) **Nunca instrua "Live Preview" do VS Code — o usuário não o encontra; passe sempre a URL `http://localhost:4321`.**
 
+1. **Gerar scaffold de preview** com o gerador determinístico — instancia cada bloco da `## Estrutura` em `slide-N.html` standalone (corpo flexível repetido `--repeat` vezes; default 2):
+
+   ```bash
+   node scripts/editor/scaffold-estilo.js \
+     --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md \
+     --out export/conteudos/{formato}/_preview-{slug_alvo|rascunho}
+   ```
+
+   O gerador deriva formato/slug do caminho, copia o `<head>`/CSS do estilo e avisa se o formato não for carrossel (editor é carrossel-only).
+2. **Subir o editor em background** (a skill executa):
+
+   ```bash
+   lsof -ti tcp:4321 | xargs kill -9 2>/dev/null; \
+   npm run editor -- export/conteudos/{formato}/_preview-{slug_alvo|rascunho} \
+     --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md \
+     > /tmp/dino-editor.log 2>&1 &
+   ```
+
+   Aguarde ~3s e confirme saúde: `curl -s -o /dev/null -w "%{http_code}" http://localhost:4321/` → `200`.
+3. **Apresentar (⏸):**
+
+   ```
+   Dino Editor no ar para o estilo {slug}.
+   Abra no navegador: http://localhost:4321 — edite o visual, clique "Salvar".
+
+   Responda:
+   - "confirmar"           → promovo as mudanças ao estilo e sigo ao gate
+   - ajuste em texto livre  → aplico inline no estilo
+   ```
+4. **Promover edições estruturais** (modo editar): após o save, leia `export/conteudos/{formato}/_preview-{...}/design/edits.json`; se existir, rode `scripts/editor/extract-structural.js` e aplique cada delta em `_rascunho/estilo.md` + `_rascunho/slide.html` atomicamente (mesmo mecanismo do Passo 11.5 de `/novo-post`). Delta não mapeável: reporte ao usuário e siga com os demais.
+
+Ajuste em texto livre → edite `_rascunho/` inline (volta ao Passo 5) e reapresente. Repita até "confirmar". Ao confirmar, derrube o editor e remova o scaffold:
+
+```bash
+lsof -ti tcp:4321 | xargs kill -9 2>/dev/null
+rm -rf export/conteudos/{formato}/_preview-{slug_alvo|rascunho}/
 ```
-Rascunho em templates/social-media/{formato}/estilos/_rascunho/
-- <arquivo principal: slide.html | frame.html>
-- estilo.md
-
-Para revisar o visual, abra o arquivo principal via Live Preview ou:
-  node scripts/export-png.js <qualquer pasta de post com design/> --format={formato}
-
-Responda "confirmar" — ou descreva o ajuste.
-```
-
-Se houver ajuste, volte ao Passo 5 editando os arquivos em `_rascunho/` inline conforme o pedido. Repita até confirmação.
 
 ### 7. Gate de marca (`revisor-brand`)
 
@@ -154,6 +180,6 @@ Use com: /novo-post {formato} {slug_final} [tema]
 - Arquivo principal do template do formato + `estilo.md` presentes em `templates/social-media/{formato}/estilos/{slug_final}/`.
 - Pasta do estilo NÃO contém `preview.html`.
 - `revisor-brand` aprovou a identidade visual (gate no Passo 7).
-- Usuário confirmou explicitamente o template no Passo 6.
-- `_rascunho/` foi removido.
+- Usuário confirmou explicitamente o template no Passo 6 (editado no Dino Editor, que a skill subiu sozinha).
+- `_rascunho/` foi removido, assim como o scaffold de preview em `export/conteudos/{formato}/_preview-*/`.
 - Em modo editar, o estilo original só foi sobrescrito após a confirmação do Passo 6 e aprovação do Passo 7.

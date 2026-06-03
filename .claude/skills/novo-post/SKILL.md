@@ -12,7 +12,7 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
 |---|---|---|---|---|
 | 1 | ⚙ parse input | input bruto | — | formato/estilo/tema/briefing-path |
-| 2 | ⚙ carregar contexto | dados/ | 1 | contexto inline |
+| 2 | ⚙ checar frescor mercado | — | 1 | trigger Fase A se stale |
 | 2a | pesquisador (Fase A, se stale) | mês, formato | 2 | slice mercado atualizado |
 | 3 | pesquisador (Fase B, condic.) | formato, contexto | 2 | candidatos ranqueados |
 | 3.⏸ | ⏸ usuário | candidatos ← 3 | 3 | tema escolhido |
@@ -75,17 +75,11 @@ Liste `templates/social-media/` e `templates/social-media/<formato>/estilos/`. T
 
 Se `briefing_path` presente: leia o arquivo apontado e extraia `Formato`, `Estilo`, `Tema`, `Ângulo central`, `Pilar`, `Objetivo`, `Recorte de público`, `Slug do post`. Esses valores substituem qualquer tema/estilo vindo do input textual. Marque `modo_briefing = "pre-pronto"`. Pule os Passos 3, 3.⏸, 4 e 4.⏸ e vá direto ao Passo 5 (se estilo for ad-hoc) ou ao Passo 7.
 
-### 2. Carregar contexto
+### 2. Frescor da inteligência de mercado
 
-Leia os seguintes arquivos antes de qualquer decisão:
+A skill **não lê contexto aqui**. Ramon, mercado e ângulos-queimados são consumidos onde de fato decidem: o `pesquisador-mercado` os lê no Passo 3 (recebe os caminhos) para ranquear o tema, e o briefing inline os lê no Passo 6. Este passo só garante que a inteligência de mercado esteja fresca antes do scouting.
 
-```
-dados/ramon/contexto.md
-dados/performance/angulos-queimados.md
-dados/mercado/tendencias/<YYYY-MM>.md   ← mês atual
-```
-
-#### 2a. Frescor da inteligência de mercado
+#### 2a. Checar frescor
 
 ```bash
 f="dados/mercado/tendencias/$(date +%Y-%m).md"
@@ -118,7 +112,7 @@ Tarefa: seleção de candidatos (Fase B — ranqueamento).
 Inputs:
 - Formato: <formato>
 - Estilo: <slug se veio no input, senão "ainda não definido">
-- Contexto Ramon: dados/ramon/contexto.md (já lido — considere fase atual e cronograma)
+- Contexto Ramon: dados/ramon/contexto.md (leia — considere fase atual e cronograma)
 - Ângulos queimados: dados/performance/angulos-queimados.md (não repetir)
 - Tendências do mês: dados/mercado/tendencias/<YYYY-MM>.md
 - Quantidade de candidatos: 3-5
@@ -351,23 +345,21 @@ Se não houver banco apontado, pule — o usuário dropa as fotos manualmente no
 
 #### Pausa para revisão e edição no Dino Editor (⏸)
 
+**A skill sobe o backend do editor automaticamente** — o usuário nunca roda o backend. Antes de apresentar a pausa, execute:
+
+```bash
+lsof -ti tcp:4321 | xargs kill -9 2>/dev/null; \
+npm run editor -- export/conteudos/<formato>/<data>-<slug> \
+  --estilo <caminho do estilo.md> > /tmp/dino-editor.log 2>&1 &
+```
+
+Aguarde ~3s e confirme saúde (`curl -s -o /dev/null -w "%{http_code}" http://localhost:4321/` → `200`). Só então apresente:
+
 ```
 Design gerado em export/conteudos/<formato>/<data>-<slug>/design/ (estilo: <slug | ad-hoc>):
 - <slides individuais: slide-1.html, slide-2.html...>
 
-Para revisar e editar (texto, tamanho, posição, foto, estilo), o Dino Editor é
-aberto automaticamente. Suba o backend em background e abra o editor no
-**Live Preview do VS Code**:
-
-1. Backend (deixe rodando em background):
-
-  npm run editor -- export/conteudos/<formato>/<data>-<slug> \
-    --estilo <caminho do estilo.md>
-
-2. Abra o editor dentro do VS Code: no Explorer, clique com o botão direito em
-   `scripts/editor/index.html` → **Show Preview** (ou use o botão Live Preview no
-   topo direito). O editor roda embutido no VS Code e fala com o backend em
-   localhost:4321. Alternativa fora do VS Code: http://localhost:4321 no navegador.
+O Dino Editor já está no ar: abra http://localhost:4321 no navegador.
 
 Edite no canvas, clique "Salvar" (grava slide-N.html + edits.json). Quando pronto, clique "Exportar" ou use:
 
