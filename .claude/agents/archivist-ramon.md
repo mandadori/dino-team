@@ -43,7 +43,7 @@ Sob demanda:
 3. **Adicionar fato em outra seção** — princípios de treino, falas, conquistas.
 4. **Auto-sync** — buscar atividade pública recente do Ramon, comparar com `contexto.md`, e: consolidar fatos datados de baixo risco; propor (sem gravar) qualquer mudança de fase ou fato conflitante.
 5. **Validar coerência do slice** — checar que datas não conflitam e que a fase atual bate com o cronograma.
-6. **Responder o que o slice sabe sobre Ramon** — varrer `contexto.md` e devolver inline (usado quando `briefing-writer` precisa de contexto).
+6. **Responder o que o slice sabe sobre Ramon** — varrer `contexto.md` e devolver inline (usado quando uma skill precisa de contexto para decidir ângulo/briefing inline).
 
 ## Recebo
 
