@@ -1,13 +1,13 @@
 ---
 name: lote-posts
-description: Gera N posts em um mesmo formato com variação de estilos e temas. Sintaxe livre — formato é obrigatório; quantidade, estilos (com distribuição opcional) e tema-base são opcionais. Multi-estilo nativo — aceita "treino-dino:2 layout-dividido:2" ou pergunta a distribuição. Útil para encher pauta semanal/mensal. Agendável via /schedule.
+description: Gera N posts em um mesmo formato com variação de estilos e temas. Sintaxe livre — formato é obrigatório; quantidade, estilos (com distribuição opcional) e tema-base são opcionais. Multi-estilo nativo — aceita "treino-dino:2 layout-dividido:2" ou pergunta a distribuição. Útil para encher pauta semanal/mensal. Agendável via /schedule. Briefing/copy/design executados inline pela skill por post.
 ---
 
 # /lote-posts — Dino Team
 
 ## Objetivo
 
-Gerar N posts em um mesmo formato, com variação de estilos e temas dentro do lote. Reusa o pipeline do `/novo-post` por post, com pausa única de revisão de previews ao final do design (não pausa durante briefing, copy ou design).
+Gerar N posts em um mesmo formato, com variação de estilos e temas dentro do lote. A produção (briefing, copy, design) é inline por post — sem subagentes de produção. Pausa única de revisão de copies ao final, depois pausa de revisão de slides por post.
 
 ## Fluxo
 
@@ -15,12 +15,12 @@ Gerar N posts em um mesmo formato, com variação de estilos e temas dentro do l
 |---|---|---|---|---|
 | 1 | ⚙ parse input | input | — | N, estilos, tema |
 | 2 | ⚙ distribuição de estilos | — | 1 | estilos por post |
-| 3 | pesquisador (Fase A/B, condic.) | tema | 2 | distribuição+candidatos |
+| 3 | pesquisador (Fase A/B, condic.) | tema, contexto | 2 | distribuição+candidatos |
 | 4 | ⏸ usuário | plano ← 3 | 3 | confirmação |
-| 5 | sub-fluxo novo-post P4–8 (×posts) | plano ← 4 | 4 | copy por post |
+| 5 | ⚙ briefing+copy inline (×posts) | plano ← 4 | 4 | copy por post |
 | 6 | ⏸ usuário | copies ← 5 | 5 | ok/ajuste em lote |
-| 7 | designer (×posts) | copy ← 5 | 6 | assets por post |
-| 8 | export-png.js + revisores (×posts) | slide-N.html ← 7 | 7 | PNGs + validação por post |
+| 7 | ⚙ design inline (×posts) | copy ← 5 | 6 | assets por post |
+| 8 | export-png.js + revisor-brand (×posts) | slide-N.html ← 7 | 7 | PNGs + validação por post |
 | 9 | ⚙ relatório do lote | — | 8 | relatório |
 | 10 | ⚙ política publish (×posts) | pasta ← 8 | 8 | publicado/pendente |
 
@@ -44,17 +44,16 @@ Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou 
 /lote-posts carrossel 5
 ```
 
-## Agentes
+## Princípio de produção inline
 
-| Agente | Responsabilidade | Quando aciona |
-|---|---|---|
-| `pesquisador-mercado` | Sugerir distribuição de estilos (se nenhum foi informado) e gerar lista de N subtemas mapeados aos estilos. | Passos 3 e 4 |
-| `briefing-writer` | Briefing estratégico por post. | Passo 5 |
-| Pipeline `/novo-post` (pesquisa → copy) | Executa pesquisa e copy de cada post. | Passo 5 |
-| Pipeline `/novo-post` (design) | Executa o design de cada post após aprovação da copy. | Passo 7 |
-| `revisor-conteudo` + `revisor-brand` | Curadoria editorial por post. | Passo 8 |
+**Cada post é um contexto independente.** A skill produz briefing, copy e design inline por post. Não há subagentes de produção (briefing-writer, copywriter, designer). A variação de tema/estilo dentro do lote é garantida pelo planejamento do Passo 3-4, não por anti-repetição automática entre posts.
 
-Cada agente lê o recorte de `brand/` que sua função exige antes de executar. Erro `BRAND_BOOK_INCOMPLETO` vindo de qualquer agente para o lote inteiro.
+**Contexto de leitura por post (Passo 5):**
+- **Briefing:** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `dados/ramon/contexto.md` + `dados/performance/angulos-queimados.md` + `dados/mercado/tendencias/<mês>.md` + `estilo.md` do estilo atribuído.
+- **Copy:** `estilo.md` (campos `#### editorial`) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa do post.
+- **Design (Passo 7):** `estilo.md` (campos `#### visual`) + `slide.html` do estilo + `brand/referencias-visuais.md` + `brand/social-media.md` + `copy.md` do post.
+
+Erro `BRAND_BOOK_INCOMPLETO` para o lote inteiro.
 
 ---
 
@@ -87,7 +86,7 @@ Decida com base no parse:
 
 ### 3. Scouting de distribuição (sem estilo informado)
 
-[Agente: `pesquisador-mercado`] → input:
+Acione `pesquisador-mercado`:
 
 ```
 Tarefa: sugerir uma distribuição de N posts entre os estilos disponíveis.
@@ -108,9 +107,9 @@ Saída inline: "slug:K | slug:K | ..." + 1 linha de justificativa.
 
 Apresente a sugestão e aguarde o usuário confirmar ou ajustar.
 
-### 4. Distribuir subtemas e confirmar plano
+### 4. Distribuir subtemas e confirmar plano (pausa)
 
-[Agente: `pesquisador-mercado`] → input:
+Acione `pesquisador-mercado`:
 
 ```
 Tarefa: gerar N subtemas distintos, cada um mapeado a um estilo da distribuição.
@@ -120,10 +119,11 @@ Inputs:
 - Formato: <formato>
 - Distribuição: <slug:K | slug:K | ...>
 - Tema-base: <texto livre ou "nenhum — distribuir entre pilares">
+- Ângulos queimados: dados/performance/angulos-queimados.md (não repetir)
 
 Regras:
 - Cada subtema deve combinar com o estilo a que é atribuído.
-- Tema-base livre → distribua entre pilares de pilares-conteudo.md.
+- Tema-base livre → distribua entre pilares de brand/pilares-conteudo.md.
 - Tema-base dado → derive N ângulos distintos.
 
 Saída: lista numerada de N triplas.
@@ -131,7 +131,7 @@ Saída: lista numerada de N triplas.
 2. ...
 ```
 
-Apresente o plano ao usuário:
+Apresente o plano ao usuário (⏸):
 
 ```
 Lote: <N> posts em <formato>
@@ -150,21 +150,52 @@ Confirma? (sim/ok para começar, ou diga o que ajustar)
 
 **Aguarde confirmação explícita** ou aplique os ajustes pedidos e reapresente. Em modo agendado, pule a confirmação.
 
-### 5. Executar até a copy de cada post
+### 5. Briefing + copy inline por post
 
-Para cada par `(subtema, estilo)` da lista, execute os passos do `/novo-post` **até a copy**, sem pausa:
+Para cada par `(subtema, estilo)` da lista confirmada, execute inline e **sem pausa entre posts**:
 
-- **Briefing estratégico** (`briefing-writer`) — extraia `slug-do-post`.
-- **Criar pasta do post** — `export/conteudos/<formato>/<data>-<slug>/`.
-- **Resolver inputs obrigatórios do estilo** (apenas se `modo_estilo = "definido"`):
-  - Modo interativo: pergunte ao usuário (ex.: lista de exercícios).
-  - Modo agendado: pule este post (`SKIPPED — input técnico obrigatório`) e siga.
-- **Pesquisa profunda** (`pesquisador-mercado`).
-- **Copy** (`copywriter`).
+#### 5a. Carregar contexto do post
+
+Leia (uma vez por lote, reutilize nos demais posts):
+- `dados/ramon/contexto.md`
+- `dados/performance/angulos-queimados.md`
+- `dados/mercado/tendencias/<YYYY-MM>.md`
+
+#### 5b. Briefing inline
+
+Leia `brand/brand-book.md` + `brand/pilares-conteudo.md` + `estilo.md` do estilo atribuído (campos `## Conceito` e `#### editorial`). Fixe: ângulo central, pilar, objetivo, recorte de público, slug do post (kebab-case).
+
+Criar pasta: `export/conteudos/<formato>/<data>-<slug>/{design,export}`.
+
+#### 5c. Resolver inputs obrigatórios do estilo (condicional)
+
+Se `estilo.md` declarar `## Inputs obrigatórios externos`:
+- **Modo interativo:** pergunte ao usuário (ex.: lista de exercícios).
+- **Modo agendado:** pule este post (`SKIPPED — input técnico obrigatório`) e siga.
+
+#### 5d. Pesquisa profunda
+
+Acione `pesquisador-mercado` por post (pesquisa profunda individual):
+
+```
+Tarefa: levantar matéria-prima profunda para a copy.
+Profundidade: deep research.
+
+Inputs:
+- Formato/Estilo/Tema: <formato> / <slug> / <subtema>
+- Pilar / Recorte / Sinalizações: <do briefing inline deste post>
+- Contexto de mercado: dados/mercado/tendencias/<YYYY-MM>.md + dados/mercado/concorrentes/*.md
+
+Saída: gravar em dados/pesquisas-brutas/<data>-tendencias-<slug>.md.
+```
+
+#### 5e. Copy inline
+
+Leia `estilo.md` (campos `#### editorial`) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa gravada. Escreva a copy seguindo exatamente os campos `#### editorial` por bloco. Grave em `export/conteudos/<formato>/<data>-<slug>/copy.md`.
 
 **Política de falha:** se um post falhar em qualquer etapa, registre o erro e continue os demais. `BRAND_BOOK_INCOMPLETO` para o lote inteiro.
 
-### 6. Pausa de revisão de copies em lote
+### 6. Pausa de revisão de copies em lote (⏸)
 
 Após a copy de todos os posts, apresente as copies em lote:
 
@@ -185,16 +216,18 @@ Post 2 — <slug-do-post> (estilo: <slug>)
 
 Responda:
 - "ok" → aprova todos e inicia design de todos
-- "ajustar post N: <descrição>" → re-aciona copywriter só daquele post; reapresenta apenas o post ajustado para confirmação; pergunta se há mais ajustes ou se pode iniciar design
+- "ajustar post N: <descrição>" → edita copy.md daquele post inline; reapresenta apenas o post ajustado para confirmação; pergunta se há mais ajustes ou se pode iniciar design
 ```
 
 A pausa só avança ao Passo 7 quando o usuário confirmar que não há mais ajustes.
 
 **Modo agendado:** pule a pausa. Siga direto ao Passo 7.
 
-### 7. Design + revisão de slides por post
+### 7. Design inline por post + revisão de slides
 
-Para cada post aprovado no Passo 6, execute o **Design (slide-N.html)** do `/novo-post` (`designer`).
+Para cada post aprovado no Passo 6, execute o design inline:
+
+Leia `estilo.md` (campos `#### visual`) + `slide.html` do estilo + `brand/referencias-visuais.md` + `brand/social-media.md` + `copy.md` do post. Para cada bloco declarado em `## Estrutura`, gere um `slide-N.html` em `design/`, aplicando a copy e respeitando as drop zones e `[alternância]`. Não gerar `preview.html`.
 
 Após o design de todos os posts, apresente **um por um**, na ordem da lista:
 
@@ -207,22 +240,40 @@ Para revisar: abra via Live Preview ou exporte (node scripts/export-png.js <past
 
 Opções:
 - "ok" / "confirmar" → segue para o próximo
-- "ajustar: <descrição>" → reaciona o designer; reapresenta este post
+- "ajustar: <descrição>" → edita os slides inline; reapresenta este post
 ```
 
 Aguarde decisão antes de passar ao próximo. Quando todos forem confirmados, siga ao Passo 8.
 
 **Modo agendado:** pule o loop. Siga direto ao Passo 8 com os slides gerados.
 
-### 8. Validação, export e curadoria editorial
+### 8. Validação, export e gate de marca
 
 Para cada post confirmado:
 
 1. Snapshot da pesquisa em `<pasta>/pesquisa-base.md`.
 2. Executar `node scripts/export-png.js export/conteudos/<formato>/<data>-<slug>/` — renderiza e valida dimensões/contagem automaticamente. Em caso de erro, registre e marque o post como pulado.
-3. Curadoria editorial em sequência:
-   a. [Agente: `revisor-conteudo`] → parecer de coerência + compliance. APROVADO ou APROVADO COM AJUSTES → segue para 3b. REPROVADO → registra e marca o post como pulado (refazer é responsabilidade do `/novo-post`).
-   b. [Agente: `revisor-brand`] → parecer de identidade. APROVADO → grava `briefing.md`. REPROVADO → registra e marca como pulado.
+3. Gate de marca: acione `revisor-brand` por post:
+
+```
+Tarefa: validar copy + compliance do post pronto (momento: criação de post).
+
+Inputs:
+- Pasta do post: export/conteudos/<formato>/<data>-<slug>/
+  (pesquisa-base.md, copy.md, design/slide-*.html, export/*.png, treino.md quando aplicável)
+- Briefing inline:
+  Pilar: <pilar>
+  Objetivo: <objetivo>
+  Ângulo central: <ângulo>
+  Recorte de público: <recorte>
+  Slug do post: <slug>
+
+Avaliar: tom de voz, pilar, compliance (saúde, jurídico, suplementação, promessas irreais).
+NÃO re-julgar identidade visual.
+```
+
+- **APROVADO** → grava `briefing.md` via `templates/briefing.md`. Post aprovado.
+- **REPROVADO** → registra e marca o post como pulado (refazer é responsabilidade do `/novo-post`).
 
 Erros técnicos (`EXPORT_FALHOU`, `VALIDACAO_TECNICA_FALHOU`) → registre e siga ao próximo.
 
@@ -245,7 +296,7 @@ Pulados/falhos (<N-M>):
 
 ### 10. Publicação por post (opcional, gated por política)
 
-Para cada post aprovado, aplicar o mesmo gate de política do Passo 14 do `/novo-post`: carregar `dados/politicas/publicacao.yaml`, avaliar as regras e só chamar `scripts/integrations/publish_instagram.js` quando a regra que casa diz `modo: automatico`. Em modo cron/agendado, **nunca publicar automaticamente** — apenas listar quais posts ficaram autorizados pela política e quais exigem aprovação humana.
+Para cada post aprovado, aplicar o mesmo gate de política do Passo 16 do `/novo-post`: carregar `dados/politicas/publicacao.yaml`, avaliar as regras e só chamar `scripts/integrations/publish_instagram.js` quando a regra que casa diz `modo: automatico`. Em modo cron/agendado, **nunca publicar automaticamente** — apenas listar quais posts ficaram autorizados pela política e quais exigem aprovação humana.
 
 ---
 
@@ -261,10 +312,11 @@ Para cada post aprovado, aplicar o mesmo gate de política do Passo 14 do `/novo
 
 - Pelo menos 1 post entregue com pasta completa (`pesquisa-base.md`, `copy.md`, `design/`, `export/<PNGs>`, `briefing.md`).
 - Quantidade de PNGs em cada `export/` = quantidade de assets em `design/`.
-- Relatório consolidado do Passo 8 entregue ao usuário, com sucessos e falhas discriminados.
+- Relatório consolidado do Passo 9 entregue ao usuário, com sucessos e falhas discriminados.
 
 ## Princípios
 
 - **Variedade dentro de coerência.** Subtemas e estilos distintos, mesmo formato, mesma marca.
 - **Mesmo formato no lote.** Múltiplos formatos = múltiplos lotes.
 - **Falhar um, seguir os outros.**
+- **Post-independente.** Cada post tem seu próprio contexto de briefing/copy/design — não carrega estado do post anterior.
