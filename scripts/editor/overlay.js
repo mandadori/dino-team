@@ -277,13 +277,13 @@ window.DT = window.DT || {};
     if (!sel) return; var el = sel.el, t = typeOf(el); hist().begin();
     if (t === "image") { var b = el.getBoundingClientRect(); el.style.width = Math.round(v) + "px"; if (aspectLock) el.style.height = Math.round(v * (b.height / b.width)) + "px"; DT.edits.record(sel.n, sel.block, slotOf(el), "width", null, el.style.width); }
     else { var bb = el.getBoundingClientRect(), fs = parseFloat(el.ownerDocument.defaultView.getComputedStyle(el).fontSize) || 40; el.style.fontSize = Math.max(8, Math.round(fs * (v / bb.width))) + "px"; DT.edits.record(sel.n, sel.block, slotOf(el), "font-size", null, el.style.fontSize); }
-    drawSelection();
+    drawSelection(); if (pnl("syncGeom")) DT.panel.syncGeom();
   }
   function setH(v) {
     if (!sel) return; var el = sel.el, t = typeOf(el); hist().begin();
     if (t === "image") { var b = el.getBoundingClientRect(); el.style.height = Math.round(v) + "px"; if (aspectLock) el.style.width = Math.round(v * (b.width / b.height)) + "px"; DT.edits.record(sel.n, sel.block, slotOf(el), "height", null, el.style.height); }
     else { var bb = el.getBoundingClientRect(), fs = parseFloat(el.ownerDocument.defaultView.getComputedStyle(el).fontSize) || 40; el.style.fontSize = Math.max(8, Math.round(fs * (v / bb.height))) + "px"; DT.edits.record(sel.n, sel.block, slotOf(el), "font-size", null, el.style.fontSize); }
-    drawSelection();
+    drawSelection(); if (pnl("syncGeom")) DT.panel.syncGeom();
   }
   function setStyle(prop, val, noHist) {
     if (!sel) return; var el = sel.el;
