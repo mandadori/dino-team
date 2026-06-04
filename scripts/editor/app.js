@@ -12,6 +12,7 @@
   var IFRAME_CSS = [
     "[data-dt-selectable]{pointer-events:auto!important}",
     "[data-bg-drop]{pointer-events:auto!important}",
+    "[data-bg-drop]{overflow:hidden!important}",
     "[contenteditable=true]{outline:2px solid #00b140;cursor:text}",
     "[data-bg-drop].dt-drop{outline:4px dashed #00b140!important;outline-offset:-4px}"
   ].join("");
@@ -70,12 +71,37 @@
     var doc = frame.iframe.contentDocument; frame.doc = doc; frame.root = doc.querySelector("section") || doc.body;
     markSelectable(doc);
     prefillBg(frame, sugg);
+    // Congela o layout (Figma-like) após as fontes assentarem: cada selecionável
+    // vira position:absolute na posição medida → mover um nunca reflui o vizinho.
+    var ready = (doc.fonts && doc.fonts.ready) ? doc.fonts.ready : Promise.resolve();
+    ready.then(function () { freezeLayout(doc, frame.root); });
     var surf = frame.surface;
     surf.addEventListener("pointerdown", function (e) { onDown(frame, e); });
     surf.addEventListener("pointermove", function (e) { if (e.buttons === 0) DT.overlay.hover(frame, hitTest(frame, e.clientX, e.clientY)); });
     surf.addEventListener("pointerleave", function () { DT.overlay.clearHover(); });
     surf.addEventListener("dblclick", function (e) { var el = hitTest(frame, e.clientX, e.clientY); if (el && DT.overlay.typeOf(el) === "text") { DT.overlay.select(ctx(frame, el)); DT.overlay.editText(el, surf); } });
     doc.addEventListener("keydown", onKey);
+  }
+
+  // Congela cada [data-dt-selectable] em position:absolute na posição medida.
+  // Dois passes (medir tudo → aplicar tudo) pra um congelamento não deslocar a
+  // medição do próximo. Idempotente: pula os já congelados (reabrir slide salvo).
+  function freezeLayout(doc, root) {
+    var view = doc.defaultView;
+    if (view.getComputedStyle(root).position === "static") root.style.position = "relative";
+    var els = Array.prototype.slice.call(root.querySelectorAll("[data-dt-selectable]"));
+    var measures = els.map(function (el) {
+      if (DT.freeze.isFrozen(el)) return null;
+      var op = el.offsetParent || root;
+      var b = el.getBoundingClientRect(), ob = op.getBoundingClientRect();
+      return { el: el, type: DT.overlay.typeOf(el), rect: { left: b.left - ob.left, top: b.top - ob.top, width: b.width, height: b.height } };
+    });
+    measures.forEach(function (m) {
+      if (!m) return;
+      var s = DT.freeze.frozenStyleFor(m.rect, m.type);
+      Object.keys(s).forEach(function (k) { m.el.style[k] = s[k]; });
+      m.el.style.right = "auto"; m.el.style.bottom = "auto"; m.el.style.margin = "0";
+    });
   }
   function ctx(frame, el) { return { n: frame.n, block: frame.block, el: el, iframe: frame.iframe, root: frame.root, doc: frame.doc, surface: frame.surface }; }
 
@@ -189,5 +215,12 @@
     DT.edits.exportPng().then(function (r) { exportBtn.textContent = r.ok ? "Exportado ✓" : "Erro"; setTimeout(function () { exportBtn.textContent = "Exportar"; }, 1800); }).catch(function () { exportBtn.textContent = "Offline"; setTimeout(function () { exportBtn.textContent = "Exportar"; }, 1800); });
   });
 
-  window.__DT = { frames: function () { return frames; }, edits: function () { return DT.edits.list(); }, contract: function () { return contract; }, selection: function () { return DT.overlay.current(); }, hitTest: hitTest, goTo: goTo };
+  window.__DT = {
+    frames: function () { return frames; }, edits: function () { return DT.edits.list(); },
+    contract: function () { return contract; }, selection: function () { return DT.overlay.current(); },
+    hitTest: hitTest, goTo: goTo,
+    // hooks de teste (smoke e2e): seleção determinística sem simular ponteiro
+    _select: function (i, sel) { var f = frames[i]; if (!f || !f.doc) return false; var el = f.doc.querySelector(sel); if (!el) return false; DT.overlay.select(ctx(f, el)); return true; },
+    _selectType: function (i, type) { var f = frames[i]; if (!f || !f.doc) return false; var els = f.doc.querySelectorAll("[data-dt-selectable]"); for (var k = 0; k < els.length; k++) { if (DT.overlay.typeOf(els[k]) === type) { DT.overlay.select(ctx(f, els[k])); return true; } } return false; }
+  };
 })();
