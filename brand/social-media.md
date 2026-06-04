@@ -31,11 +31,14 @@ Spec visual completa de cada elemento recorrente. O `estilo.md` declara presenç
 
 ### Swipe-cue
 
-- texto: ARRASTE → (seta U+2192)
-- fonte: Montserrat 600, ~14px, tracking 0.16em, CAIXA ALTA
-- cor: branco, opacidade 0.8
+- texto: ARRASTE (caixa livre — autorado; sem `text-transform`)
+- fonte: Montserrat 300, tracking ~0.04em
+- seta: chevron **preenchido** renderizado como pseudo-elemento `::after` via `mask-image` (data-URI SVG). Nunca um `<svg>`/glifo no DOM — assim a seta não é conteúdo editável e nunca é deslocada ao editar o texto.
+- proporção: `height` da seta ≈ altura de letra do texto (`.74em`), respiro `gap: .4em` — tudo em em, escala com a fonte.
+- cor: herda do texto via `background-color: currentColor` + `mask` (default branco ~0.9 sobre fundo escuro)
 - aparece: só na capa (sinaliza continuidade de carrossel)
 - posição: definida pelo estilo (default rodapé-centro)
+- chevron canônico (mask SVG, viewBox `0 0 12 16`): `path d="M4 1L11 8L4 15L1 15L8 8L1 1Z"` (peso "encorpado", variante C, travado no preview 2026-06-04)
 
 ### Barra de progresso
 
@@ -46,7 +49,7 @@ Spec visual completa de cada elemento recorrente. O `estilo.md` declara presenç
 
 ### Tag de tópico
 
-- fonte: Montserrat 600, ~14px, tracking 0.16em, CAIXA ALTA
+- fonte: Montserrat 600, ~14px, tracking 0.16em (caixa livre — autorada; sem `text-transform`. Labels podem ser escritos em maiúsculas literais)
 - cor: branco
 - posição: definida pelo estilo (default topo-dir)
 - propósito: identifica a categoria do conteúdo (ex: BACK DAY, O TREINO, PRIMEIRO EXERCÍCIO)
@@ -54,7 +57,7 @@ Spec visual completa de cada elemento recorrente. O `estilo.md` declara presenç
 ### Logo
 
 - arquivo: `assets/logo.png`
-- altura padrão em posts: ~32px
+- tamanho padrão em posts: largura 100px, altura automática (`width: 100px; height: auto`) — fixo em todos os estilos
 - tratamento sobre fundos escuros: drop-shadow sutil para legibilidade (`filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6))`)
 - posição: definida pelo estilo (default topo-esq)
 
@@ -88,7 +91,8 @@ Orientação de tamanhos por tipo de bloco (complementa `brand/referencias-visua
 
 - Títulos de capa: Anton 120-180px (estilo declara o valor exato em `[tokens]`)
 - Subtítulos / chamadas / tags: Montserrat 300-700 (estilo declara o valor exato em `[tokens]`)
-- Chrome (tag de tópico, stamp): Montserrat 600 ~14px, tracking 0.16em (padrão — não re-declarar no estilo)
+- Chrome (tag de tópico, stamp): Montserrat 600 ~14px, tracking 0.16em (padrão — não re-declarar no estilo). Caixa definida pela copy (sem `text-transform`).
+- **Caixa:** Anton (display/títulos) sempre CAIXA ALTA; Montserrat (corpo, subtítulos, labels) caixa livre — a copy decide.
 
 ---
 

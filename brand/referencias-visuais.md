@@ -35,9 +35,9 @@ Wordmark "DINO" em estilo angular/itálico, com tratamento moderno e atlético.
 ## Tipografia
 
 **Display / Títulos:** **Anton** — sempre em **CAIXA ALTA**
-**Texto secundário / Subtítulos:** **Montserrat** — sempre em **CAIXA ALTA**
+**Texto secundário / Subtítulos / Corpo:** **Montserrat** — **caixa livre**, definida pela copy
 
-> **Regra absoluta:** todo texto em peças visuais (capa, slides, frames) é em **CAIXA ALTA**. Anton para títulos, Montserrat para subtítulos e apoio. Sem misturas com caixa baixa em layout.
+> **Regra de caixa (por fonte):** o que é **Anton** (títulos/display) vai sempre em **CAIXA ALTA**. O que é **Montserrat** (corpo, subtítulos, labels, swipe) tem **caixa livre** — sem `text-transform` forçado; a copy decide. Texto autorado em maiúsculas (ex.: "ARRASTE", "BACK DAY") aparece em maiúsculas porque está escrito assim, não por transformação.
 
 ---
 
@@ -72,7 +72,7 @@ Spec visual completa de cada elemento recorrente (swipe-cue, barra de progresso,
 
 - Cores saturadas, gradientes coloridos, neons (exceto chroma green funcional)
 - Tipografias decorativas, manuscritas ou caligráficas
-- Texto em caixa baixa em peças visuais
+- Títulos Anton em caixa baixa (Anton é sempre CAIXA ALTA)
 - Ícones genéricos de "fitness" (halteres cartoon, músculos ilustrados)
 - Stock photos
 - Estética de "academia de bairro" — a marca é de elite, não popular
