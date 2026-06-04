@@ -163,6 +163,12 @@ Accountability quieta — não culpa imposta de fora, mas a consciência interna
 - "Existe uma desconformidade silenciosa em quem sabe que pode mais e continua escolhendo o mesmo."
 - "A pergunta que incomoda não é 'por que não estou evoluindo?' É 'o que tenho evitado fazer?'"
 
+### M10. Reframe de diagnóstico
+Nomeia o **nome errado** que o leitor deu ao próprio problema — e o corrige. Não nega a dor; recategoriza a causa, tirando o leitor do beco onde ele se acha defeituoso. Conecta direto à escada de dores ([`publico-alvo.md`](publico-alvo.md)): o pensamento não-dito quase sempre carrega um diagnóstico errado embutido.
+- "Você não está travado. Está disperso."
+- "Não foi disciplina que faltou. Foi direção."
+- "O espelho de hoje não mede o trabalho de meses. O instrumento é que está errado."
+
 ---
 
 ## 5. Vocabulário
