@@ -80,14 +80,17 @@ window.DT = window.DT || {};
     var L = r.left + b.left * s, T = r.top + b.top * s, Wd = b.width * s, Hd = b.height * s;
     if (!box) {
       box = document.createElement("div"); box.className = "dt-selbox";
-      // Selbox arrastável na camada de topo: permite mover/editar mesmo quando o
-      // elemento está fora do frame do slide (clipado pelo wrap) — antes o clique
-      // caía no stage e rolava o carrossel.
-      box.style.pointerEvents = "auto"; box.style.cursor = "move";
+      box.style.cursor = "move";
       box.addEventListener("pointerdown", function (e) { if (sel) { e.preventDefault(); beginMove(sel.surface, e); } });
       box.addEventListener("dblclick", function (e) { if (sel && typeOf(sel.el) === "text") { e.preventDefault(); editText(sel.el, sel.surface); } });
       layer.appendChild(box);
     }
+    // Fundo selecionado: a selbox cobriria o slide inteiro e engoliria todo clique.
+    // pointer-events:none deixa o clique atravessar pro hit-test e trocar a seleção.
+    // Mover o fundo segue possível clicando numa área vazia (cai no bg-drop).
+    var t = typeOf(sel.el);
+    var isBg = t === "bg-image" || t === "bg-fill" || sel.el.hasAttribute("data-bg-drop");
+    box.style.pointerEvents = isBg ? "none" : "auto";
     box.style.left = L + "px"; box.style.top = T + "px"; box.style.width = Wd + "px"; box.style.height = Hd + "px";
     if (!handles.length) {
       HPOS.forEach(function (p) { var h = document.createElement("div"); h.className = "dt-handle"; h.dataset.pos = p[0]; h.addEventListener("pointerdown", onHandleDown); layer.appendChild(h); handles.push(h); });
