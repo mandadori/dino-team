@@ -2,6 +2,7 @@
 
 > Preenchido em 2026-05-14 via `/brand-discovery`.
 > Reestruturado em 2026-05-29 — os pilares passam a **encodar função no funil** (Atrair / Nutrir / Converter), a partir do estudo do concorrente STNDRD ([`dados/mercado/concorrentes/stndrd.md`](../dados/mercado/concorrentes/stndrd.md)). De 5 pilares para 4 (Educacional + Descritivo fundidos em "Método"). Todo conteúdo se conecta a pelo menos um pilar.
+> Ligado em 2026-06-04 — cada pilar aponta as **dores** que serve (escada em [`publico-alvo.md`](publico-alvo.md)) e o **registro** de formato ([`tom-de-voz.md`](tom-de-voz.md): R1–R3).
 
 ## Como ler estes pilares
 
@@ -37,6 +38,8 @@ Filosofia conectada à prática, **nunca motivação vazia**. Trabalha com duali
 **Função no funil:**
 É o **motor de alcance** — a peça feita pra ser repostada como manifesto. Sem CTA: o trabalho aqui é trazer gente nova, não vender.
 
+**Dores que serve · Registro:** cansaço de recomeçar, comparação/atraso, vergonha silenciosa, medo do teto → escada de dores em [`publico-alvo.md`](publico-alvo.md). Registro **R1/R2** (capa-lâmina e editorial).
+
 **Exemplos de subtemas:**
 - Dualidades ("dá pra ter medo e treinar do mesmo jeito": medo/ação, dúvida/disciplina)
 - O que o resultado esconde — o tempo invisível antes dele
@@ -58,6 +61,8 @@ Vai **além do superficial**. Clareza aplicável baseada em método validado no 
 
 **Função no funil:**
 **Nutrir com ponte de conversão.** Framework rotulado por fase (Problema → Verdade → Ajuste → Passo final) entrega valor real e, quando apropriado, fecha com CTA pra consultoria.
+
+**Dores que serve · Registro:** dispersão, corpo que não vem, espelho que mente → escada em [`publico-alvo.md`](publico-alvo.md). Registro **R3** (educativo professoral-acessível).
 
 **Exemplos de subtemas:**
 - Divisão de treino para hipertrofia; periodização e progressão
@@ -81,6 +86,8 @@ Prova, não teoria. Mas tratada como **evidência e princípio**, não storytell
 **Função no funil:**
 **Nutrir** — constrói credibilidade que sustenta a conversão. Sem CTA.
 
+**Dores que serve · Registro:** medo do teto, comparação/atraso (Ramon como evidência de que o teto percebido não é o real) → escada em [`publico-alvo.md`](publico-alvo.md). Registro **R2/R3**.
+
 **Exemplos de subtemas:**
 - Bastidores de treino/preparação como demonstração de princípio
 - Análises técnicas do Ramon sobre fisiculturismo
@@ -99,6 +106,8 @@ Mesma lógica usada pelo Ramon, agora aplicada e validada em alunos comuns. **Re
 
 **Função no funil:**
 **Converter.** CTA explícito pra consultoria/comunidade.
+
+**Dores que serve · Registro:** corpo que não vem, tempo perdido, solidão (a comunidade responde) → escada em [`publico-alvo.md`](publico-alvo.md). Registro **R2** com CTA.
 
 **Exemplos de subtemas:**
 - Antes e depois de alunos; depoimentos em texto/vídeo
