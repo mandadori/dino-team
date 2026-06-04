@@ -26,13 +26,14 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 9 | pesquisador (P9, condic.) | briefing ← 6 | 8 | pesquisa-bruta |
 | 10 | ⚙ copy inline + ⏸ | pesquisa ← 9, contexto-copy | 9 | copy.md |
 | 11 | ⚙ design inline + ⏸ | copy ← 10, estilo.md | 10 | slide-N.html |
-| 11m | gerenciador-materiais (condic.) | banco, copy, estilo | 11 | suggestions.json |
+| 11m | arquivista (condic.) | banco, copy, estilo | 11 | suggestions.json |
 | 11.5 | ⚙ loop aprendizado (condic.) + ⏸ | edits.json ← 11 | 11 | estilo.md/slide.html |
 | 12 | ⚙ export-png.js | slide-N.html ← 11 | 11.5 | PNGs |
 | 13 | revisor-brand (gate) | copy.md + pasta | 12 | APROVADO/REPROVADO |
 | 14 | ⚙ entregar | tudo ← 13 | 13 | entrega |
 | 14.5 | ⚙ adaptar stories (condic., carrossel) + ⏸ | copy, estilo | 14 | frames |
 | 15 | ⚙ salvar/descartar _rascunho/ (condic.) + ⏸ | — | 14.5 | slug permanente ou remoção |
+| 15.5 | analista-performance — registrar ângulo | ângulo/pilar/slug ← 6 | 13 | entrada em angulos-queimados |
 | 16 | ⚙ publicação (opcional, gated) | pasta ← 13 | 15 | publicado/pendente |
 
 ## Sintaxe
@@ -56,7 +57,7 @@ Se `revisor-brand` devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e orie
 
 ## Princípio central
 
-**A skill executa produção inline.** Não há subagentes para briefing, copy ou design — a skill lê os arquivos necessários diretamente e produz. Agentes externos (pesquisador-mercado, treinador, revisor-brand, gerenciador-materiais) são acionados quando têm função geral no sistema.
+**A skill executa produção inline.** Não há subagentes para briefing, copy ou design — a skill lê os arquivos necessários diretamente e produz. Agentes externos (pesquisador-mercado, treinador, revisor-brand, arquivista) são acionados quando têm função geral no sistema.
 
 **Contexto de leitura por passo:**
 - **Briefing (Passo 6):** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `dados/ramon/contexto.md` + `dados/performance/angulos-queimados.md` + `dados/mercado/tendencias/<mês>.md` + `estilo.md` do estilo escolhido.
@@ -327,7 +328,7 @@ Saída: `design/slide-1.html`, `design/slide-2.html`, ... (um por bloco).
 
 #### Pré-preenchimento de imagens (condicional)
 
-Se o usuário tiver apontado um banco de imagens (variável de fluxo `banco`), acione `gerenciador-materiais`:
+Se o usuário tiver apontado um banco de imagens (variável de fluxo `banco`), acione `arquivista`:
 
 ```
 Tarefa: indexar (se houver imagens novas) e depois selecionar.
@@ -541,6 +542,20 @@ Quer salvar como estilo permanente?
 - **Salvar:** valide kebab-case (`^[a-z0-9-]+$`). Se já existir `templates/social-media/<formato>/estilos/<slug>/`, peça outro slug. Então `mv templates/social-media/<formato>/estilos/_rascunho/ templates/social-media/<formato>/estilos/<slug>/`. O estilo é salvo somente em `templates/social-media/carrossel/estilos/<slug>/` — nenhum estilo é criado em `templates/social-media/stories/`.
 - **Descartar:** `rm -rf templates/social-media/<formato>/estilos/_rascunho/`.
 
+### 15.5. Registrar ângulo queimado
+
+Após o post ser **APROVADO** no gate de marca (Passo 13) e entregue (Passo 14), acione `analista-performance` para gravar o ângulo usado — assim os próximos posts não o repetem. **Não depende de publicação via API; o post finalizado é o gatilho.** Se o post foi REPROVADO sem recuperação ou descartado, **não** registre.
+
+Acione `analista-performance`:
+```
+Tarefa: registrar ângulo queimado.
+Ângulo central: <ângulo definido no Passo 6>
+Pilar: <pilar do Passo 6>
+Slug: <slug do Passo 6>
+Data da publicação: <data de hoje>
+```
+O `analista-performance` define a janela de descanso por bom senso editorial (ângulo específico descansa mais; amplo, menos) e grava a entrada em `dados/performance/angulos-queimados.md`. Se o mesmo ângulo já existir, ele atualiza a data em vez de duplicar.
+
 ### 16. Publicação (opcional, gated por política)
 
 Carregar `dados/politicas/publicacao.yaml`. Avaliar as regras com as variáveis disponíveis:
@@ -575,7 +590,7 @@ Para publicar, rode manualmente:
 
 #### Marcação de uso de materiais (condicional)
 
-Se houve pré-preenchimento via banco, marque as imagens efetivamente presentes no preview final acionando `gerenciador-materiais`:
+Se houve pré-preenchimento via banco, marque as imagens efetivamente presentes no preview final acionando `arquivista`:
 
 ```
 Tarefa: marcar.
