@@ -45,13 +45,14 @@ A regra que vale em **qualquer tamanho de texto** — frase de capa ou corpo edi
 
 1. **Enuncie princípio, não narre cena.** Verdade universal em presente — nunca o relato de um acontecimento.
    - ❌ "Anos treinando, tudo certo, e o espelho não responde."
-   - ✅ "Anos de treino exaustivo não garantem resultado no espelho."
+   - ✅ "Anos de treino exaustivo não garantem o resultado."
 2. **Sem vocabulário cotidiano ou dramatizado.** Nada de "travei", "corrói", "trava". A autoridade é calma; não dramatiza a emoção.
    - ❌ "Aí vem a pergunta que corrói: será que travei?"
    - ✅ "A pergunta que você deve se fazer."
 3. **Substantivo de princípio acima do objeto literal.** Prefira o nome abstrato ao prop concreto; quando o concreto for necessário, use o do léxico do público.
    - ❌ "longe de qualquer câmera" → ✅ "longe de qualquer reconhecimento"
    - ❌ "a parte que ninguém filma" → ✅ "a parte que ninguém posta"
+   - ❌ "o espelho não mente" → ✅ "a medida é que está errada"
 4. **Fique no léxico da marca.** "estagnado" (não "travou"); processo, direção, caminho, identidade.
    - ❌ "Não travou. Você só entrou na parte do processo que ninguém filma."
    - ✅ "Você não está estagnado. Essa é a parte do processo que ninguém posta."
@@ -73,7 +74,7 @@ O "registro de mestre" garante a *voz*; o registro por formato garante a *forma*
 - **R1 · Capa / lâmina** — meta **~12 palavras** (meta, não lei: estoura só quando a ideia exige), **um** pivô, fecha no **concreto**, nunca no abstrato.
   - ❌ "…POR DEPENDER DE VONTADE PARA EXECUTAR O QUE DEVERIA SER DECISÃO."
   - ✅ "DISCIPLINA NÃO É VONTADE. É O QUE VOCÊ FAZ SEM ELA."
-  - ✅ "VOCÊ NÃO QUEBROU. PAROU DE COMEÇAR DE NOVO."
+  - ✅ "RECOMEÇAR NÃO É FALHAR. DESISTIR DE RECOMEÇAR É."
 - **R2 · Editorial longo** — parágrafo que respira, **uma virada por bloco**. Sem estatística de palanque, sem repetir o motivo. O ritmo é frase curta declarativa seguida de frase que vira; nunca empilha três ideias num fôlego só.
 - **R3 · Educativo** — professoral-acessível, **não** filosófico-denso. Conceito nomeado (ex.: "Crie mais tensão") + porquê em linguagem chã + payoff destacado. O hook pode abrir *curiosity-gap* ("os bons decidem UMA coisa antes de treinar → arrasta"). O leitor sai sentindo que **aprendeu**, não que foi pregado.
 
@@ -170,7 +171,7 @@ Accountability quieta — não culpa imposta de fora, mas a consciência interna
 Nomeia o **nome errado** que o leitor deu ao próprio problema — e o corrige. Não nega a dor; recategoriza a causa, tirando o leitor do beco onde ele se acha defeituoso. Conecta direto à escada de dores ([`publico-alvo.md`](publico-alvo.md)): o pensamento não-dito quase sempre carrega um diagnóstico errado embutido.
 - "Você não está travado. Está disperso."
 - "Não foi disciplina que faltou. Foi direção."
-- "O espelho de hoje não mede o trabalho de meses. O instrumento é que está errado."
+- "Você não estagnou. Está medindo errado."
 
 ---
 

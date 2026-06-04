@@ -51,7 +51,7 @@ O eixo operacional do público. Cada dor é lida em cinco colunas: a **dor de en
 | **Tempo perdido** | Aniversário, vira o ano: "anos de treino e…" | *"Joguei tempo fora e não tenho o que mostrar."* | Corpo → identidade | M8 + M3 |
 | **Comparação / atraso** | Vê no feed alguém que começou junto, mais evoluído | *"Todo mundo passou na frente. Já era pra eu estar mais longe."* | Identidade | M7 + borda "comparação" |
 | **Solidão no processo** | Treina enquanto os amigos saem; ninguém em volta leva a sério | *"Carrego isso sozinho. Ninguém entende."* | Identidade (comunidade) | M7 + acolhimento |
-| **Espelho que mente** | Tira foto de frente após semanas e se vê igual | *"Faço tudo e não saio do lugar — deve ser eu."* | Corpo → identidade | M10 + M3 |
+| **Progresso que não se vê** | Depois de semanas, se olha e sente que está igual | *"Faço tudo e não saio do lugar — deve ser eu."* | Corpo → identidade | M10 + M3 |
 | **Dispersão** | Abre o 5º app/coach/protocolo atrás do "certo" | *"Testo tudo e não sei mais em quem confiar."* | Corpo (direção) → identidade | M10 + M2 |
 | **Cansaço de recomeçar** | Domingo à noite decidindo (de novo) que segunda começa | *"Já prometi tanto que nem eu acredito mais."* | Identidade | M4 + M1 |
 | **Medo do teto** | Estagnou meses, cogita desistir | *"E se este for meu limite? E se eu nunca virar quem queria?"* | Identidade | M8 + M5 |

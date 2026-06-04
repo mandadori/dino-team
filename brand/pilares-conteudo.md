@@ -62,7 +62,7 @@ Vai **além do superficial**. Clareza aplicável baseada em método validado no 
 **Função no funil:**
 **Nutrir com ponte de conversão.** Framework rotulado por fase (Problema → Verdade → Ajuste → Passo final) entrega valor real e, quando apropriado, fecha com CTA pra consultoria.
 
-**Dores que serve · Registro:** dispersão, corpo que não vem, espelho que mente → escada em [`publico-alvo.md`](publico-alvo.md). Registro **R3** (educativo professoral-acessível).
+**Dores que serve · Registro:** dispersão, corpo que não vem, progresso que não se vê → escada em [`publico-alvo.md`](publico-alvo.md). Registro **R3** (educativo professoral-acessível).
 
 **Exemplos de subtemas:**
 - Divisão de treino para hipertrofia; periodização e progressão
