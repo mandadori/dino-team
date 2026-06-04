@@ -32,18 +32,32 @@ O que o público busca na superfície é **físico** e **reconhecimento**. Por b
 - **Autorrespeito** — a confiança de quem cumpre o que decide (núcleo)
 - Um **caminho validado**, prático e assertivo — parar de testar coisas sem resultado
 
-**O que sente:**
-- **Frustração** pela falta de progresso apesar do esforço
-- **Dificuldade de manter consistência** — começa e para
-- **Falta de conhecimento técnico** para decidir o que fazer
-- **Sensação de estar sozinho** no processo, sem ambiente de apoio
-- **Vontade de pertencer** a um grupo com o mesmo objetivo
+**O que sente / teme:** ver a **Escada de dores** abaixo — o inventário plano de sentimentos foi substituído por um mapa acionável (dor → momento → pensamento → prêmio → mecanismo).
 
-**O que teme:**
-- Continuar **estagnado** apesar de treinar
-- **Perder mais tempo** com métodos genéricos
-- **Recair em desculpas** e desistir de novo
-- **Não virar** a pessoa que sempre quis ser — quebrar a palavra consigo mesmo
+---
+
+## Escada de dores
+
+O eixo operacional do público. Cada dor é lida em cinco colunas: a **dor de entrada** (concreta, onde a identificação acontece), o **momento agudo** (quando aperta), o **pensamento não-dito** (o monólogo interno — matéria-prima direta de hook), o **prêmio que conecta** (corpo / identidade — ver "Os dois prêmios") e o **mecanismo de tom** (M1–M10 em [tom-de-voz.md](tom-de-voz.md)).
+
+> **Por que pensamento e não busca:** capturamos o que o lead *pensa* quando a dor aperta, não o que ele Googla. A marca ganha por **identificação**, não por SEO. A capa que descreve o pensamento dele para o scroll.
+
+**Porta principal** (onde mora a maior identificação): corpo · tempo · comparação · solidão. As demais amplificam ou derivam dela.
+
+| Dor de entrada | Momento agudo | Pensamento não-dito (→ hook) | Prêmio | Mec. |
+|---|---|---|---|---|
+| **Corpo que não vem** | Prova uma roupa, se vê marcado numa foto, o verão chegando | *"Não importa o que eu faça, meu corpo não é o que eu queria."* | Corpo | M2 + M8 |
+| **Tempo perdido** | Aniversário, vira o ano: "anos de treino e…" | *"Joguei tempo fora e não tenho o que mostrar."* | Corpo → identidade | M8 + M3 |
+| **Comparação / atraso** | Vê no feed alguém que começou junto, mais evoluído | *"Todo mundo passou na frente. Já era pra eu estar mais longe."* | Identidade | M7 + borda "comparação" |
+| **Solidão no processo** | Treina enquanto os amigos saem; ninguém em volta leva a sério | *"Carrego isso sozinho. Ninguém entende."* | Identidade (comunidade) | M7 + acolhimento |
+| **Espelho que mente** | Tira foto de frente após semanas e se vê igual | *"Faço tudo e não saio do lugar — deve ser eu."* | Corpo → identidade | M10 + M3 |
+| **Dispersão** | Abre o 5º app/coach/protocolo atrás do "certo" | *"Testo tudo e não sei mais em quem confiar."* | Corpo (direção) → identidade | M10 + M2 |
+| **Cansaço de recomeçar** | Domingo à noite decidindo (de novo) que segunda começa | *"Já prometi tanto que nem eu acredito mais."* | Identidade | M4 + M1 |
+| **Medo do teto** | Estagnou meses, cogita desistir | *"E se este for meu limite? E se eu nunca virar quem queria?"* | Identidade | M8 + M5 |
+| **Vergonha do corpo em público** | Praia, piscina, foto — evita tirar a camisa | *"Evito situações pra não me expor assim."* | Corpo → autorrespeito | M1 + acolhimento |
+| **Vergonha silenciosa** *(núcleo profundo)* | Deitado à noite, sabendo que não fez o que devia | *"Eu sei que posso mais e tô escolhendo menos."* | Identidade | M9 *(parcimônia)* |
+
+> **Hierarquia:** as quatro primeiras são a **porta** (mais identificação, ligam direto ao branding). A **vergonha silenciosa** é o **núcleo profundo** — a dor que, resolvida, afrouxa as outras; usar com parcimônia (M9), nunca como dedo apontado.
 
 ---
 
