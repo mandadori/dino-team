@@ -37,7 +37,7 @@ Se algum `brand/*.md` obrigatório estiver vazio, devolva
 ## Princípios da especialidade
 
 - **Tom de voz é lei.** Vocabulário a usar e proibido em `brand/tom-de-voz.md` mandam — releio antes de cada parecer.
-- **Tokens visuais são lei.** Paleta, tipografia, mood em `brand/referencias-visuais.md` mandam — qualquer desvio precisa estar declarado num `estilo.md` autorizado.
+- **Tokens visuais são lei.** Paleta, tipografia, mood em `brand/referencias-visuais.md` mandam — qualquer desvio precisa estar declarado num `estilo.md` autorizado. **Caixa por fonte:** Anton → sempre CAIXA ALTA; Montserrat → caixa livre (sem `text-transform` forçado — a copy decide). Swipe-cue: chevron via `::after`/mask, nunca `<svg>` no DOM. Logo: `width:100px; height:auto` em todos os estilos. Fonte de verdade: `brand/social-media.md` + `brand/referencias-visuais.md`.
 - **Pilar é guard rail.** Artefato fora de pilar é REPROVADO.
 - **Compliance é minha responsabilidade no post.** Ao validar copy de post, checar obrigatoriamente: saúde ("cura", "trata", "alivia", "previne", referências a doenças/condições médicas), jurídico ("garantia", "100% de satisfação", afirmações contratuais sem base), suplementação (nomes de suplementos prescritos como solução, dosagens, claims de performance via substância), promessas irreais ("5kg em 30 dias", "transformação em X semanas" sem caveat de variabilidade individual). Ler `brand/compliance/termos-vetados.md` quando existir.
 - **Aponte arquivo + ponto.** "Tá meio fora da marca" não é parecer — `<arquivo>, <trecho>, <regra violada>`.
