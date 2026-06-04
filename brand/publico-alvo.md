@@ -2,6 +2,7 @@
 
 > Preenchido em 2026-05-14 via `/brand-discovery`.
 > Reestruturado em 2026-05-29 — driver emocional profundo (autorrespeito/identidade) e estratificação por temperatura (frio/morno/quente), alinhados ao funil dos [pilares](pilares-conteudo.md) e ao [tom de voz](tom-de-voz.md).
+> Reescrito em 2026-06-04 — **escada de dores** (dor → momento agudo → pensamento não-dito → prêmio → mecanismo) substitui as listas estáticas; modelo dos **dois prêmios** (corpo é prêmio real, não só prova). Ver [spec](../docs/specs/2026-06-04-mapa-dores-e-registro-por-formato-design.md).
 
 ## Os dois prêmios
 
