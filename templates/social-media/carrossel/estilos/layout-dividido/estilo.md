@@ -103,3 +103,4 @@ Slide dividido em duas metades horizontais exatas (50/50 — 675px cada), cada u
 - Texto sempre branco (#FFFFFF), Anton sem text-shadow. Topo e base mantêm o mesmo font-size no mesmo slide.
 - Drop zones: `data-bg-drop="topo"` e `data-bg-drop="base"` — o wrapper aceita drag-and-drop e reposicionamento.
 - Bloco cta: metade inferior não tem drop zone (preto sólido).
+- **Caixa:** Anton (`.half-text`) sempre CAIXA ALTA. Montserrat (stamp, cta-eyebrow) caixa livre — a copy decide. Sem `text-transform` nos slots Montserrat.
