@@ -7,7 +7,7 @@ versao: 1
 
 # Ângulos queimados
 
-Ângulos editoriais usados recentemente que precisam de descanso antes de voltar. Lido por `briefing-writer` antes de aprovar um novo ângulo; escrito por `analista-performance` após uma publicação aprovada.
+Ângulos editoriais usados recentemente que precisam de descanso antes de voltar. Lido pelas skills `/novo-post`, `/lote-posts` e `/planejar-pauta-semanal` ao escolher o ângulo (briefing inline); escrito por `analista-performance` após o post ser finalizado — aprovado no gate de marca e entregue.
 
 ## Estrutura
 
@@ -22,7 +22,7 @@ Cada entrada:
 
 ## Entradas ativas
 
-_(Sem entradas em v1. Cresce orgânicamente após cada publicação aprovada.)_
+_(Sem entradas em v1. Cresce orgânicamente após cada post finalizado.)_
 
 ## Entradas expiradas (já podem voltar)
 
