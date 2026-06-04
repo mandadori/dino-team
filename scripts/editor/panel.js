@@ -74,15 +74,16 @@ window.DT = window.DT || {};
     var xy = el("div", "pnl-row"); xy.appendChild(field("X", "p-x", g.x, "number")); xy.appendChild(field("Y", "p-y", g.y, "number")); pos.appendChild(xy);
     root.appendChild(pos);
 
-    // ---- Dimensões ----
-    var dim = section("Dimensões");
-    var wh = el("div", "pnl-row"); wh.appendChild(field("L", "p-w", g.w, "number")); wh.appendChild(field("A", "p-h", g.h, "number"));
-    var lock = el("button", "pnl-lock" + (DT.overlay.getAspect() ? " on" : ""), DT.overlay.getAspect() ? ICON.lockOn : ICON.lockOff);
-    lock.title = "Travar proporção"; lock.addEventListener("click", function () { var on = !DT.overlay.getAspect(); DT.overlay.setAspect(on); lock.classList.toggle("on", on); lock.innerHTML = on ? ICON.lockOn : ICON.lockOff; });
-    wh.appendChild(lock);
-    dim.appendChild(wh);
-    if (type === "text") dim.appendChild(label("Em texto, L/A escalam o tamanho da fonte."));
-    root.appendChild(dim);
+    // ---- Dimensões (só imagem; texto se dimensiona pelo "Tam" + alças) ----
+    if (type === "image") {
+      var dim = section("Dimensões");
+      var wh = el("div", "pnl-row"); wh.appendChild(field("L", "p-w", g.w, "number")); wh.appendChild(field("A", "p-h", g.h, "number"));
+      var lock = el("button", "pnl-lock" + (DT.overlay.getAspect() ? " on" : ""), DT.overlay.getAspect() ? ICON.lockOn : ICON.lockOff);
+      lock.title = "Travar proporção"; lock.addEventListener("click", function () { var on = !DT.overlay.getAspect(); DT.overlay.setAspect(on); lock.classList.toggle("on", on); lock.innerHTML = on ? ICON.lockOn : ICON.lockOff; });
+      wh.appendChild(lock);
+      dim.appendChild(wh);
+      root.appendChild(dim);
+    }
 
     buildOpacity(cs);
 
