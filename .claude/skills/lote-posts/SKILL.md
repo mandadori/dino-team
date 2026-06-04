@@ -21,6 +21,7 @@ Gerar N posts em um mesmo formato, com variação de estilos e temas dentro do l
 | 6 | ⏸ usuário | copies ← 5 | 5 | ok/ajuste em lote |
 | 7 | ⚙ design inline (×posts) | copy ← 5 | 6 | assets por post |
 | 8 | export-png.js + revisor-brand (×posts) | slide-N.html ← 7 | 7 | PNGs + validação por post |
+| 8.5 | analista-performance — registrar ângulo (×posts) | ângulo ← 5 | 8 | entradas em angulos-queimados |
 | 9 | ⚙ relatório do lote | — | 8 | relatório |
 | 10 | ⚙ política publish (×posts) | pasta ← 8 | 8 | publicado/pendente |
 
@@ -282,6 +283,16 @@ NÃO re-julgar identidade visual.
 - **REPROVADO** → registra e marca o post como pulado (refazer é responsabilidade do `/novo-post`).
 
 Erros técnicos (`EXPORT_FALHOU`, `VALIDACAO_TECNICA_FALHOU`) → registre e siga ao próximo.
+
+**Registrar ângulo queimado (por post aprovado):** para cada post que passou no gate, acione `analista-performance`:
+```
+Tarefa: registrar ângulo queimado.
+Ângulo central: <ângulo central do post, fixado no Passo 5>
+Pilar: <pilar do post>
+Slug: <slug do post>
+Data da publicação: <data de hoje>
+```
+Posts pulados (erro de export) ou reprovados no gate **não** registram ângulo. O `analista-performance` atualiza a data se o ângulo já existir.
 
 ### 9. Reportar entrega do lote
 
