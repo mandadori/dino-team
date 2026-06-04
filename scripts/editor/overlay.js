@@ -214,6 +214,7 @@ window.DT = window.DT || {};
   }
 
   // ---------- texto inline ----------
+  var textTB = null;             // mini-barra flutuante de formatação de trecho
   function editText(el, surface) {
     if (typeOf(el) !== "text") return;
     hist().begin();
@@ -221,12 +222,65 @@ window.DT = window.DT || {};
     var before = el.innerHTML;
     el.setAttribute("contenteditable", "true"); el.focus();
     try { var rng = el.ownerDocument.createRange(); rng.selectNodeContents(el); var selo = el.ownerDocument.defaultView.getSelection(); selo.removeAllRanges(); selo.addRange(rng); } catch (_) {}
+    var doc = el.ownerDocument;
+    function onSelChange() { updateTextToolbar(el); }
+    doc.addEventListener("selectionchange", onSelChange);
     function done() {
-      el.removeAttribute("contenteditable"); el.removeEventListener("blur", done); surface.style.pointerEvents = "";
+      el.removeAttribute("contenteditable"); el.removeEventListener("blur", done);
+      doc.removeEventListener("selectionchange", onSelChange); hideTextToolbar();
+      surface.style.pointerEvents = "";
       if (el.innerHTML !== before) DT.edits.record(sel.n, sel.block, slotOf(el), "text", textOf(before), el.textContent);
       drawSelection();
     }
     el.addEventListener("blur", done);
+  }
+
+  // mostra/posiciona a toolbar quando há trecho selecionado dentro do elemento em edição
+  function updateTextToolbar(el) {
+    var doc = el.ownerDocument, gsel = doc.defaultView.getSelection();
+    if (!gsel || gsel.rangeCount === 0 || gsel.isCollapsed) { hideTextToolbar(); return; }
+    var range = gsel.getRangeAt(0);
+    if (!el.contains(range.commonAncestorContainer)) { hideTextToolbar(); return; }
+    if (!textTB) textTB = buildTextToolbar(el);
+    textTB.__el = el;
+    var fr = el.ownerDocument.defaultView.frameElement.getBoundingClientRect(), s = fr.width / W;
+    var rb = range.getBoundingClientRect();
+    textTB.style.display = "flex";
+    textTB.style.left = (fr.left + (rb.left + rb.width / 2) * s) + "px";
+    textTB.style.top = (fr.top + rb.top * s - 44) + "px";
+  }
+  function hideTextToolbar() { if (textTB) textTB.style.display = "none"; }
+
+  // aplica um estilo ao trecho selecionado via DT.spans, mantendo a seleção
+  function applyToSelection(styleObj) {
+    var el = textTB && textTB.__el; if (!el) return;
+    var doc = el.ownerDocument, gsel = doc.defaultView.getSelection();
+    if (!gsel || gsel.rangeCount === 0 || gsel.isCollapsed) return;
+    var span = DT.spans.applyStyleToRange(gsel.getRangeAt(0), styleObj);
+    DT.spans.mergeSpans(el);
+    if (span) { var r = doc.createRange(); r.selectNodeContents(span); gsel.removeAllRanges(); gsel.addRange(r); }
+    updateTextToolbar(el);
+  }
+
+  function buildTextToolbar(el) {
+    var tb = document.createElement("div"); tb.className = "dt-text-tb"; tb.style.display = "none";
+    function btn(label, on) { var b = document.createElement("button"); b.textContent = label; b.addEventListener("mousedown", function (e) { e.preventDefault(); }); b.addEventListener("click", function (e) { e.preventDefault(); on(); }); tb.appendChild(b); return b; }
+    btn("B", function () { applyToSelection({ fontWeight: "700" }); }).style.fontWeight = "700";
+    btn("Aa", function () { applyToSelection({ fontWeight: "400" }); });
+    [["#ffffff", "Branco"], ["#000000", "Preto"], ["#7f7f7f", "Cinza"]].forEach(function (c) {
+      var b = btn("", function () { applyToSelection({ color: c[0] }); }); b.title = c[1];
+      b.className = "dot"; b.style.background = c[0];
+    });
+    btn("A-", function () { stepFontSize(-4); });
+    btn("A+", function () { stepFontSize(4); });
+    layer.appendChild(tb);
+    return tb;
+  }
+  // ajusta o font-size do trecho relativo ao tamanho computado do elemento em edição
+  function stepFontSize(delta) {
+    var el = textTB && textTB.__el; if (!el) return;
+    var base = parseFloat(el.ownerDocument.defaultView.getComputedStyle(el).fontSize) || 40;
+    applyToSelection({ fontSize: Math.max(8, Math.round(base + delta)) + "px" });
   }
   function textOf(html) { return html.replace(/<br\s*\/?>/gi, " ").replace(/<[^>]+>/g, "").trim(); }
 
