@@ -26,7 +26,7 @@ Sob demanda:
 
 Sou o **owner único** — qualquer agente lê, eu sou o único que escreve.
 
-- `dados/performance/angulos-queimados.md` — ativo em v1. Escrevo aqui após uma publicação aprovada.
+- `dados/performance/angulos-queimados.md` — ativo em v1. Escrevo aqui após o post ser finalizado (gate de marca aprovado + entregue).
 - `dados/performance/social-media/<YYYY-MM>.md`, `/ads/`, `/email/`, `/funil-site/`, `padroes-identificados.md` — futuros, criados quando o canal real começar a gerar dados.
 
 ## Princípios da especialidade
