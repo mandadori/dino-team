@@ -3,15 +3,18 @@
 > Preenchido em 2026-05-14 via `/brand-discovery`.
 > Reestruturado em 2026-05-29 — driver emocional profundo (autorrespeito/identidade) e estratificação por temperatura (frio/morno/quente), alinhados ao funil dos [pilares](pilares-conteudo.md) e ao [tom de voz](tom-de-voz.md).
 
-## Driver emocional profundo
+## Os dois prêmios
 
-O que o público busca na superfície é **físico** e **reconhecimento**. Mas o prêmio real, o que de fato move, é **autorrespeito / identidade**: tornar-se a pessoa que decide e cumpre.
+O que o público busca na superfície é **físico** e **reconhecimento**. Por baixo, o processo entrega **dois prêmios — ambos reais**:
 
-- **Estética** é a *prova visível* — o que aparece.
+1. **Transformação física** — o corpo. É o que a consultoria entrega e a razão de ela existir. Não é "só prova": é metade do prêmio. A copy **honra o desejo pelo corpo** sem tratá-lo como raso.
+2. **Autorrespeito / identidade** — *consequência* do processo: tornar-se a pessoa que decide e cumpre. É o que fica e o que torna o corpo **sustentável**.
+
 - **Status / reconhecimento social** é a *consequência* — não o objetivo.
-- **Autorrespeito** é o *núcleo* — virar quem você decidiu ser.
 
-**Implicação pra copy:** a mensagem orienta **para dentro** — "mude por si mesmo, você não precisa provar nada a ninguém". O reconhecimento chega como resultado, nunca como fim declarado. (Ver regra 13 do [tom de voz](tom-de-voz.md).)
+**A culpa que ele carrega:** antes de buscar a marca, o público chega carregando **culpa** — esforço sem resultado, dias perdidos, promessas quebradas consigo mesmo. O medo que ele não verbaliza não é "estou fora de forma", mas **"eu sei que poderia ser mais e estou escolhendo não ser"**.
+
+**Implicação pra copy:** a copy **entra pela dor de entrada e eleva aos dois prêmios** — nunca abandona o corpo para falar só de identidade. Orienta **para dentro** ("mude por si mesmo, você não precisa provar nada a ninguém") e, antes de cobrar, **devolve o autorrespeito**: a marca acolhe em vez de gritar — não cobra mais esforço, oferece direção. O reconhecimento chega como resultado, nunca como fim declarado. (Ver "os dois produtos do caminho" e M8/M9 no [tom de voz](tom-de-voz.md).)
 
 ---
 
@@ -24,7 +27,7 @@ O que o público busca na superfície é **físico** e **reconhecimento**. Mas o
 - Pessoas que **já treinam** mas não estão satisfeitas com o resultado
 
 **O que busca (da superfície ao núcleo):**
-- Um **físico mais estético** (prova visível)
+- Um **físico mais estético**
 - **Respeito e reconhecimento** (consequência social)
 - **Autorrespeito** — a confiança de quem cumpre o que decide (núcleo)
 - Um **caminho validado**, prático e assertivo — parar de testar coisas sem resultado
