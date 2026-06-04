@@ -63,7 +63,7 @@ Treino completo do Ramon — exercício por exercício, com séries e repetiçõ
 
 #### visual
 [classe]: slide exercicio
-[bg]: chroma(#00B140)
+[bg]: foto(drop: photo) — padrão visual chroma verde (#00B140) p/ inserção de vídeo do Ramon na pós; editável no editor (foto/cor/gradiente)
 [overlay]: nenhum
 [slots]:
   tag-ordinal: posição topo-dir
@@ -137,3 +137,6 @@ Quem produz séries/reps quando o usuário não fornece: agente `treinador`.
 - Slides chroma (#00B140): remover qualquer drop-shadow ou filtro que contamine a chave de cor na pós-produção.
 - Símbolo `Ⓕ` (U+24BB) deve ser preservado como caractere unicode — não substituir por imagem.
 - Área central dos slides chroma reservada ao vídeo do Ramon — sem texto nem sobreposição na zona central.
+- **Logo:** `width: 100px; height: auto` em todos os slides (via `.topbar .logo-img`).
+- **Swipe-cue:** chevron preenchido via `::after`/mask (data-URI SVG canônico em `brand/social-media.md`). Sem `<svg>` no DOM. Texto "ARRASTE" autorado em maiúsculas (sem `text-transform`).
+- **Caixa:** Anton (títulos, cta) sempre CAIXA ALTA. Montserrat (tag-tópico, ex-name, ex-reps) caixa livre — a copy decide. Sem `text-transform` nos slots Montserrat.
