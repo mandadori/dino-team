@@ -7,12 +7,16 @@
   "scripts": {
     "export": "node scripts/export-png.js",
     "editor": "node scripts/editor/server.js",
-    "test": "node --test scripts/editor/*.test.js"
+    "test": "node --test scripts/editor/*.test.js",
+    "test:e2e": "node --test scripts/editor/integration.e2e.js"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
     "puppeteer": "^24.43.1"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
   }
 }
