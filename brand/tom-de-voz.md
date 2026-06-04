@@ -63,6 +63,17 @@ A regra que vale em **qualquer tamanho de texto** — frase de capa ou corpo edi
 - No topo de funil (mindset) não há CTA; quando houver, é sóbrio, sem exagero de narrativa.
 - **Analogias** estruturais (construção, fundação, tijolo) são válidas **quando encurtam o caminho até o princípio** — nunca como ornamento.
 
+### Registro por formato (R1–R3)
+
+O "registro de mestre" garante a *voz*; o registro por formato garante a *forma*. Capa não é editorial, e editorial não é educativo — cada um tem comprimento, ritmo e fecho próprios. Ignorar isso é a raiz do drift (frase densa demais na capa, truque de palanque no editorial, filosofia onde devia ensinar).
+
+- **R1 · Capa / lâmina** — meta **~12 palavras** (meta, não lei: estoura só quando a ideia exige), **um** pivô, fecha no **concreto**, nunca no abstrato.
+  - ❌ "…POR DEPENDER DE VONTADE PARA EXECUTAR O QUE DEVERIA SER DECISÃO."
+  - ✅ "DISCIPLINA NÃO É VONTADE. É O QUE VOCÊ FAZ SEM ELA."
+  - ✅ "VOCÊ NÃO QUEBROU. PAROU DE COMEÇAR DE NOVO."
+- **R2 · Editorial longo** — parágrafo que respira, **uma virada por bloco**. Sem estatística de palanque, sem repetir o motivo. O ritmo é frase curta declarativa seguida de frase que vira; nunca empilha três ideias num fôlego só.
+- **R3 · Educativo** — professoral-acessível, **não** filosófico-denso. Conceito nomeado (ex.: "Crie mais tensão") + porquê em linguagem chã + payoff destacado. O hook pode abrir *curiosity-gap* ("os bons decidem UMA coisa antes de treinar → arrasta"). O leitor sai sentindo que **aprendeu**, não que foi pregado.
+
 ---
 
 ## 3. A espinha filosófica
