@@ -5,6 +5,7 @@
 > **Re-autorado em 2026-05-31 — giro para o registro SERENO:** a autoridade vem do título do Ramon, não do volume da voz. Aposenta o "autoritário/firme" em favor do filósofo da disciplina que não precisa gritar. Espinha filosófica expandida (direção → caminho → identidade) e remoção da tabela de exemplos enérgicos.
 > **Refinado em 2026-06-01 via `/afinar-tom-de-voz`** — calibração de registro, cenários de borda, expansão dos mecanismos M1–M6 e adição de M7 (contraste de tribo), M8 (reframe de privilégio) e M9 (vergonha silenciosa). Hierarquia vocabular por contexto documentada.
 > **Reescrito em 2026-06-04 — organização enxuta + seção "Registro de mestre":** consolida as 17 regras de copy nas seções certas e adiciona a trava de registro (princípio, não narração) que sustenta a voz em texto longo. Essência inalterada (sereno/íntimo/direto, espinha, M1–M9, sign-off).
+> **Ampliado em 2026-06-04 (parte 2) — registro por formato + M10:** adiciona R1–R3 (capa/editorial/educativo), o mecanismo M10 (reframe de diagnóstico), travas anti-drift e a trava "calor não entra". Corrige o drift estrutural diagnosticado contra ~181 referências. Ver [spec](../docs/specs/2026-06-04-mapa-dores-e-registro-por-formato-design.md).
 
 ---
 
@@ -62,6 +63,8 @@ A regra que vale em **qualquer tamanho de texto** — frase de capa ou corpo edi
 - Trate o leitor por **"você"**, próximo mas respeitoso. Mensagens curtas; cada frase com propósito.
 - No topo de funil (mindset) não há CTA; quando houver, é sóbrio, sem exagero de narrativa.
 - **Analogias** estruturais (construção, fundação, tijolo) são válidas **quando encurtam o caminho até o princípio** — nunca como ornamento.
+- **Travas anti-drift:** (1) **uma virada por slide** — não empilhar tese + mecanismo + consequência na mesma peça; (2) **fecha no concreto**, não no substantivo abstrato; (3) **sem números de palanque** (porcentagem, "os 5%/95%"); (4) **não repetir o motivo** (ex.: câmera/filmou/filma no mesmo bloco).
+- **Calor não entra:** o autorrespeito é **estrutural** — vem da forma (conceder a emoção antes da direção), nunca dito na cara. Sem encorajamento direto tipo "você merece mais" / "continue". O modelo é a referência seca (STNDRD, 5am.sucks), não a aquecida.
 
 ### Registro por formato (R1–R3)
 
@@ -204,6 +207,7 @@ Quando múltiplas palavras servem ao mesmo sentido, estas preferências se aplic
 - Linguagem **excessivamente técnica** sem aplicação prática
 - **Clichês fitness** sem profundidade ("no pain no gain" solto, "go hard or go home")
 - **"Shape"** na voz da própria marca — a marca fala em "físico", "resultado", "evolução". Continua válido como jargão **ao espelhar a fala do público** (ver [`publico-alvo.md`](publico-alvo.md)), nunca como vocabulário institucional.
+- **Números/estatística de palanque** ("os 5% / os 95%", "90% das pessoas") — o sereno não precisa de número pra ter peso.
 
 ---
 
