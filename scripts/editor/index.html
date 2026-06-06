@@ -61,6 +61,9 @@
     .dt-text-tb button { background: transparent; border: 1px solid rgba(255,255,255,.24); color: #fff; height: 26px; min-width: 26px; border-radius: 5px; cursor: pointer; font: 600 12px "Montserrat", sans-serif; padding: 0 8px; display: inline-flex; align-items: center; justify-content: center; }
     .dt-text-tb button:hover { background: rgba(255,255,255,.14); }
     .dt-text-tb button.dot { width: 22px; min-width: 22px; padding: 0; border-radius: 999px; border: 1px solid rgba(255,255,255,.5); }
+    .dt-text-tb input.dt-tb-color { -webkit-appearance: none; appearance: none; width: 26px; height: 26px; border: 1px solid rgba(255,255,255,.4); border-radius: 5px; background: transparent; padding: 2px; cursor: pointer; }
+    .dt-text-tb input.dt-tb-color::-webkit-color-swatch-wrapper { padding: 0; }
+    .dt-text-tb input.dt-tb-color::-webkit-color-swatch { border: none; border-radius: 3px; }
     .dt-sep { width: 1px; height: 22px; background: rgba(255,255,255,.18); }
     .dt-counter { font-size: 12px; letter-spacing: .1em; min-width: 50px; text-align: center; }
     .dt-save { background: rgba(0,177,64,.2) !important; border-color: var(--accent-d) !important; color: var(--accent) !important; font-weight: 700 !important; }
@@ -96,6 +99,9 @@
     .pnl-lock { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--field-line); background: var(--field-bg); color: var(--ink-dim); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
     .pnl-lock.on { color: var(--accent); border-color: var(--accent-d); }
     .pnl-lock svg { width: 14px; height: 14px; }
+    .pnl-eyedrop { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--field-line); background: var(--field-bg); color: var(--ink-dim); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+    .pnl-eyedrop:hover { color: var(--ink); border-color: var(--accent-d); }
+    .pnl-eyedrop svg { width: 14px; height: 14px; }
     .pnl-swatch { flex: 0 0 auto; width: 20px; height: 20px; border-radius: 4px; border: 1px solid rgba(255,255,255,.25); }
     .pnl-img-btn { width: 100%; height: 34px; border-radius: 6px; border: 1px dashed var(--field-line); background: var(--field-bg); color: var(--ink); cursor: pointer; font: 600 12px "Montserrat", sans-serif; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
     .pnl-img-btn:hover { border-color: var(--accent); color: #fff; }

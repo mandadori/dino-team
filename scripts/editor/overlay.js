@@ -302,10 +302,17 @@ window.DT = window.DT || {};
     function btn(label, on) { var b = document.createElement("button"); b.textContent = label; b.addEventListener("mousedown", function (e) { e.preventDefault(); }); b.addEventListener("click", function (e) { e.preventDefault(); on(); }); tb.appendChild(b); return b; }
     btn("B", function () { applyToSelection({ fontWeight: "700" }); }).style.fontWeight = "700";
     btn("Aa", function () { applyToSelection({ fontWeight: "400" }); });
-    [["#ffffff", "Branco"], ["#000000", "Preto"], ["#7f7f7f", "Cinza"]].forEach(function (c) {
-      var b = btn("", function () { applyToSelection({ color: c[0] }); }); b.title = c[1];
-      b.className = "dot"; b.style.background = c[0];
-    });
+    // Cor do trecho: input nativo (gradiente+hex) + conta-gotas. tbBusy mantém a
+    // edição viva enquanto o picker/eyedropper abrem (ambos tiram o foco do iframe).
+    var ci = document.createElement("input"); ci.type = "color"; ci.className = "dt-tb-color";
+    ci.addEventListener("pointerdown", function () { tbBusy = true; });
+    ci.addEventListener("input", function () { applyToSelection({ color: ci.value }); });
+    tb.appendChild(ci);
+    if (window.EyeDropper && DT.eyedrop) {
+      var eb = btn("", function () { tbBusy = true; DT.eyedrop(function (hex) { ci.value = hex; applyToSelection({ color: hex }); }); });
+      eb.title = "Conta-gotas (cor da tela)"; eb.className = "dt-eyedrop";
+      eb.innerHTML = '<svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M10.5 2.5a1.8 1.8 0 0 1 2.5 2.5l-1 1 1.2 1.2-1.3 1.3-1.2-1.2L5.5 12.5 3 13l.5-2.5 5.7-5.7z"/></svg>';
+    }
     btn("A-", function () { stepFontSize(-4); });
     btn("A+", function () { stepFontSize(4); });
     layer.appendChild(tb);

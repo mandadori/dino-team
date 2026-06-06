@@ -125,3 +125,14 @@ test("barra de trecho aplica negrito e mantém a edição (#2)", async () => {
   assert.equal(res.editing, true, "deveria continuar em edição (barra não derrubou)");
   await page.evaluate(() => { var f = window.__DT.frames()[0]; var e = f.doc.querySelector('[contenteditable="true"]'); if (e) e.blur(); });
 });
+
+test("painel de texto usa input de cor nativo (não dropdown) (#3)", async () => {
+  const res = await page.evaluate(() => {
+    if (!window.__DT._selectType(0, "text")) return null;
+    var p = document.getElementById("dt-panel");
+    return { hasColorInput: !!p.querySelector('input[type="color"]'), noColorSelect: !p.querySelector("#p-color") };
+  });
+  assert.equal(res.hasColorInput, true, "deveria ter <input type=color>");
+  assert.equal(res.noColorSelect, true, "não deveria ter mais o select #p-color");
+  await page.evaluate(() => DT.overlay.deselect());
+});

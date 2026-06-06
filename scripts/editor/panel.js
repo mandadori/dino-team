@@ -11,9 +11,16 @@ window.DT = window.DT || {};
   var WEIGHTS = { Fina: "100", Leve: "300", Regular: "400", Média: "500", "Semi-bold": "600", Bold: "700" };
   var WEIGHT_NAMES = Object.keys(WEIGHTS);
   var FAMILIES = ["Anton", "Montserrat"];
-  var COLORS = [["#ffffff", "Branco"], ["#000000", "Preto"], ["#7f7f7f", "Cinza"]];
 
   var root = null, contract = null, refs = {};
+
+  // Conta-gotas: pega a cor de qualquer ponto da tela (Chromium). Sem EyeDropper,
+  // o caller não desenha o botão (o input nativo já cobre gradiente + hex).
+  function eyedrop(onPick) {
+    if (!window.EyeDropper) return;
+    new window.EyeDropper().open().then(function (res) { if (res && res.sRGBHex) onPick(res.sRGBHex); }).catch(function () {});
+  }
+  window.DT.eyedrop = eyedrop;
 
   function init() { root = document.getElementById("dt-panel"); }
   function setContract(c) { contract = c; }
@@ -30,7 +37,8 @@ window.DT = window.DT || {};
     tr: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><line x1="2" y1="4" x2="14" y2="4"/><line x1="6" y1="8" x2="14" y2="8"/><line x1="4" y1="12" x2="14" y2="12"/></svg>',
     img: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="3" width="12" height="10" rx="1"/><circle cx="5.5" cy="6.5" r="1.2"/><path d="M3 12l3.5-3.5L9 11l2-2 3 3"/></svg>',
     lockOn: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3.5" y="7" width="9" height="6" rx="1"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>',
-    lockOff: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3.5" y="7" width="9" height="6" rx="1"/><path d="M5.5 7V5a2.5 2.5 0 0 1 4.8-1"/></svg>'
+    lockOff: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3.5" y="7" width="9" height="6" rx="1"/><path d="M5.5 7V5a2.5 2.5 0 0 1 4.8-1"/></svg>',
+    eyedrop: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M10.5 2.5a1.8 1.8 0 0 1 2.5 2.5l-1 1 1.2 1.2-1.3 1.3-1.2-1.2L5.5 12.5 3 13l.5-2.5 5.7-5.7z"/></svg>'
   };
 
   function el(tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; }
@@ -47,6 +55,20 @@ window.DT = window.DT || {};
   }
   function section(title) { var s = el("div", "pnl-sec"); if (title) s.appendChild(el("h3", null, title)); return s; }
   function label(t) { return el("p", "pnl-label", t); }
+
+  // Linha de cor: <input type=color> nativo (gradiente+hex) + conta-gotas opcional.
+  function colorPickerRow(id, val, onChange) {
+    var row = el("div", "pnl-row");
+    var c = el("input"); c.type = "color"; c.id = id; c.value = val || "#000000";
+    c.addEventListener("input", function () { onChange(c.value); });
+    row.appendChild(c); refs[id] = c;
+    if (window.EyeDropper) {
+      var b = el("button", "pnl-eyedrop", ICON.eyedrop); b.title = "Conta-gotas (cor da tela)";
+      b.addEventListener("click", function () { eyedrop(function (hex) { c.value = hex; onChange(hex); }); });
+      row.appendChild(b);
+    }
+    return row;
+  }
 
   function show(sel) {
     refs = {}; root.innerHTML = ""; root.classList.add("is-open");
@@ -97,7 +119,7 @@ window.DT = window.DT || {};
       ty.appendChild(label("Alinhamento do texto"));
       ty.appendChild(el("div", "pnl-row", null)).appendChild(btnGroup([["left", "tl", "Esq"], ["center", "tc", "Centro"], ["right", "tr", "Dir"]], cs.textAlign, function (t) { DT.overlay.setStyle("text-align", t); }));
       ty.appendChild(label("Cor"));
-      ty.appendChild(el("div", "pnl-row", null)).appendChild(selectField("p-color", COLORS, hexOf(cs.color)));
+      ty.appendChild(colorPickerRow("p-color-input", hexOf(cs.color) || "#ffffff", function (v) { DT.overlay.setStyle("color", v); }));
       root.appendChild(ty);
     }
 
@@ -122,7 +144,13 @@ window.DT = window.DT || {};
     sec.appendChild(toggle);
     var body = el("div"); sec.appendChild(body); root.appendChild(sec);
 
-    function colorRow(lbl, id, val) { var row = el("div", "pnl-row"); row.appendChild(el("span", "k", lbl)); var c = el("input"); c.type = "color"; c.id = id; c.value = val || "#000000"; c.addEventListener("input", applyFill); row.appendChild(c); refs[id] = c; return row; }
+    function colorRow(lbl, id, val) {
+      var row = el("div", "pnl-row"); row.appendChild(el("span", "k", lbl));
+      var c = el("input"); c.type = "color"; c.id = id; c.value = val || "#000000"; c.addEventListener("input", applyFill);
+      row.appendChild(c); refs[id] = c;
+      if (window.EyeDropper) { var b = el("button", "pnl-eyedrop", ICON.eyedrop); b.title = "Conta-gotas"; b.addEventListener("click", function () { eyedrop(function (hex) { c.value = hex; applyFill(); }); }); row.appendChild(b); }
+      return row;
+    }
     function applyFill() {
       if (mode === "cor") { DT.overlay.setBgFill(refs["f-c1"].value, "solid"); }
       else if (mode === "gradiente") { var a = parseInt((refs["f-ang"] && refs["f-ang"].value) || 180) || 180; DT.overlay.setBgFill("linear-gradient(" + a + "deg, " + refs["f-c1"].value + ", " + refs["f-c2"].value + ")", "gradient"); }
@@ -166,7 +194,13 @@ window.DT = window.DT || {};
     sec.appendChild(toggle);
     var body = el("div"); sec.appendChild(body); root.appendChild(sec);
 
-    function colorRow(lbl, id, val) { var row = el("div", "pnl-row"); row.appendChild(el("span", "k", lbl)); var c = el("input"); c.type = "color"; c.id = id; c.value = val; c.addEventListener("change", apply); c.addEventListener("input", apply); row.appendChild(c); refs[id] = c; return row; }
+    function colorRow(lbl, id, val) {
+      var row = el("div", "pnl-row"); row.appendChild(el("span", "k", lbl));
+      var c = el("input"); c.type = "color"; c.id = id; c.value = val; c.addEventListener("change", apply); c.addEventListener("input", apply);
+      row.appendChild(c); refs[id] = c;
+      if (window.EyeDropper) { var b = el("button", "pnl-eyedrop", ICON.eyedrop); b.title = "Conta-gotas"; b.addEventListener("click", function () { eyedrop(function (hex) { c.value = hex; apply(); }); }); row.appendChild(b); }
+      return row;
+    }
     function rebuildBody() {
       body.innerHTML = "";
       if (mode === "solid") { body.appendChild(colorRow("Cor", "f-c1", cur.c1)); }
@@ -197,7 +231,6 @@ window.DT = window.DT || {};
     bindOne("p-size", function (v) { if (v) DT.overlay.setStyle("font-size", parseFloat(v) + "px"); });
     bindOne("p-lh", function (v) { if (v !== "") DT.overlay.setStyle("line-height", String(parseFloat(v))); });
     bindOne("p-ls", function (v) { if (v !== "") DT.overlay.setStyle("letter-spacing", parseFloat(v) + "px"); });
-    bindOne("p-color", function (v) { if (v) DT.overlay.setStyle("color", v); });
   }
   function bindOne(id, fn) { var i = refs[id]; if (i) i.addEventListener("change", function () { fn(i.value); }); }
 
