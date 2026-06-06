@@ -95,3 +95,33 @@ test("edição entra com seleção colapsada (caret), não select-all (#1)", asy
   // limpa o estado de edição pra não vazar pros próximos testes
   await page.evaluate(() => { var f = window.__DT.frames()[0]; var e = f.doc.querySelector('[contenteditable="true"]'); if (e) e.blur(); });
 });
+
+test("barra de trecho aplica negrito e mantém a edição (#2)", async () => {
+  const res = await page.evaluate(async () => {
+    if (!window.__DT._edit(0, "text")) return { ok: false, reason: "no-edit" };
+    var f = window.__DT.frames()[0];
+    var el = window.__DT.selection().el, doc = f.doc, view = doc.defaultView;
+    // seleciona os 3 primeiros chars do primeiro nó de texto
+    var tn = null; (function walk(n){ for (var c=n.firstChild;c;c=c.nextSibling){ if(c.nodeType===3 && c.textContent.trim()){ tn=c; return; } if(c.nodeType===1) walk(c); } })(el);
+    if (!tn) return { ok: false, reason: "no-textnode" };
+    var r = doc.createRange(); r.setStart(tn, 0); r.setEnd(tn, Math.min(3, tn.textContent.length));
+    var g = view.getSelection(); g.removeAllRanges(); g.addRange(r);
+    doc.dispatchEvent(new Event("selectionchange"));
+    await new Promise(function(res){ setTimeout(res, 30); });
+    var tb = document.querySelector(".dt-text-tb");
+    if (!tb || tb.style.display === "none") return { ok: false, reason: "no-toolbar" };
+    var b = tb.querySelector("button");      // primeiro botão = "B" (negrito 700)
+    // Reproduz a sequência real de um clique na barra (top-level) sobre um editável
+    // dentro do iframe: pointerdown na barra → o editável perde o foco (blur) →
+    // click. Sem a guarda, o blur derruba a edição antes do estilo aplicar.
+    b.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    el.blur();
+    b.click();
+    await new Promise(function(res){ setTimeout(res, 40); });
+    return { ok: true, html: el.innerHTML, editing: el.getAttribute("contenteditable") === "true" };
+  });
+  assert.equal(res.ok, true, "fluxo: " + res.reason);
+  assert.match(res.html, /font-weight:\s*700/, "trecho deveria ficar em negrito");
+  assert.equal(res.editing, true, "deveria continuar em edição (barra não derrubou)");
+  await page.evaluate(() => { var f = window.__DT.frames()[0]; var e = f.doc.querySelector('[contenteditable="true"]'); if (e) e.blur(); });
+});

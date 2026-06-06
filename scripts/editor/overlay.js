@@ -223,6 +223,8 @@ window.DT = window.DT || {};
 
   // ---------- texto inline ----------
   var textTB = null;             // mini-barra flutuante de formatação de trecho
+  var savedRange = null;         // último range não-colapsado (sobrevive ao blur)
+  var tbBusy = false;            // interação em curso com a barra → não comita no blur
   function editText(el, surface, clientX, clientY) {
     if (typeOf(el) !== "text") return;
     hist().begin();
@@ -244,9 +246,14 @@ window.DT = window.DT || {};
     function onSelChange() { updateTextToolbar(el); }
     doc.addEventListener("selectionchange", onSelChange);
     function done() {
+      // Clique na barra (top-level) tira o foco do editável (iframe). preventDefault
+      // cross-document não segura o blur — então, se a interação é com a barra,
+      // abortamos o commit, re-focamos e restauramos a seleção.
+      if (tbBusy) { setTimeout(function () { try { el.focus(); restoreSaved(el); } catch (_) {} }, 0); return; }
       el.removeAttribute("contenteditable"); el.removeEventListener("blur", done);
       doc.removeEventListener("selectionchange", onSelChange); hideTextToolbar();
       surface.style.pointerEvents = "";
+      savedRange = null;
       if (el.innerHTML !== before) DT.edits.record(sel.n, sel.block, slotOf(el), "text", textOf(before), el.textContent);
       drawSelection();
     }
@@ -259,6 +266,7 @@ window.DT = window.DT || {};
     if (!gsel || gsel.rangeCount === 0 || gsel.isCollapsed) { hideTextToolbar(); return; }
     var range = gsel.getRangeAt(0);
     if (!el.contains(range.commonAncestorContainer)) { hideTextToolbar(); return; }
+    savedRange = range.cloneRange();
     if (!textTB) textTB = buildTextToolbar(el);
     textTB.__el = el;
     var fr = el.ownerDocument.defaultView.frameElement.getBoundingClientRect(), s = fr.width / W;
@@ -268,20 +276,29 @@ window.DT = window.DT || {};
     textTB.style.top = (fr.top + rb.top * s - 44) + "px";
   }
   function hideTextToolbar() { if (textTB) textTB.style.display = "none"; }
+  function restoreSaved(el) {
+    if (!savedRange) return;
+    var gsel = el.ownerDocument.defaultView.getSelection();
+    gsel.removeAllRanges(); gsel.addRange(savedRange);
+  }
 
   // aplica um estilo ao trecho selecionado via DT.spans, mantendo a seleção
   function applyToSelection(styleObj) {
-    var el = textTB && textTB.__el; if (!el) return;
+    var el = textTB && textTB.__el; if (!el) { tbBusy = false; return; }
     var doc = el.ownerDocument, gsel = doc.defaultView.getSelection();
-    if (!gsel || gsel.rangeCount === 0 || gsel.isCollapsed) return;
-    var span = DT.spans.applyStyleToRange(gsel.getRangeAt(0), styleObj);
+    var range = (gsel && gsel.rangeCount && !gsel.isCollapsed) ? gsel.getRangeAt(0) : savedRange;
+    if (!range || range.collapsed) { tbBusy = false; return; }
+    var span = DT.spans.applyStyleToRange(range, styleObj);
     DT.spans.mergeSpans(el);
-    if (span) { var r = doc.createRange(); r.selectNodeContents(span); gsel.removeAllRanges(); gsel.addRange(r); }
+    if (span) { var r = doc.createRange(); r.selectNodeContents(span); savedRange = r.cloneRange(); gsel.removeAllRanges(); gsel.addRange(r); }
     updateTextToolbar(el);
+    tbBusy = false;
   }
 
   function buildTextToolbar(el) {
     var tb = document.createElement("div"); tb.className = "dt-text-tb"; tb.style.display = "none";
+    tb.addEventListener("pointerdown", function (e) { tbBusy = true; e.preventDefault(); });
+    tb.addEventListener("mousedown", function (e) { tbBusy = true; e.preventDefault(); });
     function btn(label, on) { var b = document.createElement("button"); b.textContent = label; b.addEventListener("mousedown", function (e) { e.preventDefault(); }); b.addEventListener("click", function (e) { e.preventDefault(); on(); }); tb.appendChild(b); return b; }
     btn("B", function () { applyToSelection({ fontWeight: "700" }); }).style.fontWeight = "700";
     btn("Aa", function () { applyToSelection({ fontWeight: "400" }); });
