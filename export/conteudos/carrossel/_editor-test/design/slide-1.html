@@ -1,15 +1,4 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <title>Slide Carrossel — Dino Team / editorial</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
-  <style>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"/><link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"><style>
     /* ESTILO: editorial | CONCEITO: foto full bleed + gradient bottom + logo centrada + narrativa editorial */
 
     /* ====================================================================
@@ -20,7 +9,7 @@
          .slide.corpo  → slides intermediários: foto + gradient + logo centrada no topo + área editorial inferior
          .slide.cta    → slide final: foto ou fundo preto + logo acima do título (bloco v-bottom) + sub
 
-       Tokens: paleta P&B + cinza exclusiva, Anton CAIXA ALTA + Montserrat caixa livre
+       Tokens: paleta P&B + cinza exclusiva, Anton + Montserrat CAIXA ALTA
        Margem padrão: 80px. Não altere width/height.
     ==================================================================== */
 
@@ -98,33 +87,50 @@
       pointer-events: none;
     }
     .logo-center .logo-img {
-      width: 100px;
-      height: auto;
+      height: 36px;
+      width: auto;
       display: block;
       opacity: 0.98;
     }
 
-    /* --------- Swipe cue (apenas capa) — seta = ::after via mask, proporcional --------- */
+    /* --------- Barra de progresso (todos os slides) --------- */
+    .progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 36px 80px 56px;
+      z-index: 5;
+    }
+    .progress .track {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,.22);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress .fill {
+      height: 100%;
+      background: #ffffff;
+      border-radius: 2px;
+    }
+
+    /* --------- Swipe cue (capa e corpo) --------- */
     .swipe-cue {
       display: inline-flex;
       align-items: center;
-      gap: 0.4em;
-      white-space: nowrap;
+      gap: 10px;
       font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: 0.04em;
-      color: rgba(255,255,255,0.9);
+      font-size: 26px;
+      font-weight: 300;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.92);
     }
-    .swipe-cue::after {
-      content: "";
-      display: inline-block;
-      flex: 0 0 auto;
-      width: max(10px, 0.60em);
-      height: max(12px, 0.74em);
-      background-color: currentColor;
-      -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2012%2016'%3E%3Cpath%20d='M4%201L11%208L4%2015L1%2015L8%208L1%201Z'%20fill='%23000'/%3E%3C/svg%3E") no-repeat center / contain;
-              mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2012%2016'%3E%3Cpath%20d='M4%201L11%208L4%2015L1%2015L8%208L1%201Z'%20fill='%23000'/%3E%3C/svg%3E") no-repeat center / contain;
+    .swipe-cue svg {
+      height: 0.72em;
+      width: auto;
+      display: block;
     }
 
     /* ============ VARIANTE: capa ============ */
@@ -134,7 +140,7 @@
       left: var(--pad);
       right: var(--pad);
       z-index: 3;
-      bottom: 110px;
+      bottom: 200px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -143,8 +149,8 @@
     }
     /* Logo dentro do bloco — imediatamente acima do título */
     .slide.capa .title-block .logo-img {
-      width: 100px;
-      height: auto;
+      height: 36px;
+      width: auto;
       display: block;
       opacity: 0.98;
       margin-bottom: 32px;
@@ -166,7 +172,7 @@
       left: var(--pad);
       right: var(--pad);
       z-index: 3;
-      bottom: 90px;
+      bottom: 160px;
       display: flex;
       flex-direction: column;
       gap: 18px;
@@ -176,6 +182,7 @@
       font-size: 13px;
       font-weight: 500;
       letter-spacing: 0.22em;
+      text-transform: uppercase;
       color: rgba(255,255,255,0.6);
       line-height: 1;
     }
@@ -193,9 +200,20 @@
       font-size: 30px;
       font-weight: 300;
       letter-spacing: 0.01em;
+      text-transform: uppercase;
       color: rgba(255,255,255,0.82);
       line-height: 1.4;
       max-width: 920px; /* 1080 - 2*80 = 920 */
+    }
+    /* Swipe cue no rodapé do corpo, acima da barra de progresso */
+    .slide.corpo .swipe-wrap {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      bottom: 80px;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
     }
 
     /* ============ VARIANTE: cta ============ */
@@ -205,7 +223,7 @@
       left: var(--pad);
       right: var(--pad);
       z-index: 3;
-      bottom: 130px;
+      bottom: 200px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -214,8 +232,8 @@
     }
     /* Logo dentro do bloco — imediatamente acima do título */
     .slide.cta .title-block .logo-img {
-      width: 100px;
-      height: auto;
+      height: 36px;
+      width: auto;
       display: block;
       opacity: 0.98;
       margin-bottom: 32px;
@@ -234,21 +252,10 @@
       font-size: 28px;
       font-weight: 500;
       letter-spacing: 0.06em;
+      text-transform: uppercase;
       color: rgba(255,255,255,0.75);
       line-height: 1.3;
     }
-  </style>
-</head>
-<body>
-<section class="slide capa" data-block="capa">
-    <div class="slide-bg placeholder" data-bg-drop="photo" data-slot="bg"></div>
-    <div class="img-overlay" data-overlay></div>
-
-    <div class="title-block">
-      <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" data-slot="logo" />
-      <h1 class="big-title" data-slot="título">DO ZERO<br>AO OLYMPIA</h1>
-      <div class="swipe-cue" data-slot="swipe-cue">ARRASTE</div>
-    </div>
-  </section>
-</body>
-</html>
+  </style></head><body>
+<section class="slide capa" data-block="capa"><div class="slide-bg placeholder" data-bg-drop="photo" data-slot="bg"></div><div class="img-overlay" data-overlay></div><div class="title-block"><img src="../../../../../brand/assets/logo.png" class="logo-img" data-slot="logo"><h1 class="big-title" data-slot="título" style="font-size: 110px;">DO ZERO<br>AO OLYMPIA</h1></div><div class="progress" data-slot="barra-progresso"><div class="track"><div class="fill" style="width:50%"></div></div></div></section>
+</body></html>

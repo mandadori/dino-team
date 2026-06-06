@@ -70,6 +70,45 @@ window.DT = window.DT || {};
     return row;
   }
 
+  // 2ª camada de fundo: o gradiente de legibilidade [data-overlay] que fica ACIMA
+  // do fundo. Editável aqui (cor/gradiente + opacidade) quando o fundo é selecionado.
+  function buildOverlay(zoneEl) {
+    var sec = (zoneEl.closest && zoneEl.closest("section")) || null;
+    var ov = sec ? sec.querySelector("[data-overlay]") : null;
+    if (!ov) return;
+    var cs = ov.ownerDocument.defaultView.getComputedStyle(ov);
+    var s = section("Overlay");
+    var cur = readFill(ov, cs);
+    var mode = cur.kind;                 // "solid" | "gradient"
+    var toggle = el("div", "pnl-row");
+    toggle.appendChild(btnGroupText([["solid", "Sólido"], ["gradient", "Gradiente"]], mode, function (m) { mode = m; rebuild(); applyOv(); }));
+    s.appendChild(toggle);
+    var body = el("div"); s.appendChild(body);
+    s.appendChild(label("Opacidade"));
+    s.appendChild(el("div", "pnl-row", null)).appendChild(field("%", "ov-op", Math.round((parseFloat(cs.opacity) || 1) * 100), "number"));
+    root.appendChild(s);
+    bindOne("ov-op", function (v) { DT.overlay.setOverlayOpacity(Math.max(0, Math.min(100, parseFloat(v) || 100)) / 100); });
+
+    function colorRow(lbl, id, val) {
+      var row = el("div", "pnl-row"); row.appendChild(el("span", "k", lbl));
+      var c = el("input"); c.type = "color"; c.id = id; c.value = val || "#000000"; c.addEventListener("input", applyOv);
+      row.appendChild(c); refs[id] = c;
+      if (window.EyeDropper) { var b = el("button", "pnl-eyedrop", ICON.eyedrop); b.title = "Conta-gotas"; b.addEventListener("click", function () { eyedrop(function (hex) { c.value = hex; applyOv(); }); }); row.appendChild(b); }
+      return row;
+    }
+    function rebuild() {
+      body.innerHTML = "";
+      var c = readFill(ov, cs);
+      if (mode === "solid") { body.appendChild(colorRow("Cor", "ov-c1", c.c1)); }
+      else { body.appendChild(colorRow("Cor 1", "ov-c1", c.c1)); body.appendChild(colorRow("Cor 2", "ov-c2", c.c2)); var ang = el("div", "pnl-row"); ang.appendChild(field("Ângulo", "ov-ang", c.angle, "number")); body.appendChild(ang); refs["ov-ang"].addEventListener("change", applyOv); }
+    }
+    function applyOv() {
+      if (mode === "solid") { DT.overlay.setOverlayFill(refs["ov-c1"].value, "solid"); }
+      else { var a = parseInt((refs["ov-ang"] && refs["ov-ang"].value) || cur.angle) || 180; DT.overlay.setOverlayFill("linear-gradient(" + a + "deg, " + refs["ov-c1"].value + ", " + refs["ov-c2"].value + ")", "gradient"); }
+    }
+    rebuild();
+  }
+
   function show(sel) {
     refs = {}; root.innerHTML = ""; root.classList.add("is-open");
     var elx = sel.el, type = DT.overlay.typeOf(elx);
@@ -82,8 +121,8 @@ window.DT = window.DT || {};
     ht.appendChild(el("div", "sub", slot + " · bloco " + (sel.block || "—")));
     head.appendChild(ht); root.appendChild(head);
 
-    if (type === "bg-image") { buildBg(elx, cs); buildOpacity(cs); return; }
-    if (type === "bg-fill") { buildFill(elx, cs); buildOpacity(cs); buildRemove(); return; }
+    if (type === "bg-image") { buildBg(elx, cs); buildOverlay(elx); buildOpacity(cs); return; }
+    if (type === "bg-fill") { buildFill(elx, cs); buildOverlay(elx); buildOpacity(cs); buildRemove(); return; }
 
     // ---- Posição ----
     var pos = section("Posição");

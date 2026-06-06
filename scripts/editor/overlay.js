@@ -430,6 +430,25 @@ window.DT = window.DT || {};
   function zoomSelBg(z) { if (!sel || !sel.el.hasAttribute("data-bg-drop")) return; setBgZoom(sel.el, z); DT.edits.record(sel.n, sel.block, bgSlot(sel.el), "bg-zoom", null, String(z)); }
   function removeSelBg() { if (!sel || !sel.el.hasAttribute("data-bg-drop")) return; hist().begin(); clearBg(sel.el); DT.edits.record(sel.n, sel.block, bgSlot(sel.el), "bg", null, "removida"); if (pnl("show")) DT.panel.show(sel); }
 
+  // ---------- overlay (2ª camada: gradiente de legibilidade sobre o fundo) ----------
+  // O elemento [data-overlay] é irmão do fundo dentro da mesma <section>. É editável
+  // pelo painel quando o fundo está selecionado, sem ser selecionável por clique.
+  function overlayEl() {
+    if (!sel) return null;
+    var sec = (sel.el.closest && sel.el.closest("section")) || sel.root;
+    return sec ? sec.querySelector("[data-overlay]") : null;
+  }
+  function setOverlayFill(val, kind) {
+    var ov = overlayEl(); if (!ov) return; hist().begin("ovfill::" + sel.n);
+    ov.style.background = val;
+    DT.edits.record(sel.n, sel.block, "overlay", kind === "gradient" ? "bg-gradient" : "bg-color", null, val);
+  }
+  function setOverlayOpacity(v) {
+    var ov = overlayEl(); if (!ov) return; hist().begin("ovop::" + sel.n);
+    ov.style.opacity = String(v);
+    DT.edits.record(sel.n, sel.block, "overlay", "opacity", null, String(v));
+  }
+
   function currentGeom() { if (!sel) return null; var b = sel.el.getBoundingClientRect(), rb = sel.root.getBoundingClientRect(); return { x: Math.round(b.left - rb.left), y: Math.round(b.top - rb.top), w: Math.round(b.width), h: Math.round(b.height) }; }
   function currentType() { return sel ? typeOf(sel.el) : null; }
 
@@ -438,6 +457,7 @@ window.DT = window.DT || {};
     current: function () { return sel; }, editText: editText, typeOf: typeOf,
     align: align, setX: setX, setY: setY, setW: setW, setH: setH, setStyle: setStyle, setBgFill: setBgFill, bgToPhotoMode: bgToPhotoMode, nudge: nudge, removeSel: removeSel,
     replaceSelBg: replaceSelBg, zoomSelBg: zoomSelBg, removeSelBg: removeSelBg, currentGeom: currentGeom, currentType: currentType,
+    overlayEl: overlayEl, setOverlayFill: setOverlayFill, setOverlayOpacity: setOverlayOpacity,
     setAspect: setAspect, getAspect: getAspect
   };
 })();

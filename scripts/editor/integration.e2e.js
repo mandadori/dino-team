@@ -193,3 +193,24 @@ test("undo reverte mudança contínua de cor de fundo num passo só (#B)", async
   assert.equal(res.afterUndo, res.before, "1 undo deveria reverter a mudança inteira (veio " + res.afterUndo + ", esperado " + res.before + ")");
   await page.evaluate(() => DT.overlay.deselect());
 });
+
+test("painel do fundo separa Overlay e edita a 2ª camada (#3-overlay)", async () => {
+  const res = await page.evaluate(() => {
+    DT.overlay.deselect();
+    if (!window.__DT._select(0, "[data-bg-drop]")) return { skip: true };
+    var f = window.__DT.frames()[0];
+    if (!f.doc.querySelector("[data-overlay]")) return { skip: true };
+    var hasOverlaySec = Array.from(document.querySelectorAll("#dt-panel h3")).some(function (h) { return h.textContent === "Overlay"; });
+    var before = f.doc.querySelector("[data-overlay]").style.background || "";
+    DT.overlay.setOverlayFill("#123456", "solid");
+    var afterChange = f.doc.querySelector("[data-overlay]").style.background;
+    DT.history.undo();
+    var afterUndo = f.doc.querySelector("[data-overlay]").style.background;
+    return { hasOverlaySec: hasOverlaySec, before: before, afterChange: afterChange, afterUndo: afterUndo };
+  });
+  if (res.skip) return;
+  assert.equal(res.hasOverlaySec, true, "painel do fundo deveria ter seção Overlay");
+  assert.notEqual(res.afterChange, res.before, "overlay deveria mudar");
+  assert.equal(res.afterUndo, res.before, "undo deveria reverter o overlay");
+  await page.evaluate(() => DT.overlay.deselect());
+});
