@@ -1,69 +1,49 @@
 ---
-versao: 1
-ultima_atualizacao: 2026-05-23
+versao: 2
+ultima_atualizacao: 2026-06-06
 ---
 
-# Banco de Dados — Schema
+# Cérebro de Marca — Schema (`memory/`)
 
-Memória persistente compartilhada do sistema Dino Team. Markdown com frontmatter YAML. Lido por qualquer agente; escrito apenas pelo owner declarado.
+Memória viva compartilhada do sistema Dino Team. **"A memória é a integração":** as funções não se coordenam entre si — leem e escrevem o mesmo estado. Markdown + frontmatter YAML. Lido por qualquer função; escrito apenas pelo owner declarado.
 
 ## Princípios
 
-- **Ownership único por slice.** Só o agente declarado owner escreve. Outros propõem via output e o owner consolida.
+- **Dono único por slice.** Só o owner escreve; outros propõem via output e o owner consolida.
+- **Cérebro ≠ insumo.** `memory/pesquisa/` é pesquisa bruta (insumo transitório). O resto é a "verdade" durável.
+- **YAGNI de slice.** Uma fatia só nasce quando uma função a lê de verdade. Este schema **declara** a estrutura completa; declarar ≠ construir.
+- **Write-back é de 1ª classe.** Produzir uma peça atualiza o cérebro (livro-razão de mensagens, ângulos).
 - **Versionado em git.** Toda mudança é commit.
-- **Escala em markdown enquanto possível.** Migra para SQL apenas quando volume passar de ~100MB ou queries ficarem lentas (decisão do `keeper-banco`, agente futuro).
-- **Leitura sob demanda.** Quem precisa, lê. Nada é carregado automaticamente.
 
-## Slices ativos (v1)
+## Slices
 
-| Slice | Caminho | Owner único | Conteúdo |
+| Slice | Owner único | Conteúdo | Estado |
 |---|---|---|---|
-| **Ramon** | `dados/ramon/` | `arquivista` | Contexto temporal e biográfico do Ramon: cronograma, fase atual, princípios de treino, falas, conquistas, acervo visual. Fontes: o usuário via `/atualizar-ramon` **e** busca automática do próprio `arquivista` em fontes públicas (sempre com fonte citada e validação). Agentes nunca inventam. |
-| **Mercado** | `dados/mercado/` | `pesquisador-mercado` | Pesquisa de mercado, concorrentes, tendências, vocabulário do público. Populado por pesquisas profundas. |
-| **Performance** | `dados/performance/` | `analista-performance` | Métricas de canais (social media, ads, email, funil-site), ângulos queimados, padrões identificados. **Onda 3 só popula `angulos-queimados.md`; sub-slices por canal (`performance/social-media/`, `performance/ads/`, etc.) entram quando publicação real existir (Onda 5+), sob o mesmo owner ou analistas por canal derivados dele.** |
+| `narrativas/` | `estrategista-narrativa` | arcos ativos, roadmap de crença, livro-razão de mensagens | criado (Onda 1); populado (Onda 2) |
+| `publico/` | `pesquisador-mercado` (Produto alimenta) | dores, objeções (com a fala do público embutida) | criado (Onda 1) |
+| `mercado/` | `pesquisador-mercado` | `narrativa-de-mercado.md`, `tendencias/`, `concorrentes/` | ativo |
+| `ramon/` | `arquivista` | contexto temporal/biográfico | ativo |
+| `performance/` | `analista-performance` | `angulos-queimados.md`; métricas por canal (futuro) | ativo (parcial) |
+| `pesquisa/` | `pesquisador-mercado` | pesquisa bruta datada (insumo) | ativo |
 
-## Arquivos populados em v1 (Onda 3)
+**Não é cérebro:** `orquestracao/politicas/` (governança/config), `memory/mercado/_diretivas.md` → config de pesquisa (mover pra junto da skill `/pesquisar-mercado` na Onda 3).
 
-```
-dados/
-├── _schema.md                           ← este arquivo
-├── ramon/
-│   └── contexto.md                      ← arquivo único: fase atual, cronograma, princípios, falas, conquistas (seções). Usuário via /atualizar-ramon + auto-sync do archivist
-├── mercado/
-│   └── vocabulario-publico.md           ← derivado de brand/publico-alvo.md
-└── performance/
-    └── angulos-queimados.md             ← vazio em v1; cresce ao longo do uso
-```
+## Slices declarados, build depois (Produto / canais)
 
-## Arquivos futuros (declarados, não criados em v1)
+- `publico/` é alimentado por sinais reais da consultoria (Onda 6+).
+- `performance/{social-media,ads,email,funil-site}/` quando publicação real gerar métrica (Onda 5+).
 
-Conforme volume justificar:
-- **Ramon:** o contexto vive num arquivo só (`ramon/contexto.md`) enquanto for enxuto. Só vira multi-arquivo (ex: `ramon/acervo-visual.md`) se uma vertente crescer a ponto de pesar o arquivo único.
-- `mercado/tendencias/<YYYY-MM>.md`, `mercado/concorrentes/<slug>.md`, `mercado/hashtags-performando.md`
-- `performance/social-media/<YYYY-MM>.md`, `performance/ads/<YYYY-MM>.md`, `performance/email/<YYYY-MM>.md`, `performance/funil-site/<YYYY-MM>.md`, `performance/padroes-identificados.md`
-
-Criar apenas quando uma skill real for consumir.
-
-## Regras de ownership
-
-- Owner **único** por slice (ou por sub-slice quando explicitado, como em `performance/<canal>`).
-- Owner **escreve**; outros **leem e propõem**.
-- Proposta vira pull (manual ou via skill) feita pelo owner.
-- Mudança de owner exige atualização deste schema + commit.
-
-## Frontmatter padrão para arquivos do banco
-
-Cada arquivo do banco deve ter no topo:
+## Frontmatter padrão dos arquivos do cérebro
 
 ```yaml
 ---
-slice: <ramon | mercado | performance>
-owner: <nome do agente owner>
+slice: <narrativas | publico | mercado | ramon | performance | pesquisa>
+owner: <agente owner>
 ultima_atualizacao: YYYY-MM-DD
 versao: 1
 ---
 ```
 
-## Migração futura
+## Ownership
 
-Se em algum momento for migrar para SQL/outro armazenamento, este schema é o ponto de entrada da migração — declara a estrutura semântica que o novo armazenamento precisa replicar.
+Owner **escreve**; outros **leem e propõem**. Mudança de owner exige atualizar este schema + commit.
