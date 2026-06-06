@@ -79,7 +79,7 @@
     surf.addEventListener("pointerdown", function (e) { onDown(frame, e); });
     surf.addEventListener("pointermove", function (e) { if (e.buttons === 0) DT.overlay.hover(frame, hitTest(frame, e.clientX, e.clientY)); });
     surf.addEventListener("pointerleave", function () { DT.overlay.clearHover(); });
-    surf.addEventListener("dblclick", function (e) { var el = hitTest(frame, e.clientX, e.clientY); if (el && DT.overlay.typeOf(el) === "text") { DT.overlay.select(ctx(frame, el)); DT.overlay.editText(el, surf); } });
+    surf.addEventListener("dblclick", function (e) { var el = hitTest(frame, e.clientX, e.clientY); if (el && DT.overlay.typeOf(el) === "text") { DT.overlay.select(ctx(frame, el)); DT.overlay.editText(el, surf, e.clientX, e.clientY); } });
     doc.addEventListener("keydown", onKey);
   }
 
@@ -239,6 +239,9 @@
     hitTest: hitTest, goTo: goTo,
     // hooks de teste (smoke e2e): seleção determinística sem simular ponteiro
     _select: function (i, sel) { var f = frames[i]; if (!f || !f.doc) return false; var el = f.doc.querySelector(sel); if (!el) return false; DT.overlay.select(ctx(f, el)); return true; },
-    _selectType: function (i, type) { var f = frames[i]; if (!f || !f.doc) return false; var els = f.doc.querySelectorAll("[data-dt-selectable]"); for (var k = 0; k < els.length; k++) { if (DT.overlay.typeOf(els[k]) === type) { DT.overlay.select(ctx(f, els[k])); return true; } } return false; }
+    _selectType: function (i, type) { var f = frames[i]; if (!f || !f.doc) return false; var els = f.doc.querySelectorAll("[data-dt-selectable]"); for (var k = 0; k < els.length; k++) { if (DT.overlay.typeOf(els[k]) === type) { DT.overlay.select(ctx(f, els[k])); return true; } } return false; },
+    // hook de teste: seleciona um elemento do tipo e entra em edição (sem coords →
+    // caret colapsado no fim). Usado pelos e2e de edição de texto.
+    _edit: function (i, type) { if (!this._selectType(i, type || "text")) return false; var s = DT.overlay.current(); if (!s) return false; DT.overlay.editText(s.el, s.surface); return true; }
   };
 })();

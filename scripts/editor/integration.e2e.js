@@ -83,3 +83,15 @@ test("painel: imagem mostra bloco Dimensões (quando há imagem)", async () => {
   });
   assert.ok(res === true || res === "no-image", `imagem deveria ter Dimensões (veio ${res})`);
 });
+
+test("edição entra com seleção colapsada (caret), não select-all (#1)", async () => {
+  const collapsed = await page.evaluate(() => {
+    if (!window.__DT._edit(0, "text")) return null;
+    var f = window.__DT.frames()[0];
+    var g = f.doc.defaultView.getSelection();
+    return g.isCollapsed;
+  });
+  assert.equal(collapsed, true);
+  // limpa o estado de edição pra não vazar pros próximos testes
+  await page.evaluate(() => { var f = window.__DT.frames()[0]; var e = f.doc.querySelector('[contenteditable="true"]'); if (e) e.blur(); });
+});

@@ -82,7 +82,7 @@ window.DT = window.DT || {};
       box = document.createElement("div"); box.className = "dt-selbox";
       box.style.cursor = "move";
       box.addEventListener("pointerdown", function (e) { if (sel) { e.preventDefault(); beginMove(sel.surface, e); } });
-      box.addEventListener("dblclick", function (e) { if (sel && typeOf(sel.el) === "text") { e.preventDefault(); editText(sel.el, sel.surface); } });
+      box.addEventListener("dblclick", function (e) { if (sel && typeOf(sel.el) === "text") { e.preventDefault(); editText(sel.el, sel.surface, e.clientX, e.clientY); } });
       layer.appendChild(box);
     }
     // Fundo selecionado: a selbox cobriria o slide inteiro e engoliria todo clique.
@@ -223,14 +223,24 @@ window.DT = window.DT || {};
 
   // ---------- texto inline ----------
   var textTB = null;             // mini-barra flutuante de formatação de trecho
-  function editText(el, surface) {
+  function editText(el, surface, clientX, clientY) {
     if (typeOf(el) !== "text") return;
     hist().begin();
     surface.style.pointerEvents = "none";       // deixa o iframe receber foco/teclado
     var before = el.innerHTML;
     el.setAttribute("contenteditable", "true"); el.focus();
-    try { var rng = el.ownerDocument.createRange(); rng.selectNodeContents(el); var selo = el.ownerDocument.defaultView.getSelection(); selo.removeAllRanges(); selo.addRange(rng); } catch (_) {}
-    var doc = el.ownerDocument;
+    var doc = el.ownerDocument, view = doc.defaultView, selo = view.getSelection();
+    // Caret no ponto do clique (em vez de selecionar tudo) → permite pegar trecho.
+    var rng = null;
+    if (clientX != null && doc.caretRangeFromPoint && view.frameElement) {
+      var fr = view.frameElement.getBoundingClientRect(), s = fr.width / W;
+      rng = doc.caretRangeFromPoint((clientX - fr.left) / s, (clientY - fr.top) / s);
+    }
+    try {
+      selo.removeAllRanges();
+      if (rng) { selo.addRange(rng); }
+      else { var r2 = doc.createRange(); r2.selectNodeContents(el); r2.collapse(false); selo.addRange(r2); }
+    } catch (_) {}
     function onSelChange() { updateTextToolbar(el); }
     doc.addEventListener("selectionchange", onSelChange);
     function done() {
