@@ -6,14 +6,17 @@
 
 // rect já vem relativo ao offsetParent. Texto fixa só width (ceil) pra preservar a
 // quebra de linha; height fica auto (cresce com o conteúdo). Não-texto fixa W e H.
-export function frozenStyleFor(rect, type) {
+export function frozenStyleFor(rect, type, opts) {
   const style = {
     position: "absolute",
     left: Math.round(rect.left) + "px",
     top: Math.round(rect.top) + "px",
   };
   if (type === "text") {
-    style.width = Math.ceil(rect.width) + "px";
+    // Texto comum fixa width (ceil) pra preservar quebra de linha. Texto nowrap
+    // (ex.: swipe-cue inline-flex com seta ::after) NÃO fixa width — senão, ao
+    // crescer a fonte, a seta estoura/colapsa e some.
+    if (!(opts && opts.nowrap)) style.width = Math.ceil(rect.width) + "px";
   } else {
     style.width = Math.round(rect.width) + "px";
     style.height = Math.round(rect.height) + "px";

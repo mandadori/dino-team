@@ -89,16 +89,34 @@
   function freezeLayout(doc, root) {
     var view = doc.defaultView;
     if (view.getComputedStyle(root).position === "static") root.style.position = "relative";
-    var els = Array.prototype.slice.call(root.querySelectorAll("[data-dt-selectable]"));
+    var sels = Array.prototype.slice.call(root.querySelectorAll("[data-dt-selectable]"));
+    // Contêineres posicionados intermediários (ex.: .title-block, .content-area):
+    // ao congelar os filhos em absolute eles saem do fluxo e um contêiner de altura
+    // automática colapsaria — arrastando os filhos, cujas coords são relativas a ele.
+    // Pinar o contêiner na própria caixa preserva o offsetParent e mantém os filhos
+    // no lugar. Coletado subindo a árvore de cada selecionável até a raiz.
+    var containers = [];
+    sels.forEach(function (el) {
+      for (var p = el.parentElement; p && p !== root; p = p.parentElement) {
+        if (containers.indexOf(p) === -1 && !p.hasAttribute("data-dt-selectable") &&
+            view.getComputedStyle(p).position !== "static") containers.push(p);
+      }
+    });
+    // Mede tudo (contêineres + selecionáveis) ANTES de aplicar — congelar um não
+    // pode deslocar a medição do próximo. Contêiner congela como caixa (W+H fixos).
+    var els = containers.concat(sels);
     var measures = els.map(function (el) {
       if (DT.freeze.isFrozen(el)) return null;
       var op = el.offsetParent || root;
       var b = el.getBoundingClientRect(), ob = op.getBoundingClientRect();
-      return { el: el, type: DT.overlay.typeOf(el), rect: { left: b.left - ob.left, top: b.top - ob.top, width: b.width, height: b.height } };
+      var type = containers.indexOf(el) !== -1 ? "box" : DT.overlay.typeOf(el);
+      var ws = view.getComputedStyle(el).whiteSpace;
+      var nowrap = ws === "nowrap" || ws === "pre";
+      return { el: el, type: type, nowrap: nowrap, rect: { left: b.left - ob.left, top: b.top - ob.top, width: b.width, height: b.height } };
     });
     measures.forEach(function (m) {
       if (!m) return;
-      var s = DT.freeze.frozenStyleFor(m.rect, m.type);
+      var s = DT.freeze.frozenStyleFor(m.rect, m.type, { nowrap: m.nowrap });
       Object.keys(s).forEach(function (k) { m.el.style[k] = s[k]; });
       m.el.style.right = "auto"; m.el.style.bottom = "auto"; m.el.style.margin = "0";
     });

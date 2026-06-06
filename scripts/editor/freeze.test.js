@@ -23,3 +23,16 @@ test("isFrozen: true só quando position:absolute inline + left definido", () =>
   assert.equal(isFrozen({ style: { position: "", left: "10px" } }), false);
   assert.equal(isFrozen({ style: {} }), false);
 });
+
+test("frozenStyleFor: texto nowrap NÃO fixa width (cresce com a fonte)", () => {
+  const s = frozenStyleFor({ left: 10, top: 20, width: 120, height: 40 }, "text", { nowrap: true });
+  assert.equal(s.position, "absolute");
+  assert.equal(s.left, "10px");
+  assert.equal(s.width, undefined);   // sem width → cresce com a fonte, seta não some
+  assert.equal(s.height, undefined);
+});
+
+test("frozenStyleFor: texto sem opts mantém width (compat)", () => {
+  const s = frozenStyleFor({ left: 0, top: 0, width: 200.4, height: 40 }, "text");
+  assert.equal(s.width, "201px");
+});
