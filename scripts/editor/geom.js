@@ -12,19 +12,20 @@ export function resizeKeepingAspect(curW, curH, axis, value, lock) {
   return { width: lock ? Math.round(height * ratio) : null, height };
 }
 
-// Visibilidade das alças conforme o tamanho do box NA TELA (px já escalados).
-// Box pequeno: só cantos (desafoga). Box muito pequeno: nenhuma — resize fino
-// fica pelo campo "Tam" do painel e pelas setas do teclado.
-export const HANDLE_HIDE_EDGES_BELOW = 48;
-export const HANDLE_HIDE_ALL_BELOW = 24;
-export function handleVisibility(screenW, screenH) {
+// Layout das alças conforme o tamanho do box NA TELA (px já escalados).
+// Cantos SEMPRE visíveis (resize sempre possível); arestas só quando há espaço.
+// O tamanho da alça é proporcional, com piso agarrável e teto padrão — assim em
+// elemento pequeno a alça encolhe (não cobre o conteúdo) sem perder o resize.
+export const HANDLE_MIN = 7;            // piso agarrável
+export const HANDLE_MAX = 11;           // tamanho padrão
+export const HANDLE_EDGES_BELOW = 40;   // abaixo disso, só cantos
+export function handleLayout(screenW, screenH) {
   const m = Math.min(screenW, screenH);
-  if (m < HANDLE_HIDE_ALL_BELOW) return { corners: false, edges: false };
-  if (m < HANDLE_HIDE_EDGES_BELOW) return { corners: true, edges: false };
-  return { corners: true, edges: true };
+  const size = Math.max(HANDLE_MIN, Math.min(HANDLE_MAX, Math.round(m / 4)));
+  return { size: size, corners: true, edges: m >= HANDLE_EDGES_BELOW };
 }
 
 if (typeof window !== "undefined") {
   window.DT = window.DT || {};
-  window.DT.geom = { resizeKeepingAspect, handleVisibility };
+  window.DT.geom = { resizeKeepingAspect, handleLayout };
 }

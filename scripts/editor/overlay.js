@@ -96,13 +96,13 @@ window.DT = window.DT || {};
       HPOS.forEach(function (p) { var h = document.createElement("div"); h.className = "dt-handle"; h.dataset.pos = p[0]; h.addEventListener("pointerdown", onHandleDown); layer.appendChild(h); handles.push(h); });
     }
     var isBgDrop = sel.el.hasAttribute("data-bg-drop");
-    var vis = DT.geom.handleVisibility(Wd, Hd);
+    var lay = DT.geom.handleLayout(Wd, Hd);
     handles.forEach(function (h) {
       var pos = h.dataset.pos, p = HPOS.find(function (x) { return x[0] === pos; });
       h.style.left = (L + Wd * p[1]) + "px"; h.style.top = (T + Hd * p[2]) + "px";
-      var show = pos.length === 2 ? vis.corners : vis.edges;   // cantos = 2 chars (nw/ne/se/sw)
-      var small = Math.min(Wd, Hd) < 48;
-      h.classList.toggle("sm", small);
+      h.style.width = lay.size + "px"; h.style.height = lay.size + "px";
+      h.style.margin = (-lay.size / 2) + "px 0 0 " + (-lay.size / 2) + "px";
+      var show = pos.length === 2 ? lay.corners : lay.edges;   // cantos = 2 chars (nw/ne/se/sw)
       h.style.display = (isBgDrop || !show) ? "none" : "block";
     });
   }

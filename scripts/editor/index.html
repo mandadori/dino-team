@@ -40,14 +40,13 @@
     .dt-surface { position: absolute; inset: 0; z-index: 2; touch-action: none; cursor: default; }
 
     #dt-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 500; }
-    .dt-selbox { position: fixed; border: 1.5px solid var(--accent); pointer-events: none; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+    .dt-selbox { position: fixed; border: 1px solid var(--accent); pointer-events: none; }
     .dt-hoverbox { position: fixed; border: 1px solid rgba(0,224,81,.6); pointer-events: none; }
-    .dt-handle { position: fixed; width: 11px; height: 11px; margin: -6px 0 0 -6px; background: #fff; border: 1.5px solid var(--accent); border-radius: 2px; pointer-events: auto; z-index: 520; touch-action: none; }
+    .dt-handle { position: fixed; width: 11px; height: 11px; margin: -6px 0 0 -6px; background: #fff; border: 1px solid var(--accent); border-radius: 2px; pointer-events: auto; z-index: 520; touch-action: none; }
     .dt-handle[data-pos="nw"], .dt-handle[data-pos="se"] { cursor: nwse-resize; }
     .dt-handle[data-pos="ne"], .dt-handle[data-pos="sw"] { cursor: nesw-resize; }
     .dt-handle[data-pos="n"],  .dt-handle[data-pos="s"]  { cursor: ns-resize; }
     .dt-handle[data-pos="e"],  .dt-handle[data-pos="w"]  { cursor: ew-resize; }
-    .dt-handle.sm { width: 8px; height: 8px; margin: -4px 0 0 -4px; }
     .dt-guide { position: fixed; background: var(--guide); z-index: 510; pointer-events: none; }
     .dt-guide.v { width: 1px; } .dt-guide.h { height: 1px; }
     .dt-dist { position: fixed; z-index: 515; pointer-events: none; transform: translate(-50%, -50%); background: var(--guide); color: #fff; font: 600 10px/1 "Montserrat", sans-serif; padding: 2px 4px; border-radius: 2px; white-space: nowrap; }
@@ -58,7 +57,7 @@
     .dt-toolbar button { background: transparent; border: 1px solid rgba(255,255,255,.26); color: #fff; height: 32px; min-width: 32px; border-radius: 999px; cursor: pointer; font: 600 13px "Montserrat", sans-serif; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; }
     .dt-toolbar button:hover { background: rgba(255,255,255,.12); }
     .dt-toolbar button:disabled { opacity: .3; cursor: default; }
-    .dt-text-tb { position: fixed; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: rgba(0,0,0,.9); backdrop-filter: blur(8px); border-radius: 8px; z-index: 700; user-select: none; }
+    .dt-text-tb { position: fixed; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: rgba(0,0,0,.9); backdrop-filter: blur(8px); border-radius: 8px; z-index: 700; user-select: none; pointer-events: auto; }
     .dt-text-tb button { background: transparent; border: 1px solid rgba(255,255,255,.24); color: #fff; height: 26px; min-width: 26px; border-radius: 5px; cursor: pointer; font: 600 12px "Montserrat", sans-serif; padding: 0 8px; display: inline-flex; align-items: center; justify-content: center; }
     .dt-text-tb button:hover { background: rgba(255,255,255,.14); }
     .dt-text-tb button.dot { width: 22px; min-width: 22px; padding: 0; border-radius: 999px; border: 1px solid rgba(255,255,255,.5); }

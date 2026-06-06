@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { resizeKeepingAspect, handleVisibility, HANDLE_HIDE_EDGES_BELOW, HANDLE_HIDE_ALL_BELOW } from "./geom.js";
+import { resizeKeepingAspect, handleLayout, HANDLE_MIN, HANDLE_MAX, HANDLE_EDGES_BELOW } from "./geom.js";
 
 test("axis w, lock on → height segue a proporção", () => {
   const r = resizeKeepingAspect(200, 100, "w", 300, true);
@@ -21,21 +21,24 @@ test("dimensão atual zerada não quebra (ratio 1)", () => {
   assert.deepEqual(resizeKeepingAspect(0, 0, "w", 80, true), { width: 80, height: 80 });
 });
 
-test("handleVisibility: box grande mostra cantos e arestas", () => {
-  assert.deepEqual(handleVisibility(200, 120), { corners: true, edges: true });
+test("handleLayout: box grande → cantos + arestas, tamanho no teto", () => {
+  assert.deepEqual(handleLayout(200, 120), { size: HANDLE_MAX, corners: true, edges: true });
 });
 
-test("handleVisibility: box pequeno esconde só as arestas", () => {
-  const v = handleVisibility(40, 200); // min=40 < 48
-  assert.deepEqual(v, { corners: true, edges: false });
+test("handleLayout: box pequeno → cantos sempre, arestas escondidas", () => {
+  const v = handleLayout(30, 200); // min=30 < 40
+  assert.equal(v.corners, true);
+  assert.equal(v.edges, false);
 });
 
-test("handleVisibility: box muito pequeno esconde tudo", () => {
-  const v = handleVisibility(18, 18); // min=18 < 24
-  assert.deepEqual(v, { corners: false, edges: false });
+test("handleLayout: box minúsculo → cantos ainda presentes (resize não some)", () => {
+  const v = handleLayout(12, 12);
+  assert.equal(v.corners, true);
+  assert.equal(v.size, HANDLE_MIN);   // alça no piso agarrável
 });
 
-test("handleVisibility: limiares exportados", () => {
-  assert.equal(HANDLE_HIDE_EDGES_BELOW, 48);
-  assert.equal(HANDLE_HIDE_ALL_BELOW, 24);
+test("handleLayout: tamanho proporcional entre piso e teto", () => {
+  assert.equal(handleLayout(40, 40).size, 10);   // round(40/4)=10
+  assert.equal(handleLayout(40, 200).edges, true); // min=40 >= 40
+  assert.equal(HANDLE_EDGES_BELOW, 40);
 });
