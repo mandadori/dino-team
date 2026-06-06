@@ -95,8 +95,16 @@ window.DT = window.DT || {};
     if (!handles.length) {
       HPOS.forEach(function (p) { var h = document.createElement("div"); h.className = "dt-handle"; h.dataset.pos = p[0]; h.addEventListener("pointerdown", onHandleDown); layer.appendChild(h); handles.push(h); });
     }
-    var hide = sel.el.hasAttribute("data-bg-drop");
-    handles.forEach(function (h) { var p = HPOS.find(function (x) { return x[0] === h.dataset.pos; }); h.style.left = (L + Wd * p[1]) + "px"; h.style.top = (T + Hd * p[2]) + "px"; h.style.display = hide ? "none" : "block"; });
+    var isBgDrop = sel.el.hasAttribute("data-bg-drop");
+    var vis = DT.geom.handleVisibility(Wd, Hd);
+    handles.forEach(function (h) {
+      var pos = h.dataset.pos, p = HPOS.find(function (x) { return x[0] === pos; });
+      h.style.left = (L + Wd * p[1]) + "px"; h.style.top = (T + Hd * p[2]) + "px";
+      var show = pos.length === 2 ? vis.corners : vis.edges;   // cantos = 2 chars (nw/ne/se/sw)
+      var small = Math.min(Wd, Hd) < 48;
+      h.classList.toggle("sm", small);
+      h.style.display = (isBgDrop || !show) ? "none" : "block";
+    });
   }
   function clearSelection() { if (box) { box.remove(); box = null; } handles.forEach(function (h) { h.remove(); }); handles = []; }
 

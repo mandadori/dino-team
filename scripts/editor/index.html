@@ -25,7 +25,7 @@
 
     #dt-stage {
       flex: 1 1 auto; height: 100vh; min-width: 0;
-      display: flex; align-items: center; gap: 60px; padding: 0 12vw;
+      display: flex; align-items: center; gap: 60px; padding: 54px 12vw 96px;
       overflow-x: auto; overflow-y: hidden;
       scroll-snap-type: x mandatory; scroll-padding-inline: 50%;
       scrollbar-width: thin; scrollbar-color: #444 transparent;
@@ -46,6 +46,7 @@
     .dt-handle[data-pos="ne"], .dt-handle[data-pos="sw"] { cursor: nesw-resize; }
     .dt-handle[data-pos="n"],  .dt-handle[data-pos="s"]  { cursor: ns-resize; }
     .dt-handle[data-pos="e"],  .dt-handle[data-pos="w"]  { cursor: ew-resize; }
+    .dt-handle.sm { width: 8px; height: 8px; margin: -4px 0 0 -4px; }
     .dt-guide { position: fixed; background: var(--guide); z-index: 510; pointer-events: none; }
     .dt-guide.v { width: 1px; } .dt-guide.h { height: 1px; }
     .dt-dist { position: fixed; z-index: 515; pointer-events: none; transform: translate(-50%, -50%); background: var(--guide); color: #fff; font: 600 10px/1 "Montserrat", sans-serif; padding: 2px 4px; border-radius: 2px; white-space: nowrap; }
