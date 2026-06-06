@@ -60,7 +60,7 @@ Se `revisor-brand` devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e orie
 **A skill executa produção inline.** Não há subagentes para briefing, copy ou design — a skill lê os arquivos necessários diretamente e produz. Agentes externos (pesquisador-mercado, treinador, revisor-brand, arquivista) são acionados quando têm função geral no sistema.
 
 **Contexto de leitura por passo:**
-- **Briefing (Passo 6):** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `dados/ramon/contexto.md` + `dados/performance/angulos-queimados.md` + `dados/mercado/tendencias/<mês>.md` + `estilo.md` do estilo escolhido.
+- **Briefing (Passo 6):** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `memory/ramon/contexto.md` + `memory/performance/angulos-queimados.md` + `memory/mercado/tendencias/<mês>.md` + `estilo.md` do estilo escolhido.
 - **Copy (Passo 10):** `estilo.md` (campos `#### editorial` de cada bloco) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa gravada.
 - **Design (Passo 11):** `estilo.md` (campos `#### visual` de cada bloco) + `slide.html` do estilo + `brand/referencias-visuais.md` + `brand/social-media.md` + copy.md.
 
@@ -83,7 +83,7 @@ A skill **não lê contexto aqui**. Ramon, mercado e ângulos-queimados são con
 #### 2a. Checar frescor
 
 ```bash
-f="dados/mercado/tendencias/$(date +%Y-%m).md"
+f="memory/mercado/tendencias/$(date +%Y-%m).md"
 if [ -f "$f" ] && [ -z "$(find "$f" -mtime +14 2>/dev/null)" ]; then echo "FRESCO"; else echo "STALE"; fi
 ```
 
@@ -96,7 +96,7 @@ Profundidade: deep research.
 Inputs:
 - Mês de referência: <YYYY-MM>
 
-Saída: gravar/atualizar dados/mercado/tendencias/<YYYY-MM>.md, dados/mercado/concorrentes/<slug>.md e dados/mercado/vocabulario-publico.md conforme a metodologia do modo scouting de mercado.
+Saída: gravar/atualizar memory/mercado/tendencias/<YYYY-MM>.md, memory/mercado/concorrentes/<slug>.md e memory/mercado/vocabulario-publico.md conforme a metodologia do modo scouting de mercado.
 ```
 
 Se FRESCO, pule.
@@ -113,9 +113,9 @@ Tarefa: seleção de candidatos (Fase B — ranqueamento).
 Inputs:
 - Formato: <formato>
 - Estilo: <slug se veio no input, senão "ainda não definido">
-- Contexto Ramon: dados/ramon/contexto.md (leia — considere fase atual e cronograma)
-- Ângulos queimados: dados/performance/angulos-queimados.md (não repetir)
-- Tendências do mês: dados/mercado/tendencias/<YYYY-MM>.md
+- Contexto Ramon: memory/ramon/contexto.md (leia — considere fase atual e cronograma)
+- Ângulos queimados: memory/performance/angulos-queimados.md (não repetir)
+- Tendências do mês: memory/mercado/tendencias/<YYYY-MM>.md
 - Quantidade de candidatos: 3-5
 
 Saída inline: candidatos ranqueados (ângulo + pilar + sustentação + potencial), do maior para o menor potencial.
@@ -210,9 +210,9 @@ Se vier ajuste, edite os arquivos em `_rascunho/` inline conforme o pedido. Repi
 **Caso contrário:** leia os seguintes arquivos e decida inline:
 - `brand/brand-book.md`
 - `brand/pilares-conteudo.md`
-- `dados/ramon/contexto.md`
-- `dados/performance/angulos-queimados.md`
-- `dados/mercado/tendencias/<YYYY-MM>.md`
+- `memory/ramon/contexto.md`
+- `memory/performance/angulos-queimados.md`
+- `memory/mercado/tendencias/<YYYY-MM>.md`
 - `estilo.md` do estilo escolhido (campos `## Conceito` e `#### editorial` de cada bloco)
 
 Com base nessas leituras e no tema/candidatos escolhidos, fixe:
@@ -269,12 +269,12 @@ Profundidade: deep research (WebFetch nas fontes promissoras).
 Inputs:
 - Formato/Estilo/Tema: <formato> / <slug | "ad-hoc"> / <tema>
 - Pilar / Recorte / Sinalizações: <inline do briefing>
-- Contexto de mercado acumulado: dados/mercado/tendencias/<mês-atual em YYYY-MM>.md + dados/mercado/concorrentes/*.md (parta daqui; não redescubra tendências já mapeadas).
+- Contexto de mercado acumulado: memory/mercado/tendencias/<mês-atual em YYYY-MM>.md + memory/mercado/concorrentes/*.md (parta daqui; não redescubra tendências já mapeadas).
 
 Foco: ângulos não-óbvios e contradições dentro do recorte; referências concretas com link; dados/citações verificáveis; mitos a quebrar.
 
 Template: templates/pesquisa.md.
-Saída: gravar em dados/pesquisas-brutas/<data>-tendencias-<slug>.md.
+Saída: gravar em memory/pesquisa/<data>-tendencias-<slug>.md.
 ```
 
 ### 10. Copy (inline + pausa)
@@ -283,7 +283,7 @@ Leia os seguintes arquivos:
 - `estilo.md` do estilo escolhido — campos `#### editorial` de cada bloco (função, tom, [entregar], [ab])
 - `brand/tom-de-voz.md`
 - `brand/publico-alvo.md`
-- `dados/pesquisas-brutas/<data>-tendencias-<slug>.md` (se pesquisa executada no Passo 9)
+- `memory/pesquisa/<data>-tendencias-<slug>.md` (se pesquisa executada no Passo 9)
 - `export/conteudos/<formato>/<data>-<slug>/treino.md` (se existir)
 
 Com base nessas leituras e no briefing inline do Passo 6, escreva a copy seguindo **exatamente** os campos `#### editorial` de cada bloco do estilo (função, tom, [entregar], [ab]). Um bloco por bloco, respeitando limites de palavras declarados em `[entregar]`.
@@ -412,7 +412,7 @@ Se "tudo" ou seleção, edite `estilo.md` e `slide.html` do estilo **inline**, a
 Snapshot da pesquisa na pasta do post:
 
 ```bash
-cp -n dados/pesquisas-brutas/<data>-tendencias-<slug>.md \
+cp -n memory/pesquisa/<data>-tendencias-<slug>.md \
       export/conteudos/<formato>/<data>-<slug>/pesquisa-base.md
 ```
 
@@ -554,11 +554,11 @@ Pilar: <pilar do Passo 6>
 Slug: <slug do Passo 6>
 Data da publicação: <data de hoje>
 ```
-O `analista-performance` define a janela de descanso por bom senso editorial (ângulo específico descansa mais; amplo, menos) e grava a entrada em `dados/performance/angulos-queimados.md`. Se o mesmo ângulo já existir, ele atualiza a data em vez de duplicar.
+O `analista-performance` define a janela de descanso por bom senso editorial (ângulo específico descansa mais; amplo, menos) e grava a entrada em `memory/performance/angulos-queimados.md`. Se o mesmo ângulo já existir, ele atualiza a data em vez de duplicar.
 
 ### 16. Publicação (opcional, gated por política)
 
-Carregar `dados/politicas/publicacao.yaml`. Avaliar as regras com as variáveis disponíveis:
+Carregar `orquestracao/politicas/publicacao.yaml`. Avaliar as regras com as variáveis disponíveis:
 - `artefato.canal = 'instagram'`
 - `briefing.pilar = <pilar do briefing>`
 - `artefato.contem_termo(<termo>)` (varrer copy + briefing para termos sensíveis)

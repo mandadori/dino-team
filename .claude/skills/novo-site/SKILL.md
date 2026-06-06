@@ -34,7 +34,7 @@ A skill checa `site/package.json`:
 | `designer-web` | Criação (Passo 4) + alteração visual | briefing, arquivo destino | componente React | Engenharia/Execução/Web |
 | `dev-frontend` | Criação (Passo 5) + alteração de integração/lógica | componentes, página destino | integração no app | Engenharia/Execução/Web |
 | `curador-web` | Criação (Passo 6) + qualquer alteração antes de finalizar | pasta `site/` + critérios | relatório técnico ou preview URL | Engenharia/Revisão |
-| ⚙ briefing inline | Criação (Passo 3) + qualquer alteração editorial | spec, brand book, dados/ramon/, objetivo da página | `site/docs/home-briefing.md` | skill escreve diretamente |
+| ⚙ briefing inline | Criação (Passo 3) + qualquer alteração editorial | spec, brand book, memory/ramon/, objetivo da página | `site/docs/home-briefing.md` | skill escreve diretamente |
 | `revisor-brand` | Gate pré-deploy (Passo 7.5) + qualquer alteração que toque copy/identidade | componentes + globals + briefing | APROVADO/REPROVADO (binário) | Transversais/Brand (externo) |
 
 ## Fluxo — modo criação
@@ -96,7 +96,7 @@ A própria skill produz `site/docs/home-briefing.md` seguindo `templates/briefin
 Inputs a ler:
 - `docs/specs/2026-05-19-site-dino-team-design.md` — descreve as 7 seções e o tom esperado.
 - `brand/brand-book.md`, `brand/tom-de-voz.md`, `brand/publico-alvo.md`, `brand/referencias-visuais.md` — identidade da marca.
-- `dados/ramon/contexto.md` — fase atual + conquistas + falas do Ramon (para ângulo/contexto biográfico).
+- `memory/ramon/contexto.md` — fase atual + conquistas + falas do Ramon (para ângulo/contexto biográfico).
 
 Estrutura do briefing a produzir em `site/docs/home-briefing.md`:
 - Objetivo único da página, persona alvo, tom, ângulo central da home (porta de entrada da marca), pilar dominante.

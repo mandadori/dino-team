@@ -1,19 +1,19 @@
 ---
 name: atualizar-ramon
-description: Skill interativa para atualizar o slice `dados/ramon/` — fase atual, cronograma, princípios, falas, conquistas. Usa o agente `arquivista` como owner único do slice. Aceita input manual do usuário OU dispara o auto-sync (busca em fontes públicas). Sem ela, agentes que dependem do contexto Ramon operam às cegas.
+description: Skill interativa para atualizar o slice `memory/ramon/` — fase atual, cronograma, princípios, falas, conquistas. Usa o agente `arquivista` como owner único do slice. Aceita input manual do usuário OU dispara o auto-sync (busca em fontes públicas). Sem ela, agentes que dependem do contexto Ramon operam às cegas.
 ---
 
 # /atualizar-ramon — Dino Team
 
 ## Objetivo
 
-Manter `dados/ramon/contexto.md` atualizado — slice da memória persistente sobre o Ramon, lido inline pelas skills de post para calibrar todo conteúdo.
+Manter `memory/ramon/contexto.md` atualizado — slice da memória persistente sobre o Ramon, lido inline pelas skills de post para calibrar todo conteúdo.
 
 ## Fluxo
 
 | Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
 |---|---|---|---|---|
-| 1 | ⚙ diagnóstico | dados/ramon (archivist auto) | — | estado atual |
+| 1 | ⚙ diagnóstico | memory/ramon (archivist auto) | — | estado atual |
 | 2 | ⏸ usuário | — | 1 | input |
 | 3 | arquivista | input ← 2 | 2 | contexto.md (manifesto) |
 | 4 | ⚙ tratar retorno | retorno ← 3 | 3 | tratamento + oferta |
@@ -31,14 +31,14 @@ Sem argumentos — a skill é conversacional. O usuário descreve o que mudou (t
 
 ### 1. Diagnóstico — mostrar estado atual
 
-Ler `dados/ramon/contexto.md` e mostrar inline:
+Ler `memory/ramon/contexto.md` e mostrar inline:
 - Seção "Fase atual" (fase + última revisão).
 - Seção "Cronograma" (últimas 5 entradas, ou "(vazio)").
 
 Apresentar:
 
 ```
-Slice ramon/ — estado atual (dados/ramon/contexto.md):
+Slice ramon/ — estado atual (memory/ramon/contexto.md):
 
 Fase atual: <conteúdo da seção Fase atual | "(vazio — primeira atualização)">
 Última revisão de fase: <data | "(nunca)">
@@ -94,7 +94,7 @@ Inputs:
 - Fonte: usuário via /atualizar-ramon na data <YYYY-MM-DD> | (auto-sync: você cita as fontes públicas que encontrar)
 
 Regras:
-- Edite a seção relevante de dados/ramon/contexto.md; atualize `ultima_atualizacao` no frontmatter.
+- Edite a seção relevante de memory/ramon/contexto.md; atualize `ultima_atualizacao` no frontmatter.
 - Mudança de fase SEMPRE requer confirmação do usuário — se for auto-sync, devolva CONFIRMAR_FASE em vez de gravar.
 - Se houver conflito com entrada existente, devolva CONFLITO_FATOS — eu pergunto ao usuário e re-aciono.
 
@@ -110,7 +110,7 @@ Saída: contexto.md atualizado + 1-3 linhas confirmando (ou proposta, se alto ri
 Depois:
 
 ```
-Gravado em dados/ramon/contexto.md:
+Gravado em memory/ramon/contexto.md:
 <diff resumido — só a parte que mudou>
 
 Mais alguma coisa pra atualizar? (sim/não)
@@ -122,7 +122,7 @@ Loop até "não".
 
 ```
 Slice ramon/ atualizado.
-Seções modificadas em dados/ramon/contexto.md:
+Seções modificadas em memory/ramon/contexto.md:
 - <lista>
 
 Próximo /novo-post vai consultar o estado novo do slice.
@@ -138,6 +138,6 @@ Próximo /novo-post vai consultar o estado novo do slice.
 
 ## Critério de conclusão
 
-- Pelo menos 1 seção de `dados/ramon/contexto.md` foi atualizada e versionada (ou auto-sync rodou e nada novo havia).
+- Pelo menos 1 seção de `memory/ramon/contexto.md` foi atualizada e versionada (ou auto-sync rodou e nada novo havia).
 - `arquivista` retornou confirmação.
 - O usuário encerrou explicitamente ("não" para próxima atualização).

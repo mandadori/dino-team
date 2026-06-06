@@ -48,13 +48,13 @@ export async function POST(req: Request) {
         motivo: "política exige aprovação humana",
         regra: "termos-sensiveis",
         termo,
-        note: `Bloqueado pela política (dados/politicas/publicacao.yaml): termo sensível "${termo}".`,
+        note: `Bloqueado pela política (orquestracao/politicas/publicacao.yaml): termo sensível "${termo}".`,
       });
     }
   }
 
   // Política existe? (apenas registra; a avaliação completa é feita pelas skills)
-  const politicaPath = path.join(REPO_ROOT, "dados", "politicas", "publicacao.yaml");
+  const politicaPath = path.join(REPO_ROOT, "orquestracao", "politicas", "publicacao.yaml");
   const politicaPresente = fs.existsSync(politicaPath);
 
   // Cliente pronto para o wiring real do orquestrador.

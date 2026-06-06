@@ -52,7 +52,7 @@ Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestr
 - [`/novo-post`](.claude/skills/novo-post/SKILL.md) — criar um post completo (carrossel ou stories).
 - [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — gerar N posts em sequência, agendável.
 - [`/novo-estilo`](.claude/skills/novo-estilo/SKILL.md) — criar um novo estilo visual para carrossel ou stories.
-- [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — atualizar o slice `dados/ramon/` (fase atual + cronograma + outras vertentes).
+- [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — atualizar o slice `memory/ramon/` (fase atual + cronograma + outras vertentes).
 - [`/novo-site`](.claude/skills/novo-site/SKILL.md) — criar ou alterar o site (dual-mode); aciona os agentes de Engenharia + gate `revisor-brand`.
 - [`/planejar-pauta-semanal`](.claude/skills/planejar-pauta-semanal/SKILL.md) — L2: produz N briefings da semana (sem executar). Agendável (default: 2ª 9h via cron).
 
@@ -65,7 +65,7 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 **Agentes atuais (11):**
 
 - **Marketing / Pesquisa**
-  - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `dados/mercado/`.
+  - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `memory/mercado/`.
 - **Marketing / Revisão**
   - [`curador-export`](.claude/agents/curador-export.md) — validação técnica + export PNG.
 - **Produto / Consultoria / Execução**
@@ -73,8 +73,8 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 - **Transversais / Brand**
   - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca e compliance; gate em 2 momentos (identidade visual em criação de estilo; copy + compliance em criação de post).
 - **Transversais / Dados**
-  - [`arquivista`](.claude/agents/arquivista.md) — owner único do slice `dados/ramon/` e do banco de imagens; consolida contexto do Ramon (input do usuário + auto-sync de fontes públicas) e gerencia legenda/seleção/marcação de fotos por slide.
-  - [`analista-performance`](.claude/agents/analista-performance.md) — owner único do slice `dados/performance/`; registra ângulos queimados e (futuro) métricas de canais.
+  - [`arquivista`](.claude/agents/arquivista.md) — owner único do slice `memory/ramon/` e do banco de imagens; consolida contexto do Ramon (input do usuário + auto-sync de fontes públicas) e gerencia legenda/seleção/marcação de fotos por slide.
+  - [`analista-performance`](.claude/agents/analista-performance.md) — owner único do slice `memory/performance/`; registra ângulos queimados e (futuro) métricas de canais.
 - **Engenharia / Execução / Web**
   - [`arquiteto-web`](.claude/agents/arquiteto-web.md) — scaffold, organização, libs, config do site.
   - [`designer-web`](.claude/agents/designer-web.md) — componentes React + Tailwind + Framer Motion.
@@ -88,13 +88,13 @@ Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-0
 
 ### 4. Banco de Dados (`dados/`)
 
-Memória persistente compartilhada — markdown + frontmatter YAML, versionada em git, lida por qualquer agente e escrita apenas pelo owner declarado. Ver [`dados/_schema.md`](dados/_schema.md) para slices ativos e ownership.
+Memória persistente compartilhada — markdown + frontmatter YAML, versionada em git, lida por qualquer agente e escrita apenas pelo owner declarado. Ver [`memory/_schema.md`](memory/_schema.md) para slices ativos e ownership.
 
 **Slices em v1:**
-- `dados/ramon/contexto.md` — contexto temporal e biográfico do Ramon, arquivo único (owner: `arquivista`).
-- `dados/mercado/` — pesquisa de mercado e vocabulário do público (owner: `pesquisador-mercado`).
-- `dados/performance/` — só `angulos-queimados.md` em v1 (owner: `analista-performance`); outros sub-slices entram quando publicação real existir.
-- `dados/pesquisas-brutas/` — pesquisas profundas geradas pelo pipeline (insumo cumulativo).
+- `memory/ramon/contexto.md` — contexto temporal e biográfico do Ramon, arquivo único (owner: `arquivista`).
+- `memory/mercado/` — pesquisa de mercado e vocabulário do público (owner: `pesquisador-mercado`).
+- `memory/performance/` — só `angulos-queimados.md` em v1 (owner: `analista-performance`); outros sub-slices entram quando publicação real existir.
+- `memory/pesquisa/` — pesquisas profundas geradas pelo pipeline (insumo cumulativo).
 
 ### 5. Site (`site/`)
 
@@ -108,7 +108,7 @@ Site institucional + comercial do Dino Team — Next.js 16 + Tailwind 4 + Framer
 Camada que torna o sistema reativo. Triggers (cron, futuramente webhook/threshold) disparam skills sem slash command. Políticas declarativas decidem quando humano entra. Dashboard mostra estado e permite gatilho manual.
 
 - **Rotas:** [`orquestracao/rotas.yaml`](orquestracao/rotas.yaml) — tabela declarativa de trigger → skill. v1 com 1 rota (cron pauta semanal).
-- **Políticas:** [`dados/politicas/publicacao.yaml`](dados/politicas/publicacao.yaml) — regras de quando publicação é automática e quando exige aprovação humana.
+- **Políticas:** [`orquestracao/politicas/publicacao.yaml`](orquestracao/politicas/publicacao.yaml) — regras de quando publicação é automática e quando exige aprovação humana.
 - **Dashboard:** rota `/admin/dashboard` no site (auth por token). Mostra campanhas em curso, aprovações pendentes, frescor do banco, e dispara skills via Route Handler.
 - **Cron:** Vercel Cron + Route Handler em `site/app/api/cron/<id>/route.ts`.
 - **Tools de publicação:** scripts em [`scripts/integrations/`](scripts/integrations/), mantidos por `integrador-apis`. v1: `publish_instagram.js`.

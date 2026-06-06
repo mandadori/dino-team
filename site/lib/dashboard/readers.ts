@@ -3,7 +3,7 @@ import path from "node:path";
 
 /**
  * Leitores server-side do estado do sistema. Leem arquivos do repositório
- * (campanhas/, dados/) a partir da raiz — site/ é subpasta, então sobe 1 nível.
+ * (campanhas/, memory/) a partir da raiz — site/ é subpasta, então sobe 1 nível.
  *
  * NOTA: em produção (Vercel serverless) o repositório não está presente no
  * filesystem da função, então estes leitores retornam vazio graciosamente.
@@ -96,17 +96,17 @@ export type SliceInfo = {
 };
 
 export function readInteligencia(): SliceInfo[] {
-  const dadosDir = path.join(REPO_ROOT, "dados");
-  const slices = ["ramon", "mercado", "performance"];
+  const memoryDir = path.join(REPO_ROOT, "memory");
+  const slices = ["narrativas", "publico", "mercado", "ramon", "performance", "pesquisa"];
   return safe(() => {
     return slices.map((slice) => {
-      const dir = path.join(dadosDir, slice);
+      const dir = path.join(memoryDir, slice);
       const arquivos: SliceInfo["arquivos"] = [];
       if (fs.existsSync(dir)) {
         for (const f of fs.readdirSync(dir)) {
           if (!f.endsWith(".md")) continue;
           const stat = fs.statSync(path.join(dir, f));
-          arquivos.push({ path: `dados/${slice}/${f}`, ultimaAtualizacao: stat.mtime.toISOString() });
+          arquivos.push({ path: `memory/${slice}/${f}`, ultimaAtualizacao: stat.mtime.toISOString() });
         }
       }
       const ultimaAtualizacao =
@@ -119,6 +119,6 @@ export function readInteligencia(): SliceInfo[] {
 }
 
 export function readPoliticas(): string {
-  const p = path.join(REPO_ROOT, "dados", "politicas", "publicacao.yaml");
+  const p = path.join(REPO_ROOT, "orquestracao", "politicas", "publicacao.yaml");
   return safe(() => (fs.existsSync(p) ? fs.readFileSync(p, "utf8") : "(política não encontrada)"), "(erro ao ler política)");
 }

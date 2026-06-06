@@ -1,6 +1,6 @@
 # Integrations — scripts determinísticos
 
-Owner único: agente `integrador-apis`. Scripts Node.js puros (sem LLM) que conectam o sistema a APIs externas. Chamados por skills quando o artefato está pronto **e** a política (`dados/politicas/publicacao.yaml`) autoriza.
+Owner único: agente `integrador-apis`. Scripts Node.js puros (sem LLM) que conectam o sistema a APIs externas. Chamados por skills quando o artefato está pronto **e** a política (`orquestracao/politicas/publicacao.yaml`) autoriza.
 
 ## Scripts
 

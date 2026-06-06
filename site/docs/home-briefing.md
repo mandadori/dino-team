@@ -1,7 +1,7 @@
 # Briefing institucional — Home Dino Team
 
-> **Nota de processo:** este briefing seguiria o agente `briefing-writer` (Marketing/Estratégia), que consulta `dados/ramon/contexto.md` e `dados/performance/angulos-queimados.md`. Como o registro de agentes do Claude Code carrega no startup, o `briefing-writer` não resolve na mesma sessão em que foi criado/alterado — este briefing foi redigido seguindo o schema canônico dele + brand book + spec do site. Numa sessão nova, rode `/novo-site` para regerá-lo via pipeline.
-> **Sinalização do banco:** `dados/ramon/contexto.md` está em template (fase atual ainda não definida). Briefing produzido **sem o sinal de fase** — quando o slice for populado via `/atualizar-ramon`, revisar o tom à luz da fase do Ramon.
+> **Nota de processo:** este briefing seguiria o agente `briefing-writer` (Marketing/Estratégia), que consulta `memory/ramon/contexto.md` e `memory/performance/angulos-queimados.md`. Como o registro de agentes do Claude Code carrega no startup, o `briefing-writer` não resolve na mesma sessão em que foi criado/alterado — este briefing foi redigido seguindo o schema canônico dele + brand book + spec do site. Numa sessão nova, rode `/novo-site` para regerá-lo via pipeline.
+> **Sinalização do banco:** `memory/ramon/contexto.md` está em template (fase atual ainda não definida). Briefing produzido **sem o sinal de fase** — quando o slice for populado via `/atualizar-ramon`, revisar o tom à luz da fase do Ramon.
 
 ## Estratégia
 

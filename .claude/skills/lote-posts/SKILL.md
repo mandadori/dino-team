@@ -53,7 +53,7 @@ Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou 
 **Cada post é um contexto independente.** A skill produz briefing, copy e design inline por post — sem subagentes de produção. A variação de tema/estilo dentro do lote é garantida pelo planejamento do Passo 3-4, não por anti-repetição automática entre posts.
 
 **Contexto de leitura por post (Passo 5):**
-- **Briefing:** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `dados/ramon/contexto.md` + `dados/performance/angulos-queimados.md` + `dados/mercado/tendencias/<mês>.md` + `estilo.md` do estilo atribuído.
+- **Briefing:** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `memory/ramon/contexto.md` + `memory/performance/angulos-queimados.md` + `memory/mercado/tendencias/<mês>.md` + `estilo.md` do estilo atribuído.
 - **Copy:** `estilo.md` (campos `#### editorial`) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa do post.
 - **Design (Passo 7):** `estilo.md` (campos `#### visual`) + `slide.html` do estilo + `brand/referencias-visuais.md` + `brand/social-media.md` + `copy.md` do post.
 
@@ -126,7 +126,7 @@ Inputs:
 - Formato: <formato>
 - Distribuição: <slug:K | slug:K | ...>
 - Tema-base: <texto livre ou "nenhum — distribuir entre pilares">
-- Ângulos queimados: dados/performance/angulos-queimados.md (não repetir)
+- Ângulos queimados: memory/performance/angulos-queimados.md (não repetir)
 
 Regras:
 - Cada subtema deve combinar com o estilo a que é atribuído.
@@ -164,9 +164,9 @@ Para cada par `(subtema, estilo)` da lista confirmada, execute inline e **sem pa
 #### 5a. Carregar contexto do post
 
 Leia (uma vez por lote, reutilize nos demais posts):
-- `dados/ramon/contexto.md`
-- `dados/performance/angulos-queimados.md`
-- `dados/mercado/tendencias/<YYYY-MM>.md`
+- `memory/ramon/contexto.md`
+- `memory/performance/angulos-queimados.md`
+- `memory/mercado/tendencias/<YYYY-MM>.md`
 
 #### 5b. Briefing inline
 
@@ -191,9 +191,9 @@ Profundidade: deep research.
 Inputs:
 - Formato/Estilo/Tema: <formato> / <slug> / <subtema>
 - Pilar / Recorte / Sinalizações: <do briefing inline deste post>
-- Contexto de mercado: dados/mercado/tendencias/<YYYY-MM>.md + dados/mercado/concorrentes/*.md
+- Contexto de mercado: memory/mercado/tendencias/<YYYY-MM>.md + memory/mercado/concorrentes/*.md
 
-Saída: gravar em dados/pesquisas-brutas/<data>-tendencias-<slug>.md.
+Saída: gravar em memory/pesquisa/<data>-tendencias-<slug>.md.
 ```
 
 #### 5e. Copy inline
@@ -313,7 +313,7 @@ Pulados/falhos (<N-M>):
 
 ### 10. Publicação por post (opcional, gated por política)
 
-Para cada post aprovado, aplicar o mesmo gate de política do Passo 16 do `/novo-post`: carregar `dados/politicas/publicacao.yaml`, avaliar as regras e só chamar `scripts/integrations/publish_instagram.js` quando a regra que casa diz `modo: automatico`. Em modo cron/agendado, **nunca publicar automaticamente** — apenas listar quais posts ficaram autorizados pela política e quais exigem aprovação humana.
+Para cada post aprovado, aplicar o mesmo gate de política do Passo 16 do `/novo-post`: carregar `orquestracao/politicas/publicacao.yaml`, avaliar as regras e só chamar `scripts/integrations/publish_instagram.js` quando a regra que casa diz `modo: automatico`. Em modo cron/agendado, **nunca publicar automaticamente** — apenas listar quais posts ficaram autorizados pela política e quais exigem aprovação humana.
 
 ---
 

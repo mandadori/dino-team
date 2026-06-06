@@ -70,7 +70,7 @@ Profundidade: profunda.
 Inputs:
 - Semana ativa: <YYYY-Www> (de <data-início> a <data-fim>).
 - N: <N>
-- Ângulos queimados: lê dados/performance/angulos-queimados.md (não repetir nas próximas 4 semanas)
+- Ângulos queimados: lê memory/performance/angulos-queimados.md (não repetir nas próximas 4 semanas)
 
 Saída: gravar em campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md.
 
@@ -82,8 +82,8 @@ Conteúdo esperado: 2-3 tendências por pilar com fonte, ângulos sugeridos por 
 Para cada pilar/tema da pesquisa do Passo 2, escreva o briefing **inline**, lendo:
 - `brand/brand-book.md` — essência, propósito, mensagens centrais.
 - `brand/pilares-conteudo.md` — eixos temáticos válidos.
-- `dados/ramon/contexto.md` — fase atual, cronograma, vertentes.
-- `dados/performance/angulos-queimados.md` — ângulos a evitar.
+- `memory/ramon/contexto.md` — fase atual, cronograma, vertentes.
+- `memory/performance/angulos-queimados.md` — ângulos a evitar.
 - `campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md` — tendências levantadas no Passo 2.
 - Lista de estilos disponíveis: `templates/social-media/<formato>/estilos/*/estilo.md` — `## Quando usar` / `## Quando NÃO usar` para recomendar o estilo.
 
