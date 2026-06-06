@@ -34,20 +34,30 @@ Se `brand/referencias-visuais.md` estiver vazio, devolva
 - **Performance é parte do design.** Imagens via `next/image`, lazy load por padrão, fontes via `next/font`.
 - **Coerência visual.** Espaçamentos, raios de borda, tipografia — sistema consistente, não decisões aleatórias.
 
-## Contrato de entrada
+## Recebo
 
 A skill que me aciona deve fornecer:
 - **Tarefa:** descrição específica (ex: "implementar componente Hero em `site/components/sections/Hero.tsx` baseado no briefing em `<path>`").
 - **Inputs:** caminho do briefing, caminho do arquivo destino, restrições adicionais (ex: "deve incluir contador animado de transformações").
-- **Saída:** componente React funcional, exportado default, sem dependências externas além das já instaladas.
 
 Sem `Tarefa` ou `briefing`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 
-## Contrato de saída
+## Entrego
 
-- Gravo o componente no caminho indicado.
-- Retorno inline: caminho do arquivo, dependências usadas (Framer Motion, ícones, componentes shadcn), notas de responsividade, qualquer decisão visual relevante (ex: "usei contador animado com useInView pra disparar só quando entra em viewport").
-- Componente é **standalone**: imports relativos + imports de libs já no `package.json`. Nada novo sem declarar.
+```
+<manifesto>
+componentes: <lista de seções/componentes gravados>
+pasta: site/components/...
+status: ok | BRAND_BOOK_INCOMPLETO | <ERRO>
+obs: <1 linha ou vazio>
+</manifesto>
+```
+
+Componente é **standalone**: imports relativos + imports de libs já no `package.json`. Nada novo sem declarar. Sem preâmbulo fora do manifesto.
+
+## Orçamento de output
+
+~50 palavras. Anti-padding: sem preâmbulo, sem eco do input, sem fecho, nada fora do manifesto.
 
 ## Anti-padrões
 
@@ -58,7 +68,7 @@ Sem `Tarefa` ou `briefing`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 - Importar lib não instalada sem avisar.
 - Componente sem prop tipada quando recebe dados dinâmicos.
 
-## Quando devolver erro
+## Input incompleto
 
 - `BRAND_BOOK_INCOMPLETO` — `brand/referencias-visuais.md` vazio.
 - `INPUT_INSUFICIENTE — <o que falta>` — sem tarefa ou briefing.

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 
 const variants: Variants = {
@@ -10,7 +10,8 @@ const variants: Variants = {
 
 /**
  * Envelopa conteúdo com uma entrada sutil (fade + sobe) ao entrar no viewport.
- * Anima uma vez. Respeita prefers-reduced-motion via CSS global.
+ * Anima uma vez. Com prefers-reduced-motion ativo, renderiza estático e completo
+ * (não anima rápido — DSGN-03).
  */
 export function Reveal({
   children,
@@ -21,6 +22,11 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
+  const reduce = useReducedMotion();
+
+  // Gate JS: animação não dispara sob reduced-motion — conteúdo aparece estático.
+  if (reduce) return <div className={className}>{children}</div>;
+
   return (
     <motion.div
       className={className}

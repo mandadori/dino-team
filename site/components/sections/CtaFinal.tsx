@@ -7,8 +7,10 @@ export function CtaFinal() {
     <section className="border-t border-line px-6 py-28 md:py-40">
       <div className="mx-auto max-w-4xl text-center">
         <Reveal>
-          <h2 className="font-display text-5xl uppercase leading-[0.95] md:text-7xl">
-            A escolha é sua. O caminho tá aqui.
+          {/* Fecho on-brand distinto do H1 do Hero (que já usa o sign-off).
+              Âncora no princípio central da marca: consistência + direção (brand-book). */}
+          <h2 className="font-display text-5xl uppercase leading-[0.95] lg:text-7xl">
+            Consistência vence. Direção define.
           </h2>
         </Reveal>
         <Reveal delay={0.08}>
@@ -17,9 +19,14 @@ export function CtaFinal() {
             ambiente que te puxa pra cima — sem fórmula mágica.
           </p>
         </Reveal>
+        <Reveal delay={0.12}>
+          <p className="mt-4 font-body text-sm uppercase tracking-widest text-muted">
+            O topo exige direção.
+          </p>
+        </Reveal>
         <Reveal delay={0.16}>
           <div className="mt-10 flex justify-center">
-            <CTAButton href={WHATSAPP_URL}>Começar minha consultoria</CTAButton>
+            <CTAButton href={WHATSAPP_URL}>Quero minha direção</CTAButton>
           </div>
         </Reveal>
       </div>

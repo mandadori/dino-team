@@ -1,14 +1,23 @@
+"use client";
+
 import Script from "next/script";
+import { useConsent } from "@/components/ConsentProvider";
 
 /**
  * Componente único de analytics/tracking. Cada ferramenta é ativada por
  * variável de ambiente (ver .env.example) — adicionar/remover não exige
  * reescrever código. Nenhum ID configurado = nada é injetado.
+ *
+ * Fase 3 (LEGAL-03 / D-10/D-11): os três scripts só são montados quando o
+ * visitante consentiu explicitamente. Sem consentimento, nada é injetado.
  */
 export function TrackingScripts() {
+  const { consent } = useConsent();
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
   const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   const clarityId = process.env.NEXT_PUBLIC_CLARITY_ID;
+
+  if (!consent) return null;
 
   return (
     <>

@@ -36,22 +36,32 @@ Sob demanda:
 3. **Atualizar script existente** quando API mudar (deprecation, novo campo obrigatório).
 4. **Validar setup** — script roda em dry-run com credenciais reais e reporta o que faltaria pra publicar.
 
-## Contrato de entrada
+## Recebo
 
 - **Tarefa:** descrição específica.
 - **Inputs:**
   - API alvo, endpoint, escopo de autorização.
   - Schema do input que o script recebe (pasta do post, JSON, etc.).
   - Schema do output esperado.
-- **Saída:** scripts criados/atualizados + README atualizado + .env.example atualizado.
 
 Sem `Tarefa` ou `Inputs`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 
-## Contrato de saída
+## Entrego
 
-- Script(s) gravado(s) em `scripts/integrations/`.
-- README e `.env.example` atualizados.
-- Retorno inline: "Script `<nome>` pronto. Env vars necessárias: <lista>. Como rodar: `<comando>`."
+```
+<manifesto>
+script: scripts/integrations/<arquivo>
+api: <alvo + versão> | log: <caminho do .logs/ ou n/a>
+status: ok | SEM_CREDENCIAIS | <ERRO>
+obs: <1 linha ou vazio>
+</manifesto>
+```
+
+Sem preâmbulo fora do manifesto.
+
+## Orçamento de output
+
+~50 palavras. Anti-padding: sem preâmbulo, sem eco do input, sem fecho, nada fora do manifesto.
 
 ## Anti-padrões
 
@@ -61,7 +71,7 @@ Sem `Tarefa` ou `Inputs`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 - Reescrever script inteiro quando só uma função mudou.
 - Inventar funcionalidade fora do contrato declarado.
 
-## Quando devolver erro
+## Input incompleto
 
 - `INPUT_INSUFICIENTE — <o que falta>` — sem tarefa ou contexto da API.
 - `API_DEPRECIADA — <API>` — endpoint solicitado foi descontinuado pela plataforma.

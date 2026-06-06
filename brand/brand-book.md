@@ -22,6 +22,16 @@ Nasceu da vontade de Ramon Dino de **inspirar e dar o exemplo** — mostrar que 
 
 ---
 
+## O que está em jogo
+
+Na superfície, o público quer um físico melhor e reconhecimento. No fundo, o que move é **autorrespeito**: tornar-se a pessoa que decide e cumpre. A estética é a prova visível; o reconhecimento é consequência; o prêmio real é a **identidade**.
+
+Por isso a única disputa que importa é **você vs. você** — quem você é hoje contra quem decidiu ser. Não se compara com os outros; supera quem era ontem. A comunicação orienta **para dentro**: muda por si mesmo, não pra provar nada a ninguém.
+
+> Estratificação operacional do público (estágios frio/morno/quente) em [`publico-alvo.md`](publico-alvo.md).
+
+---
+
 ## Estrutura da marca
 
 **Ramon Dino é a marca pessoal — única.** A Dino Team **não é uma marca separada**: é o **negócio + comunidade** que faz parte da marca pessoal Ramon Dino. Uma extensão prática que permite ao público acessar o método, a disciplina e a mentalidade do atleta.
@@ -32,9 +42,17 @@ Toda comunicação da Dino Team carrega o peso de quem é Ramon Dino: trajetóri
 
 ## Mensagens centrais (filosofia da marca)
 
-A comunicação reforça consistentemente:
+**Assinatura da marca (sign-off fixo):** _"O topo exige direção."_ — fecha toda legenda/peça. Funde a ascensão do Ramon ("topo") com a tese central ("direção"). Ver [`tom-de-voz.md`](tom-de-voz.md).
 
-- **Direção > motivação:** "Você não precisa de mais motivação, precisa de direção."
+**Tese central:** _"Direção > motivação."_ — "Você não precisa de mais motivação, precisa de direção."
+
+**Espinha filosófica (desdobramento):** _Direção é a escolha. Caminho é a escolha repetida. Identidade é o que sobra depois que você andou o suficiente._ Quem você é não se declara — se repete. O caminho tem dois produtos: o topo (externo — a foto, o reconhecimento) e a pessoa em quem você vira (interno — o que fica). **O prêmio real não é chegar; é ter virado alguém no caminho.** Estrutura completa em [`tom-de-voz.md`](tom-de-voz.md).
+
+**Registro da voz:** **sereno**. A autoridade vem do título do Ramon — um campeão real no topo do funil — não do volume da voz. A marca não grita: é a única no fitness que acolhe em vez de cobrar, devolvendo o autorrespeito antes de exigir esforço. Anti-hype, anti-espetáculo: romantiza o trabalho invisível, não a glória.
+
+A comunicação desdobra a tese consistentemente:
+
+- **Você vs. você:** a única comparação que importa — supere quem você era ontem, não os outros.
 - **Quem tem direção evolui. Quem não tem, repete.**
 - **Sem direção, esforço vira perda de tempo.**
 - **A desculpa é o que te mantém no mesmo lugar.**
@@ -85,5 +103,7 @@ Método · Evolução · Resultado · Transformação física · Disciplina · C
 
 ## Última atualização
 
+2026-05-31 — giro para o registro **sereno** via `/brand-discovery`: espinha filosófica expandida (direção → caminho → identidade; "o prêmio é ter virado alguém") nas mensagens centrais, registro de voz sereno declarado. Coordenado com a re-autoria de `tom-de-voz.md` e o alinhamento de `publico-alvo.md`.
+2026-05-29 — otimização de marca a partir do estudo do concorrente STNDRD: driver emocional (autorrespeito/identidade, "você vs. você") na essência, sign-off fixo "O topo exige direção." como assinatura, hierarquia das mensagens centrais. Coordenado com `tom-de-voz.md`, `pilares-conteudo.md` e `publico-alvo.md`.
 2026-05-16 — migração de fragmentos únicos do CLAUDE.md (enquadramento Acre/adaptação à realidade; máxima sobre ambiente coletivo).
 2026-05-14 — preenchimento inicial via `/brand-discovery`.

@@ -7,6 +7,16 @@ description: Conduz uma entrevista estruturada com o usuário para construir ou 
 
 Conduz uma entrevista estruturada para preencher o brand book da Dino Team de forma incremental.
 
+## Fluxo
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 0 | ⚙ diagnóstico | brand/* | — | lacunas |
+| 1 | ⏸ coleta de materiais | materiais soltos | 0 | insumos |
+| 2 | ⏸ entrevista incremental | perguntas ← 1 | 1 | respostas |
+| 3 | ⚙ consolidação | respostas ← 2 | 2 | brand/* preenchido |
+| 4 | ⏸ validação final | brand/* ← 3 | 3 | aprovação |
+
 ## Quando usar
 - Início do projeto (primeira vez configurando a marca)
 - Quando outra skill (ex: `/novo-post`) detecta que o brand book está incompleto e pausa o pipeline

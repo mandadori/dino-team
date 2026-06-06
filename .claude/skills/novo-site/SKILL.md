@@ -34,8 +34,35 @@ A skill checa `site/package.json`:
 | `designer-web` | Criação (Passo 4) + alteração visual | briefing, arquivo destino | componente React | Engenharia/Execução/Web |
 | `dev-frontend` | Criação (Passo 5) + alteração de integração/lógica | componentes, página destino | integração no app | Engenharia/Execução/Web |
 | `curador-web` | Criação (Passo 6) + qualquer alteração antes de finalizar | pasta `site/` + critérios | relatório técnico ou preview URL | Engenharia/Revisão |
-| `briefing-writer` | Criação (Passo 3) + qualquer alteração editorial | spec, brand book, objetivo da página | briefing institucional escrito; consulta `dados/ramon/` | Marketing/Estratégia (externo) |
+| ⚙ briefing inline | Criação (Passo 3) + qualquer alteração editorial | spec, brand book, dados/ramon/, objetivo da página | `site/docs/home-briefing.md` | skill escreve diretamente |
 | `revisor-brand` | Gate pré-deploy (Passo 7.5) + qualquer alteração que toque copy/identidade | componentes + globals + briefing | APROVADO/REPROVADO (binário) | Transversais/Brand (externo) |
+
+## Fluxo — modo criação
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ validar spec+brand | spec, brand | — | validado |
+| 2 | arquiteto-web | spec ← 1 | 1 | scaffold (manifesto) |
+| 3 | ⚙ briefing inline | spec, objetivo | 2 | `site/docs/home-briefing.md` |
+| 4 | designer-web | briefing ← 3 | 3 | 7 seções (manifesto) |
+| 5 | dev-frontend | seções ← 4 | 4 | home integrada |
+| 6 | curador-web | — | 5 | `<validacao>` |
+| 7 | ⏸ usuário | preview | 6 | ok/ajuste |
+| 7.5 | revisor-brand (bloqueante) | seções ← 5 | 7 | parecer binário |
+| 8 | ⚙ deploy preview (vercel) | — | 7.5 | URL |
+| 9 | ⚙ confirmar | — | 8 | confirmação |
+
+## Fluxo — modo alteração
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ estado atual | descrição da mudança | — | contexto |
+| 2 | ⚙ classificar alteração | — | 1 | tipo de mudança |
+| 3 | agente(s) pertinente(s) | escopo ← 2 | 2 | mudança aplicada |
+| 4 | curador-web | — | 3 | `<validacao>` |
+| 5 | revisor-brand (se tocou copy/identidade) | — | 4 | parecer binário |
+| 6 | ⏸ usuário | preview | 5 | confirmação |
+| 7 | ⚙ commit | — | 6 | commitado |
 
 ---
 
@@ -62,22 +89,21 @@ Saída: site/ com package.json, tsconfig.json, next.config.ts, postcss.config.mj
 
 Aguarde retorno com a lista de arquivos criados.
 
-### 3. Acionar briefing-writer — briefing da home
+### 3. Escrever briefing da home (inline)
 
-[Agente: `briefing-writer`] → input:
+A própria skill produz `site/docs/home-briefing.md` seguindo `templates/briefing.md`.
 
-```
-Tarefa: produzir briefing institucional da home da consultoria Dino Team seguindo o template templates/briefing.md.
-Inputs:
-- Spec do site: docs/specs/2026-05-19-site-dino-team-design.md (descreve as 7 seções e o tom esperado).
-- Brand book (lido automaticamente os 5 arquivos de brand/).
-- Banco de Dados: dados/ramon/contexto.md e dados/performance/angulos-queimados.md (lidos automaticamente quando produzindo briefing).
-Saída: site/docs/home-briefing.md
-Estrutura esperada: objetivo único da página, persona alvo, tom, ângulo central da home (porta de entrada da marca), pilar dominante, e — por seção (Hero, Para quem é, Método, Resultados, Sobre Ramon, FAQ, CTA final) — propósito, copy sugerido, elementos visuais esperados, CTA (se houver).
-Referências visuais: stndrd.app, joinladder.com, brightscout.com. Estilo: minimalista premium escuro, alto contraste, animações ricas.
-```
+Inputs a ler:
+- `docs/specs/2026-05-19-site-dino-team-design.md` — descreve as 7 seções e o tom esperado.
+- `brand/brand-book.md`, `brand/tom-de-voz.md`, `brand/publico-alvo.md`, `brand/referencias-visuais.md` — identidade da marca.
+- `dados/ramon/contexto.md` — fase atual + conquistas + falas do Ramon (para ângulo/contexto biográfico).
 
-Aguarde retorno com o briefing. Mostre ao usuário e aguarde aprovação antes de seguir.
+Estrutura do briefing a produzir em `site/docs/home-briefing.md`:
+- Objetivo único da página, persona alvo, tom, ângulo central da home (porta de entrada da marca), pilar dominante.
+- Por seção (Hero, Para quem é, Método, Resultados, Sobre Ramon, FAQ, CTA final): propósito, copy sugerido, elementos visuais esperados, CTA (se houver).
+- Referências visuais: stndrd.app, joinladder.com, brightscout.com. Estilo: minimalista premium escuro, alto contraste, animações ricas.
+
+Escreva o arquivo e mostre ao usuário. Aguarde aprovação explícita antes de seguir para o Passo 4.
 
 ### 4. Acionar designer-web — implementar as 7 seções
 
@@ -180,7 +206,7 @@ Triagem rápida baseada na descrição:
 - **Estrutural** (nova pasta, lib nova, reorganização) → `arquiteto-web`.
 - **Visual** (estilo, layout, animação) → `designer-web`.
 - **Lógica/integração** (estado, formulário, navegação) → `dev-frontend`.
-- **Editorial** (copy, microcopy, CTA) → `copywriter` + `briefing-writer` se mudar narrativa/ângulo.
+- **Editorial** (copy, microcopy, CTA) → editado inline pela skill (copy + ângulo), com gate `revisor-brand` se mudar narrativa/ângulo.
 - **Combinação** → rodar agentes em sequência.
 
 ### 3. Acionar agente(s) pertinente(s)

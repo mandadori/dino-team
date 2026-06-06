@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Slide 1 — capa — Costas: largura e espessura (treino-dino)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* ESTILO: treino-dino | CONCEITO: treino completo do Ramon, exercício por exercício, autoridade técnica seca */
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #7f7f7f;
+      --color-chroma: #00b140;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --pad: 80px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      color: var(--color-fg);
+    }
+    .slide-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: #1a1a1a;
+    }
+    .slide-bg.placeholder {
+      background-image: repeating-linear-gradient(
+        45deg, #1a1a1a 0 24px, #222 24px 48px
+      );
+    }
+    .img-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0) 55%,
+        rgba(0,0,0,.7) 100%
+      );
+    }
+    .topbar {
+      position: absolute;
+      top: var(--pad);
+      left: var(--pad);
+      right: var(--pad);
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 4;
+    }
+    .topbar .logo-img {
+      height: 32px;
+      width: auto;
+      display: block;
+      opacity: 0.98;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));
+    }
+    .topbar .topic {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.92);
+    }
+    .progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 36px 80px 56px;
+      z-index: 5;
+    }
+    .progress .track {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,.22);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress .fill {
+      height: 100%;
+      background: #ffffff;
+      border-radius: 2px;
+    }
+    .slide.capa .title-block {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      text-align: left;
+      padding: 0 var(--pad);
+    }
+    .slide.capa .big-title {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 168px;
+      line-height: 0.92;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 4px 28px rgba(0,0,0,.45);
+    }
+    .slide.capa .swipe-cue {
+      margin-top: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.8);
+    }
+    .slide.capa .swipe-cue svg {
+      height: 0.9em;
+      width: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <section class="slide capa">
+    <div class="slide-bg placeholder" data-bg-drop="photo"></div>
+    <div class="img-overlay"></div>
+
+    <div class="topbar">
+      <img src="file:///Users/unstudio/Documents/Projetos/dino%20team/brand/assets/logo.png" alt="DINO" class="logo-img" />
+      <span class="topic">BACK DAY</span>
+    </div>
+
+    <div class="title-block">
+      <h1 class="big-title">COSTAS NÃO É<br />UM MÚSCULO</h1>
+      <div class="swipe-cue">
+        <span>Arraste</span>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.4"
+                stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track"><div class="fill" style="width: 11.11%"></div></div>
+    </div>
+  </section>
+</body>
+</html>

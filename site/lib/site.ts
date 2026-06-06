@@ -29,3 +29,88 @@ export const TIMELINE: ReadonlyArray<{ marco: string; texto: string }> = [
   { marco: "Arnold Classic 2023", texto: "Entre os melhores do mundo no Classic Physique." },
   { marco: "Mr. Olympia 2025", texto: "Primeiro brasileiro homem a vencer o maior campeonato do planeta." },
 ];
+
+// ---------------------------------------------------------------------------
+// Constantes de conversão — Fase 2
+// ---------------------------------------------------------------------------
+
+// Número extraído de NEXT_PUBLIC_WHATSAPP_URL (espelha WHATSAPP_URL).
+// Fallback: "0000000000" enquanto o env var não estiver configurado (D-06/D-19).
+const _waBase = process.env.NEXT_PUBLIC_WHATSAPP_URL ?? "";
+const WA_NUMBER = _waBase.match(/wa\.me\/([^?]+)/)?.[1] ?? "0000000000";
+
+// Builder de deeplink por plano — espelha o padrão de WHATSAPP_URL.
+// Texto pré-preenchido: "Quero o Plano X", facilitando identificação no WhatsApp.
+function planDeeplink(planName: string): string {
+  return (
+    "https://wa.me/" +
+    WA_NUMBER +
+    "?text=" +
+    encodeURIComponent("Quero o Plano " + planName)
+  );
+}
+
+// Planos da consultoria. PLACEHOLDER — nomes, preços e inclusos reais chegam
+// via chat sob demanda (D-06). Substituir "PLACEHOLDER A"/"PLACEHOLDER B" pelos
+// nomes reais dos planos quando disponíveis.
+export const PLANS: ReadonlyArray<{
+  name: string;
+  price: string;
+  includes: ReadonlyArray<string>;
+  whatsappUrl: string;
+}> = [
+  {
+    name: "PLACEHOLDER A",
+    price: "Sob consulta", // rótulo intencional on-brand — nunca "PLACEHOLDER" cru (Pitfall 5)
+    includes: ["PLACEHOLDER"],
+    whatsappUrl: planDeeplink("A"),
+  },
+  {
+    name: "PLACEHOLDER B",
+    price: "Sob consulta", // rótulo intencional on-brand — nunca "PLACEHOLDER" cru (Pitfall 5)
+    includes: ["PLACEHOLDER"],
+    whatsappUrl: planDeeplink("B"),
+  },
+];
+
+// Depoimentos de alunos. PLACEHOLDER — trocar por nomes e textos reais via chat.
+// Regra: sem nome real, não publica (publishable: false). O componente Depoimentos
+// filtra publishable === false; cards não aparecem enquanto todos forem false.
+export const TESTIMONIALS: ReadonlyArray<{
+  name: string;
+  context: string;
+  change: string;
+  result: string;
+  photo?: string;
+  publishable: boolean;
+}> = [
+  { name: "PLACEHOLDER", context: "", change: "", result: "", publishable: false },
+  { name: "PLACEHOLDER", context: "", change: "", result: "", publishable: false },
+  { name: "PLACEHOLDER", context: "", change: "", result: "", publishable: false },
+];
+
+// Link de convite do grupo exclusivo de alunos — SEPARADO de WHATSAPP_URL (suporte).
+// PLACEHOLDER até o link real do grupo ser fornecido pelo usuário (D-14/D-17).
+export const COMMUNITY_WHATSAPP_URL =
+  "https://chat.whatsapp.com/PLACEHOLDER"; // grupo exclusivo de alunos Dino Team
+
+// Benefícios da comunidade de alunos (3–4 itens, D-15).
+// Enquadra a comunidade como parte do método, não como bônus.
+// PLACEHOLDER — refinar com copy real quando os dados da Comunidade chegarem via chat.
+export const COMMUNITY_BENEFITS: ReadonlyArray<string> = [
+  "PLACEHOLDER — Não está sozinho no processo: alunos se apoiam mutuamente com o mesmo método.",
+  "PLACEHOLDER — Acesso exclusivo a conteúdo e atualizações diretas de Ramon.",
+  "PLACEHOLDER — Comunidade fechada: entra quem contrata, permanece quem executa.",
+  "PLACEHOLDER — Direção coletiva: o ambiente reforça o compromisso com o processo.",
+];
+
+// ---------------------------------------------------------------------------
+// Cookie consent — Fase 3 (LEGAL-03)
+// ---------------------------------------------------------------------------
+
+// Chave de localStorage onde a escolha de consentimento é persistida.
+export const COOKIE_CONSENT_KEY = "dino-consent";
+
+// Validade da escolha: 6 meses em milissegundos (D-08).
+// 6 × 30 dias × 24h × 60min × 60s × 1000ms.
+export const COOKIE_CONSENT_TTL_MS = 6 * 30 * 24 * 60 * 60 * 1000;

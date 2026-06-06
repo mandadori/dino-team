@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Anton, Montserrat } from "next/font/google";
 import "./globals.css";
+import { ConsentProvider } from "@/components/ConsentProvider";
+import { CookieBanner } from "@/components/CookieBanner";
 import { TrackingScripts } from "@/components/TrackingScripts";
 
 // Anton: display/títulos — peso único 400, usado em CAIXA ALTA.
@@ -43,8 +45,11 @@ export default function RootLayout({
       className={`${anton.variable} ${montserrat.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-bg text-fg">
-        {children}
-        <TrackingScripts />
+        <ConsentProvider>
+          {children}
+          <CookieBanner />
+          <TrackingScripts />
+        </ConsentProvider>
       </body>
     </html>
   );

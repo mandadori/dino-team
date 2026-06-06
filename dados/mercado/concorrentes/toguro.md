@@ -61,3 +61,9 @@ Posiciona o fitness como **identidade e representação**, não como método ou 
 ## Nota de guardrail
 
 O modelo Toguro (humor, polêmica, ostentação) é FORA_DE_PILAR para a Dino Team. Útil como referência de escala de audiência e tendência de cultura jovem, mas não deve influenciar o tom ou ângulos da marca.
+
+---
+
+## Log de scouting
+
+*(Entradas adicionadas pelo `pesquisador-mercado` a cada Fase A. Não sobrescrever entradas anteriores.)*

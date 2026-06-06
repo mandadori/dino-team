@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Slide 4 — exercício 2 — Costas: largura e espessura (treino-dino)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* ESTILO: treino-dino | CONCEITO: treino completo do Ramon, exercício por exercício, autoridade técnica seca */
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #7f7f7f;
+      --color-chroma: #00b140;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+      --pad: 80px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      color: var(--color-fg);
+    }
+    /* Chroma key: sem filtro/sombra para não contaminar a chave de cor */
+    .chroma-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: var(--color-chroma);
+    }
+    .topbar {
+      position: absolute;
+      top: var(--pad);
+      left: var(--pad);
+      right: var(--pad);
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 4;
+    }
+    .topbar .logo-img {
+      height: 32px;
+      width: auto;
+      display: block;
+      opacity: 0.98;
+    }
+    .topbar .topic {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    /* Em chroma, sem drop-shadow / text-shadow para não vazar verde */
+    .slide.exercicio .topbar .logo-img,
+    .slide.exercicio .topbar .topic,
+    .slide.exercicio .exercise-corner * {
+      filter: none;
+      text-shadow: none;
+    }
+    .progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 36px 80px 56px;
+      z-index: 5;
+    }
+    .progress .track {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,.4);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress .fill {
+      height: 100%;
+      background: #ffffff;
+      border-radius: 2px;
+    }
+    .slide.exercicio .exercise-corner {
+      position: absolute;
+      left: var(--pad);
+      bottom: 110px;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 880px;
+    }
+    .slide.exercicio .ex-name {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 38px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 1.1;
+    }
+    .slide.exercicio .ex-name .code { margin-right: 12px; }
+    .slide.exercicio .ex-reps {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 30px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #ffffff;
+      display: flex;
+      align-items: baseline;
+      gap: 36px;
+    }
+    .slide.exercicio .ex-reps .sets { min-width: 150px; }
+    .slide.exercicio .ex-reps .reps { display: flex; gap: 20px; }
+  </style>
+</head>
+<body>
+  <section class="slide exercicio">
+    <div class="chroma-bg"></div>
+
+    <div class="topbar">
+      <img src="file:///Users/unstudio/Documents/Projetos/dino%20team/brand/assets/logo.png" alt="DINO" class="logo-img" />
+      <span class="topic">SEGUNDO EXERCÍCIO</span>
+    </div>
+
+    <div class="exercise-corner">
+      <div class="ex-name"><span class="code">2.</span>PUXADA ALTA NA POLIA (PEGADA ABERTA)</div>
+      <div class="ex-reps">
+        <span class="sets">4 SÉRIES</span>
+        <span class="reps"><span>12</span><span>10</span><span>10</span><span>Ⓕ</span></span>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track"><div class="fill" style="width: 44.44%"></div></div>
+    </div>
+  </section>
+</body>
+</html>

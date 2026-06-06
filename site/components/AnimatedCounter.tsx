@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
+import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 
 /**
  * Conta de 0 até `to` quando entra no viewport (uma vez). Easing ease-out cubic.
+ * Com prefers-reduced-motion ativo, exibe o valor final imediatamente (DSGN-03).
  */
 export function AnimatedCounter({
   to,
@@ -20,9 +22,16 @@ export function AnimatedCounter({
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [value, setValue] = useState(0);
+  const reduce = usePrefersReducedMotion();
 
   useEffect(() => {
     if (!inView) return;
+    if (reduce) {
+      // Gate JS: exibe valor final via rAF para satisfazer regra react-hooks/set-state-in-effect
+      // (setState deve ser chamado em callback de sistema externo, não sincronamente — DSGN-03).
+      const raf = requestAnimationFrame(() => setValue(to));
+      return () => cancelAnimationFrame(raf);
+    }
     let raf = 0;
     const start = performance.now();
     const tick = (now: number) => {
@@ -33,7 +42,7 @@ export function AnimatedCounter({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [inView, to, duration]);
+  }, [inView, to, duration, reduce]);
 
   return (
     <span ref={ref}>

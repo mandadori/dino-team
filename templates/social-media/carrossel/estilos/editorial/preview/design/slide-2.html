@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Slide Carrossel — Dino Team / editorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* ESTILO: editorial | CONCEITO: foto full bleed + gradient bottom + logo centrada + narrativa editorial */
+
+    /* ====================================================================
+       BRAND DINO TEAM — Estilo editorial (foto-narrativa) — carrossel 4:5 (1080x1350)
+
+       Variantes (escolha uma na <section class="slide ...">):
+         .slide.capa   → slide 1: foto full bleed + gradient + logo acima do título (bloco v-bottom) + swipe cue
+         .slide.corpo  → slides intermediários: foto + gradient + logo centrada no topo + área editorial inferior
+         .slide.cta    → slide final: foto ou fundo preto + logo acima do título (bloco v-bottom) + sub
+
+       Tokens: paleta P&B + cinza exclusiva, Anton CAIXA ALTA + Montserrat caixa livre
+       Margem padrão: 80px. Não altere width/height.
+    ==================================================================== */
+
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #7f7f7f;
+
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+
+      --pad: 80px;
+      --gradient-overlay: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0.15) 30%,
+        rgba(0,0,0,0.95) 75%,
+        rgba(0,0,0,1) 100%
+      );
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      color: var(--color-fg);
+    }
+
+    /* --------- Background fotográfico (todos os slides) --------- */
+    .slide-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: #1a1a1a; /* fallback enquanto a foto não está aplicada */
+    }
+    .slide-bg.placeholder {
+      background-image: repeating-linear-gradient(
+        45deg, #1a1a1a 0 24px, #222 24px 48px
+      );
+    }
+
+    /* --------- Gradient overlay de legibilidade --------- */
+    .img-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: var(--gradient-overlay);
+    }
+
+    /* --------- Logo no topo (apenas slides corpo) --------- */
+    .logo-center {
+      position: absolute;
+      top: var(--pad);
+      left: 0;
+      right: 0;
+      z-index: 4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+    .logo-center .logo-img {
+      width: 100px;
+      height: auto;
+      display: block;
+      opacity: 0.98;
+    }
+
+    /* --------- Swipe cue (apenas capa) — seta = ::after via mask, proporcional --------- */
+    .swipe-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      white-space: nowrap;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.9);
+    }
+    .swipe-cue::after {
+      content: "";
+      display: inline-block;
+      flex: 0 0 auto;
+      width: max(10px, 0.60em);
+      height: max(12px, 0.74em);
+      background-color: currentColor;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2012%2016'%3E%3Cpath%20d='M4%201L11%208L4%2015L1%2015L8%208L1%201Z'%20fill='%23000'/%3E%3C/svg%3E") no-repeat center / contain;
+              mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2012%2016'%3E%3Cpath%20d='M4%201L11%208L4%2015L1%2015L8%208L1%201Z'%20fill='%23000'/%3E%3C/svg%3E") no-repeat center / contain;
+    }
+
+    /* ============ VARIANTE: capa ============ */
+    /* Logo + título agrupados em bloco v-bottom ancorado no rodapé */
+    .slide.capa .title-block {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      z-index: 3;
+      bottom: 110px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 22px;
+    }
+    /* Logo dentro do bloco — imediatamente acima do título */
+    .slide.capa .title-block .logo-img {
+      width: 100px;
+      height: auto;
+      display: block;
+      opacity: 0.98;
+      margin-bottom: 32px;
+    }
+    .slide.capa .big-title {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 140px;
+      line-height: 0.9;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    /* ============ VARIANTE: corpo ============ */
+    /* Área de conteúdo editorial inferior */
+    .slide.corpo .content-area {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      z-index: 3;
+      bottom: 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .slide.corpo .eyebrow {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.6);
+      line-height: 1;
+    }
+    .slide.corpo .headline {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 88px;
+      line-height: 0.92;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .slide.corpo .body-text {
+      font-family: var(--font-body);
+      font-size: 30px;
+      font-weight: 300;
+      letter-spacing: 0.01em;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.4;
+      max-width: 920px; /* 1080 - 2*80 = 920 */
+    }
+
+    /* ============ VARIANTE: cta ============ */
+    /* Logo + título agrupados em bloco v-bottom — mesmo padrão da capa */
+    .slide.cta .title-block {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      z-index: 3;
+      bottom: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 22px;
+    }
+    /* Logo dentro do bloco — imediatamente acima do título */
+    .slide.cta .title-block .logo-img {
+      width: 100px;
+      height: auto;
+      display: block;
+      opacity: 0.98;
+      margin-bottom: 32px;
+    }
+    .slide.cta .cta-headline {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 140px;
+      line-height: 0.9;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .slide.cta .cta-sub {
+      font-family: var(--font-body);
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.3;
+    }
+  </style>
+</head>
+<body>
+<section class="slide corpo" data-block="corpo">
+      <div class="slide-bg placeholder" data-bg-drop="photo" data-slot="bg"></div>
+      <div class="img-overlay" data-overlay></div>
+
+      <div class="logo-center">
+        <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" data-slot="logo" />
+      </div>
+
+      <div class="content-area">
+        <span class="eyebrow" data-slot="eyebrow">Sem academia. Sem dinheiro.</span>
+        <h2 class="headline" data-slot="headline">A PRIMEIRA<br>DECISÃO</h2>
+        <p class="body-text" data-slot="corpo">Placeholder — até 3 linhas de texto de corpo. Máximo 120 caracteres por parágrafo.</p>
+      </div>
+    </section>
+</body>
+</html>

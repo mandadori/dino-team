@@ -1,6 +1,6 @@
 ---
 name: planejar-pauta-semanal
-description: Skill L2 (composta). Produz N briefings estratégicos para a semana corrente sem executar os posts — a execução fica por conta de /lote-posts ou /novo-post posteriores. Output em `campanhas/<YYYY-Www>-pauta-semanal/`. Acionada por cron (toda 2ª 9h) ou manualmente.
+description: Skill L2 (composta). Produz N briefings estratégicos para a semana corrente sem executar os posts — a execução fica por conta de /lote-posts ou /novo-post posteriores. Output em `campanhas/<YYYY-Www>-pauta-semanal/`. Acionada por cron (toda 2ª 9h) ou manualmente. Briefings escritos inline pela skill.
 ---
 
 # /planejar-pauta-semanal — Dino Team
@@ -9,6 +9,8 @@ description: Skill L2 (composta). Produz N briefings estratégicos para a semana
 
 Toda semana, planejar **N briefings** que cubram os pilares ativos, evitem ângulos queimados e levem em conta o estado atual de Ramon. **Não executa posts** — gera só a pauta para `/lote-posts` ou `/novo-post` rodarem depois (manual ou disparados pelo dashboard).
 
+Os briefings são artefatos gravados em `campanhas/.../output/posts/` — são handoff cross-skill, consumidos posteriormente por `/novo-post` ou `/lote-posts` via `--briefing <caminho>`.
+
 ## Sintaxe
 
 ```
@@ -16,6 +18,16 @@ Toda semana, planejar **N briefings** que cubram os pilares ativos, evitem ângu
 ```
 
 - **`[N]`** — opcional, default **5** posts.
+
+## Fluxo
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ semana ativa | data | — | YYYY-Www |
+| 2 | pesquisador (Fase A) | N, semana, ângulos-queimados | 1 | pesquisa-tendencias.md |
+| 3 | ⚙ briefings inline (×N) | tendências ← 2, contexto | 2 | N briefings gravados |
+| 4 | ⚙ gravar manifest | briefings ← 3 | 3 | campanha |
+| 5 | ⚙ relatório | — | 4 | relatório inline |
 
 ## Quando dispara
 
@@ -28,7 +40,10 @@ Toda semana, planejar **N briefings** que cubram os pilares ativos, evitem ângu
 | Agente | Quando |
 |---|---|
 | `pesquisador-mercado` | Levantar tendências da semana corrente + sugerir distribuição de pilares (1 chamada profunda) |
-| `briefing-writer` | Produzir cada um dos N briefings (N chamadas) — consulta `dados/ramon/` automaticamente |
+
+Briefings são escritos inline pela skill no Passo 3.
+
+---
 
 ## Pipeline
 
@@ -55,7 +70,6 @@ Profundidade: profunda.
 Inputs:
 - Semana ativa: <YYYY-Www> (de <data-início> a <data-fim>).
 - N: <N>
-- Pilares ativos: lê brand/pilares-conteudo.md
 - Ângulos queimados: lê dados/performance/angulos-queimados.md (não repetir nas próximas 4 semanas)
 
 Saída: gravar em campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md.
@@ -63,23 +77,27 @@ Saída: gravar em campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md.
 Conteúdo esperado: 2-3 tendências por pilar com fonte, ângulos sugeridos por dia da semana, lista final "N pilares para os N posts da semana".
 ```
 
-### 3. Gerar briefings em paralelo
+### 3. Gerar briefings inline (×N)
 
-Para cada pilar/tema da pesquisa, acionar `briefing-writer` (paralelizável):
+Para cada pilar/tema da pesquisa do Passo 2, escreva o briefing **inline**, lendo:
+- `brand/brand-book.md` — essência, propósito, mensagens centrais.
+- `brand/pilares-conteudo.md` — eixos temáticos válidos.
+- `dados/ramon/contexto.md` — fase atual, cronograma, vertentes.
+- `dados/performance/angulos-queimados.md` — ângulos a evitar.
+- `campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md` — tendências levantadas no Passo 2.
+- Lista de estilos disponíveis: `templates/social-media/<formato>/estilos/*/estilo.md` — `## Quando usar` / `## Quando NÃO usar` para recomendar o estilo.
 
-```
-Tarefa: produzir briefing estratégico para 1 post.
+Para cada post, decida inline:
+- **Ângulo central** — ponto de vista específico que diferencia.
+- **Pilar** — de `brand/pilares-conteudo.md`; apenas 1.
+- **Objetivo** — 1 frase específica.
+- **Recorte de público** — 1-2 frases.
+- **Slug do post** — kebab-case (2-5 palavras).
+- **Estilo recomendado** — slug existente; justificativa em 1 frase.
+- **Data prevista de publicação** — dia específico da semana.
+- **Sinalizações para o pipeline** — pesquisa necessária? tom? restrições/tabus?
 
-Inputs:
-- Formato: carrossel (default; pode ser stories quando a tendência sugerir)
-- Tema: <tema vindo da pesquisa>
-- Estilo: (deixe briefing-writer recomendar — passe lista de estilos disponíveis)
-- Data prevista de publicação: <data específica na semana>
-
-Briefing-writer lê automaticamente dados/ramon/ + performance/angulos-queimados.md.
-
-Saída: gravar em campanhas/<YYYY-Www>-pauta-semanal/output/posts/<N>-<slug-do-briefing>.md.
-```
+Grave cada briefing em `campanhas/<YYYY-Www>-pauta-semanal/output/posts/<N>-<slug-do-briefing>.md` usando `templates/briefing.md` como esqueleto.
 
 ### 4. Gravar manifest da campanha
 
@@ -148,8 +166,11 @@ Pauta semanal <YYYY-Www> pronta:
 - Pilares cobertos: <lista>
 - Estilos sugeridos: <lista>
 
-Próximo passo: revise no dashboard ou rode /lote-posts apontando para a pauta.
+Próximo passo: revise no dashboard ou rode /lote-posts apontando para a pauta,
+ou /novo-post <formato> --briefing <caminho-do-briefing>.
 ```
+
+---
 
 ## Modo cron (sem usuário humano)
 

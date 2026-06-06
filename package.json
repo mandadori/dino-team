@@ -5,12 +5,18 @@
   "description": "Pipeline multi-agente para geração de posts Instagram da Dino Team (carrossel 4:5, stories 9:16)",
   "type": "module",
   "scripts": {
-    "export": "node scripts/export-png.js"
+    "export": "node scripts/export-png.js",
+    "editor": "node scripts/editor/server.js",
+    "test": "node --test scripts/editor/*.test.js",
+    "test:e2e": "node --test scripts/editor/integration.e2e.js"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
     "puppeteer": "^24.43.1"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
   }
 }

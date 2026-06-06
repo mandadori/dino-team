@@ -53,7 +53,7 @@ Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestr
 - [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — gerar N posts em sequência, agendável.
 - [`/novo-estilo`](.claude/skills/novo-estilo/SKILL.md) — criar um novo estilo visual para carrossel ou stories.
 - [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — atualizar o slice `dados/ramon/` (fase atual + cronograma + outras vertentes).
-- [`/novo-site`](.claude/skills/novo-site/SKILL.md) — criar ou alterar o site (dual-mode); aciona os agentes de Engenharia + `briefing-writer` + gate `revisor-brand`.
+- [`/novo-site`](.claude/skills/novo-site/SKILL.md) — criar ou alterar o site (dual-mode); aciona os agentes de Engenharia + gate `revisor-brand`.
 - [`/planejar-pauta-semanal`](.claude/skills/planejar-pauta-semanal/SKILL.md) — L2: produz N briefings da semana (sem executar). Agendável (default: 2ª 9h via cron).
 
 ### 3. Agentes — especialistas por função (`.claude/agents/`)
@@ -62,25 +62,18 @@ Cada agente domina **uma função** e organiza-se em **setor × papel** apenas t
 
 Agentes não conhecem o fluxo nem outros agentes — recebem input num formato declarado, entregam output num formato declarado. Conhecimento específico de um fluxo vive nas skills e templates, não no agente.
 
-**Agentes atuais (16):**
+**Agentes atuais (11):**
 
 - **Marketing / Pesquisa**
   - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `dados/mercado/`.
-- **Marketing / Estratégia**
-  - [`briefing-writer`](.claude/agents/briefing-writer.md) — recomendação de estilo e briefing estratégico canônico.
-- **Marketing / Execução**
-  - [`copywriter`](.claude/agents/copywriter.md) — copy persuasiva.
-  - [`designer`](.claude/agents/designer.md) — HTML+CSS visual.
 - **Marketing / Revisão**
   - [`curador-export`](.claude/agents/curador-export.md) — validação técnica + export PNG.
-  - [`revisor-coerencia`](.claude/agents/revisor-coerencia.md) — coerência editorial do artefato com o briefing.
 - **Produto / Consultoria / Execução**
   - [`treinador`](.claude/agents/treinador.md) — decisões técnicas de treino.
 - **Transversais / Brand**
-  - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca (decisão binária).
-  - [`revisor-compliance`](.claude/agents/revisor-compliance.md) — compliance: promessas proibidas e claims sensíveis.
+  - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca e compliance; gate em 2 momentos (identidade visual em criação de estilo; copy + compliance em criação de post).
 - **Transversais / Dados**
-  - [`archivist-ramon`](.claude/agents/archivist-ramon.md) — owner único do slice `dados/ramon/`; consolida o contexto do Ramon (input do usuário + auto-sync de fontes públicas).
+  - [`arquivista`](.claude/agents/arquivista.md) — owner único do slice `dados/ramon/` e do banco de imagens; consolida contexto do Ramon (input do usuário + auto-sync de fontes públicas) e gerencia legenda/seleção/marcação de fotos por slide.
   - [`analista-performance`](.claude/agents/analista-performance.md) — owner único do slice `dados/performance/`; registra ângulos queimados e (futuro) métricas de canais.
 - **Engenharia / Execução / Web**
   - [`arquiteto-web`](.claude/agents/arquiteto-web.md) — scaffold, organização, libs, config do site.
@@ -98,7 +91,7 @@ Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-0
 Memória persistente compartilhada — markdown + frontmatter YAML, versionada em git, lida por qualquer agente e escrita apenas pelo owner declarado. Ver [`dados/_schema.md`](dados/_schema.md) para slices ativos e ownership.
 
 **Slices em v1:**
-- `dados/ramon/contexto.md` — contexto temporal e biográfico do Ramon, arquivo único (owner: `archivist-ramon`).
+- `dados/ramon/contexto.md` — contexto temporal e biográfico do Ramon, arquivo único (owner: `arquivista`).
 - `dados/mercado/` — pesquisa de mercado e vocabulário do público (owner: `pesquisador-mercado`).
 - `dados/performance/` — só `angulos-queimados.md` em v1 (owner: `analista-performance`); outros sub-slices entram quando publicação real existir.
 - `dados/pesquisas-brutas/` — pesquisas profundas geradas pelo pipeline (insumo cumulativo).
@@ -107,7 +100,7 @@ Memória persistente compartilhada — markdown + frontmatter YAML, versionada e
 
 Site institucional + comercial do Dino Team — Next.js 16 + Tailwind 4 + Framer Motion + Lucide + MDX. Construído e mantido pelo setor de Engenharia. Identidade monocromática (preto/branco/cinza) fiel ao brand book.
 
-- [`/novo-site`](.claude/skills/novo-site/SKILL.md) — skill dual-mode (criação vs. alteração). Aciona `briefing-writer` para o briefing institucional e exige aprovação de `revisor-brand` antes de cada deploy.
+- [`/novo-site`](.claude/skills/novo-site/SKILL.md) — skill dual-mode (criação vs. alteração). Produz briefing institucional inline e exige aprovação de `revisor-brand` antes de cada deploy.
 - MVP: home da consultoria com 7 seções (Hero, ParaQuemE, Método, Resultados, SobreRamon, FAQ, CtaFinal). Briefing em `site/docs/home-briefing.md`.
 
 ### 6. Orquestração + Dashboard
@@ -126,8 +119,16 @@ Camada que torna o sistema reativo. Triggers (cron, futuramente webhook/threshol
 ## Regras operacionais
 
 - **Skills orquestram, agentes executam.** Skill define ordem, pausas e formato final; agentes dominam função e podem cooperar entre si dentro de uma ordem.
-- **Brand é o eixo comum.** Qualquer agente consulta `brand/` quando o trabalho exigir contexto da marca.
+- **Skill = fluxo; contrato = comportamento.** A skill define ordem, envelope entre agentes, dependências, retrabalho e output final. O contrato do agente define critérios de qualidade, como processar input, schema de output e tratamento de input incompleto. Nunca colocar comportamento interno do agente na skill.
+- **Contexto cirúrgico, sem redundância.** A skill só injeta o que varia por chamada. Nunca repassa contexto que o agente já declara em "Contexto que carrego" (brand/*, slices que é owner, diretivas). Nenhuma instrução repetida entre skill e contrato.
+- **Schema rígido de saída.** Todo agente entrega num dos 3 formatos: inline rígido (tags/campos), markdown estruturado (briefing) ou manifesto (file-producers). Sem preâmbulo; texto fora do schema é ignorado.
+- **Orçamento via contrato.** Sem `max_tokens` por subagent no runtime — cada contrato declara alvo de concisão + anti-padding.
+- **Early-exit + máx 1 retry.** Gate antes de agente caro; máx 1 retry automático por etapa, 2º fracasso escala ao usuário.
+- **Toda skill abre com `## Fluxo`** (tabela: Passo | Agente/Ação | Recebe | Depende | Entrega).
+- **Brand é o eixo comum.** Cada agente lê o recorte de `brand/` que sua função exige — declarado em "Contexto que carrego" do próprio contrato.
 - **Erros estruturais voltam pra skill** (ex: `BRAND_BOOK_INCOMPLETO`, `ESTILO_INVALIDO`).
+
+Padrão de contratos e skills detalhado em [docs/specs/2026-05-26-redesign-contexto-agentes-skills-design.md](docs/specs/2026-05-26-redesign-contexto-agentes-skills-design.md).
 
 ---
 

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Slide 4 — Dividido (layout-dividido)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ESTILO: layout-dividido | CONCEITO: slide 50/50 com duas fotos e overlays opostos; pílula filosófica em duas frases Anton */
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #b3b3b3;
+      --color-photo-placeholder-top: #1a1a1a;
+      --color-photo-placeholder-bottom: #262626;
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .slide {
+      width: 1080px; height: 1350px; position: relative;
+      display: flex; flex-direction: column; background: var(--color-bg);
+    }
+    .half {
+      position: relative; width: 1080px; height: 675px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 80px; text-align: center;
+      background-size: cover; background-position: center; background-repeat: no-repeat;
+    }
+    .half.top { background-color: var(--color-photo-placeholder-top); }
+    .half.bottom { background-color: var(--color-photo-placeholder-bottom); }
+    .half.top[data-has-bg] { filter: grayscale(0.85) contrast(1.05); }
+    .half.bottom[data-has-bg] { filter: contrast(1.08) saturate(1.05); }
+    .half::before {
+      content: attr(data-label); position: absolute; top: 24px; left: 24px;
+      font-family: var(--font-body); font-weight: 600; font-size: 14px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.22); pointer-events: none;
+    }
+    .half[data-has-bg]::before { display: none; }
+    .half-text {
+      position: relative; z-index: 2; font-family: var(--font-display);
+      font-weight: 400; color: var(--color-fg); text-transform: uppercase;
+      line-height: 0.95; letter-spacing: -0.005em; text-shadow: none; max-width: 920px;
+    }
+    .half.top .half-text { font-size: 90px; }
+    .half.bottom .half-text { font-size: 90px; }
+    /* Base mais longa (4 linhas de copy): reduzida proporcionalmente p/ caber sem estourar a metade */
+    .half.bottom .half-text.reduced { font-size: 62px; }
+    .brand-stamp {
+      position: absolute; left: 0; right: 0; bottom: 36px; text-align: center;
+      z-index: 5; font-family: var(--font-body); font-weight: 600; font-size: 14px;
+      letter-spacing: 0.42em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78); text-shadow: none; pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <section class="slide dividido">
+    <div class="half top" data-bg-drop="topo" data-label="[FOTO SUPERIOR]">
+      <div class="half-text">TRAVOU, E O REFLEXO<br />É EMPILHAR TREINO,<br />PESO, SÉRIE...</div>
+    </div>
+    <div class="half bottom" data-bg-drop="base" data-label="[FOTO INFERIOR]">
+      <div class="half-text reduced">MAIS VOLUME SÓ ADIA<br />A PERGUNTA QUE IMPORTA:<br />O QUE MUDAR?</div>
+    </div>
+    <div class="brand-stamp">DINO TEAM</div>
+  </section>
+</body>
+</html>

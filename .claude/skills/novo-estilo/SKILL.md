@@ -1,13 +1,29 @@
 ---
 name: novo-estilo
-description: Cria ou edita um estilo visual para qualquer formato disponível em templates/formatos/. Em modo criação, recebe descrição livre (texto + refs visuais opcionais) e gera o template do zero. Em modo edição, detecta um slug existente no input, exibe o preview atual e aplica as alterações pedidas. Apresenta preview iterativo antes de salvar. Respeita a identidade visual da marca.
+description: Cria ou edita um estilo visual para qualquer formato disponível em templates/social-media/. Em modo criação, recebe descrição livre (texto + refs visuais opcionais) e gera o template do zero inline. Em modo edição, detecta um slug existente no input, exibe o preview atual e aplica as alterações pedidas inline. Apresenta preview iterativo antes de salvar. Gate de marca (revisor-brand) valida identidade visual antes de salvar.
 ---
 
 # /novo-estilo — Dino Team
 
+## Fluxo
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ parse + modo | input | — | modo, formato, slug |
+| 2 | ⚙ tratar _rascunho/ | — | 1 | rascunho pronto |
+| 3 | ⏸ usuário | contexto ← 2 | 2 | descrição/alterações |
+| 4 | ⚙ preparar pasta | — | 3 | pasta de trabalho |
+| 5 | ⚙ gerar/editar inline | descrição/refs ← 3, modo | 4 | estilo.md + slide.html |
+| 6 | ⚙ editor auto + ⏸ usuário | _rascunho ← 5 | 5 | confirmar/ajuste |
+| 6.5 | ⚙ promover edits → estilo (editar) | edits.json ← 6 | 6 | estilo.md/slide.html |
+| 7 | revisor-brand (gate visual) | estilo.md + slide.html ← 5/6 | 6 | APROVADO/REPROVADO |
+| 8 | ⚙ slug (só criar) | — | 7 | slug |
+| 9 | ⚙ salvar | — | 8 | estilo salvo |
+| 10 | ⚙ confirmar | — | 9 | confirmação |
+
 ## Objetivo
 
-Criar um estilo visual novo ou editar um existente — `estilo.md` + template HTML + `preview.html` — prontos para uso pela skill `/novo-post`.
+Criar um estilo visual novo ou editar um existente — `estilo.md` + template HTML — prontos para uso pela skill `/novo-post`. Não há subagente de design: a skill gera/edita os artefatos inline.
 
 ## Sintaxe
 
@@ -15,9 +31,9 @@ Criar um estilo visual novo ou editar um existente — `estilo.md` + template HT
 /novo-estilo <formato> [slug-existente] [descrição / alterações]
 ```
 
-- **`<formato>`** — obrigatório. Qualquer subpasta válida de `templates/formatos/`.
-- **`[slug-existente]`** — opcional. Se bater com pasta em `templates/formatos/{formato}/estilos/`, entra em modo edição.
-- **`[descrição / alterações]`** — opcional. Pode ser pedida no Passo 4.
+- **`<formato>`** — obrigatório. Qualquer subpasta válida de `templates/social-media/`.
+- **`[slug-existente]`** — opcional. Se bater com pasta em `templates/social-media/{formato}/estilos/`, entra em modo edição.
+- **`[descrição / alterações]`** — opcional. Pode ser pedida no Passo 3.
 
 Ordem é livre. A skill identifica formato, slug e trata o restante como descrição.
 
@@ -26,92 +42,131 @@ Ordem é livre. A skill identifica formato, slug e trata o restante como descri�
 /novo-estilo carrossel layout-dividido reduzir o stamp do rodapé
 ```
 
-## Agentes
-
-| Agente | Responsabilidade | Input | Output |
-|---|---|---|---|
-| `designer` | Gerar ou editar template HTML, `estilo.md` e `preview.html` numa pasta destino. | Modo (`criar-template-de-estilo` \| `editar-template-de-estilo` \| `regenerar-preview`), formato, pasta destino, slug-alvo (edição), descrição/alterações, refs visuais. | Arquivo principal do template do formato + `estilo.md` + `preview.html` na pasta destino. |
-
 ---
 
 ## Pipeline
 
 ### 1. Parsear input e determinar modo
 
-Extraia o formato e valide contra as subpastas de `templates/formatos/`. Se ausente ou inválido, pergunte e pare. Liste `templates/formatos/{formato}/estilos/`. Se algum token do input (case-insensitive) bater com um slug existente (exceto `_rascunho`), modo = **editar** com `slug_alvo = {slug}`; senão, modo = **criar**. O restante do input vira `descricao_alteracoes` (pode estar vazio).
+Extraia o formato e valide contra as subpastas de `templates/social-media/`. Se ausente ou inválido, pergunte e pare. Liste `templates/social-media/{formato}/estilos/`. Se algum token do input (case-insensitive) bater com um slug existente (exceto `_rascunho`), modo = **editar** com `slug_alvo = {slug}`; senão, modo = **criar**. O restante do input vira `descricao_alteracoes` (pode estar vazio).
 
 ### 2. Tratar `_rascunho/` existente
 
-Se `templates/formatos/{formato}/estilos/_rascunho/` existir, pergunte: continuar de onde parou (pula para o Passo 6) ou descartar (`rm -rf _rascunho/` e segue).
+Se `templates/social-media/{formato}/estilos/_rascunho/` existir, pergunte: continuar de onde parou (pula para o Passo 6) ou descartar (`rm -rf _rascunho/` e segue).
 
 ### 3. Mostrar contexto e coletar descrição/alterações
 
-- **Modo editar**: o usuário precisa ver o estilo atual antes de descrever mudanças.
-  - Se `templates/formatos/{formato}/estilos/{slug_alvo}/preview.html` existir, mostre o caminho.
-  - Se não existir, acione [Agente: `designer`] → input: `regenerar-preview` para `{slug_alvo}`. Output: `preview.html` regenerado na pasta do estilo. Mostre o caminho.
-  - Peça ao usuário que abra o preview no Claude Design e descreva as alterações (ou confirme as que já vieram no input).
+- **Modo editar**: a edição visual acontece no Dino Editor, que abre automaticamente no Passo 6 — **não** peça ao usuário para abrir Live Preview aqui.
+  - Se o usuário já trouxe alterações em texto no input, confirme-as e siga.
+  - Se não, avise que o editor abrirá com o estilo atual instanciado para edição visual direta, e siga (sem exigir descrição em texto).
 - **Modo criar**: se `descricao_alteracoes` for menor que uma frase clara, peça detalhes — posicionamento, variantes, uso de foto de fundo, elementos esperados.
 
 ### 4. Preparar pasta de trabalho
 
-- Criar: `mkdir -p templates/formatos/{formato}/estilos/_rascunho/`
-- Editar: `cp -r templates/formatos/{formato}/estilos/{slug_alvo}/ templates/formatos/{formato}/estilos/_rascunho/` — preserva o original intacto até o Passo 8.
+- Criar: `mkdir -p templates/social-media/{formato}/estilos/_rascunho/`
+- Editar: `cp -r templates/social-media/{formato}/estilos/{slug_alvo}/ templates/social-media/{formato}/estilos/_rascunho/` — preserva o original intacto até o Passo 9.
 
-### 5. Acionar designer
+### 5. Gerar ou editar estilo inline
 
-[Agente: `designer`] → input abaixo. Output: arquivo principal do template do formato + `estilo.md` + `preview.html` em `_rascunho/`. Encaminha para o usuário no Passo 6.
+Leia os seguintes arquivos antes de produzir:
+- `templates/estilo.md` — contrato canônico (seções obrigatórias e condicionais).
+- `brand/referencias-visuais.md` — tokens de marca (paleta, tipografia, CAIXA ALTA, 80px).
+- `brand/social-media.md` — dimensões, chrome canônico, aspect-ratios.
+
+**Modo criar:** gere do zero, a partir da descrição e refs visuais do usuário:
+- `estilo.md` — seguindo o esqueleto canônico em `templates/estilo.md`: seções obrigatórias (Conceito, Estrutura com `[sequência]`/`[total]`/blocos com `#### visual` e `#### editorial`; `[alternância]` quando bloco N-dinâmico varia layout/fundo, Quando usar, Quando NÃO usar) e condicionais que se apliquem.
+- `slide.html` (carrossel) ou `frame.html` (stories) — HTML standalone com `<body>` contendo as seções de exemplo taggeadas (`data-block`, `data-slot`, `data-bg-drop`).
+- Conteúdo dos blocos é PLACEHOLDER ("TÍTULO DE EXEMPLO", "FRASE — MÁX 12 PALAVRAS", etc.).
+- Backgrounds com intenção fotográfica = sempre drop zone (`data-bg-drop="<nome>"`).
+- **Não gerar `preview.html`** — preview = abrir `slide.html` via Live Preview ou Dino Editor.
+
+**Modo editar:** leia os arquivos já copiados em `_rascunho/`. Aplique APENAS as alterações pedidas; preserve variantes, tokens, estrutura e documentação não mencionada.
+
+Regras críticas:
+- Referências fotográficas são guia de mood/composição/tratamento — NUNCA conteúdo final.
+- Nunca re-declare tokens de marca que já vivem em `brand/referencias-visuais.md`.
+- Nunca hardcodar número de instâncias do corpo — quantidade vem da copy (bloco N-dinâmico).
+
+### 6. Revisar no Dino Editor (auto-start + pausa iterativa)
+
+A revisão visual roda no **Dino Editor**, que a skill **sobe automaticamente** — o usuário nunca executa o backend. (O editor suporta `slide-N.html` / carrossel; para formatos baseados em `frame.html` — ex. stories — caia no fallback: render com `export-png.js`.) **Nunca instrua "Live Preview" do VS Code — o usuário não o encontra; passe sempre a URL `http://localhost:4321`.**
+
+1. **Gerar scaffold de preview** com o gerador determinístico — instancia cada bloco da `## Estrutura` em `slide-N.html` standalone (corpo flexível repetido `--repeat` vezes; default 2):
+
+   ```bash
+   node scripts/editor/scaffold-estilo.js \
+     --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md
+   ```
+
+   O gerador deriva formato/slug do caminho, copia o `<head>`/CSS do estilo e avisa se o formato não for carrossel (editor é carrossel-only). Sem `--out`, o preview vai pra `templates/social-media/{formato}/estilos/_rascunho/preview/` (na pasta do próprio estilo — nunca mais em `export/`).
+2. **Subir o editor em background** (a skill executa):
+
+   ```bash
+   lsof -ti tcp:4321 | xargs kill -9 2>/dev/null; \
+   npm run editor -- templates/social-media/{formato}/estilos/_rascunho/preview \
+     --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md \
+     > /tmp/dino-editor.log 2>&1 &
+   ```
+
+   Aguarde ~3s e confirme saúde: `curl -s -o /dev/null -w "%{http_code}" http://localhost:4321/` → `200`.
+3. **Apresentar (⏸):**
+
+   ```
+   Dino Editor no ar para o estilo {slug}.
+   Abra no navegador: http://localhost:4321 — edite o visual, clique "Salvar".
+
+   Responda:
+   - "confirmar"           → promovo as mudanças ao estilo e sigo ao gate
+   - ajuste em texto livre  → aplico inline no estilo
+   ```
+4. **Promover edições estruturais** (modo editar): após o save, leia `templates/social-media/{formato}/estilos/_rascunho/preview/design/edits.json`; se existir, rode `scripts/editor/extract-structural.js` e aplique cada delta em `_rascunho/estilo.md` + `_rascunho/slide.html` atomicamente (mesmo mecanismo do Passo 11.5 de `/novo-post`). Delta não mapeável: reporte ao usuário e siga com os demais.
+
+Ajuste em texto livre → edite `_rascunho/` inline (volta ao Passo 5) e reapresente. Repita até "confirmar". Ao confirmar, derrube o editor e remova o scaffold:
+
+```bash
+lsof -ti tcp:4321 | xargs kill -9 2>/dev/null
+```
+
+O `preview/` do estilo final é **commitado** junto com o estilo (regenerado por `scaffold-estilo.js` quando o `slide.html` muda). Só remova o diretório de trabalho `_rascunho/` se ele não for o estilo final.
+
+### 7. Gate de marca (`revisor-brand`)
+
+Após confirmação do usuário, acione `revisor-brand`:
 
 ```
-Modo: {criar-template-de-estilo | editar-template-de-estilo}
-Formato: {formato}
-Pasta de trabalho: templates/formatos/{formato}/estilos/_rascunho/
-Slug alvo (só edição): {slug_alvo}
+Tarefa: validar identidade visual do estilo (momento: criação/edição de estilo).
 
-Descrição / Alterações:
-{texto do usuário}
+Inputs:
+- estilo.md: templates/social-media/{formato}/estilos/_rascunho/estilo.md
+- Arquivo principal: templates/social-media/{formato}/estilos/_rascunho/<slide.html | frame.html>
 
-Referências visuais: {lista de caminhos ou "nenhuma"}
-
-Regras:
-- brand/referencias-visuais.md é lei (paleta, tipografia, mood).
-- Regras inegociáveis (dimensões, safe areas, fontes, paleta): templates/formatos/README.md.
-- Arquivo principal por convenção de formato: slide.html (carrossel) | frame.html (stories).
-- Contrato canônico do estilo.md: templates/estilo.md (seções obrigatórias e condicionais).
-- Conteúdo é PLACEHOLDER ("TÍTULO DE EXEMPLO", "CORPO — MÁX 40 PALAVRAS", etc.).
-- Zonas fotográficas marcadas com [data-bg-drop="..."]. Declarar essas zonas no campo "Inputs visuais" de cada bloco da ## Estrutura.
-- Cada variante em bloco identificável por classe + comentário HTML.
-
-Comportamento por modo:
-- criar: gere o template do zero a partir da descrição e refs visuais, respeitando o contrato em templates/estilo.md e as regras inegociáveis.
-- editar: leia os arquivos já copiados em _rascunho/. Aplique APENAS as alterações pedidas; preserve variantes, tokens, estrutura e documentação não mencionada.
-
-Entregáveis em _rascunho/:
-- arquivo principal do template (slide.html para carrossel, frame.html para stories)
-- estilo.md — seções obrigatórias (Conceito visual, Estrutura com blocos/função/tom/entrega/A-B/Inputs visuais, Quando usar, Quando NÃO usar, Variantes visuais) e condicionais (Inputs obrigatórios externos, Cores adicionais/Tokens, Notas técnicas) que se apliquem
-- preview.html — copie templates/wrappers/preview-wrapper.html verbatim, substitua <!-- SLIDES_HERE --> por uma section[data-slide="N"] por variante, atualize apenas o <title>
+Avaliar: paleta, tipografia, layout, mood — alinhamento com brand/referencias-visuais.md e brand/social-media.md.
 ```
 
-### 6. Revisar preview
+Controle de tentativas:
+- `tentativas_7`: inicializar em 0; incrementar a cada re-rodada.
 
-Mostre ao usuário:
+Se `tentativas_7 ≥ 1` → pausar e apresentar ao usuário:
 
 ```
-Rascunho em templates/formatos/{formato}/estilos/_rascunho/preview.html
-Abra no Claude Design e responda "confirmar" — ou descreva o ajuste.
+Gate de identidade visual travado após N tentativa(s).
+Parecer atual: <inline>
+Ação necessária: <instrução do revisor>
 ```
 
-Se houver ajuste, volte ao Passo 5 passando o estado atual de `_rascunho/` como input do designer. Repita até confirmação.
+- **APROVADO** → siga para o Passo 8.
+- **REPROVADO** → aplique a instrução inline (edite `_rascunho/estilo.md` e/ou `_rascunho/slide.html` conforme apontado); incrementar `tentativas_7`; volte ao Passo 6 para nova revisão do usuário.
 
-### 7. Definir slug (só modo criar)
+### 8. Definir slug (só modo criar)
 
-Pergunte o slug. Valide kebab-case (`^[a-z0-9-]+$`). Se já existir pasta com esse nome em `templates/formatos/{formato}/estilos/`, peça outro. Em modo editar, `slug_final = slug_alvo` — pule.
+Pergunte o slug. Valide kebab-case (`^[a-z0-9-]+$`). Se já existir pasta com esse nome em `templates/social-media/{formato}/estilos/`, peça outro. Em modo editar, `slug_final = slug_alvo` — pule.
 
-### 8. Salvar
+### 9. Salvar
 
-- Criar: `mv templates/formatos/{formato}/estilos/_rascunho templates/formatos/{formato}/estilos/{slug_final}`
-- Editar: `cp -r templates/formatos/{formato}/estilos/_rascunho/. templates/formatos/{formato}/estilos/{slug_alvo}/` && `rm -rf templates/formatos/{formato}/estilos/_rascunho/`
+- Criar: `mv templates/social-media/{formato}/estilos/_rascunho templates/social-media/{formato}/estilos/{slug_final}`
+- Editar: `cp -r templates/social-media/{formato}/estilos/_rascunho/. templates/social-media/{formato}/estilos/{slug_alvo}/` && `rm -rf templates/social-media/{formato}/estilos/_rascunho/`
 
-### 9. Confirmar ao usuário
+### 10. Confirmar ao usuário
 
 ```
 Estilo {criado | atualizado}: {slug_final} ({formato})
@@ -122,11 +177,9 @@ Use com: /novo-post {formato} {slug_final} [tema]
 
 ## Critério de conclusão
 
-- Arquivo principal do template do formato + `estilo.md` + `preview.html` presentes em `templates/formatos/{formato}/estilos/{slug_final}/`.
-- Usuário confirmou explicitamente o preview no Passo 6.
-- `_rascunho/` foi removido.
-- Em modo editar, o estilo original só foi sobrescrito após a confirmação do Passo 6.
-
-## Wrapper de preview
-
-O wrapper (carrossel arrastável, drop de imagem, reposicionamento) vive em `templates/wrappers/preview-wrapper.html` — fonte única, lida do disco pelo `designer`. Editar somente lá.
+- Arquivo principal do template do formato + `estilo.md` presentes em `templates/social-media/{formato}/estilos/{slug_final}/`.
+- Pasta do estilo NÃO contém `preview.html` (mas contém a pasta `preview/design/slide-N.html` do editor, commitada).
+- `revisor-brand` aprovou a identidade visual (gate no Passo 7).
+- Usuário confirmou explicitamente o template no Passo 6 (editado no Dino Editor, que a skill subiu sozinha).
+- `_rascunho/` (diretório de trabalho) foi removido; o `preview/` do estilo final é commitado e reflete o `slide.html` atual. Nada de `_preview-*` em `export/`.
+- Em modo editar, o estilo original só foi sobrescrito após a confirmação do Passo 6 e aprovação do Passo 7.

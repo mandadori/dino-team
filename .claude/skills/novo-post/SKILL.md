@@ -1,91 +1,111 @@
 ---
 name: novo-post
-description: Dispara o pipeline completo de criação de um post Instagram (formato definido pelo usuário entre os disponíveis em templates/formatos/). Sintaxe livre — só formato é obrigatório; estilo e tema são opcionais e podem vir em qualquer ordem. Orquestra pesquisa, briefing, copy, design, curadoria técnica e curadoria editorial. Uso - /novo-post <formato> [estilo] [tema]. Requer brand book preenchido.
+description: Dispara o pipeline completo de criação de um post Instagram (formato definido pelo usuário entre os disponíveis em templates/social-media/). Sintaxe livre — só formato é obrigatório; estilo e tema são opcionais e podem vir em qualquer ordem. Orquestra pesquisa, briefing inline, copy inline, design inline, export e gate de marca. Uso - /novo-post <formato> [estilo] [tema]. Requer brand book preenchido. Aceita briefing pré-pronto vindo da pauta semanal como input opcional.
 ---
 
 # /novo-post
 
 Cria um post Instagram completo no formato pedido, do briefing à entrega das imagens.
 
+## Fluxo
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ parse input | input bruto | — | formato/estilo/tema/briefing-path |
+| 2 | ⚙ checar frescor mercado | — | 1 | trigger Fase A se stale |
+| 2a | pesquisador (Fase A, se stale) | mês, formato | 2 | slice mercado atualizado |
+| 3 | pesquisador (Fase B, condic.) | formato, contexto | 2 | candidatos ranqueados |
+| 3.⏸ | ⏸ usuário | candidatos ← 3 | 3 | tema escolhido |
+| 4 | ⚙ recomendar estilo (inline, condic.) | tema, estilos disponíveis | 3.⏸ | recomendação |
+| 4.⏸ | ⏸ usuário | recomendação ← 4 + plano | 4 | confirmação do plano |
+| 5 | ⚙ estilo ad-hoc inline (condic.) + ⏸ | descrição/refs | 4.⏸ | _rascunho/ |
+| 6 | ⚙ briefing inline (ou briefing pré-pronto) | contexto ← 2, tema, estilo | 5 | ângulo/pilar/objetivo/slug |
+| 7 | ⚙ criar pasta | slug ← 6 | 6 | pasta |
+| 8 | ⚙ resolver inputs externos do estilo (condic.) | estilo.md | 7 | treino.md |
+| 8t | treinador (condic.) | exercícios, objetivo | 8 | prescrição |
+| 9 | pesquisador (P9, condic.) | briefing ← 6 | 8 | pesquisa-bruta |
+| 10 | ⚙ copy inline + ⏸ | pesquisa ← 9, contexto-copy | 9 | copy.md |
+| 11 | ⚙ design inline + ⏸ | copy ← 10, estilo.md | 10 | slide-N.html |
+| 11m | arquivista (condic.) | banco, copy, estilo | 11 | suggestions.json |
+| 11.5 | ⚙ loop aprendizado (condic.) + ⏸ | edits.json ← 11 | 11 | estilo.md/slide.html |
+| 12 | ⚙ export-png.js | slide-N.html ← 11 | 11.5 | PNGs |
+| 13 | revisor-brand (gate) | copy.md + pasta | 12 | APROVADO/REPROVADO |
+| 14 | ⚙ entregar | tudo ← 13 | 13 | entrega |
+| 14.5 | ⚙ adaptar stories (condic., carrossel) + ⏸ | copy, estilo | 14 | frames |
+| 15 | ⚙ salvar/descartar _rascunho/ (condic.) + ⏸ | — | 14.5 | slug permanente ou remoção |
+| 15.5 | analista-performance — registrar ângulo | ângulo/pilar/slug ← 6 | 13 | entrada em angulos-queimados |
+| 16 | ⚙ publicação (opcional, gated) | pasta ← 13 | 15 | publicado/pendente |
+
 ## Sintaxe
 
 ```
 /novo-post <formato> [estilo] [tema...]
+/novo-post <formato> [estilo] --briefing <caminho/briefing-pre-pronto.md>
 ```
 
-- **`<formato>`** — obrigatório. Slug de diretório em `templates/formatos/`.
-- **`[estilo]`** — opcional. Slug em `templates/formatos/<formato>/estilos/`.
+- **`<formato>`** — obrigatório. Slug de diretório em `templates/social-media/`.
+- **`[estilo]`** — opcional. Slug em `templates/social-media/<formato>/estilos/`.
 - **`[tema...]`** — opcional, texto livre.
+- **`--briefing <caminho>`** — opcional. Caminho para um briefing pré-pronto (ex: vindo de `/planejar-pauta-semanal`). Quando presente, pula o Passo 6 (decisão inline) e usa ângulo/pilar/estilo já definidos.
 - Ordem livre. Tokens são interpretados por correspondência com slugs; o resto vira tema.
 
 ## Pré-requisitos
 
 - Puppeteer/Chromium instalado (`npm install` na raiz).
 
-Se algum agente devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente a rodar `/brand-discovery` antes.
+Se `revisor-brand` devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e oriente a rodar `/brand-discovery` antes.
 
 ## Princípio central
 
-**Estrutura de copy é propriedade do estilo, não do formato.** Cada `estilo.md` carrega `## Estrutura` (blocos, função editorial, tom, variações A/B, inputs visuais). Em modo ad-hoc, criamos um estilo temporário em `_rascunho/` **antes** da pesquisa+copy, para que o pipeline inteiro rode sobre um estilo concreto.
+**A skill executa produção inline.** Não há subagentes para briefing, copy ou design — a skill lê os arquivos necessários diretamente e produz. Agentes externos (pesquisador-mercado, treinador, revisor-brand, arquivista) são acionados quando têm função geral no sistema.
 
-## Agentes
+**Contexto de leitura por passo:**
+- **Briefing (Passo 6):** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `dados/ramon/contexto.md` + `dados/performance/angulos-queimados.md` + `dados/mercado/tendencias/<mês>.md` + `estilo.md` do estilo escolhido.
+- **Copy (Passo 10):** `estilo.md` (campos `#### editorial` de cada bloco) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa gravada.
+- **Design (Passo 11):** `estilo.md` (campos `#### visual` de cada bloco) + `slide.html` do estilo + `brand/referencias-visuais.md` + `brand/social-media.md` + copy.md.
 
-| Agente | Responsabilidade | Input | Output |
-|---|---|---|---|
-| `pesquisador-mercado` | Fase A (scouting de mercado → slice) + Fase B (seleção ranqueada) + pesquisa profunda (P7) | modo + formato/estilo (P2a) / briefing (P7) | slice `dados/mercado/` atualizado (Fase A) / candidatos ranqueados inline (Fase B) / `dados/pesquisas-brutas/<data>-tendencias-<slug>.md` (P7) |
-| `briefing-writer` | Recomendação de estilo (P2b) + briefing estratégico (P4) | formato+tema (P2b) / formato+estilo+tema (P4) | recomendação inline (P2b) / briefing inline (P4) |
-| `designer` | Estilo ad-hoc em `_rascunho/` (P3) + assets do post + preview consolidado (P9) | refs visuais + contrato (P3) / estilo + copy (P9) | `estilo.md` + arquivo principal + `preview.html` (P3) / `design/*.html` + `design/preview.html` (P9) |
-| `treinador` | Prescrição técnica de treino | exercícios + objetivo + recorte | `treino.md` |
-| `copywriter` | Copy do post | pesquisa + briefing + `estilo.md` (+ `treino.md`) | `copy.md` |
-| `curador-export` | Validação técnica + export PNG | `design/` + `estilo.md` | status inline + `export/*.png` |
-| `revisor-coerencia` | Curadoria editorial (P11a) — coerência artefato vs. briefing; pode aprovar com ajustes | pasta + briefing | parecer inline |
-| `revisor-brand` | Validação de identidade da marca (P11b) — binário | pasta + briefing | APROVADO/REPROVADO inline |
-| `revisor-compliance` | Validação de compliance (P11c) — binário | pasta | APROVADO/REPROVADO inline |
+**Estrutura de copy é propriedade do estilo, não do formato.** Cada `estilo.md` carrega `## Estrutura` com blocos declarativos. Em modo ad-hoc, cria-se um estilo temporário em `_rascunho/` **antes** da copy, para que o pipeline inteiro rode sobre um estilo concreto.
+
+---
 
 ## Pipeline
 
-4 pausas no modo definido (Passos 2, 8, 9, 13.5). 6 pausas no modo ad-hoc (Passos 2, 3, 8, 9, 13.5, 13.6).
-
 ### 1. Parsear input
 
-Liste `templates/formatos/` e `templates/formatos/<formato>/estilos/`. Tokenize a entrada: match com slug de estilo → estilo; resto → tema. Se formato ausente/inválido, pergunte ao usuário oferecendo a lista descoberta. Siga sempre para o Passo 2.
+Liste `templates/social-media/` e `templates/social-media/<formato>/estilos/`. Tokenize a entrada: match com slug de estilo → estilo; `--briefing <caminho>` → `briefing_path`; resto → tema. Se formato ausente/inválido, pergunte ao usuário oferecendo a lista descoberta. Siga sempre para o Passo 2.
 
-### 2. Resolver tema → estilo (pausa)
+Se `briefing_path` presente: leia o arquivo apontado e extraia `Formato`, `Estilo`, `Tema`, `Ângulo central`, `Pilar`, `Objetivo`, `Recorte de público`, `Slug do post`. Esses valores substituem qualquer tema/estilo vindo do input textual. Marque `modo_briefing = "pre-pronto"`. Pule os Passos 3, 3.⏸, 4 e 4.⏸ e vá direto ao Passo 5 (se estilo for ad-hoc) ou ao Passo 7.
 
-Ordem: tema primeiro, estilo depois — porque a recomendação de estilo depende do tema.
+### 2. Frescor da inteligência de mercado
 
-#### 2a. Tema
+A skill **não lê contexto aqui**. Ramon, mercado e ângulos-queimados são consumidos onde de fato decidem: o `pesquisador-mercado` os lê no Passo 3 (recebe os caminhos) para ranquear o tema, e o briefing inline os lê no Passo 6. Este passo só garante que a inteligência de mercado esteja fresca antes do scouting.
 
-- **Tema veio no input** → usa direto. **Pula todo o scouting (bypass)** — vai para o Passo 2b.
-- **Sem tema** → scouting de duas fases (2a.i → 2a.ii → 2a.iii):
-
-##### 2a.i — Checar frescor da inteligência de mercado
+#### 2a. Checar frescor
 
 ```bash
 f="dados/mercado/tendencias/$(date +%Y-%m).md"
 if [ -f "$f" ] && [ -z "$(find "$f" -mtime +14 2>/dev/null)" ]; then echo "FRESCO"; else echo "STALE"; fi
 ```
 
-##### 2a.ii — Auto-heal (só se STALE)
-
-Avise o usuário ("Atualizando inteligência de mercado, isso leva um pouco…") e acione `pesquisador-mercado`:
+Se STALE, avise o usuário ("Atualizando inteligência de mercado…") e acione `pesquisador-mercado`:
 
 ```
 Tarefa: scouting de mercado (Fase A — inteligência durável).
 Profundidade: deep research.
 
 Inputs:
-- Pilares da marca: (de brand/pilares-conteudo.md)
 - Mês de referência: <YYYY-MM>
 
 Saída: gravar/atualizar dados/mercado/tendencias/<YYYY-MM>.md, dados/mercado/concorrentes/<slug>.md e dados/mercado/vocabulario-publico.md conforme a metodologia do modo scouting de mercado.
 ```
 
-Se FRESCO, pule este passo.
+Se FRESCO, pule.
 
-##### 2a.iii — Seleção ranqueada (sempre)
+### 3. Tema (scouting ranqueado)
 
-Acione `pesquisador-mercado`:
+**Tema veio no input** → usa direto. Pula o scouting — vai para o Passo 4.
+
+**Sem tema** → acione `pesquisador-mercado` (Fase B), informando o contexto carregado no Passo 2:
 
 ```
 Tarefa: seleção de candidatos (Fase B — ranqueamento).
@@ -93,12 +113,15 @@ Tarefa: seleção de candidatos (Fase B — ranqueamento).
 Inputs:
 - Formato: <formato>
 - Estilo: <slug se veio no input, senão "ainda não definido">
+- Contexto Ramon: dados/ramon/contexto.md (leia — considere fase atual e cronograma)
+- Ângulos queimados: dados/performance/angulos-queimados.md (não repetir)
+- Tendências do mês: dados/mercado/tendencias/<YYYY-MM>.md
 - Quantidade de candidatos: 3-5
 
 Saída inline: candidatos ranqueados (ângulo + pilar + sustentação + potencial), do maior para o menor potencial.
 ```
 
-Apresente e pause:
+Apresente e pause (⏸):
 
 ```
 Candidatos (ranqueados por potencial):
@@ -111,157 +134,104 @@ Responda:
 - ou dê seu próprio tema (bypass — sua escolha vence)
 ```
 
-A escolha define `tema`. **Guarde o candidato escolhido + a lista ranqueada** (serão reenviados no Passo 4). Se "mais"/ajuste, re-acione o modo seleção e reapresente. **Aguarde escolha explícita** antes de seguir ao Passo 2b.
+A escolha define `tema`. **Guarde o candidato escolhido + a lista ranqueada** (serão usados no Passo 6). Se "mais"/ajuste, re-acione o modo seleção e reapresente. **Aguarde escolha explícita** antes de seguir ao Passo 4.
 
-#### 2b. Estilo (sabendo o tema)
+### 4. Estilo (inline, sabendo o tema) e plano
 
-- **Estilo veio no input** → `modo_estilo = "definido"`, `slug = <escolhido>`.
-- **Sem estilo** → acione `briefing-writer`:
+**Estilo veio no input** → `modo_estilo = "definido"`, `slug = <escolhido>`. Mostre o plano abaixo e pause.
 
-```
-Tarefa: recomendar UM estilo para o tema, ou propor ad-hoc se nenhum couber bem.
+**Sem estilo** → leia `## Quando usar` / `## Quando NÃO usar` de cada `estilo.md` em `templates/social-media/<formato>/estilos/` (exceto `_rascunho`) e decida inline qual estilo serve melhor para o tema. Se nenhum couber bem, recomende "ad-hoc".
 
-Inputs:
-- Formato: <formato>
-- Tema: <tema>
-- Estilos disponíveis (leia todos): templates/formatos/<formato>/estilos/*/estilo.md
-
-Avalie cada estilo contra o tema usando `## Quando usar` / `## Quando NÃO usar` de cada estilo.md.
-
-Saída inline:
-- Recomendação: <slug recomendado> | "ad-hoc"
-- Motivo: 1-2 frases ancorando em tema vs. estilo (ou explicando porque nenhum cabe).
-```
-
-Apresente a recomendação ao usuário:
-
-```
-Estilo recomendado: <slug | ad-hoc>
-Motivo: <motivo do briefing-writer>
-
-Responda:
-- "sim" → segue com o recomendado
-- "<outro-slug>" → troca para esse estilo
-- "ad-hoc" → cria estilo novo (anexe imagem de referência e/ou descreva o visual)
-```
-
-Se vier `ad-hoc` (ou recomendação foi ad-hoc), `modo_estilo = "ad-hoc"`, colete:
-- `referencia_imagem` (caminho) — opcional
-- `referencia_descricao` (texto) — opcional
-- Ao menos um dos dois é obrigatório. Se nenhum, repita a pergunta.
-
-#### 2c. Mostrar plano + pausa
+Apresente o plano ao usuário (⏸):
 
 ```
 Plano do post:
 - Formato: <formato>
 - Tema: <tema>
 - Estilo: <slug existente> | ad-hoc (referência: <descrição resumida>)
+- Motivo: <1-2 frases ancorando tema vs. estilo>
 
-Confirma? (responda "sim" para seguir, ou diga o que ajustar)
+Responda:
+- "sim" / "ok" → segue com este plano
+- "<outro-slug>" → troca para esse estilo
+- "ad-hoc" → cria estilo novo (anexe imagem de referência e/ou descreva o visual)
+- qualquer ajuste em texto livre
 ```
+
+Se vier `ad-hoc` (ou recomendação inline foi ad-hoc), `modo_estilo = "ad-hoc"`, colete:
+- `referencia_imagem` (caminho) — opcional
+- `referencia_descricao` (texto) — opcional
+- Ao menos um dos dois é obrigatório. Se nenhum, repita a pergunta.
 
 **Aguarde confirmação explícita ou ajuste** antes de seguir.
 
-### 3. Preparar `_rascunho/` ad-hoc (pausa)
+### 5. Preparar `_rascunho/` ad-hoc (pausa)
 
-**Só executa quando `modo_estilo = "ad-hoc"`.** Em modo definido, pule para o Passo 4.
+**Só executa quando `modo_estilo = "ad-hoc"`.** Em modo definido, pule para o Passo 6.
 
 ```bash
-mkdir -p templates/formatos/<formato>/estilos/_rascunho/
+mkdir -p templates/social-media/<formato>/estilos/_rascunho/
 ```
 
 Se `_rascunho/` já existir, pergunte ao usuário antes de sobrescrever (sobrescrever / continuar do rascunho atual / abortar).
 
-Acione `designer`:
-
-```
-Tarefa: criar estilo (estilo.md + arquivo principal + preview.html) a partir das referências do usuário.
-
-Inputs:
-- Pasta de trabalho: templates/formatos/<formato>/estilos/_rascunho/
-- Formato: <formato>
-- Referências:
-  - Imagem: <caminho ou "nenhuma">
-  - Descrição: <texto do usuário ou "nenhuma">
-- Contrato canônico: templates/estilo.md (use como guia das seções obrigatórias e condicionais)
-- Regras inegociáveis: templates/formatos/README.md
-- Dimensões e arquivo principal: vêm das regras inegociáveis + convenção de nome (slide.html para carrossel, frame.html para stories)
-
-Saída em _rascunho/:
-- estilo.md — preencher seções obrigatórias (Conceito visual, Estrutura, Quando usar, Quando NÃO usar, Variantes visuais) e condicionais que se apliquem
-- arquivo principal do template (slide.html ou frame.html)
-- preview.html — copiar templates/wrappers/preview-wrapper.html verbatim, substituir <!-- SLIDES_HERE --> por uma section[data-slide="N"] por variante, atualizar apenas o <title>
+Crie `estilo.md` + `slide.html` inline nesta pasta, seguindo:
+- `templates/estilo.md` como contrato canônico (seções obrigatórias e condicionais)
+- `brand/referencias-visuais.md` para tokens de marca
+- `brand/social-media.md` para dimensões e chrome
+- As referências/descrição do usuário para DNA visual
 
 Regras críticas:
 - Referências fotográficas são guia de mood/composição/tratamento — NUNCA conteúdo final.
-- Backgrounds com intenção fotográfica = sempre drop zone (data-bg-drop="<nome>").
-- Declarar drop zones no campo "Inputs visuais" de cada bloco da ## Estrutura do estilo.md.
+- Backgrounds com intenção fotográfica = sempre drop zone (`data-bg-drop="<nome>"`).
+- Declarar drop zones no campo `[bg]` e `[slots]` de cada bloco da `## Estrutura` do `estilo.md`.
 - Conteúdo dos blocos é PLACEHOLDER ("TÍTULO DE EXEMPLO", "FRASE — MÁX 12 PALAVRAS", etc.).
-```
+- Não gerar `preview.html` — preview = abrir `slide.html` via Live Preview ou Dino Editor.
 
-**Pausa após gravação:**
+**Pausa após gravação (⏸):**
 
 ```
-Rascunho do estilo ad-hoc em templates/formatos/<formato>/estilos/_rascunho/
+Rascunho do estilo ad-hoc em templates/social-media/<formato>/estilos/_rascunho/
 - estilo.md
-- <arquivo principal>
-- preview.html
+- slide.html (ou frame.html)
 
-Abra preview.html no Claude Design e revise estrutura/visual.
+Para revisar o visual, abra o arquivo principal via Live Preview ou:
+  node scripts/export-png.js <qualquer pasta de post com design/> --format=<formato>
+
 Confirma? ("ok" para seguir ao briefing, ou descreva o ajuste)
 ```
 
-Se vier ajuste, re-acione o `designer` com o pedido inline + estado atual de `_rascunho/`. Repita até "ok".
+Se vier ajuste, edite os arquivos em `_rascunho/` inline conforme o pedido. Repita até "ok".
 
-### 4. Briefing estratégico
+### 6. Briefing estratégico (inline)
 
-Acione `briefing-writer`:
+**Quando `modo_briefing = "pre-pronto"`:** pule este passo. Os campos já foram extraídos no Passo 1.
 
-```
-Tarefa: produzir briefing estratégico para o post.
+**Caso contrário:** leia os seguintes arquivos e decida inline:
+- `brand/brand-book.md`
+- `brand/pilares-conteudo.md`
+- `dados/ramon/contexto.md`
+- `dados/performance/angulos-queimados.md`
+- `dados/mercado/tendencias/<YYYY-MM>.md`
+- `estilo.md` do estilo escolhido (campos `## Conceito` e `#### editorial` de cada bloco)
 
-Inputs:
-- Formato: <formato>
-- Estilo: <slug | "ad-hoc">
-- Caminho do estilo: <templates/formatos/<formato>/estilos/<slug>/ | templates/formatos/<formato>/estilos/_rascunho/>
-- Tema: <tema>
-- Data: <YYYY-MM-DD>
-- Candidatos ranqueados: <lista da Fase B guardada no Passo 2a.iii | "nenhum — tema veio no input (sem scouting)">
-- Candidato escolhido pelo humano: <o selecionado no Passo 2a.iii | "nenhum">
+Com base nessas leituras e no tema/candidatos escolhidos, fixe:
+- **Ângulo central** — ponto de vista específico que diferencia (não o tema bruto).
+- **Pilar** — de `brand/pilares-conteudo.md`; apenas 1.
+- **Objetivo** — 1 frase específica do que o post deve fazer no leitor.
+- **Recorte de público** — 1-2 frases do segmento específico dentro do público-alvo.
+- **Slug do post** — kebab-case (2-5 palavras capturando o ângulo, não o tema bruto).
+- **Sinalizações para o pipeline** — pesquisa necessária? tom específico? restrições/tabus?
 
-Leia o estilo.md no caminho indicado (## Estrutura é fonte da modulação de tom por bloco).
-Avalie tema/formato/estilo contra o brand book; decida ângulo central; selecione 1 pilar; defina objetivo; descreva recorte de público; gere slug em kebab-case (2-5 palavras, captura o ângulo, não o tema bruto).
+**Guarde esses campos na memória da skill** — serão usados nos Passos 10 (copy) e 13 (gate + briefing.md).
 
-Preencha o esqueleto inline:
-
-## Briefing estratégico
-**Formato:** {formato}
-**Estilo:** {slug | ad-hoc}
-**Caminho do estilo:** {caminho passado acima}
-**Tema:** {tema}
-**Data:** {YYYY-MM-DD}
-**Slug do post:** {kebab-case}
-**Pilar:** {de pilares-conteudo.md}
-**Objetivo:** {1 frase específica}
-**Recorte de público:** {1-2 frases}
-**Ângulo central:** {1-2 frases}
-**Por que este recorte:** {2-3 linhas ligando ângulo + pilar + público + formato}
-**Sinalizações para o pipeline:**
-- {pesquisa}
-- {tom}
-- {restrição/tabu}
-```
-
-Mostre o briefing ao usuário e **guarde-o inline na memória da skill** — será reenviado no Passo 11. Prossiga sem pausa.
-
-### 5. Criar pasta do post
+### 7. Criar pasta do post
 
 ```bash
 mkdir -p export/conteudos/<formato>/<data>-<slug>/{design,export}
 ```
 
-### 6. Resolver inputs obrigatórios externos do estilo
+### 8. Resolver inputs obrigatórios externos do estilo
 
 Leia o `estilo.md` apontado pelo briefing. Se ele declarar `## Inputs obrigatórios externos`, resolva por tipo:
 
@@ -286,7 +256,9 @@ Inputs:
 Saída: inline no formato canônico do treinador.
 ```
 
-### 7. Pesquisa profunda
+### 9. Pesquisa profunda (condicional)
+
+Execute quando o ângulo for informacional (dados, mitos, técnica). Pule em post puramente narrativo (história pessoal, motivação sem dados).
 
 Acione `pesquisador-mercado`:
 
@@ -305,32 +277,20 @@ Template: templates/pesquisa.md.
 Saída: gravar em dados/pesquisas-brutas/<data>-tendencias-<slug>.md.
 ```
 
-### 8. Copy (pausa)
+### 10. Copy (inline + pausa)
 
-Acione `copywriter`:
+Leia os seguintes arquivos:
+- `estilo.md` do estilo escolhido — campos `#### editorial` de cada bloco (função, tom, [entregar], [ab])
+- `brand/tom-de-voz.md`
+- `brand/publico-alvo.md`
+- `dados/pesquisas-brutas/<data>-tendencias-<slug>.md` (se pesquisa executada no Passo 9)
+- `export/conteudos/<formato>/<data>-<slug>/treino.md` (se existir)
 
-```
-Tarefa: escrever copy do post seguindo a ## Estrutura do estilo.
+Com base nessas leituras e no briefing inline do Passo 6, escreva a copy seguindo **exatamente** os campos `#### editorial` de cada bloco do estilo (função, tom, [entregar], [ab]). Um bloco por bloco, respeitando limites de palavras declarados em `[entregar]`.
 
-Inputs:
-- Pesquisa: dados/pesquisas-brutas/<data>-tendencias-<slug>.md
-- Briefing inline:
-  - Pilar: <pilar>
-  - Objetivo: <objetivo>
-  - Ângulo central: <ângulo>
-  - Recorte de público: <recorte>
-  - Slug do post: <slug>
-- Inputs técnicos (quando aplicável):
-  export/conteudos/<formato>/<data>-<slug>/treino.md
+Grave em `export/conteudos/<formato>/<data>-<slug>/copy.md`.
 
-Estilo a seguir: <caminho do estilo.md — templates/formatos/<formato>/estilos/<slug>/estilo.md OU templates/formatos/<formato>/estilos/_rascunho/estilo.md>
-
-Saída: gravar em export/conteudos/<formato>/<data>-<slug>/copy.md.
-```
-
-Critério: arquivo gravado seguindo a `## Estrutura` declarada no estilo (blocos, função, tom, variações A/B nos pontos pedidos).
-
-#### Pausa para revisão da copy
+#### Pausa para revisão da copy (⏸)
 
 ```
 Copy gerada em export/conteudos/<formato>/<data>-<slug>/copy.md
@@ -342,76 +302,112 @@ Copy gerada em export/conteudos/<formato>/<data>-<slug>/copy.md
 Confirma? (responda "ok" para seguir ao design, ou descreva o ajuste)
 ```
 
-**Aguarde resposta.** Se vier ajuste, re-acione o `copywriter` com o pedido inline (sem re-rodar pesquisa), aguarde nova gravação e reapresente. Repita até "ok".
+**Aguarde resposta.** Se vier ajuste, edite `copy.md` inline conforme o pedido (sem re-rodar pesquisa), reapresente. Repita até "ok".
 
-Prompt do `copywriter` em modo ajuste:
+### 11. Design (inline + pausa)
 
-```
-Tarefa: ajustar copy do post conforme pedido do usuário.
+Leia os seguintes arquivos:
+- `estilo.md` do estilo escolhido — campos `#### visual` de cada bloco (classe, bg, overlay, layout, alternância, slots, tokens)
+- `slide.html` (ou `frame.html`) do estilo — template base
+- `brand/referencias-visuais.md`
+- `brand/social-media.md`
+- `export/conteudos/<formato>/<data>-<slug>/copy.md`
+- `export/conteudos/<formato>/<data>-<slug>/treino.md` (se existir)
 
-Inputs:
-- Copy atual: export/conteudos/<formato>/<data>-<slug>/copy.md
-- Pedido de ajuste: <texto do usuário>
-- Briefing inline original: <briefing guardado no Passo 4>
-- Estilo a seguir: <caminho do estilo.md>
-
-Regras:
-- Preserve a ## Estrutura do estilo e blocos que não foram pedidos para mudar.
-- Aplique apenas o ajuste solicitado.
-
-Saída: sobrescrever export/conteudos/<formato>/<data>-<slug>/copy.md.
-```
-
-### 9. Design (pausa)
-
-Acione `designer` com as duas tarefas no mesmo prompt:
-
-```
-Tarefa 1 — produzir N assets visuais (um por bloco da ## Estrutura do estilo).
-
-Inputs:
-- Regras inegociáveis: templates/formatos/README.md
-- Estilo (visual + estrutura): <caminho do estilo.md>
-- Template visual: <pasta do estilo>/<arquivo principal HTML> (slide.html | frame.html)
-- Copy: export/conteudos/<formato>/<data>-<slug>/copy.md
-- Inputs técnicos (se houver): export/conteudos/<formato>/<data>-<slug>/treino.md
-
-Saída: um HTML standalone por bloco em design/, nome sequencial seguindo o padrão do template visual (slide-1.html, frame-1.html, ...).
-
-Drop zones: respeite o campo "Inputs visuais" de cada bloco no estilo.md.
-- data-bg-drop="full" se asset preenche tudo com foto
-- data-bg-drop="<nome>" por zona fotográfica
-- não marcar se puramente tipográfico ou se for placeholder técnico (ex: chroma)
-
-Tarefa 2 — consolidar em preview.html.
-
-Inputs:
-- Pasta dos assets: export/conteudos/<formato>/<data>-<slug>/design/
-- Wrapper (VERBATIM, não altere CSS/JS): templates/wrappers/preview-wrapper.html
+Para cada bloco declarado em `## Estrutura` do estilo, gere um `slide-N.html` em `design/`, nome sequencial. Aplique a copy do bloco correspondente em `copy.md` aos slots declarados em `[slots]` / `[entregar]`. Para blocos N-dinâmico com `[alternância]`, aplique a variante A (ímpar) ou B (par) conforme a posição na sequência.
 
 Regras:
-- Substituir APENAS <!-- SLIDES_HERE --> por <section data-slide="N" style="width:{W}px;height:{H}px;"> para cada asset, contendo o <style> do <head> + o conteúdo do <body> (sem o wrapper <body>). W/H das dimensões do template visual. data-slide="N" obrigatório (o script de export usa).
-- Atualizar APENAS o <title> para "Preview — <tema> (<estilo>)".
+- Drop zones: respeite o campo `[bg]` e `[slots]` de cada bloco.
+  - `data-bg-drop="full"` se asset preenche tudo com foto
+  - `data-bg-drop="<nome>"` por zona fotográfica
+  - não marcar se puramente tipográfico ou placeholder técnico (ex: chroma)
+- Cada slide é HTML standalone com `data-block` e `data-slot` nos elementos.
+- Não gerar `preview.html`.
 
-Saída: export/conteudos/<formato>/<data>-<slug>/design/preview.html.
+Saída: `design/slide-1.html`, `design/slide-2.html`, ... (um por bloco).
+
+#### Pré-preenchimento de imagens (condicional)
+
+Se o usuário tiver apontado um banco de imagens (variável de fluxo `banco`), acione `arquivista`:
+
+```
+Tarefa: indexar (se houver imagens novas) e depois selecionar.
+
+Inputs:
+- Banco: <caminho do banco>
+- copy.md: export/conteudos/<formato>/<data>-<slug>/copy.md
+- estilo.md: <caminho do estilo.md>
+- Pasta do post: export/conteudos/<formato>/<data>-<slug>/
+
+Saída: design/suggestions.json com a melhor imagem disponível por drop zone.
 ```
 
-#### Pausa para revisão do preview
+Se não houver banco apontado, pule — o usuário dropa as fotos manualmente no estúdio.
+
+#### Pausa para revisão e edição no Dino Editor (⏸)
+
+**A skill sobe o backend do editor automaticamente** — o usuário nunca roda o backend. Antes de apresentar a pausa, execute:
+
+```bash
+lsof -ti tcp:4321 | xargs kill -9 2>/dev/null; \
+npm run editor -- export/conteudos/<formato>/<data>-<slug> \
+  --estilo <caminho do estilo.md> > /tmp/dino-editor.log 2>&1 &
+```
+
+Aguarde ~3s e confirme saúde (`curl -s -o /dev/null -w "%{http_code}" http://localhost:4321/` → `200`). Só então apresente:
 
 ```
 Design gerado em export/conteudos/<formato>/<data>-<slug>/design/ (estilo: <slug | ad-hoc>):
-- preview.html
-- <assets individuais>
+- <slides individuais: slide-1.html, slide-2.html...>
 
-Opções:
-- "exportar" → exporto o preview.html em disco como está.
-- Anexe preview.html editado → sobrescrevo e exporto.
-- Peça ajustes → repasso ao Designer.
+O Dino Editor já está no ar: abra http://localhost:4321 no navegador.
+
+Edite no canvas, clique "Salvar" (grava slide-N.html + edits.json). Quando pronto, clique "Exportar" ou use:
+
+  node scripts/export-png.js export/conteudos/<formato>/<data>-<slug>/
+
+Opções de resposta:
+- "ok" / "exportei" → sigo para a revisão de marca (Passo 13).
+- Peça ajustes visuais → edito os slides inline e reapresento.
 ```
 
-**Aguarde resposta.** Se vier arquivo anexado, sobrescreva `design/preview.html`. Se vier pedido de ajuste, repasse ao `designer` com o ponto específico. Se vier confirmação, siga para o Passo 10.
+**Aguarde resposta.** Edições visuais são feitas pelo usuário no Dino Editor (zero token). Se o usuário pedir explicitamente um ajuste inline, edite o slide apontado. Quando confirmar, siga para o Passo 11.5.
 
-### 10. Validação técnica + export PNG
+### 11.5. Loop de aprendizado de estilo (condicional)
+
+Após o usuário salvar no estúdio (Passo 11), leia `export/conteudos/<formato>/<data>-<slug>/design/edits.json` se existir e rode a extração:
+
+```bash
+node -e '
+import("./scripts/editor/extract-structural.js").then(async (m) => {
+  const fs = await import("node:fs");
+  const p = "export/conteudos/<formato>/<data>-<slug>/design/edits.json";
+  if (!fs.existsSync(p)) { console.log(JSON.stringify({hasStructural:false})); return; }
+  console.log(JSON.stringify(m.extractStructural(JSON.parse(fs.readFileSync(p,"utf8")))));
+});
+'
+```
+
+Se `hasStructural` for `false` (ou o arquivo não existir), **pule** este passo sem mensagem.
+
+Se `hasStructural` for `true`, **pause** e apresente (⏸):
+
+```
+Detectei mudanças estruturais no estilo '<estilo>':
+<para cada bloco em byBlock>
+- bloco <block>: <lines unidas por " · ">
+
+Promover ao estilo.md? Isso atualiza o estilo para posts futuros.
+- "tudo"            → promove todos os deltas
+- "<bloco/slot>"    → promove só os escolhidos
+- "não"             → fica só neste post (estilo intacto)
+```
+
+**Aguarde resposta.** Se "não", siga para o Passo 12 sem alterar o estilo.
+
+Se "tudo" ou seleção, edite `estilo.md` e `slide.html` do estilo **inline**, aplicando cada delta nos dois arquivos atomicamente conforme a variante de posição declarada. Em delta não mapeável, reporte ao usuário o delta problemático e siga com os demais. Após a promoção, siga para o Passo 12.
+
+### 12. Export PNG (determinístico)
 
 Snapshot da pesquisa na pasta do post:
 
@@ -420,91 +416,54 @@ cp -n dados/pesquisas-brutas/<data>-tendencias-<slug>.md \
       export/conteudos/<formato>/<data>-<slug>/pesquisa-base.md
 ```
 
-Acione `curador-export`:
+Execute o export:
 
-```
-Tarefa: validar assets e executar export para PNG.
-
-Inputs:
-- Pasta: export/conteudos/<formato>/<data>-<slug>/design/
-- Estilo: <caminho do estilo.md>
-
-Critérios:
-- Dimensões dos assets = template visual.
-- Tipografia/paleta dentro de brand/referencias-visuais.md (+ extras autorizadas pelo estilo.md).
-- Sem JavaScript em assets individuais (JS só no wrapper).
-- preview.html tem section[data-slide="N"] para cada asset.
-
-Comando: node scripts/export-png.js export/conteudos/<formato>/<data>-<slug>/
-
-Pós-export: verificar que qtd. de PNGs em export/ = qtd. de assets HTML em design/; inspeção visual rápida (capa + último asset).
-
-Saída: inline com status, lista de PNGs, observações.
+```bash
+node scripts/export-png.js export/conteudos/<formato>/<data>-<slug>/
 ```
 
-Em `VALIDACAO_TECNICA_FALHOU` → corrija no Designer no ponto apontado. Em `EXPORT_FALHOU` → resolva a causa (dependência, HTML quebrado) e re-rode.
+O script renderiza cada `slide-N.html` e valida automaticamente dimensões e contagem. Se a validação falhar, leia o erro, corrija no arquivo apontado e re-rode.
 
-### 11. Curadoria editorial final
+Em caso de erro de dependência (Puppeteer não instalado): `npm install` na raiz.
 
-Três revisões em sequência. Toda reprovação **interrompe** a sequência e devolve a etapa apontada para refazer. Só após APROVADO em todos os três, o briefing institucional é consolidado.
+### 13. Gate de marca (`revisor-brand`)
 
-#### 11a. Coerência (`revisor-coerencia`)
+Acione `revisor-brand`:
 
 ```
-Tarefa: dar parecer editorial sobre o post pronto.
+Tarefa: validar copy + compliance do post pronto (momento: criação de post).
 
 Inputs:
 - Pasta do post: export/conteudos/<formato>/<data>-<slug>/
-  (pesquisa-base.md, copy.md, design/preview.html, design/*.html, export/*.png, treino.md quando aplicável)
-- Briefing estratégico original (inline):
-  <briefing guardado no Passo 4, na íntegra>
+  (copy.md, design/slide-*.html, export/*.png, treino.md quando aplicável, pesquisa-base.md)
+- Briefing inline:
+  Pilar: <pilar>
+  Objetivo: <objetivo>
+  Ângulo central: <ângulo>
+  Recorte de público: <recorte>
+  Slug do post: <slug>
 
-Avalie 4 dimensões: alinhamento com brand book; coerência com briefing original (ângulo, pilar, objetivo, recorte); qualidade editorial (hook, 1 ideia por bloco, concreto > abstrato, CTA específico); integridade técnica (qtd. PNGs = qtd. assets; pesquisa-base.md presente).
+Avaliar: tom de voz, pilar, compliance (saúde, jurídico, suplementação, promessas irreais).
+NÃO re-julgar identidade visual — o estilo já foi validado na criação.
 
-Saída: parecer inline.
-Status válidos: APROVADO | APROVADO COM AJUSTES | REPROVADO.
+Saída: parecer inline (schema "momento: criação de post"). Status: APROVADO | REPROVADO.
 ```
 
-- **APROVADO** ou **APROVADO COM AJUSTES** → seguir para 11b. Se AJUSTES, anotar os pontos para aplicar depois ou em iteração rápida com `copywriter`/`designer` antes de seguir.
-- **REPROVADO** → reabra a etapa apontada, refaça, e re-rode 11a.
+Controle de tentativas (rastrear por execução):
+- `tentativas_13`: inicializar em 0; incrementar a cada re-rodada.
 
-#### 11b. Brand (`revisor-brand`)
-
-```
-Tarefa: validar identidade da marca no post pronto.
-
-Inputs:
-- Pasta do post: export/conteudos/<formato>/<data>-<slug>/
-- Briefing estratégico original (inline):
-  <briefing guardado no Passo 4, na íntegra>
-
-Avalie tom de voz, paleta/tipografia, pilar, mood/identidade visual contra brand/. Decisão binária.
-
-Saída: parecer inline.
-Status válidos: APROVADO | REPROVADO.
-```
-
-- **APROVADO** → seguir para 11c.
-- **REPROVADO** → reabra a etapa apontada (em geral copy ou design) e re-rode 11a desde o início.
-
-#### 11c. Compliance (`revisor-compliance`)
+Se `tentativas_13 ≥ 1` → pausar e apresentar ao usuário:
 
 ```
-Tarefa: validar compliance do post pronto.
-
-Inputs:
-- Pasta do post: export/conteudos/<formato>/<data>-<slug>/
-
-Varra saúde, jurídico, suplementação, promessas irreais. Decisão binária.
-
-Saída: parecer inline.
-Status válidos: APROVADO | REPROVADO.
+Gate de marca travado após N tentativa(s).
+Parecer atual: <inline>
+Ação necessária: <instrução do revisor>
 ```
 
-- **APROVADO** → consolidar briefing institucional usando `templates/briefing.md` (sem variações A/B, sem rastros de processo) e gravar em `export/conteudos/<formato>/<data>-<slug>/briefing.md`. **Este é o último passo da curadoria.**
-- **REPROVADO** → reabra `copy` ou `design` e re-rode 11a desde o início.
+- **APROVADO** → consolidar `briefing.md` usando `templates/briefing.md` e gravar em `export/conteudos/<formato>/<data>-<slug>/briefing.md`. Siga para o Passo 14.
+- **REPROVADO** → aplicar a instrução do campo `Ação` (corrigir copy ou design inline conforme indicado); incrementar `tentativas_13`; re-rodar Passo 12 + Passo 13.
 
-### 13. Entregar ao usuário
+### 14. Entregar ao usuário
 
 ```
 Post pronto: export/conteudos/<formato>/<data>-<slug>/
@@ -513,7 +472,7 @@ Post pronto: export/conteudos/<formato>/<data>-<slug>/
 - Estilo: <slug> (<salvo como permanente | descartado | já era permanente>)
 - Tema: <tema>
 
-Destaques da curadoria:
+Destaques do gate de marca:
 - {bullet 1}
 - {bullet 2}
 - {bullet 3}
@@ -524,9 +483,9 @@ Imagens prontas para upload:
 Briefing institucional: export/conteudos/<formato>/<data>-<slug>/briefing.md
 ```
 
-### 13.5. Adaptar para stories (pausa)
+### 14.5. Adaptar para stories (pausa)
 
-**Só executa quando `<formato> = carrossel`.** Em outros formatos, pule para o Passo 13.6 (ad-hoc) ou Passo 14 (modo definido).
+**Só executa quando `<formato> = carrossel`.** Em outros formatos, pule para o Passo 15.
 
 ```
 Quer adaptar este post para stories (9:16)?
@@ -534,103 +493,70 @@ Quer adaptar este post para stories (9:16)?
 - "não" → segue para o próximo passo
 ```
 
-Se "não", pule para o Passo 13.6 (ad-hoc) ou Passo 14 (modo definido).
+Se "não", pule para o Passo 15.
 
-Se "sim", acione `designer`:
+Se "sim", leia o `estilo.md` do carrossel e o `slide.html` de referência. Gere os frames stories inline:
+- Dimensões: 1080×1920
+- Saída: `export/conteudos/carrossel/<data>-<slug>/stories/design/frame-N.html`
+- Manter as drop zones declaradas no estilo de referência.
 
-```
-Tarefa: adaptar assets do carrossel para stories (9:16).
-
-Inputs:
-- Regras inegociáveis: templates/formatos/README.md
-- Estilo de referência: <caminho do estilo.md do carrossel>
-- Template de referência: <pasta do estilo>/slide.html
-- Copy: export/conteudos/carrossel/<data>-<slug>/copy.md
-- Inputs técnicos (se houver): export/conteudos/carrossel/<data>-<slug>/treino.md
-- Formato de saída: stories (1080×1920)
-
-Saída em export/conteudos/carrossel/<data>-<slug>/stories/design/:
-- frame-N.html por bloco da ## Estrutura do estilo
-- preview.html usando templates/wrappers/preview-wrapper.html verbatim
-
-Drop zones: manter as declaradas no estilo de referência.
-```
-
-#### Pausa para revisão do preview stories
+#### Pausa para revisão dos frames stories (⏸)
 
 ```
 Stories gerado em export/conteudos/carrossel/<data>-<slug>/stories/design/:
-- preview.html
-- <frames individuais>
+- <frames individuais: frame-1.html, frame-2.html...>
+
+Para revisar, abra os frames via Live Preview ou exporte diretamente:
+  node scripts/export-png.js export/conteudos/carrossel/<data>-<slug>/stories/ --format=stories
 
 Opções:
 - "exportar" → exporto como está
-- Anexe preview.html editado → sobrescrevo e exporto
-- Peça ajustes visuais → repasso ao designer
-- Ajuste de copy → re-aciono copywriter; salvo em stories/copy.md (copy.md original intacto)
+- Peça ajustes visuais → edito os frames inline e reapresento
+- Ajuste de copy → edito o copy inline para a versão stories
 ```
 
-**Aguarde resposta.** Se vier ajuste visual, repasse ao `designer` com o ponto específico e aguarde nova gravação. Se vier ajuste de copy, acione `copywriter`:
+**Aguarde resposta.** Se vier ajuste visual, edite os frames inline. Se vier ajuste de copy, edite a copy para stories e grave em `stories/copy.md` (copy.md original intacto). Repita até "exportar" ou confirmação.
 
-```
-Tarefa: ajustar copy para versão stories do post.
+Após aprovação, execute o export:
 
-Inputs:
-- Copy original: export/conteudos/carrossel/<data>-<slug>/copy.md
-- Pedido de ajuste: <texto do usuário>
-- Briefing inline original: <briefing guardado no Passo 4>
-- Estilo a seguir: <caminho do estilo.md do carrossel>
-
-Regras:
-- Preserve a ## Estrutura do estilo e blocos não pedidos para mudar.
-- Aplique apenas o ajuste solicitado.
-
-Saída: gravar em export/conteudos/carrossel/<data>-<slug>/stories/copy.md.
-NÃO alterar export/conteudos/carrossel/<data>-<slug>/copy.md.
+```bash
+node scripts/export-png.js export/conteudos/carrossel/<data>-<slug>/stories/ --format=stories
 ```
 
-Repita até "exportar" ou confirmação. Após aprovação, acione `curador-export`:
+O script valida dimensões e contagem automaticamente. Em caso de erro, corrija o frame apontado e re-rode.
+
+**Gate de marca não se repete** — copy e briefing já foram aprovados no Passo 13.
+
+### 15. Salvar/descartar `_rascunho/` (pausa)
+
+**Só executa quando `modo_estilo = "ad-hoc"`.** Em modo definido, pule para o Passo 16.
 
 ```
-Tarefa: validar assets e executar export para PNG.
-
-Inputs:
-- Pasta: export/conteudos/carrossel/<data>-<slug>/stories/design/
-- Estilo: <caminho do estilo.md do carrossel>
-
-Critérios:
-- Dimensões dos frames = 1080×1920.
-- Tipografia/paleta dentro de brand/referencias-visuais.md (+ extras autorizadas pelo estilo.md).
-- Sem JavaScript em assets individuais (JS só no wrapper).
-- preview.html tem section[data-slide="N"] para cada frame.
-
-Comando: node scripts/export-png.js export/conteudos/carrossel/<data>-<slug>/stories/
-
-Pós-export: verificar que qtd. de PNGs em stories/export/ = qtd. de frame-N.html em stories/design/.
-
-Saída: inline com status, lista de PNGs, observações.
-```
-
-**Curadoria não se repete** — copy e briefing já foram aprovados nos Passos 11a/b/c.
-
-Em `VALIDACAO_TECNICA_FALHOU` → corrija no designer no ponto apontado. Em `EXPORT_FALHOU` → resolva a causa e re-rode.
-
-### 13.6. Salvar/descartar `_rascunho/` (pausa)
-
-**Só executa quando `modo_estilo = "ad-hoc"`.** Em modo definido, pule para o Passo 14.
-
-```
-Estilo ad-hoc usado no post: templates/formatos/<formato>/estilos/_rascunho/
+Estilo ad-hoc usado no post: templates/social-media/<formato>/estilos/_rascunho/
 
 Quer salvar como estilo permanente?
 - "salvar <slug-em-kebab-case>" → mantém pasta, renomeia.
 - "descartar" → remove a pasta.
 ```
 
-- **Salvar:** valide kebab-case (`^[a-z0-9-]+$`). Se já existir `templates/formatos/<formato>/estilos/<slug>/`, peça outro slug. Então `mv templates/formatos/<formato>/estilos/_rascunho/ templates/formatos/<formato>/estilos/<slug>/`. O estilo é salvo somente em `templates/formatos/carrossel/estilos/<slug>/` — nenhum estilo é criado em `templates/formatos/stories/`.
-- **Descartar:** `rm -rf templates/formatos/<formato>/estilos/_rascunho/`.
+- **Salvar:** valide kebab-case (`^[a-z0-9-]+$`). Se já existir `templates/social-media/<formato>/estilos/<slug>/`, peça outro slug. Então `mv templates/social-media/<formato>/estilos/_rascunho/ templates/social-media/<formato>/estilos/<slug>/`. O estilo é salvo somente em `templates/social-media/carrossel/estilos/<slug>/` — nenhum estilo é criado em `templates/social-media/stories/`.
+- **Descartar:** `rm -rf templates/social-media/<formato>/estilos/_rascunho/`.
 
-### 14. Publicação (opcional, gated por política)
+### 15.5. Registrar ângulo queimado
+
+Após o post ser **APROVADO** no gate de marca (Passo 13) e entregue (Passo 14), acione `analista-performance` para gravar o ângulo usado — assim os próximos posts não o repetem. **Não depende de publicação via API; o post finalizado é o gatilho.** Se o post foi REPROVADO sem recuperação ou descartado, **não** registre.
+
+Acione `analista-performance`:
+```
+Tarefa: registrar ângulo queimado.
+Ângulo central: <ângulo definido no Passo 6>
+Pilar: <pilar do Passo 6>
+Slug: <slug do Passo 6>
+Data da publicação: <data de hoje>
+```
+O `analista-performance` define a janela de descanso por bom senso editorial (ângulo específico descansa mais; amplo, menos) e grava a entrada em `dados/performance/angulos-queimados.md`. Se o mesmo ângulo já existir, ele atualiza a data em vez de duplicar.
+
+### 16. Publicação (opcional, gated por política)
 
 Carregar `dados/politicas/publicacao.yaml`. Avaliar as regras com as variáveis disponíveis:
 - `artefato.canal = 'instagram'`
@@ -662,6 +588,23 @@ Para publicar, rode manualmente:
   node scripts/integrations/publish_instagram.js --post export/conteudos/<formato>/<data>-<slug>/
 ```
 
+#### Marcação de uso de materiais (condicional)
+
+Se houve pré-preenchimento via banco, marque as imagens efetivamente presentes no preview final acionando `arquivista`:
+
+```
+Tarefa: marcar.
+
+Inputs:
+- Banco: <caminho do banco>
+- Imagens usadas: <lista dos arquivos efetivamente aplicados nas drop zones>
+- Post: <data>-<slug>
+```
+
+Isso registra `used_in` + `rest_until` no índice — evita repetir a mesma foto cedo demais.
+
+---
+
 ## Entregável final
 
 ```
@@ -670,25 +613,23 @@ export/conteudos/<formato>/<data>-<slug>/
 ├── copy.md
 ├── treino.md                     (quando aplicável)
 ├── design/
-│   ├── <assets HTML>
-│   └── preview.html
+│   └── slide-N.html              (um por bloco)
 ├── export/
-│   └── <PNGs>
+│   └── slide-N.png
 ├── briefing.md
 └── stories/                      (quando adaptação stories executada)
     ├── copy.md                   (só existe se houver ajuste de copy no stories)
     ├── design/
-    │   ├── <frames HTML>
-    │   └── preview.html
+    │   └── frame-N.html
     └── export/
-        └── <PNGs>
+        └── frame-N.png
 ```
 
 ## Critério de conclusão
 
-- A pasta `export/conteudos/<formato>/<data>-<slug>/` contém `pesquisa-base.md`, `copy.md`, `design/` com assets + `preview.html`, `export/` com PNGs e `briefing.md`.
-- Quantidade de PNGs em `export/` é igual à de assets HTML em `design/`.
-- `briefing.md` foi gerado por curadoria editorial com status APROVADO.
-- Em modo ad-hoc, `_rascunho/` foi salvo com slug definitivo ou removido (não deve sobrar entre execuções) — a decisão ocorre no Passo 13.6, após o Passo 13.5.
-- Usuário recebeu a mensagem final do Passo 13 com lista de PNGs e caminho do briefing.
-- Quando adaptação stories executada: `stories/design/` contém `frame-N.html` + `preview.html`; `stories/export/` contém um PNG por frame; quantidade de PNGs = quantidade de frames HTML; `copy.md` raiz não foi alterado.
+- A pasta `export/conteudos/<formato>/<data>-<slug>/` contém `pesquisa-base.md`, `copy.md`, `design/slide-N.html`, `export/slide-N.png` e `briefing.md`.
+- Quantidade de PNGs em `export/` é igual à de `slide-N.html` em `design/` (validado pelo export-png.js).
+- `briefing.md` foi gerado com status APROVADO pelo gate `revisor-brand`.
+- Em modo ad-hoc, `_rascunho/` foi salvo com slug definitivo ou removido (não deve sobrar entre execuções) — a decisão ocorre no Passo 15.
+- Usuário recebeu a mensagem final do Passo 14 com lista de PNGs e caminho do briefing.
+- Quando adaptação stories executada: `stories/design/` contém `frame-N.html`; `stories/export/` contém um PNG por frame; quantidade de PNGs = quantidade de frames HTML; `copy.md` raiz não foi alterado.

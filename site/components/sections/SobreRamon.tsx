@@ -1,29 +1,26 @@
 import { Reveal } from "@/components/Reveal";
+import { RamonPhoto } from "@/components/RamonPhoto";
 import { TIMELINE } from "@/lib/site";
 
 export function SobreRamon() {
   return (
     <section className="border-t border-line px-6 py-24 md:py-32">
       <div className="mx-auto grid max-w-6xl gap-14 md:grid-cols-2 md:gap-20">
-        {/* Coluna visual — lugar da foto editorial P&B do Ramon */}
+        {/* Coluna visual — retrato editorial P&B do Ramon (foto-conduzido, RDSN-02).
+            RamonPhoto cuida do role="img"/aria-label e do placeholder intencional (D-04).
+            Sem priority: não é LCP (fica lazy). */}
         <Reveal>
-          <div
-            aria-label="Retrato de Ramon Dino (imagem a ser adicionada)"
-            role="img"
-            className="relative flex aspect-[4/5] items-end overflow-hidden border border-line bg-[radial-gradient(circle_at_50%_20%,#181818_0%,#000_70%)]"
-          >
-            <span
-              aria-hidden
-              className="pointer-events-none w-full select-none text-center font-display text-[18vw] leading-none text-fg/[0.05] md:text-[10vw]"
-            >
-              DINO
-            </span>
-          </div>
+          <RamonPhoto
+            src="/ramon/retrato.jpg"
+            alt="Retrato de Ramon Dino em preto e branco"
+            scrim="portrait"
+            className="aspect-[4/5] border border-line"
+          />
         </Reveal>
 
         <div className="flex flex-col justify-center">
           <Reveal>
-            <h2 className="font-display text-4xl uppercase leading-tight md:text-6xl">
+            <h2 className="font-display text-4xl uppercase leading-tight sm:text-5xl">
               Do Acre ao topo do mundo.
             </h2>
           </Reveal>
@@ -38,14 +35,14 @@ export function SobreRamon() {
 
           <ol className="mt-10 space-y-6">
             {TIMELINE.map((t, i) => (
-              <Reveal key={t.marco} delay={0.06 * i}>
-                <li className="border-l border-line pl-5">
+              <li key={t.marco} className="border-l border-line pl-5">
+                <Reveal delay={0.06 * i}>
                   <p className="font-body text-sm font-semibold uppercase tracking-[0.2em] text-fg">
                     {t.marco}
                   </p>
                   <p className="mt-2 font-body text-muted">{t.texto}</p>
-                </li>
-              </Reveal>
+                </Reveal>
+              </li>
             ))}
           </ol>
 

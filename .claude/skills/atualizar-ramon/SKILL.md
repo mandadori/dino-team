@@ -1,13 +1,23 @@
 ---
 name: atualizar-ramon
-description: Skill interativa para atualizar o slice `dados/ramon/` — fase atual, cronograma, princípios, falas, conquistas. Usa o agente `archivist-ramon` como owner único do slice. Aceita input manual do usuário OU dispara o auto-sync (busca em fontes públicas). Sem ela, agentes que dependem do contexto Ramon operam às cegas.
+description: Skill interativa para atualizar o slice `dados/ramon/` — fase atual, cronograma, princípios, falas, conquistas. Usa o agente `arquivista` como owner único do slice. Aceita input manual do usuário OU dispara o auto-sync (busca em fontes públicas). Sem ela, agentes que dependem do contexto Ramon operam às cegas.
 ---
 
 # /atualizar-ramon — Dino Team
 
 ## Objetivo
 
-Manter `dados/ramon/contexto.md` atualizado — slice da memória persistente sobre o Ramon, lido por `briefing-writer` para calibrar todo conteúdo.
+Manter `dados/ramon/contexto.md` atualizado — slice da memória persistente sobre o Ramon, lido inline pelas skills de post para calibrar todo conteúdo.
+
+## Fluxo
+
+| Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
+|---|---|---|---|---|
+| 1 | ⚙ diagnóstico | dados/ramon (archivist auto) | — | estado atual |
+| 2 | ⏸ usuário | — | 1 | input |
+| 3 | arquivista | input ← 2 | 2 | contexto.md (manifesto) |
+| 4 | ⚙ tratar retorno | retorno ← 3 | 3 | tratamento + oferta |
+| 5 | ⚙ reportar | — | 4 | conclusão |
 
 ## Sintaxe
 
@@ -15,7 +25,7 @@ Manter `dados/ramon/contexto.md` atualizado — slice da memória persistente so
 /atualizar-ramon
 ```
 
-Sem argumentos — a skill é conversacional. O usuário descreve o que mudou (texto livre), ou pede para o sistema buscar sozinho ("sincroniza", "busca atualizações"). A skill identifica a seção afetada e aciona `archivist-ramon`.
+Sem argumentos — a skill é conversacional. O usuário descreve o que mudou (texto livre), ou pede para o sistema buscar sozinho ("sincroniza", "busca atualizações"). A skill identifica a seção afetada e aciona `arquivista`.
 
 ## Pipeline
 
@@ -72,9 +82,9 @@ Tente parsear:
 - Se mencionar data + evento → adicionar ao cronograma.
 - Caso contrário, pergunte qual seção é o alvo.
 
-### 3. Acionar `archivist-ramon`
+### 3. Acionar `arquivista`
 
-[Agente: `archivist-ramon`]
+[Agente: `arquivista`]
 
 ```
 Tarefa: <atualizar fase atual | adicionar entrada no cronograma | adicionar fato em <seção> | auto-sync>
@@ -129,5 +139,5 @@ Próximo /novo-post vai consultar o estado novo do slice.
 ## Critério de conclusão
 
 - Pelo menos 1 seção de `dados/ramon/contexto.md` foi atualizada e versionada (ou auto-sync rodou e nada novo havia).
-- `archivist-ramon` retornou confirmação.
+- `arquivista` retornou confirmação.
 - O usuário encerrou explicitamente ("não" para próxima atualização).
