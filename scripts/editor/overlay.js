@@ -108,9 +108,22 @@ window.DT = window.DT || {};
   }
   function clearSelection() { if (box) { box.remove(); box = null; } handles.forEach(function (h) { h.remove(); }); handles = []; }
 
-  function select(ctx) { sel = ctx; clearHover(); drawSelection(); if (pnl("show")) DT.panel.show(sel); }
-  function deselect() { if (!sel) return; clearSelection(); clearGuides(); sel = null; if (pnl("hide")) DT.panel.hide(); }
+  function select(ctx) { sel = ctx; clearHover(); drawSelection(); preserveScroll(function () { if (pnl("show")) DT.panel.show(sel); }); }
+  function deselect() { if (!sel) return; clearSelection(); clearGuides(); sel = null; preserveScroll(function () { if (pnl("hide")) DT.panel.hide(); }); }
   function reposition() { if (sel) drawSelection(); }
+
+  // Abrir/fechar o painel encolhe o #dt-stage → o scroll-snap re-snapa e o carrossel
+  // pula pro início. Suspendemos o snap, executamos a troca e restauramos o scrollLeft.
+  function preserveScroll(fn) {
+    if (!stage) { fn(); return; }
+    var sl = stage.scrollLeft;
+    stage.classList.add("is-busy");
+    fn();
+    requestAnimationFrame(function () {
+      stage.scrollLeft = sl;
+      requestAnimationFrame(function () { stage.scrollLeft = sl; stage.classList.remove("is-busy"); });
+    });
+  }
 
   // ---------- hover ----------
   function hover(frame, el) {

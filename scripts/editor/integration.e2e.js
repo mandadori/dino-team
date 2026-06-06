@@ -136,3 +136,20 @@ test("painel de texto usa input de cor nativo (não dropdown) (#3)", async () =>
   assert.equal(res.noColorSelect, true, "não deveria ter mais o select #p-color");
   await page.evaluate(() => DT.overlay.deselect());
 });
+
+test("selecionar não joga o carrossel pro início (#6)", async () => {
+  const res = await page.evaluate(async () => {
+    var stage = document.getElementById("dt-stage");
+    DT.overlay.deselect();
+    stage.scrollLeft = stage.scrollWidth;     // rola pro fim
+    await new Promise(function (r) { setTimeout(r, 40); });
+    var before = stage.scrollLeft;
+    if (before < 50) return { skipped: true };  // poucos slides: sem scroll útil
+    window.__DT._select(window.__DT.frames().length - 1, "[data-dt-selectable]");
+    await new Promise(function (r) { setTimeout(r, 250); });  // > transição do painel (140ms)
+    return { before: before, after: stage.scrollLeft };
+  });
+  if (res.skipped) return;
+  assert.ok(res.after >= res.before - 10, "scroll deveria ser preservado (antes=" + res.before + " depois=" + res.after + ")");
+  await page.evaluate(() => DT.overlay.deselect());
+});
