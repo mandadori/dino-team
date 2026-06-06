@@ -18,7 +18,7 @@ Memória persistente compartilhada do sistema Dino Team. Markdown com frontmatte
 
 | Slice | Caminho | Owner único | Conteúdo |
 |---|---|---|---|
-| **Ramon** | `dados/ramon/` | `archivist-ramon` | Contexto temporal e biográfico do Ramon: cronograma, fase atual, princípios de treino, falas, conquistas, acervo visual. Fontes: o usuário via `/atualizar-ramon` **e** busca automática do próprio `archivist-ramon` em fontes públicas (sempre com fonte citada e validação). Agentes nunca inventam. |
+| **Ramon** | `dados/ramon/` | `arquivista` | Contexto temporal e biográfico do Ramon: cronograma, fase atual, princípios de treino, falas, conquistas, acervo visual. Fontes: o usuário via `/atualizar-ramon` **e** busca automática do próprio `arquivista` em fontes públicas (sempre com fonte citada e validação). Agentes nunca inventam. |
 | **Mercado** | `dados/mercado/` | `pesquisador-mercado` | Pesquisa de mercado, concorrentes, tendências, vocabulário do público. Populado por pesquisas profundas. |
 | **Performance** | `dados/performance/` | `analista-performance` | Métricas de canais (social media, ads, email, funil-site), ângulos queimados, padrões identificados. **Onda 3 só popula `angulos-queimados.md`; sub-slices por canal (`performance/social-media/`, `performance/ads/`, etc.) entram quando publicação real existir (Onda 5+), sob o mesmo owner ou analistas por canal derivados dele.** |
 

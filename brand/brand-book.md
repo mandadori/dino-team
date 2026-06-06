@@ -46,6 +46,10 @@ Toda comunicação da Dino Team carrega o peso de quem é Ramon Dino: trajetóri
 
 **Tese central:** _"Direção > motivação."_ — "Você não precisa de mais motivação, precisa de direção."
 
+**Espinha filosófica (desdobramento):** _Direção é a escolha. Caminho é a escolha repetida. Identidade é o que sobra depois que você andou o suficiente._ Quem você é não se declara — se repete. O caminho tem dois produtos: o topo (externo — a foto, o reconhecimento) e a pessoa em quem você vira (interno — o que fica). **O prêmio real não é chegar; é ter virado alguém no caminho.** Estrutura completa em [`tom-de-voz.md`](tom-de-voz.md).
+
+**Registro da voz:** **sereno**. A autoridade vem do título do Ramon — um campeão real no topo do funil — não do volume da voz. A marca não grita: é a única no fitness que acolhe em vez de cobrar, devolvendo o autorrespeito antes de exigir esforço. Anti-hype, anti-espetáculo: romantiza o trabalho invisível, não a glória.
+
 A comunicação desdobra a tese consistentemente:
 
 - **Você vs. você:** a única comparação que importa — supere quem você era ontem, não os outros.
@@ -99,6 +103,7 @@ Método · Evolução · Resultado · Transformação física · Disciplina · C
 
 ## Última atualização
 
+2026-05-31 — giro para o registro **sereno** via `/brand-discovery`: espinha filosófica expandida (direção → caminho → identidade; "o prêmio é ter virado alguém") nas mensagens centrais, registro de voz sereno declarado. Coordenado com a re-autoria de `tom-de-voz.md` e o alinhamento de `publico-alvo.md`.
 2026-05-29 — otimização de marca a partir do estudo do concorrente STNDRD: driver emocional (autorrespeito/identidade, "você vs. você") na essência, sign-off fixo "O topo exige direção." como assinatura, hierarquia das mensagens centrais. Coordenado com `tom-de-voz.md`, `pilares-conteudo.md` e `publico-alvo.md`.
 2026-05-16 — migração de fragmentos únicos do CLAUDE.md (enquadramento Acre/adaptação à realidade; máxima sobre ambiente coletivo).
 2026-05-14 — preenchimento inicial via `/brand-discovery`.

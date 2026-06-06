@@ -4,5 +4,18 @@
       "WebSearch",
       "WebFetch"
     ]
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": false,
+    "interface-design@interface-design": true
+  },
+  "extraKnownMarketplaces": {
+    "interface-design": {
+      "source": {
+        "source": "github",
+        "repo": "Dammyjay93/interface-design"
+      }
+    }
   }
 }

@@ -1,0 +1,20 @@
+{
+  "estilo": "editorial",
+  "estilo_path": "templates/social-media/carrossel/estilos/editorial/estilo.md",
+  "post": "_editor-test",
+  "slides": [
+    {
+      "slide": 1,
+      "block": "capa",
+      "edits": [
+        {
+          "target": "título",
+          "prop": "font-size",
+          "from": null,
+          "to": "110px",
+          "scope": "structural"
+        }
+      ]
+    }
+  ]
+}

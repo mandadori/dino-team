@@ -73,7 +73,7 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 - **Transversais / Brand**
   - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca e compliance; gate em 2 momentos (identidade visual em criação de estilo; copy + compliance em criação de post).
 - **Transversais / Dados**
-  - [`archivist-ramon`](.claude/agents/archivist-ramon.md) — owner único do slice `dados/ramon/`; consolida o contexto do Ramon (input do usuário + auto-sync de fontes públicas).
+  - [`arquivista`](.claude/agents/arquivista.md) — owner único do slice `dados/ramon/` e do banco de imagens; consolida contexto do Ramon (input do usuário + auto-sync de fontes públicas) e gerencia legenda/seleção/marcação de fotos por slide.
   - [`analista-performance`](.claude/agents/analista-performance.md) — owner único do slice `dados/performance/`; registra ângulos queimados e (futuro) métricas de canais.
 - **Engenharia / Execução / Web**
   - [`arquiteto-web`](.claude/agents/arquiteto-web.md) — scaffold, organização, libs, config do site.
@@ -91,7 +91,7 @@ Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-0
 Memória persistente compartilhada — markdown + frontmatter YAML, versionada em git, lida por qualquer agente e escrita apenas pelo owner declarado. Ver [`dados/_schema.md`](dados/_schema.md) para slices ativos e ownership.
 
 **Slices em v1:**
-- `dados/ramon/contexto.md` — contexto temporal e biográfico do Ramon, arquivo único (owner: `archivist-ramon`).
+- `dados/ramon/contexto.md` — contexto temporal e biográfico do Ramon, arquivo único (owner: `arquivista`).
 - `dados/mercado/` — pesquisa de mercado e vocabulário do público (owner: `pesquisador-mercado`).
 - `dados/performance/` — só `angulos-queimados.md` em v1 (owner: `analista-performance`); outros sub-slices entram quando publicação real existir.
 - `dados/pesquisas-brutas/` — pesquisas profundas geradas pelo pipeline (insumo cumulativo).

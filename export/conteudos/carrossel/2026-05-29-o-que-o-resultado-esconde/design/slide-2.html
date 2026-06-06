@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Slide 2 — corpo — Dino Team / editorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* ESTILO: editorial | CONCEITO: foto full bleed + gradient bottom + logo centrada + narrativa editorial */
+
+    :root {
+      --color-bg: #000000;
+      --color-fg: #ffffff;
+      --color-muted: #7f7f7f;
+
+      --font-display: "Anton", "Impact", sans-serif;
+      --font-body: "Montserrat", "Helvetica Neue", sans-serif;
+
+      --pad: 80px;
+      --gradient-overlay: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0.15) 30%,
+        rgba(0,0,0,0.95) 75%,
+        rgba(0,0,0,1) 100%
+      );
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1080px; height: 1350px; }
+    body {
+      background: var(--color-bg);
+      color: var(--color-fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      color: var(--color-fg);
+    }
+
+    .slide-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: #1a1a1a;
+    }
+    .slide-bg.placeholder {
+      background-image: repeating-linear-gradient(
+        45deg, #1a1a1a 0 24px, #222 24px 48px
+      );
+    }
+
+    .img-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: var(--gradient-overlay);
+    }
+
+    .logo-center {
+      position: absolute;
+      top: var(--pad);
+      left: 0;
+      right: 0;
+      z-index: 4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+    .logo-center .logo-img {
+      height: 36px;
+      width: auto;
+      display: block;
+      opacity: 0.98;
+    }
+
+    .progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 36px 80px 56px;
+      z-index: 5;
+    }
+    .progress .track {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,.22);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress .fill {
+      height: 100%;
+      background: #ffffff;
+      border-radius: 2px;
+    }
+
+    .swipe-cue {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-body);
+      font-size: 26px;
+      font-weight: 300;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.92);
+    }
+    .swipe-cue svg {
+      height: 0.72em;
+      width: auto;
+      display: block;
+    }
+
+    /* ============ VARIANTE: corpo ============ */
+    .slide.corpo .content-area {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      z-index: 3;
+      bottom: 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .slide.corpo .eyebrow {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      line-height: 1;
+    }
+    .slide.corpo .headline {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 88px;
+      line-height: 0.92;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .slide.corpo .body-text {
+      font-family: var(--font-body);
+      font-size: 30px;
+      font-weight: 300;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.4;
+      max-width: 920px;
+    }
+    .slide.corpo .swipe-wrap {
+      position: absolute;
+      left: var(--pad);
+      right: var(--pad);
+      bottom: 80px;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <section class="slide corpo">
+    <div class="slide-bg placeholder" data-bg-drop="photo"></div>
+    <div class="img-overlay"></div>
+
+    <div class="logo-center">
+      <img src="../../../../../brand/assets/logo.png" alt="DINO" class="logo-img" />
+    </div>
+
+    <div class="content-area">
+      <span class="eyebrow">O QUE SE VÊ</span>
+      <h2 class="headline">A PONTA<br>DO ICEBERG</h2>
+      <p class="body-text">O FÍSICO NO PALCO É O QUE APARECE. O QUE SUSTENTA ELE FOI CONSTRUÍDO NOS ANOS QUE NINGUÉM FILMOU. VOCÊ VÊ OS 5%. OS 95% ACONTECEM FORA DE QUALQUER CÂMERA.</p>
+    </div>
+
+    <div class="swipe-wrap">
+      <div class="swipe-cue">
+        <span>ARRASTE</span>
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.4"
+                stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="track"><div class="fill" style="width: 28.57%"></div></div>
+    </div>
+  </section>
+</body>
+</html>

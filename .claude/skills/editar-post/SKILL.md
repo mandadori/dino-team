@@ -66,11 +66,14 @@ Post: <pasta>
 Estilo: <estilo_path>
 Slides: <lista de slide-N.html em design/>
 
-Para editar, rode em outro terminal:
+Para editar:
+
+1. Suba o backend (deixe rodando em background):
 
   npm run editor -- <pasta> --estilo <estilo_path>
 
-Acesse http://localhost:4321 no navegador.
+2. No VS Code, clique com o botão direito em `scripts/editor/index.html` →
+   **Show Preview** (Live Preview embutido). Alternativa: http://localhost:4321 no navegador.
 - Edite no canvas (arrastar, handles, texto inline, cor, fonte).
 - "Salvar" grava slide-N.html + edits.json.
 - "Exportar" (ou use o comando abaixo) gera PNGs.
