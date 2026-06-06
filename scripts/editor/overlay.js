@@ -245,6 +245,11 @@ window.DT = window.DT || {};
     var before = el.innerHTML;
     el.setAttribute("contenteditable", "true"); el.focus();
     var doc = el.ownerDocument, view = doc.defaultView, selo = view.getSelection();
+    // Habilita seleção NATIVA de texto: o iframe (chrome marca pointer-events:none)
+    // passa a receber o ponteiro, e a selbox/alças saem da frente do drag.
+    if (view.frameElement) view.frameElement.style.pointerEvents = "auto";
+    if (box) box.style.pointerEvents = "none";
+    handles.forEach(function (h) { h.style.display = "none"; });
     // Caret no ponto do clique (em vez de selecionar tudo) → permite pegar trecho.
     var rng = null;
     if (clientX != null && doc.caretRangeFromPoint && view.frameElement) {
@@ -266,6 +271,7 @@ window.DT = window.DT || {};
       el.removeAttribute("contenteditable"); el.removeEventListener("blur", done);
       doc.removeEventListener("selectionchange", onSelChange); hideTextToolbar();
       surface.style.pointerEvents = "";
+      if (view.frameElement) view.frameElement.style.pointerEvents = "";   // devolve o controle à superfície
       savedRange = null;
       if (el.innerHTML !== before) DT.edits.record(sel.n, sel.block, slotOf(el), "text", textOf(before), el.textContent);
       drawSelection();
@@ -396,13 +402,13 @@ window.DT = window.DT || {};
   }
   function setStyle(prop, val, noHist) {
     if (!sel) return; var el = sel.el;
-    if (!noHist) hist().begin();
+    if (!noHist) hist().begin(prop + "::" + slotOf(el));
     var css = { "font-family": "fontFamily", "font-weight": "fontWeight", "text-align": "textAlign", "color": "color", "letter-spacing": "letterSpacing", "line-height": "lineHeight", "font-size": "fontSize", "opacity": "opacity" }[prop];
     if (prop === "font-family") el.style.fontFamily = '"' + val + '", sans-serif'; else if (css) el.style[css] = val;
     DT.edits.record(sel.n, sel.block, slotOf(el), prop, null, val); drawSelection();
   }
   function setBgFill(val, kind) {
-    if (!sel) return; hist().begin(); var el = sel.el; el.style.background = val;
+    if (!sel) return; var el = sel.el; hist().begin("bgfill::" + slotOf(el)); el.style.background = val;
     // zona de foto que vira cor/gradiente: limpa o estado de foto pra a cor aparecer limpa
     if (el.hasAttribute("data-bg-drop")) { el.removeAttribute("data-has-bg"); el.classList.remove("placeholder"); el.__bgCover = null; el.__bgZoom = 1; }
     DT.edits.record(sel.n, sel.block, slotOf(el), kind === "gradient" ? "bg-gradient" : "bg-color", null, val); drawSelection();

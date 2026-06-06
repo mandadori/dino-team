@@ -96,6 +96,19 @@ test("edição entra com seleção colapsada (caret), não select-all (#1)", asy
   await page.evaluate(() => { var f = window.__DT.frames()[0]; var e = f.doc.querySelector('[contenteditable="true"]'); if (e) e.blur(); });
 });
 
+test("edição habilita o iframe pro ponteiro (seleção nativa de texto) e restaura ao sair (#A)", async () => {
+  const res = await page.evaluate(async () => {
+    if (!window.__DT._edit(0, "text")) return null;
+    var f = window.__DT.frames()[0];
+    var during = f.iframe.style.pointerEvents;
+    var el = f.doc.querySelector('[contenteditable="true"]'); if (el) el.blur();
+    await new Promise(function (r) { setTimeout(r, 20); });
+    return { during: during, after: f.iframe.style.pointerEvents };
+  });
+  assert.equal(res.during, "auto", "iframe deveria ficar interativo durante a edição");
+  assert.equal(res.after, "", "iframe deveria voltar a pointer-events herdado (none) ao sair");
+});
+
 test("barra de trecho aplica negrito e mantém a edição (#2)", async () => {
   const res = await page.evaluate(async () => {
     if (!window.__DT._edit(0, "text")) return { ok: false, reason: "no-edit" };
@@ -151,5 +164,28 @@ test("selecionar não joga o carrossel pro início (#6)", async () => {
   });
   if (res.skipped) return;
   assert.ok(res.after >= res.before - 10, "scroll deveria ser preservado (antes=" + res.before + " depois=" + res.after + ")");
+  await page.evaluate(() => DT.overlay.deselect());
+});
+
+test("undo reverte mudança contínua de cor de fundo num passo só (#B)", async () => {
+  const res = await page.evaluate(async () => {
+    DT.overlay.deselect();
+    if (!window.__DT._select(0, "[data-bg-drop]")) return { skip: true };
+    var el0 = window.__DT.selection().el;
+    var before = el0.style.background || "";
+    // simula o input contínuo do color picker (várias mudanças seguidas)
+    DT.overlay.setBgFill("#111111", "solid");
+    DT.overlay.setBgFill("#222222", "solid");
+    DT.overlay.setBgFill("#333333", "solid");
+    var afterChange = window.__DT.selection().el.style.background;
+    DT.history.undo();
+    // undo re-escreve o innerHTML → re-buscar o elemento
+    var f = window.__DT.frames()[0];
+    var afterUndo = (f.doc.querySelector("[data-bg-drop]") || {}).style ? f.doc.querySelector("[data-bg-drop]").style.background : "?";
+    return { before: before, afterChange: afterChange, afterUndo: afterUndo };
+  });
+  if (res.skip) return;
+  assert.notEqual(res.afterChange, res.before, "a cor deveria ter mudado");
+  assert.equal(res.afterUndo, res.before, "1 undo deveria reverter a mudança inteira (veio " + res.afterUndo + ", esperado " + res.before + ")");
   await page.evaluate(() => DT.overlay.deselect());
 });
