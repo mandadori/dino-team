@@ -15,6 +15,7 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from "node:fs";
 import { dirname, basename, join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 function parseArgs(argv) {
   const a = argv.slice(2);
@@ -63,6 +64,12 @@ function sectionsDoSlide(html) {
   return map;
 }
 
+// Pasta de preview do próprio estilo: .../estilos/<slug>/preview (commitada).
+// Substitui o antigo scaffold descartável em export/conteudos/<formato>/_preview-*.
+export function defaultOutFor(estiloPath) {
+  return join(dirname(resolve(estiloPath)), "preview");
+}
+
 function main() {
   const { estilo, out, repeat } = parseArgs(process.argv);
   if (!estilo || !existsSync(estilo)) {
@@ -108,7 +115,7 @@ function main() {
     process.exit(2);
   }
 
-  const outDir = out || join("export/conteudos", formato, "_preview-" + slug);
+  const outDir = out || defaultOutFor(estilo);
   const designDir = join(outDir, "design");
   if (existsSync(designDir)) rmSync(designDir, { recursive: true, force: true });
   mkdirSync(designDir, { recursive: true });
@@ -124,4 +131,6 @@ function main() {
   console.log(JSON.stringify({ out: outDir, formato, slug, repeat, slides: seq.map((s) => s.nome) }) + warn);
 }
 
-main();
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main();
+}

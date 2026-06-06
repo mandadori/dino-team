@@ -95,16 +95,15 @@ A revisão visual roda no **Dino Editor**, que a skill **sobe automaticamente** 
 
    ```bash
    node scripts/editor/scaffold-estilo.js \
-     --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md \
-     --out export/conteudos/{formato}/_preview-{slug_alvo|rascunho}
+     --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md
    ```
 
-   O gerador deriva formato/slug do caminho, copia o `<head>`/CSS do estilo e avisa se o formato não for carrossel (editor é carrossel-only).
+   O gerador deriva formato/slug do caminho, copia o `<head>`/CSS do estilo e avisa se o formato não for carrossel (editor é carrossel-only). Sem `--out`, o preview vai pra `templates/social-media/{formato}/estilos/_rascunho/preview/` (na pasta do próprio estilo — nunca mais em `export/`).
 2. **Subir o editor em background** (a skill executa):
 
    ```bash
    lsof -ti tcp:4321 | xargs kill -9 2>/dev/null; \
-   npm run editor -- export/conteudos/{formato}/_preview-{slug_alvo|rascunho} \
+   npm run editor -- templates/social-media/{formato}/estilos/_rascunho/preview \
      --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md \
      > /tmp/dino-editor.log 2>&1 &
    ```
@@ -120,14 +119,15 @@ A revisão visual roda no **Dino Editor**, que a skill **sobe automaticamente** 
    - "confirmar"           → promovo as mudanças ao estilo e sigo ao gate
    - ajuste em texto livre  → aplico inline no estilo
    ```
-4. **Promover edições estruturais** (modo editar): após o save, leia `export/conteudos/{formato}/_preview-{...}/design/edits.json`; se existir, rode `scripts/editor/extract-structural.js` e aplique cada delta em `_rascunho/estilo.md` + `_rascunho/slide.html` atomicamente (mesmo mecanismo do Passo 11.5 de `/novo-post`). Delta não mapeável: reporte ao usuário e siga com os demais.
+4. **Promover edições estruturais** (modo editar): após o save, leia `templates/social-media/{formato}/estilos/_rascunho/preview/design/edits.json`; se existir, rode `scripts/editor/extract-structural.js` e aplique cada delta em `_rascunho/estilo.md` + `_rascunho/slide.html` atomicamente (mesmo mecanismo do Passo 11.5 de `/novo-post`). Delta não mapeável: reporte ao usuário e siga com os demais.
 
 Ajuste em texto livre → edite `_rascunho/` inline (volta ao Passo 5) e reapresente. Repita até "confirmar". Ao confirmar, derrube o editor e remova o scaffold:
 
 ```bash
 lsof -ti tcp:4321 | xargs kill -9 2>/dev/null
-rm -rf export/conteudos/{formato}/_preview-{slug_alvo|rascunho}/
 ```
+
+O `preview/` do estilo final é **commitado** junto com o estilo (regenerado por `scaffold-estilo.js` quando o `slide.html` muda). Só remova o diretório de trabalho `_rascunho/` se ele não for o estilo final.
 
 ### 7. Gate de marca (`revisor-brand`)
 
@@ -178,8 +178,8 @@ Use com: /novo-post {formato} {slug_final} [tema]
 ## Critério de conclusão
 
 - Arquivo principal do template do formato + `estilo.md` presentes em `templates/social-media/{formato}/estilos/{slug_final}/`.
-- Pasta do estilo NÃO contém `preview.html`.
+- Pasta do estilo NÃO contém `preview.html` (mas contém a pasta `preview/design/slide-N.html` do editor, commitada).
 - `revisor-brand` aprovou a identidade visual (gate no Passo 7).
 - Usuário confirmou explicitamente o template no Passo 6 (editado no Dino Editor, que a skill subiu sozinha).
-- `_rascunho/` foi removido, assim como o scaffold de preview em `export/conteudos/{formato}/_preview-*/`.
+- `_rascunho/` (diretório de trabalho) foi removido; o `preview/` do estilo final é commitado e reflete o `slide.html` atual. Nada de `_preview-*` em `export/`.
 - Em modo editar, o estilo original só foi sobrescrito após a confirmação do Passo 6 e aprovação do Passo 7.
