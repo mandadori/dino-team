@@ -49,7 +49,7 @@ Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestr
 
 **Skills disponíveis:**
 
-_Produção multicanal — todas leem `memory/narrativas/ativas.md` e dão write-back ao livro-razão:_
+_Produção multicanal — todas ancoram numa verdade do `## Verdades` (brand-book) e dão write-back ao livro-razão:_
 - [`/novo-post`](.claude/skills/novo-post/SKILL.md) — post Instagram completo (carrossel ou stories). Dispara `/pesquisar-mercado` (Fase A, quando stale) e `/pesquisar-tema` (deep research, quando informacional). Write-back: `angulos-queimados.md` + `livro-razao.md` (`--canal instagram`).
 - [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — N posts Instagram em sequência, agendável. Write-back ao `livro-razao.md` por post aprovado.
 - [`/novo-artigo`](.claude/skills/novo-artigo/SKILL.md) — artigo de blog (MDX draft) em `export/conteudos/blog/<slug>/artigo.mdx`. Pesquisa via `/pesquisar-tema` quando informacional. Write-back `--canal blog`. A publicação no site é trabalho do GSD do site.
@@ -57,8 +57,7 @@ _Produção multicanal — todas leem `memory/narrativas/ativas.md` e dão write
 - [`/novo-comunidade`](.claude/skills/novo-comunidade/SKILL.md) — mensagem para a comunidade (WhatsApp) em `export/conteudos/comunidade/<slug>/mensagem.md`. Tom de conversa, não broadcast. Write-back `--canal comunidade`. Disparo real é etapa futura.
 
 _Estratégia e direção:_
-- [`/ciclo-de-direcao`](.claude/skills/ciclo-de-direcao/SKILL.md) — define/atualiza arcos de narrativa ativos em `memory/narrativas/ativas.md`. Precede `/planejar-pauta-semanal` a cada novo horizonte estratégico.
-- [`/planejar-pauta-semanal`](.claude/skills/planejar-pauta-semanal/SKILL.md) — L2: produz N briefings da semana (sem executar). Agendável (default: 2ª 9h via cron).
+- [`/planejar-pauta-semanal`](.claude/skills/planejar-pauta-semanal/SKILL.md) — L2: produz N briefings da semana (sem executar) passando pelo `estrategista-mercado` (lê o momento, escolhe a verdade). Agendável (default: 2ª 9h via cron).
 
 _Pesquisa e inteligência:_
 - [`/pesquisar-mercado`](.claude/skills/pesquisar-mercado/SKILL.md) — Fase A standalone: captura inteligência de mercado durável (tendências, concorrentes, fala do público) em `memory/mercado/` + `memory/publico/`. Disparável manual ou pela produção quando stale.
@@ -81,10 +80,10 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 
 **Agentes atuais (11):**
 
+- **Marketing / Estratégia**
+  - [`estrategista-mercado`](.claude/agents/estrategista-mercado.md) — lê o momento (emoção do público + crença de mercado) e escolhe a verdade da marca que responde; owner do livro-razão; propõe as jogadas da pauta.
 - **Marketing / Pesquisa**
   - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `memory/mercado/`.
-- **Marketing / Revisão**
-  - [`curador-export`](.claude/agents/curador-export.md) — validação técnica + export PNG.
 - **Produto / Consultoria / Execução**
   - [`treinador`](.claude/agents/treinador.md) — decisões técnicas de treino.
 - **Transversais / Brand**
@@ -108,7 +107,7 @@ Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-0
 **A memória é a integração.** As funções não se coordenam entre si — leem e escrevem o mesmo estado (blackboard). Markdown + frontmatter YAML, versionado em git, dono único por slice. Ver [`memory/_schema.md`](memory/_schema.md) para slices e ownership.
 
 **Slices:**
-- `memory/narrativas/` — narrativas ativas, roadmap de crença, livro-razão de mensagens (owner: `estrategista-narrativa`).
+- `memory/narrativas/` — livro-razão de verdades acionadas (camada lenta = `## Verdades` do brand-book) (owner: `estrategista-mercado`).
 - `memory/publico/` — dores e objeções com a fala do público embutida (owner: `pesquisador-mercado`; Produto alimenta via `/sinal-consultoria`).
 - `memory/mercado/` — `narrativa-de-mercado.md` (discurso do nicho), `tendencias/`, `concorrentes/` (owner: `pesquisador-mercado`).
 - `memory/ramon/contexto.md` — contexto temporal e biográfico do Ramon (owner: `arquivista`).
@@ -129,7 +128,7 @@ Site institucional + comercial do Dino Team — Next.js 16 + Tailwind 4 + Framer
 Camada que torna o sistema reativo. Triggers (cron, futuramente webhook/threshold) disparam skills sem slash command. Políticas declarativas decidem quando humano entra. Dashboard mostra estado e permite gatilho manual.
 
 - **Governança:** [`orquestracao/governanca.yaml`](orquestracao/governanca.yaml) — mapa de autonomia por decisão: consolida os flags `automatico / humano / automatico_com_revisao` de cada função do roster. Para publicação, aponta para `politicas/publicacao.yaml`.
-- **Rotas:** [`orquestracao/rotas.yaml`](orquestracao/rotas.yaml) — tabela declarativa de trigger → skill. v1 com 3 rotas cron: pauta semanal (toda 2ª-feira), ciclo de direção (dia 1/mês) e pesquisa de mercado (dia 1/mês).
+- **Rotas:** [`orquestracao/rotas.yaml`](orquestracao/rotas.yaml) — tabela declarativa de trigger → skill. v1 com 2 rotas cron: pauta semanal (toda 2ª-feira) e pesquisa de mercado (dia 1/mês).
 - **Políticas:** [`orquestracao/politicas/publicacao.yaml`](orquestracao/politicas/publicacao.yaml) — regras de quando publicação é automática e quando exige aprovação humana. Referenciada por `governanca.yaml`; lida por `/novo-post`, `/lote-posts` e pelo dashboard.
 - **Validador de política:** [`scripts/orquestracao/avaliar_politica.js`](scripts/orquestracao/avaliar_politica.js) — valida deterministicamente se um artefato passa pela política de publicação (`--canal`, `--pilar`, `--texto`, `--orcamento`). Prova que a política barra publicações com termos sensíveis.
 - **Dashboard:** rota `/admin/dashboard` no site (auth por token). Mostra campanhas em curso, aprovações pendentes, frescor do banco, e dispara skills via Route Handler.
@@ -157,7 +156,7 @@ Padrão de contratos e skills detalhado em [docs/specs/2026-05-26-redesign-conte
 
 ## Funções do sistema
 
-Cada função é executada por skills. Outputs ficam em `export/`, organizados por canal e data. **Produção é multicanal:** todas as skills de conteúdo leem a mesma narrativa ativa (`memory/narrativas/ativas.md`) e escrevem de volta no mesmo livro-razão — uma crença em construção gera peças coerentes em múltiplos canais sem coordenação manual.
+Cada função é executada por skills. Outputs ficam em `export/`, organizados por canal e data. **Produção é multicanal:** todas as skills de conteúdo ancoram numa verdade do `## Verdades` (brand-book) e escrevem de volta no mesmo livro-razão — uma verdade acionada em múltiplos canais sem coordenação manual. A coerência entre semanas emerge do conjunto fixo de verdades + voz, não de campanha prescrita.
 
 - **Criação de conteúdo — Instagram** — Skills: `/novo-post` (individual), `/lote-posts` (em lote).
 - **Criação de conteúdo — Blog** — Artigo MDX draft pronto para integração no site. Skill: `/novo-artigo`.
