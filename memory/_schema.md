@@ -12,14 +12,14 @@ Memória viva compartilhada do sistema Dino Team. **"A memória é a integraçã
 - **Dono único por slice.** Só o owner escreve; outros propõem via output e o owner consolida.
 - **Cérebro ≠ insumo.** `memory/pesquisa/` é pesquisa bruta (insumo transitório). O resto é a "verdade" durável.
 - **YAGNI de slice.** Uma fatia só nasce quando uma função a lê de verdade. Este schema **declara** a estrutura completa; declarar ≠ construir.
-- **Write-back é de 1ª classe.** Produzir uma peça atualiza o cérebro (livro-razão de mensagens, ângulos).
+- **Write-back é de 1ª classe.** Produzir uma peça atualiza o cérebro (livro-razão de mensagens, ângulos). O livro-razão recebe write-back de **múltiplos canais** (`instagram`, `blog`, `email`, `comunidade`) via `node scripts/memory/append_livro_razao.js --canal <canal>`. É a demonstração direta de "a memória é a integração".
 - **Versionado em git.** Toda mudança é commit.
 
 ## Slices
 
 | Slice | Owner único | Conteúdo | Estado |
 |---|---|---|---|
-| `narrativas/` | `estrategista-narrativa` | arcos ativos, roadmap de crença, livro-razão de mensagens | criado (Onda 1); populado (Onda 2) |
+| `narrativas/` | `estrategista-narrativa` | arcos ativos, roadmap de crença, livro-razão de mensagens | criado (Onda 1); populado (Onda 2); write-back multicanal (Onda 4) |
 | `publico/` | `pesquisador-mercado` (Produto alimenta) | dores, objeções (com a fala do público embutida) | criado (Onda 1) |
 | `mercado/` | `pesquisador-mercado` | `narrativa-de-mercado.md`, `tendencias/`, `concorrentes/` | ativo |
 | `ramon/` | `arquivista` | contexto temporal/biográfico | ativo |

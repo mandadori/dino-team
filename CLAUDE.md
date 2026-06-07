@@ -48,16 +48,27 @@ Documentos institucionais que ancoram toda decisão. Cada agente lê automaticam
 Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestra**: define a ordem das etapas, qual agente é acionado em cada uma, como o output de um vira input do próximo, onde pausa para confirmação do usuário, e qual é o formato do entregável final.
 
 **Skills disponíveis:**
+
+_Produção multicanal — todas leem `memory/narrativas/ativas.md` e dão write-back ao livro-razão:_
+- [`/novo-post`](.claude/skills/novo-post/SKILL.md) — post Instagram completo (carrossel ou stories). Dispara `/pesquisar-mercado` (Fase A, quando stale) e `/pesquisar-tema` (deep research, quando informacional). Write-back: `angulos-queimados.md` + `livro-razao.md` (`--canal instagram`).
+- [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — N posts Instagram em sequência, agendável. Write-back ao `livro-razao.md` por post aprovado.
+- [`/novo-artigo`](.claude/skills/novo-artigo/SKILL.md) — artigo de blog (MDX draft) em `export/conteudos/blog/<slug>/artigo.mdx`. Pesquisa via `/pesquisar-tema` quando informacional. Write-back `--canal blog`. A publicação no site é trabalho do GSD do site.
+- [`/novo-email`](.claude/skills/novo-email/SKILL.md) — e-mail (assunto + preheader + corpo + CTA) em `export/conteudos/email/<slug>/email.md`. Tom de carta de mentor 1:1. Write-back `--canal email`. Envio real (Resend) é etapa futura.
+- [`/novo-comunidade`](.claude/skills/novo-comunidade/SKILL.md) — mensagem para a comunidade (WhatsApp) em `export/conteudos/comunidade/<slug>/mensagem.md`. Tom de conversa, não broadcast. Write-back `--canal comunidade`. Disparo real é etapa futura.
+
+_Estratégia e direção:_
+- [`/ciclo-de-direcao`](.claude/skills/ciclo-de-direcao/SKILL.md) — define/atualiza arcos de narrativa ativos em `memory/narrativas/ativas.md`. Precede `/planejar-pauta-semanal` a cada novo horizonte estratégico.
+- [`/planejar-pauta-semanal`](.claude/skills/planejar-pauta-semanal/SKILL.md) — L2: produz N briefings da semana (sem executar). Agendável (default: 2ª 9h via cron).
+
+_Pesquisa e inteligência:_
+- [`/pesquisar-mercado`](.claude/skills/pesquisar-mercado/SKILL.md) — Fase A standalone: captura inteligência de mercado durável (tendências, concorrentes, fala do público) em `memory/mercado/` + `memory/publico/`. Disparável manual ou pela produção quando stale.
+- [`/pesquisar-tema`](.claude/skills/pesquisar-tema/SKILL.md) — deep research standalone para um ângulo/tema específico. Grava matéria-prima em `memory/pesquisa/`, reusável por `/novo-post`, `/lote-posts` e `/novo-artigo`.
+
+_Marca e site:_
 - [`/brand-discovery`](.claude/skills/brand-discovery/SKILL.md) — entrevista para construir/atualizar o brand book.
-- [`/novo-post`](.claude/skills/novo-post/SKILL.md) — criar um post completo (carrossel ou stories). Dispara `/pesquisar-mercado` (Fase A, quando stale) e `/pesquisar-tema` (deep research, quando informacional). Ao finalizar com APROVADO, escreve de volta no cérebro: ângulo em `angulos-queimados.md` e mensagem em `livro-razao.md`.
-- [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — gerar N posts em sequência, agendável. Também dá write-back ao `livro-razao.md` por post aprovado.
 - [`/novo-estilo`](.claude/skills/novo-estilo/SKILL.md) — criar um novo estilo visual para carrossel ou stories.
 - [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — atualizar o slice `memory/ramon/` (fase atual + cronograma + outras vertentes).
 - [`/novo-site`](.claude/skills/novo-site/SKILL.md) — criar ou alterar o site (dual-mode); aciona os agentes de Engenharia + gate `revisor-brand`.
-- [`/planejar-pauta-semanal`](.claude/skills/planejar-pauta-semanal/SKILL.md) — L2: produz N briefings da semana (sem executar). Agendável (default: 2ª 9h via cron).
-- [`/ciclo-de-direcao`](.claude/skills/ciclo-de-direcao/SKILL.md) — define/atualiza arcos de narrativa ativos em `memory/narrativas/ativas.md`. Precede `/planejar-pauta-semanal` a cada novo horizonte estratégico.
-- [`/pesquisar-mercado`](.claude/skills/pesquisar-mercado/SKILL.md) — Fase A standalone: captura inteligência de mercado durável (tendências, concorrentes, fala do público) em `memory/mercado/` + `memory/publico/`. Disparável manual ou pela produção quando stale.
-- [`/pesquisar-tema`](.claude/skills/pesquisar-tema/SKILL.md) — deep research standalone para um ângulo/tema específico. Grava matéria-prima em `memory/pesquisa/`, reusável por `/novo-post` e `/lote-posts`.
 
 ### 3. Agentes — especialistas por função (`.claude/agents/`)
 
@@ -139,9 +150,12 @@ Padrão de contratos e skills detalhado em [docs/specs/2026-05-26-redesign-conte
 
 ## Funções do sistema
 
-Cada função é executada por skills. Outputs ficam em `export/`, organizados por formato e data.
+Cada função é executada por skills. Outputs ficam em `export/`, organizados por canal e data. **Produção é multicanal:** todas as skills de conteúdo leem a mesma narrativa ativa (`memory/narrativas/ativas.md`) e escrevem de volta no mesmo livro-razão — uma crença em construção gera peças coerentes em múltiplos canais sem coordenação manual.
 
-- **Criação de conteúdo** — produzir posts prontos para publicação. Skills: `/novo-post` (individual), `/lote-posts` (em lote).
+- **Criação de conteúdo — Instagram** — Skills: `/novo-post` (individual), `/lote-posts` (em lote).
+- **Criação de conteúdo — Blog** — Artigo MDX draft pronto para integração no site. Skill: `/novo-artigo`.
+- **Criação de conteúdo — E-mail** — Carta de mentor 1:1 com assunto, preheader e corpo. Skill: `/novo-email`.
+- **Criação de conteúdo — Comunidade** — Mensagem curta para grupo WhatsApp. Skill: `/novo-comunidade`.
 - **Criação de estilos** — criar novos templates visuais para uso nos posts. Skill: `/novo-estilo`.
 - **Descoberta de marca** — entrevista estruturada para preencher ou atualizar o brand book. Skill: `/brand-discovery`.
 
