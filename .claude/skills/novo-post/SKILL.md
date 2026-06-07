@@ -96,7 +96,7 @@ Profundidade: deep research.
 Inputs:
 - Mês de referência: <YYYY-MM>
 
-Saída: gravar/atualizar memory/mercado/tendencias/<YYYY-MM>.md, memory/mercado/concorrentes/<slug>.md e memory/mercado/vocabulario-publico.md conforme a metodologia do modo scouting de mercado.
+Saída: gravar/atualizar memory/mercado/tendencias/<YYYY-MM>.md, memory/mercado/concorrentes/<slug>.md e memory/publico/ (dores/objeções) conforme a metodologia do modo scouting de mercado.
 ```
 
 Se FRESCO, pule.
