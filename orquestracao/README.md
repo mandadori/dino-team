@@ -10,12 +10,11 @@ Tabela declarativa de rotas (trigger → skill). Lida pelo roteador implementado
 | `governanca.yaml` | Mapa de autonomia por decisão — quais funções do roster são automáticas, humanas, ou automáticas com revisão. Referencia `politicas/publicacao.yaml` para a função de publicação. |
 | `politicas/publicacao.yaml` | Política específica de publicação — regras por canal/pilar/termos que determinam `automatico` vs `aprovacao_humana`. Referenciada por `governanca.yaml` e lida por `/novo-post`, `/lote-posts` e pelo dashboard. **Não aposentado** — é a política viva de publicação. |
 
-## Rotas cron ativas (3)
+## Rotas cron ativas (2)
 
 | ID | Schedule | Skill | Handler |
 |---|---|---|---|
 | `pauta-semanal-cron` | `0 9 * * 1` (2ª-feira 9h) | `/planejar-pauta-semanal` | `site/app/api/cron/planejar-pauta-semanal/route.ts` |
-| `ciclo-de-direcao-cron` | `0 9 1 * *` (dia 1 do mês 9h) | `/ciclo-de-direcao` | `site/app/api/cron/ciclo-de-direcao/route.ts` |
 | `pesquisar-mercado-cron` | `0 8 1 * *` (dia 1 do mês 8h) | `/pesquisar-mercado` | `site/app/api/cron/pesquisar-mercado/route.ts` |
 
 **Nota de runtime (honesta):** os handlers de cron validam autenticação e registram o trigger, mas **não executam a skill** — serverless tem filesystem efêmero/somente-leitura. A execução real é delegada a um runner com acesso de escrita ao repo (GitHub Action, Claude Code remoto, ou worker dedicado). Esse wiring é a próxima etapa (pós-Onda 5).

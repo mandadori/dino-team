@@ -5,14 +5,18 @@
 versao: 1
 
 decisoes:
-  - funcao: direcao-narrativa
-    decisao: "ativar/aposentar arco, crença-alvo, saturação"
-    autonomia: automatico_com_revisao   # detectar saturação/propor = auto; VIRAR narrativa = humano
-    virada_escala_humano: true
-    corpo: "agente estrategista-narrativa + /ciclo-de-direcao"
+  - funcao: estrategia-mercado
+    decisao: "que verdade da marca responde ao momento (emoção do público + crença de mercado)"
+    autonomia: automatico_com_revisao   # propor jogadas = auto; ajuste de temas = humano no modo manual da pauta
+    corpo: "agente estrategista-mercado (na /planejar-pauta-semanal)"
+
+  - funcao: coerencia-verdade
+    decisao: "a jogada serve ou contradiz uma verdade da marca"
+    autonomia: automatico                # flag; ação humana só se 'contradiz'/'off-brand'
+    corpo: "estrategista-mercado (check na pauta)"
 
   - funcao: planejamento-pauta
-    decisao: "o que produzir na janela, p/ qual narrativa"
+    decisao: "o que produzir na janela, p/ qual verdade"
     autonomia: automatico_com_revisao
     corpo: "/planejar-pauta-semanal"
 
@@ -36,11 +40,6 @@ decisoes:
     decisao: "dentro da identidade + compliance"
     autonomia: automatico                # gate determinístico (aprovado/reprovado)
     corpo: "agente revisor-brand"
-
-  - funcao: coerencia-narrativa
-    decisao: "fortalece ou enfraquece o posicionamento"
-    autonomia: automatico                # flag; ação humana só se 'contradiz'
-    corpo: "estrategista-narrativa (check na pauta)"
 
   - funcao: aprimoramento-branding
     decisao: "o brand book precisa evoluir"

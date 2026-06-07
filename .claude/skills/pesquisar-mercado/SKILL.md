@@ -7,7 +7,7 @@ description: Captura de inteligência de mercado durável (Fase A): tendências 
 
 ## Objetivo
 
-Capturar inteligência de mercado durável para o cérebro da marca: tendências do mês, padrão de comunicação dos concorrentes e fala do público. Escreve nos slices `memory/mercado/` e `memory/publico/`. **Não produz post, copy ou briefing** — é matéria-prima para as skills de produção (`/novo-post`, `/lote-posts`, `/planejar-pauta-semanal`) e para o `/ciclo-de-direcao`.
+Capturar inteligência de mercado durável para o cérebro da marca: tendências do mês, padrão de comunicação dos concorrentes e fala do público. Escreve nos slices `memory/mercado/` e `memory/publico/`. **Não produz post, copy ou briefing** — é matéria-prima para as skills de produção (`/novo-post`, `/lote-posts`, `/planejar-pauta-semanal`).
 
 Pode ser disparada manualmente, pela produção (quando a inteligência está stale — check do `/novo-post` Passo 2a) ou por cron (Onda 5, via `orquestracao/rotas.yaml`).
 
