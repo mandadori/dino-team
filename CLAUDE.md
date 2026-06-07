@@ -86,15 +86,17 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 
 Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-05-22-arquitetura-multi-setor-design.md) para o destino completo (3 setores produtivos + 3 transversais + orquestração).
 
-### 4. Banco de Dados (`dados/`)
+### 4. Cérebro de marca (`memory/`)
 
-Memória persistente compartilhada — markdown + frontmatter YAML, versionada em git, lida por qualquer agente e escrita apenas pelo owner declarado. Ver [`memory/_schema.md`](memory/_schema.md) para slices ativos e ownership.
+**A memória é a integração.** As funções não se coordenam entre si — leem e escrevem o mesmo estado (blackboard). Markdown + frontmatter YAML, versionado em git, dono único por slice. Ver [`memory/_schema.md`](memory/_schema.md) para slices e ownership.
 
-**Slices em v1:**
-- `memory/ramon/contexto.md` — contexto temporal e biográfico do Ramon, arquivo único (owner: `arquivista`).
-- `memory/mercado/` — pesquisa de mercado e vocabulário do público (owner: `pesquisador-mercado`).
-- `memory/performance/` — só `angulos-queimados.md` em v1 (owner: `analista-performance`); outros sub-slices entram quando publicação real existir.
-- `memory/pesquisa/` — pesquisas profundas geradas pelo pipeline (insumo cumulativo).
+**Slices:**
+- `memory/narrativas/` — narrativas ativas, roadmap de crença, livro-razão de mensagens (owner: `estrategista-narrativa`).
+- `memory/publico/` — dores e objeções com a fala do público embutida (owner: `pesquisador-mercado`; Produto alimenta).
+- `memory/mercado/` — `narrativa-de-mercado.md` (discurso do nicho), `tendencias/`, `concorrentes/` (owner: `pesquisador-mercado`).
+- `memory/ramon/contexto.md` — contexto temporal e biográfico do Ramon (owner: `arquivista`).
+- `memory/performance/` — `angulos-queimados.md` + métricas por canal (futuro) (owner: `analista-performance`).
+- `memory/pesquisa/` — pesquisa bruta (insumo cumulativo, não-verdade).
 
 ### 5. Site (`site/`)
 
@@ -118,7 +120,7 @@ Camada que torna o sistema reativo. Triggers (cron, futuramente webhook/threshol
 
 ## Regras operacionais
 
-- **Skills orquestram, agentes executam.** Skill define ordem, pausas e formato final; agentes dominam função e podem cooperar entre si dentro de uma ordem.
+- **Skills orquestram fluxos; agentes possuem funções.** Uma função pode ser **decisão, memória ou execução** — não só execução. Agentes se coordenam **pela memória (`memory/`), nunca entre si** (blackboard: "a memória é a integração"). Skill define ordem, pausas e formato final; o agente domina fundo o próprio domínio de decisão e não conhece a orquestração (qual skill chama quem).
 - **Skill = fluxo; contrato = comportamento.** A skill define ordem, envelope entre agentes, dependências, retrabalho e output final. O contrato do agente define critérios de qualidade, como processar input, schema de output e tratamento de input incompleto. Nunca colocar comportamento interno do agente na skill.
 - **Contexto cirúrgico, sem redundância.** A skill só injeta o que varia por chamada. Nunca repassa contexto que o agente já declara em "Contexto que carrego" (brand/*, slices que é owner, diretivas). Nenhuma instrução repetida entre skill e contrato.
 - **Schema rígido de saída.** Todo agente entrega num dos 3 formatos: inline rígido (tags/campos), markdown estruturado (briefing) ou manifesto (file-producers). Sem preâmbulo; texto fora do schema é ignorado.
