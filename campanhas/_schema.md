@@ -33,14 +33,20 @@ campanha:
 tarefas:
   - id: <slug-da-tarefa>
     skill: /<skill que executa>
-    estado: pendente | em-andamento | aguardando-aprovacao | concluida | falhou
+    estado: pendente | em-andamento | aguardando-publicacao | aguardando-aprovacao | concluida | falhou-gate | falhou-auto | falhou
     output: <caminho ou null>
+    data_prevista: YYYY-MM-DD | null   # data prevista de publicação (pauta semanal)
     atualizado_em: YYYY-MM-DDTHH:mm
 aprovacoes_pendentes:
   - tarefa_id: <id>
     aguardando_desde: YYYY-MM-DDTHH:mm
     canal: <dashboard | whatsapp | ...>
 ```
+
+**Estados do fluxo autônomo (Peça 3):**
+- `aguardando-publicacao` — post gerado por `/novo-post --auto`, pronto, esperando aprovação humana de publicação no dashboard.
+- `falhou-gate` — `revisor-brand` reprovou 2× no modo `--auto`; não há rascunho publicável.
+- `falhou-auto` — erro de execução no modo `--auto`.
 
 ## Quem escreve
 
