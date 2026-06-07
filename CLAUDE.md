@@ -123,10 +123,12 @@ Site institucional + comercial do Dino Team — Next.js 16 + Tailwind 4 + Framer
 
 Camada que torna o sistema reativo. Triggers (cron, futuramente webhook/threshold) disparam skills sem slash command. Políticas declarativas decidem quando humano entra. Dashboard mostra estado e permite gatilho manual.
 
-- **Rotas:** [`orquestracao/rotas.yaml`](orquestracao/rotas.yaml) — tabela declarativa de trigger → skill. v1 com 1 rota (cron pauta semanal).
-- **Políticas:** [`orquestracao/politicas/publicacao.yaml`](orquestracao/politicas/publicacao.yaml) — regras de quando publicação é automática e quando exige aprovação humana.
+- **Governança:** [`orquestracao/governanca.yaml`](orquestracao/governanca.yaml) — mapa de autonomia por decisão: consolida os flags `automatico / humano / automatico_com_revisao` de cada função do roster. Para publicação, aponta para `politicas/publicacao.yaml`.
+- **Rotas:** [`orquestracao/rotas.yaml`](orquestracao/rotas.yaml) — tabela declarativa de trigger → skill. v1 com 3 rotas cron: pauta semanal (toda 2ª-feira), ciclo de direção (dia 1/mês) e pesquisa de mercado (dia 1/mês).
+- **Políticas:** [`orquestracao/politicas/publicacao.yaml`](orquestracao/politicas/publicacao.yaml) — regras de quando publicação é automática e quando exige aprovação humana. Referenciada por `governanca.yaml`; lida por `/novo-post`, `/lote-posts` e pelo dashboard.
+- **Validador de política:** [`scripts/orquestracao/avaliar_politica.js`](scripts/orquestracao/avaliar_politica.js) — valida deterministicamente se um artefato passa pela política de publicação (`--canal`, `--pilar`, `--texto`, `--orcamento`). Prova que a política barra publicações com termos sensíveis.
 - **Dashboard:** rota `/admin/dashboard` no site (auth por token). Mostra campanhas em curso, aprovações pendentes, frescor do banco, e dispara skills via Route Handler.
-- **Cron:** Vercel Cron + Route Handler em `site/app/api/cron/<id>/route.ts`.
+- **Cron:** Vercel Cron + Route Handler em `site/app/api/cron/<id>/route.ts`. Handlers validam autenticação e registram o trigger; execução real delegada a runner com acesso de escrita ao repo (pós-Onda 5).
 - **Tools de publicação:** scripts em [`scripts/integrations/`](scripts/integrations/), mantidos por `integrador-apis`. v1: `publish_instagram.js`.
 - **Campanhas:** estado vivo em [`campanhas/`](campanhas/) (schema em `campanhas/_schema.md`), escrito por skills L2/L3, lido pelo dashboard.
 
