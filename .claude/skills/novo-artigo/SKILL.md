@@ -12,7 +12,7 @@ Cria um artigo de blog completo, do briefing ao artefato MDX draft aprovado pelo
 | Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
 |---|---|---|---|---|
 | 1 | ⚙ parse input | input bruto | — | tema/ângulo, pilar opcional |
-| 2 | ⚙ ler narrativa ativa | `memory/narrativas/ativas.md` | 1 | `narrativa_servida` (slug\|neutro) |
+| 2 | ⚙ escolher verdade servida | `brand/brand-book.md` (`## Verdades`) | 1 | `verdade_servida` (slug\|neutro) |
 | 3 | ⚙ briefing inline | contexto ← 2, tema/pilar/brand | 2 | ângulo/pilar/objetivo/recorte/slug |
 | 3.⏸ | ⏸ usuário | briefing ← 3 | 3 | confirmação do plano |
 | 4 | `/pesquisar-tema` (condic., ângulo informacional) | tema, pilar, recorte ← 3 | 3.⏸ | `memory/pesquisa/<data>-tendencias-<slug>.md` |
@@ -35,17 +35,16 @@ Cria um artigo de blog completo, do briefing ao artefato MDX draft aprovado pelo
 
 Extraia do input: tema (texto livre após `/novo-artigo`), pilar (se `--pilar <valor>`). Se tema ausente, pergunte ao usuário antes de seguir.
 
-### 2. Ler narrativa ativa
+### 2. Escolher verdade servida
 
-Leia `memory/narrativas/ativas.md`. Identifique o arco com `estado: ativa`. Guarde o slug do arco como `narrativa_servida`. Se não houver arco `ativa`, use `narrativa_servida = neutro` e emita aviso de uma linha.
+Leia `brand/brand-book.md` (`## Verdades`). Com base no tema/ângulo (Passo 1), identifique a verdade que este artigo acende. Guarde como `verdade_servida = <slug>`. Se nenhuma verdade responder claramente, use `verdade_servida = neutro`.
 
 ### 3. Briefing inline
 
 Leia os seguintes arquivos:
-- `brand/brand-book.md`
+- `brand/brand-book.md` (inclui `## Verdades`)
 - `brand/pilares-conteudo.md`
 - `brand/publico-alvo.md`
-- `memory/narrativas/ativas.md`
 - `memory/performance/angulos-queimados.md`
 
 Com base nessas leituras, fixe:
@@ -65,7 +64,7 @@ Plano do artigo:
 - Pilar: <pilar>
 - Objetivo: <objetivo>
 - Slug: <slug>
-- Narrativa servida: <narrativa_servida>
+- Verdade servida: <verdade_servida>
 - Pesquisa: <sim / não (narrativo)>
 
 Confirma? ("ok" para seguir, ou descreva o ajuste)
@@ -100,7 +99,7 @@ Leia os seguintes arquivos:
 - `memory/pesquisa/<data>-tendencias-<slug>.md` (se pesquisa executada no Passo 4)
 
 Escreva o artigo completo em MDX seguindo a estrutura de `templates/artigo.md`:
-- Frontmatter com os campos fixados no briefing (Passo 3) + `narrativa_servida`.
+- Frontmatter com os campos fixados no briefing (Passo 3) + `verdade_servida`.
 - `## Abertura` — hook que espelha a dor; keyword no primeiro parágrafo.
 - Corpo em H2/H3 — desenvolvimento do ângulo, ancorado na pesquisa.
 - `## Fechamento` — eleva ao tom da marca + CTA sóbrio.
@@ -157,7 +156,7 @@ Artigo pronto (draft): export/conteudos/blog/<slug>/artigo.mdx
 
 - Pilar: <pilar>
 - Ângulo: <ângulo>
-- Narrativa servida: <narrativa_servida>
+- Verdade servida: <verdade_servida>
 
 Destaques do gate de marca:
 - {bullet 1}
@@ -172,7 +171,7 @@ Write-back no livro-razão (somente quando APROVADO):
 node scripts/memory/append_livro_razao.js \
   --data "$(date +%F)" \
   --mensagem "<ângulo central do Passo 3>" \
-  --narrativa "<narrativa_servida do Passo 2>" \
+  --narrativa "<verdade_servida do Passo 2>" \
   --canal blog \
   --peca "<slug do Passo 3>"
 ```

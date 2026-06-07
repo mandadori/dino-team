@@ -22,7 +22,7 @@ Gerar N posts em um mesmo formato, com variação de estilos e temas dentro do l
 | 7 | ⚙ design inline (×posts) | copy ← 5 | 6 | assets por post |
 | 8 | export-png.js + revisor-brand (×posts) | slide-N.html ← 7 | 7 | PNGs + validação por post |
 | 8.5 | analista-performance — registrar ângulo (×posts) | ângulo ← 5 | 8 | entradas em angulos-queimados |
-| 8.6 | ⚙ write-back livro-razão (×posts aprovados) | ângulo+narrativa_servida+slug ← 5 | 8 | linhas no livro-razão |
+| 8.6 | ⚙ write-back livro-razão (×posts aprovados) | ângulo+verdade_servida+slug ← 5 | 8 | linhas no livro-razão |
 | 9 | ⚙ relatório do lote | — | 8 | relatório |
 | 10 | ⚙ política publish (×posts) | pasta ← 8 | 8 | publicado/pendente |
 
@@ -171,9 +171,9 @@ Leia (uma vez por lote, reutilize nos demais posts):
 
 #### 5b. Briefing inline
 
-Leia `brand/brand-book.md` + `brand/pilares-conteudo.md` + `memory/narrativas/ativas.md` + `estilo.md` do estilo atribuído (campos `## Conceito` e `#### editorial`). Fixe: ângulo central, pilar, objetivo, recorte de público, slug do post (kebab-case), **narrativa servida** (slug do arco ativo que este ângulo avança; `neutro` se nenhum — espelha o `/novo-post` Passo 6). Guarde como `narrativa_servida` do post (usado no Passo 8.6).
+Leia `brand/brand-book.md` (inclui `## Verdades`) + `brand/pilares-conteudo.md` + `estilo.md` do estilo atribuído (campos `## Conceito` e `#### editorial`). Fixe: ângulo central, pilar, objetivo, recorte de público, slug do post (kebab-case), **verdade servida** (slug do `## Verdades` do brand-book que este ângulo acende; `neutro` se nenhuma). Guarde como `verdade_servida` do post (usado no Passo 8.6).
 
-Quando briefing pré-pronto (modo `--pauta`): extrair `narrativa:` do briefing — se ausente, `neutro`.
+Quando briefing pré-pronto (modo `--pauta`): extrair `verdade:` do briefing — se ausente, `neutro`.
 
 Criar pasta: `export/conteudos/<formato>/<data>-<slug>/{design,export}`.
 
@@ -303,7 +303,7 @@ Posts pulados (erro de export) ou reprovados no gate **não** registram ângulo.
 node scripts/memory/append_livro_razao.js \
   --data "$(date +%F)" \
   --mensagem "<ângulo central do post, fixado no Passo 5>" \
-  --narrativa "<narrativa_servida do Passo 5 — slug ou neutro>" \
+  --narrativa "<verdade_servida do Passo 5 — slug ou neutro>" \
   --canal instagram \
   --peca "<slug do post>"
 ```

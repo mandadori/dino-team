@@ -12,7 +12,7 @@ Cria uma mensagem de comunidade (WhatsApp) completa, do briefing ao artefato apr
 | Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
 |---|---|---|---|---|
 | 1 | ⚙ parse input | input bruto | — | tema/intenção, pilar opcional |
-| 2 | ⚙ ler narrativa ativa | `memory/narrativas/ativas.md` | 1 | `narrativa_servida` (slug\|neutro) |
+| 2 | ⚙ escolher verdade servida | `brand/brand-book.md` (`## Verdades`) | 1 | `verdade_servida` (slug\|neutro) |
 | 3 | ⚙ mensagem inline + ⏸ | contexto ← 2, tema/brand, `templates/comunidade.md` | 2 | `export/conteudos/comunidade/<slug>/mensagem.md` |
 | 4 | `revisor-brand` (gate, criação de post) | `mensagem.md` ← 3 | 3 | APROVADO/REPROVADO |
 | 5 | ⚙ entregar + write-back | tudo ← 4 | 4 (APROVADO) | entrega ao usuário + linha no livro-razão |
@@ -31,9 +31,9 @@ Cria uma mensagem de comunidade (WhatsApp) completa, do briefing ao artefato apr
 
 Extraia do input: tema (texto livre após `/novo-comunidade`). Se tema ausente, pergunte ao usuário antes de seguir.
 
-### 2. Ler narrativa ativa
+### 2. Escolher verdade servida
 
-Leia `memory/narrativas/ativas.md`. Identifique o arco com `estado: ativa`. Guarde o slug do arco como `narrativa_servida`. Se não houver arco `ativa`, use `narrativa_servida = neutro` e emita aviso de uma linha.
+Leia `brand/brand-book.md` (`## Verdades`). Com base no tema (Passo 1), identifique a verdade que esta mensagem acende. Guarde como `verdade_servida = <slug>`. Se nenhuma verdade responder claramente, use `verdade_servida = neutro`.
 
 ### 3. Escrever a mensagem inline (+ pausa)
 
@@ -46,13 +46,12 @@ mkdir -p export/conteudos/comunidade/<slug>
 Leia os seguintes arquivos:
 - `brand/tom-de-voz.md`
 - `brand/publico-alvo.md`
-- `memory/narrativas/ativas.md`
 - `templates/comunidade.md` (esqueleto de campos)
 
 Com base nessas leituras, escreva a mensagem seguindo `templates/comunidade.md`:
-- Frontmatter com os campos do briefing (slug = kebab-case do tema, 2-4 palavras) + `narrativa_servida`.
+- Frontmatter com os campos do briefing (slug = kebab-case do tema, 2-4 palavras) + `verdade_servida`.
 - `gancho` — 1 linha; frase que para o scroll mental. ≤ 15 palavras.
-- `corpo` — ≤ 4 linhas; conversa, não marketing. Tom de quem está no grupo, não de quem está vendendo. Corpo corrido, sem bullets. Ancorado no arco narrativo ativo.
+- `corpo` — ≤ 4 linhas; conversa, não marketing. Tom de quem está no grupo, não de quem está vendendo. Corpo corrido, sem bullets. Ancorado na verdade servida.
 - `convite` — 1 pergunta curta e genuína que abre diálogo real.
 
 Grave em `export/conteudos/comunidade/<slug>/mensagem.md`.
@@ -82,7 +81,7 @@ Inputs:
 - Arquivo: export/conteudos/comunidade/<slug>/mensagem.md
 - Briefing inline:
   Tema: <tema>
-  Narrativa servida: <narrativa_servida>
+  Verdade servida: <verdade_servida>
   Slug: <slug>
 
 Avaliar: tom de voz (conversa, não marketing), compliance (saúde, jurídico, suplementação, promessas irreais).
@@ -103,7 +102,7 @@ Entregue ao usuário:
 Mensagem de comunidade pronta: export/conteudos/comunidade/<slug>/mensagem.md
 
 - Tema: <tema>
-- Narrativa servida: <narrativa_servida>
+- Verdade servida: <verdade_servida>
 - Gancho: <gancho>
 
 Destaques do gate de marca:
@@ -119,7 +118,7 @@ Write-back no livro-razão (somente quando APROVADO):
 node scripts/memory/append_livro_razao.js \
   --data "$(date +%F)" \
   --mensagem "<gancho + tema>" \
-  --narrativa "<narrativa_servida do Passo 2>" \
+  --narrativa "<verdade_servida do Passo 2>" \
   --canal comunidade \
   --peca "<slug do Passo 3>"
 ```

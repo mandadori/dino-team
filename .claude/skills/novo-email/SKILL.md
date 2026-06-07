@@ -12,7 +12,7 @@ Cria um e-mail completo de marca, do briefing ao artefato aprovado pelo gate de 
 | Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
 |---|---|---|---|---|
 | 1 | ⚙ parse input | input bruto | — | tema/ângulo, objetivo opcional |
-| 2 | ⚙ ler narrativa ativa | `memory/narrativas/ativas.md` | 1 | `narrativa_servida` (slug\|neutro) |
+| 2 | ⚙ escolher verdade servida | `brand/brand-book.md` (`## Verdades`) | 1 | `verdade_servida` (slug\|neutro) |
 | 3 | ⚙ briefing inline | contexto ← 2, tema/brand | 2 | ângulo/pilar/objetivo/recorte/slug |
 | 3.⏸ | ⏸ usuário | briefing ← 3 | 3 | confirmação do plano |
 | 4 | `/pesquisar-tema` (condic., ângulo informacional) | tema, pilar, recorte ← 3 | 3.⏸ | `memory/pesquisa/<data>-tendencias-<slug>.md` |
@@ -35,17 +35,16 @@ Cria um e-mail completo de marca, do briefing ao artefato aprovado pelo gate de 
 
 Extraia do input: tema (texto livre após `/novo-email`), pilar (se `--pilar <valor>`). Se tema ausente, pergunte ao usuário antes de seguir.
 
-### 2. Ler narrativa ativa
+### 2. Escolher verdade servida
 
-Leia `memory/narrativas/ativas.md`. Identifique o arco com `estado: ativa`. Guarde o slug do arco como `narrativa_servida`. Se não houver arco `ativa`, use `narrativa_servida = neutro` e emita aviso de uma linha.
+Leia `brand/brand-book.md` (`## Verdades`). Com base no tema/ângulo (Passo 1), identifique a verdade que este e-mail acende. Guarde como `verdade_servida = <slug>`. Se nenhuma verdade responder claramente, use `verdade_servida = neutro`.
 
 ### 3. Briefing inline
 
 Leia os seguintes arquivos:
-- `brand/brand-book.md`
+- `brand/brand-book.md` (inclui `## Verdades`)
 - `brand/pilares-conteudo.md`
 - `brand/publico-alvo.md`
-- `memory/narrativas/ativas.md`
 
 Com base nessas leituras, fixe:
 - **Ângulo central** — a ideia central do e-mail; o que o leitor deve sair sentindo/pensando.
@@ -64,7 +63,7 @@ Plano do e-mail:
 - Pilar: <pilar>
 - Objetivo: <objetivo>
 - Slug: <slug>
-- Narrativa servida: <narrativa_servida>
+- Verdade servida: <verdade_servida>
 - Pesquisa: <sim / não (relacional)>
 
 Confirma? ("ok" para seguir, ou descreva o ajuste)
@@ -99,7 +98,7 @@ Leia os seguintes arquivos:
 - `memory/pesquisa/<data>-tendencias-<slug>.md` (se pesquisa executada no Passo 4)
 
 Escreva o e-mail completo seguindo `templates/email.md`:
-- Frontmatter com os campos do briefing (Passo 3) + `narrativa_servida`.
+- Frontmatter com os campos do briefing (Passo 3) + `verdade_servida`.
 - `assunto` — ≤ 50 chars; específico, não clickbait.
 - `preheader` — ≤ 90 chars; complementa o assunto.
 - Corpo: abertura pessoal → desenvolvimento → CTA sóbrio (1 linha). Tom: carta de mentor 1:1. Corpo corrido, sem bullets, sem formatação excessiva.
@@ -155,7 +154,7 @@ E-mail pronto: export/conteudos/email/<slug>/email.md
 
 - Pilar: <pilar>
 - Ângulo: <ângulo>
-- Narrativa servida: <narrativa_servida>
+- Verdade servida: <verdade_servida>
 - Assunto: <assunto>
 
 Destaques do gate de marca:
@@ -171,7 +170,7 @@ Write-back no livro-razão (somente quando APROVADO):
 node scripts/memory/append_livro_razao.js \
   --data "$(date +%F)" \
   --mensagem "<ângulo central do Passo 3>" \
-  --narrativa "<narrativa_servida do Passo 2>" \
+  --narrativa "<verdade_servida do Passo 2>" \
   --canal email \
   --peca "<slug do Passo 3>"
 ```
