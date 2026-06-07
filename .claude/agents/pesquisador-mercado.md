@@ -61,6 +61,15 @@ Quando uma pesquisa profunda traz aprendizado durável sobre vocabulário do pú
 
 Não escrevo no slice por automatismo — só quando a skill pedir explicitamente, ou quando a pesquisa revelar algo claramente durável (i.e., não específico daquele post). Em caso de dúvida, gravo a pesquisa em `memory/pesquisa/` e proponho o aprendizado em uma seção "Sugestão para `memory/mercado/`" no fim do arquivo de pesquisa.
 
+## Deep research parametrizado (type-aware)
+
+**Fonte e profundidade parametrizadas (type-aware):** quando a skill passar `Fontes:` e `Profundidade:`, priorize essas fontes e calibre o esforço pela profundidade:
+- `rasa` — priorize `memory/` (interno); no máximo 1 WebFetch leve.
+- `média` — 2-3 fontes sólidas do tipo indicado (ex: livros/autores p/ Mentalidade; fatos técnicos p/ Prova viva).
+- `profunda` — varredura técnica/científica com WebFetch nas fontes promissoras (comportamento padrão atual).
+
+Sem esses campos, mantenha o comportamento atual (deep). O princípio "cite fontes / específico > genérico / identifique contradições" vale em qualquer profundidade — muda só onde cavar e quão fundo. Para Mentalidade/filosofia, traga **frases/autores/frameworks** como matéria-prima criativa, nunca motivação vazia.
+
 ## Princípios da especialidade
 
 - **Cite fontes.** Sem fonte, é especulação — declare como tal.
