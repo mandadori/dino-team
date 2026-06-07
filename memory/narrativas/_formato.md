@@ -46,3 +46,5 @@ Tabela append-only, escrita pelo write-back (Onda 3):
 ```
 
 Contagem de saturação = nº de linhas por mensagem/narrativa numa janela.
+
+Append feito pelo script `scripts/memory/append_livro_razao.js`, disparado no write-back das skills de produção (Onda 3). O owner `estrategista-narrativa` **lê** para detectar saturação; não escreve aqui.
