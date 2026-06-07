@@ -1,0 +1,60 @@
+# Governança — mapa de autonomia por decisão (Dino Team)
+# "A governança é propriedade de cada decisão" (spec §4.5).
+# Este arquivo CONSOLIDA os flags; políticas específicas (ex: publicação) vivem em arquivos próprios.
+# Versão: 1
+versao: 1
+
+decisoes:
+  - funcao: direcao-narrativa
+    decisao: "ativar/aposentar arco, crença-alvo, saturação"
+    autonomia: automatico_com_revisao   # detectar saturação/propor = auto; VIRAR narrativa = humano
+    virada_escala_humano: true
+    corpo: "agente estrategista-narrativa + /ciclo-de-direcao"
+
+  - funcao: planejamento-pauta
+    decisao: "o que produzir na janela, p/ qual narrativa"
+    autonomia: automatico_com_revisao
+    corpo: "/planejar-pauta-semanal"
+
+  - funcao: pesquisa-mercado
+    decisao: "o que no nicho importa"
+    autonomia: automatico                # cron + demanda
+    corpo: "agente pesquisador-mercado + /pesquisar-mercado"
+
+  - funcao: producao-conteudo
+    decisao: "produzir a peça no canal X"
+    autonomia: humano                    # gate de marca sempre; publicação ver politica
+    corpo: "/novo-post, /novo-artigo, /novo-email, /novo-comunidade"
+    politica: orquestracao/politicas/publicacao.yaml
+
+  - funcao: publicacao
+    decisao: "publicar o artefato pronto"
+    autonomia: ver_politica
+    politica: orquestracao/politicas/publicacao.yaml
+
+  - funcao: guarda-marca-compliance
+    decisao: "dentro da identidade + compliance"
+    autonomia: automatico                # gate determinístico (aprovado/reprovado)
+    corpo: "agente revisor-brand"
+
+  - funcao: coerencia-narrativa
+    decisao: "fortalece ou enfraquece o posicionamento"
+    autonomia: automatico                # flag; ação humana só se 'contradiz'
+    corpo: "estrategista-narrativa (check na pauta)"
+
+  - funcao: aprimoramento-branding
+    decisao: "o brand book precisa evoluir"
+    autonomia: humano
+    corpo: "/brand-discovery, /afinar-tom-de-voz + revisor-brand"
+
+  - funcao: aprendizado-performance
+    decisao: "o que performou/saturou"
+    autonomia: automatico
+    corpo: "agente analista-performance"
+
+  - funcao: sinais-produto      # Onda 6 — declarado
+    decisao: "o que o aluno trava/pergunta/conquista vira dor/objeção/prova"
+    autonomia: humano
+    corpo: "/sinal-consultoria (Onda 6)"
+
+# Regra-mãe (nunca relaxar): publicar como fallback de timeout é PROIBIDO (ver publicacao.yaml).
