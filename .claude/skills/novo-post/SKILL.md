@@ -19,7 +19,7 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 4 | ⚙ recomendar estilo (inline, condic.) | tema, estilos disponíveis | 3.⏸ | recomendação |
 | 4.⏸ | ⏸ usuário | recomendação ← 4 + plano | 4 | confirmação do plano |
 | 5 | ⚙ estilo ad-hoc inline (condic.) + ⏸ | descrição/refs | 4.⏸ | _rascunho/ |
-| 6 | ⚙ briefing inline (ou briefing pré-pronto) | contexto ← 2, tema, estilo | 5 | ângulo/pilar/objetivo/slug |
+| 6 | ⚙ briefing inline (ou briefing pré-pronto) | contexto ← 2, tema, estilo | 5 | ângulo/pilar/objetivo/slug/narrativa_servida |
 | 7 | ⚙ criar pasta | slug ← 6 | 6 | pasta |
 | 8 | ⚙ resolver inputs externos do estilo (condic.) | estilo.md | 7 | treino.md |
 | 8t | treinador (condic.) | exercícios, objetivo | 8 | prescrição |
@@ -34,6 +34,7 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 14.5 | ⚙ adaptar stories (condic., carrossel) + ⏸ | copy, estilo | 14 | frames |
 | 15 | ⚙ salvar/descartar _rascunho/ (condic.) + ⏸ | — | 14.5 | slug permanente ou remoção |
 | 15.5 | analista-performance — registrar ângulo | ângulo/pilar/slug ← 6 | 13 | entrada em angulos-queimados |
+| 15.6 | ⚙ write-back livro-razão | ângulo+narrativa_servida+slug ← 6 | 14 | linha no livro-razão |
 | 16 | ⚙ publicação (opcional, gated) | pasta ← 13 | 15 | publicado/pendente |
 
 ## Sintaxe
@@ -558,6 +559,21 @@ Data da publicação: <data de hoje>
 ```
 O `analista-performance` define a janela de descanso por bom senso editorial (ângulo específico descansa mais; amplo, menos) e grava a entrada em `memory/performance/angulos-queimados.md`. Se o mesmo ângulo já existir, ele atualiza a data em vez de duplicar.
 
+### 15.6. Registrar mensagem no livro-razão
+
+Após APROVADO (Passo 13) e entregue (Passo 14), registre a mensagem deste post no livro-razão de narrativas — assim o cérebro sabe o que já foi dito e a direção detecta saturação. Determinístico (script; o `estrategista-narrativa` é o leitor da saturação, não escreve aqui):
+
+```bash
+node scripts/memory/append_livro_razao.js \
+  --data "$(date +%F)" \
+  --mensagem "<ângulo central do Passo 6>" \
+  --narrativa "<narrativa_servida do Passo 6 — slug ou neutro>" \
+  --canal instagram \
+  --peca "<slug do Passo 6>"
+```
+
+Reporte a linha anexada inline. Se o script falhar (`LIVRO_RAZAO_AUSENTE`), avise o usuário e siga — o post já está entregue; o write-back não bloqueia entrega.
+
 ### 16. Publicação (opcional, gated por política)
 
 Carregar `orquestracao/politicas/publicacao.yaml`. Avaliar as regras com as variáveis disponíveis:
@@ -634,4 +650,5 @@ export/conteudos/<formato>/<data>-<slug>/
 - `briefing.md` foi gerado com status APROVADO pelo gate `revisor-brand`.
 - Em modo ad-hoc, `_rascunho/` foi salvo com slug definitivo ou removido (não deve sobrar entre execuções) — a decisão ocorre no Passo 15.
 - Usuário recebeu a mensagem final do Passo 14 com lista de PNGs e caminho do briefing.
+- Quando APROVADO: o ângulo foi registrado em `angulos-queimados.md` (Passo 15.5) **e** a mensagem em `livro-razao.md` (Passo 15.6).
 - Quando adaptação stories executada: `stories/design/` contém `frame-N.html`; `stories/export/` contém um PNG por frame; quantidade de PNGs = quantidade de frames HTML; `copy.md` raiz não foi alterado.
