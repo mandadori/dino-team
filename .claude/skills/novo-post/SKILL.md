@@ -58,7 +58,7 @@ Se `revisor-brand` devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e orie
 
 ## Princípio central
 
-**A skill executa produção inline.** Não há subagentes para briefing, copy ou design — a skill lê os arquivos necessários diretamente e produz. Agentes externos (pesquisador-mercado, treinador, revisor-brand, arquivista) são acionados quando têm função geral no sistema.
+**A skill executa produção inline e dispara skills de pesquisa.** Não há subagentes para briefing, copy ou design — a skill lê os arquivos necessários diretamente e produz. A pesquisa de mercado (Fase A) e a pesquisa de tema (deep research) são delegadas às skills `/pesquisar-mercado` e `/pesquisar-tema` respectivamente — o `/novo-post` dispara essas skills quando necessário, mas não possui o pipeline de pesquisa. A Fase B (seleção de candidatos) permanece inline, pois é decisória e acoplada à produção. Agentes externos (treinador, revisor-brand, arquivista, analista-performance) são acionados quando têm função geral no sistema. Ao finalizar (APROVADO), escreve de volta no cérebro: ângulo em `angulos-queimados.md` (Passo 15.5) e mensagem em `livro-razao.md` (Passo 15.6).
 
 **Contexto de leitura por passo:**
 - **Briefing (Passo 6):** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `memory/ramon/contexto.md` + `memory/performance/angulos-queimados.md` + `memory/mercado/tendencias/<mês>.md` + `estilo.md` do estilo escolhido.
@@ -88,17 +88,13 @@ f="memory/mercado/tendencias/$(date +%Y-%m).md"
 if [ -f "$f" ] && [ -z "$(find "$f" -mtime +14 2>/dev/null)" ]; then echo "FRESCO"; else echo "STALE"; fi
 ```
 
-Se STALE, avise o usuário ("Atualizando inteligência de mercado…") e acione `pesquisador-mercado`:
+Se STALE, avise o usuário ("Atualizando inteligência de mercado…") e invoque `/pesquisar-mercado`:
 
 ```
-Tarefa: scouting de mercado (Fase A — inteligência durável).
-Profundidade: deep research.
-
-Inputs:
-- Mês de referência: <YYYY-MM>
-
-Saída: gravar/atualizar memory/mercado/tendencias/<YYYY-MM>.md, memory/mercado/concorrentes/<slug>.md e memory/publico/ (dores/objeções) conforme a metodologia do modo scouting de mercado.
+/pesquisar-mercado --mes <YYYY-MM>
 ```
+
+A skill `/pesquisar-mercado` aciona o `pesquisador-mercado` (Fase A) e grava `memory/mercado/tendencias/<YYYY-MM>.md`, `memory/mercado/concorrentes/<slug>.md` e `memory/publico/`. O prompt completo do agente e a metodologia de scouting vivem em `/pesquisar-mercado` (fonte única).
 
 Se FRESCO, pule.
 
@@ -263,22 +259,15 @@ Saída: inline no formato canônico do treinador.
 
 Execute quando o ângulo for informacional (dados, mitos, técnica). Pule em post puramente narrativo (história pessoal, motivação sem dados).
 
-Acione `pesquisador-mercado`:
+Invoque `/pesquisar-tema`:
 
 ```
-Tarefa: levantar matéria-prima profunda para a copy.
-Profundidade: deep research (WebFetch nas fontes promissoras).
-
-Inputs:
-- Formato/Estilo/Tema: <formato> / <slug | "ad-hoc"> / <tema>
-- Pilar / Recorte / Sinalizações: <inline do briefing>
-- Contexto de mercado acumulado: memory/mercado/tendencias/<mês-atual em YYYY-MM>.md + memory/mercado/concorrentes/*.md (parta daqui; não redescubra tendências já mapeadas).
-
-Foco: ângulos não-óbvios e contradições dentro do recorte; referências concretas com link; dados/citações verificáveis; mitos a quebrar.
-
-Template: templates/pesquisa.md.
-Saída: gravar em memory/pesquisa/<data>-tendencias-<slug>.md.
+/pesquisar-tema <tema> --pilar <pilar do briefing> --recorte <recorte do briefing>
 ```
+
+A skill `/pesquisar-tema` aciona o `pesquisador-mercado` (deep research) partindo do contexto de mercado acumulado em `memory/mercado/` e grava o resultado em `memory/pesquisa/<data>-tendencias-<slug>.md`. O prompt completo do agente, o template e a metodologia de pesquisa profunda vivem em `/pesquisar-tema` (fonte única). A **Fase B (Passo 3, seleção de candidatos) permanece inline** — é decisória e acoplada à produção.
+
+O arquivo gravado pela `/pesquisar-tema` (`memory/pesquisa/<data>-tendencias-<slug>.md`) é o que o Passo 10 (copy) lê.
 
 ### 10. Copy (inline + pausa)
 
