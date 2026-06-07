@@ -7,9 +7,9 @@ description: Skill L2 (composta). Produz N briefings estratégicos para a semana
 
 ## Objetivo
 
-Toda semana, planejar **N briefings** que cubram os pilares ativos, evitem ângulos queimados e levem em conta o estado atual de Ramon — **distribuindo peças que servem os arcos de narrativa ativos** em `memory/narrativas/ativas.md`. **Não executa posts** — gera só a pauta para `/lote-posts` ou `/novo-post` rodarem depois (manual ou disparados pelo dashboard).
+Toda semana, planejar **N briefings** que cubram os pilares ativos, evitem ângulos queimados e levem em conta o estado atual de Ramon. **Não executa posts** — gera só a pauta para `/lote-posts` ou `/novo-post` rodarem depois (manual ou disparados pelo dashboard).
 
-Esta skill é **downstream do ciclo de direção**: a direção estratégica é definida por `/ciclo-de-direcao` (qual narrativa construir, crença-alvo do trimestre). A pauta semanal é a **tradução** dessa direção em peças da janela. Rode `/ciclo-de-direcao` antes de planejar a pauta quando os arcos estiverem desatualizados ou ao início de novo horizonte.
+A pauta semanal traduz o **momento** (emoção do público + crença de mercado, lidos pelo pesquisador) na **verdade** da marca que responde — via `estrategista-mercado`. A conexão entre semanas **emerge** do conjunto fixo de `## Verdades` (brand-book) + voz, não de campanha prescrita.
 
 Os briefings são artefatos gravados em `campanhas/.../output/posts/` — são handoff cross-skill, consumidos posteriormente por `/novo-post` ou `/lote-posts` via `--briefing <caminho>`.
 
@@ -26,11 +26,12 @@ Os briefings são artefatos gravados em `campanhas/.../output/posts/` — são h
 | Passo | Agente/Ação | Recebe (← passo) | Depende | Entrega |
 |---|---|---|---|---|
 | 1 | ⚙ semana ativa | data | — | YYYY-Www |
-| 2 | ⚙ ler narrativas ativas | `memory/narrativas/ativas.md` | 1 | arcos ativos + crenças-alvo |
-| 3 | pesquisador (Fase A) | N, semana, ângulos-queimados, arcos ativos ← 2 | 2 | pesquisa-tendencias.md |
-| 4 | ⚙ briefings inline (×N) | tendências ← 3, arcos ← 2, contexto | 3 | N briefings gravados (com campo `narrativa:`) |
-| 5 | `estrategista-narrativa` (tarefa: `responder-coerencia`) | lista de ângulos ← 4, arcos ← 2 | 4 | classificação serve/neutro/contradiz por briefing |
-| 6 | ⚙ gravar manifest + aplicar flags de coerência | briefings + coerência ← 4+5 | 5 | campanha |
+| 2 | pesquisador (sensing leve) | semana, N | 1 | `pesquisa-tendencias.md` enriquecido (emoção + crença de mercado) |
+| 3 | `estrategista-mercado` (`jogadas-da-semana`) | sensing ← 2, ângulos-queimados, livro-razão | 2 | N jogadas (ângulo+verdade+pilar+formato/canal) equilibradas |
+| 3.⏸ | ⏸ usuário (só modo manual) | jogadas ← 3 | 3 | jogadas confirmadas/ajustadas |
+| 4 | ⚙ briefings inline (×N) | jogadas ← 3.⏸ | 3.⏸ | N briefings com campo `verdade:` |
+| 5 | `estrategista-mercado` (`coerencia-verdade`) | ângulos ← 4 | 4 | serve/off-brand/contradiz por briefing |
+| 6 | ⚙ manifest + flags | briefings + coerência ← 4+5 | 5 | campanha (`verdade` na tabela) |
 | 7 | ⚙ relatório | — | 6 | relatório inline |
 
 ## Quando dispara
@@ -43,8 +44,8 @@ Os briefings são artefatos gravados em `campanhas/.../output/posts/` — são h
 
 | Agente | Quando |
 |---|---|
-| `pesquisador-mercado` | Levantar tendências da semana corrente + sugerir distribuição de pilares (1 chamada profunda) |
-| `estrategista-narrativa` | Check de coerência de narrativa ao fim da geração de briefings |
+| `pesquisador-mercado` | Sensing leve da semana (emoção do público + crença de mercado) — 1 chamada |
+| `estrategista-mercado` | Propor as jogadas da semana (`jogadas-da-semana`) e checar coerência das verdades (`coerencia-verdade`) |
 
 Briefings são escritos inline pela skill no Passo 4.
 
@@ -64,50 +65,59 @@ mkdir -p campanhas/<YYYY-Www>-pauta-semanal/output/posts
 
 Se já existir, **abortar com erro** `PAUTA_JA_EXISTE — campanhas/<slug>` (cron não deve rodar 2x na mesma semana; rodar de novo é decisão humana).
 
-### 2. Ler narrativas ativas
-
-Ler `memory/narrativas/ativas.md` e extrair:
-- Lista de arcos com estado `ativa` (slug + crença-alvo + pilares).
-- Arcos `saturando` (sinalizar ao pesquisador para não reforçar a mesma mensagem).
-
-Se o arquivo estiver vazio ou não tiver nenhum arco `ativa`, emitir aviso:
-
-```
-⚠ Nenhum arco ativo em memory/narrativas/ativas.md.
-  Recomendado: rode /ciclo-de-direcao antes de planejar a pauta.
-  Continuando sem direção narrativa — briefings não terão campo narrativa: preenchido.
-```
-
-Prosseguir mesmo assim (degraded mode), mas registrar o aviso no `log.md` da campanha.
-
-### 3. Pesquisar tendências da semana
+### 2. Sensing leve da semana
 
 Acionar `pesquisador-mercado`:
 
 ```
-Tarefa: levantar tendências quentes desta semana relevantes para os pilares Dino Team e sugerir distribuição de N pilares ao longo da semana.
-Profundidade: profunda.
+Tarefa: scouting de mercado — sensing leve da semana.
+Profundidade: leve.
 
 Inputs:
-- Semana ativa: <YYYY-Www> (de <data-início> a <data-fim>).
+- Semana ativa: <YYYY-Www> (de <início> a <fim>).
 - N: <N>
-- Ângulos queimados: lê memory/performance/angulos-queimados.md (não repetir nas próximas 4 semanas)
-- Arcos de narrativa ativos (do Passo 2): <lista de arcos — priorizar tendências que avançam a crença-alvo dos arcos>
 
-Saída: gravar em campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md.
-
-Conteúdo esperado: 2-3 tendências por pilar com fonte, ângulos sugeridos por dia da semana, lista final "N pilares para os N posts da semana" — indicando para cada um qual arco ativo serve (ou "neutro" se nenhum).
+Saída: gravar em campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md, com as seções ## Emoção do público (oscilação da semana) e ## Crença de mercado em movimento.
 ```
+
+### 3. Jogadas da semana (`estrategista-mercado`)
+
+Acionar `estrategista-mercado`:
+
+```
+Tarefa: jogadas-da-semana
+
+Inputs:
+- Sensing da semana: campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md
+- N: <N>
+- Janela: <YYYY-Www>
+```
+
+O agente devolve N jogadas (ângulo + verdade + pilar + formato/canal + sustentação) equilibradas pelo livro-razão.
+
+### 3.⏸ Ajuste humano (só modo manual)
+
+**Apenas no modo manual** (pulado no modo cron): apresentar as jogadas e pausar:
+
+```
+Jogadas da semana (equilibradas por verdade):
+<lista do agente>
+
+Responda:
+- "ok" → segue para gerar os N briefings
+- ajuste em texto livre (trocar verdade, ângulo, pilar de qualquer jogada)
+```
+
+Aguardar resposta. Se houver ajuste, reacionar o estrategista (ou ajustar inline) e reapresentar até "ok".
 
 ### 4. Gerar briefings inline (×N)
 
-Para cada pilar/tema da pesquisa do Passo 3, escreva o briefing **inline**, lendo:
-- `brand/brand-book.md` — essência, propósito, mensagens centrais.
+Para cada jogada do Passo 3.⏸, escreva o briefing **inline**, lendo:
+- `brand/brand-book.md` — essência, propósito, mensagens centrais e `## Verdades`.
 - `brand/pilares-conteudo.md` — eixos temáticos válidos.
 - `memory/ramon/contexto.md` — fase atual, cronograma, vertentes.
 - `memory/performance/angulos-queimados.md` — ângulos a evitar.
-- `memory/narrativas/ativas.md` — arcos ativos e crenças-alvo (do Passo 2).
-- `campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md` — tendências levantadas no Passo 3.
+- `campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md` — sensing da semana (Passo 2).
 - Lista de estilos disponíveis: `templates/social-media/<formato>/estilos/*/estilo.md` — `## Quando usar` / `## Quando NÃO usar` para recomendar o estilo.
 
 Para cada post, decida inline:
@@ -116,30 +126,25 @@ Para cada post, decida inline:
 - **Objetivo** — 1 frase específica.
 - **Recorte de público** — 1-2 frases.
 - **Slug do post** — kebab-case (2-5 palavras).
-- **Narrativa** — slug do arco ativo que este post avança; `neutro` se nenhum arco for servido. (Campo obrigatório: `narrativa: <slug | neutro>`)
+- **Verdade** — slug do `## Verdades` (brand-book) que a jogada acende (vindo do Passo 3). Campo obrigatório: `verdade: <slug>`.
 - **Estilo recomendado** — slug existente; justificativa em 1 frase.
 - **Data prevista de publicação** — dia específico da semana.
 - **Sinalizações para o pipeline** — pesquisa necessária? tom? restrições/tabus?
 
 Grave cada briefing em `campanhas/<YYYY-Www>-pauta-semanal/output/posts/<N>-<slug-do-briefing>.md` usando `templates/briefing.md` como esqueleto.
 
-### 5. Check de coerência de narrativa
+### 5. Check de coerência de verdade
 
-Acionar `estrategista-narrativa`:
+Acionar `estrategista-mercado`:
 
 ```
-Tarefa: responder-coerencia
+Tarefa: coerencia-verdade
 
 Inputs:
-- Arcos ativos: <lista do Passo 2 — slug + crença-alvo>
-- Briefings planejados: <lista de slugs + ângulo central de cada um>
+- Briefings planejados: <lista de slugs + ângulo central + verdade de cada um>
 ```
 
-O agente devolve, por briefing: `serve <arco>` | `neutro` | `contradiz <arco>`.
-
-**Regras de ação:**
-- Briefing marcado `contradiz <arco>` → sinalizar ao usuário com sugestão de reâncorar no arco ativo. Não bloquear automaticamente — o usuário decide se mantém ou ajusta.
-- `neutro` em >metade da pauta → emitir aviso: `⚠ Mais da metade dos briefings está neutra — a pauta desta semana não está construindo narrativa. Considere revisar ângulos ou rodar /ciclo-de-direcao.`
+O agente devolve, por briefing: `serve <verdade>` | `off-brand` | `contradiz <verdade>`. Regra: `contradiz`/`off-brand` → sinalizar ao usuário (não bloquear). `off-brand` em >metade → aviso de pauta sem verdade.
 
 Registrar a classificação de cada briefing no `briefing-mestre.md` (coluna `coerência`).
 
@@ -163,9 +168,9 @@ N: <N>
 
 ## Posts planejados
 
-| # | Slug | Pilar | Narrativa | Coerência | Estilo | Data prevista | Arquivo |
+| # | Slug | Pilar | Verdade | Coerência | Estilo | Data prevista | Arquivo |
 |---|---|---|---|---|---|---|---|
-| 1 | <slug> | <pilar> | <slug-arco \| neutro> | <serve \| neutro \| contradiz> | <estilo> | <data> | output/posts/1-<slug>.md |
+| 1 | <slug> | <pilar> | <slug-verdade> | <serve \| off-brand \| contradiz> | <estilo> | <data> | output/posts/1-<slug>.md |
 ...
 ```
 
@@ -208,7 +213,7 @@ Pauta semanal <YYYY-Www> pronta:
 
 - <N> briefings em campanhas/<YYYY-Www>-pauta-semanal/output/posts/
 - Pilares cobertos: <lista>
-- Narrativas servidas: <arco: N posts | neutro: N posts>
+- Verdades acionadas: <verdade: N posts | distribuição>
 - Coerência: <N servem | N neutros | N contradizem — detalhes no briefing-mestre>
 - Estilos sugeridos: <lista>
 
@@ -228,7 +233,7 @@ ou /novo-post <formato> --briefing <caminho-do-briefing>.
 ## Critério de conclusão
 
 - Pasta `campanhas/<YYYY-Www>-pauta-semanal/` existe com briefing-mestre, status, log e N briefings em `output/posts/`.
-- `memory/narrativas/ativas.md` foi lido; cada briefing carrega o campo `narrativa: <slug | neutro>`.
-- Check de coerência rodou (`estrategista-narrativa`) e o resultado está na tabela do `briefing-mestre.md`.
+- Cada briefing carrega o campo `verdade: <slug>` (slug do `## Verdades` da jogada).
+- Check de coerência rodou (`estrategista-mercado`) e o resultado está na tabela do `briefing-mestre.md`.
 - `status.yaml` declara `aprovacoes_pendentes` para o dashboard mostrar.
 - Nenhum post foi executado.
