@@ -65,7 +65,8 @@ export function briefingsDoDia({ campanhasDir, today }) {
 }
 
 // CLI
-if (import.meta.url === `file://${process.argv[1]}`) {
+const _thisFile = new URL(import.meta.url).pathname;
+if (process.argv[1] && (process.argv[1] === _thisFile || decodeURIComponent(process.argv[1]) === decodeURIComponent(_thisFile))) {
   const campanhasDir = resolve(process.env.CAMPANHAS_DIR || "campanhas");
   const today = process.env.TODAY || new Date().toISOString().slice(0, 10);
   console.log(JSON.stringify(briefingsDoDia({ campanhasDir, today }), null, 2));
