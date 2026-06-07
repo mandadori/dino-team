@@ -74,7 +74,7 @@ Se `revisor-brand` devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e orie
 
 Liste `templates/social-media/` e `templates/social-media/<formato>/estilos/`. Tokenize a entrada: match com slug de estilo → estilo; `--briefing <caminho>` → `briefing_path`; resto → tema. Se formato ausente/inválido, pergunte ao usuário oferecendo a lista descoberta. Siga sempre para o Passo 2.
 
-Se `briefing_path` presente: leia o arquivo apontado e extraia `Formato`, `Estilo`, `Tema`, `Ângulo central`, `Pilar`, `Objetivo`, `Recorte de público`, `Slug do post`. Esses valores substituem qualquer tema/estilo vindo do input textual. Marque `modo_briefing = "pre-pronto"`. Pule os Passos 3, 3.⏸, 4 e 4.⏸ e vá direto ao Passo 5 (se estilo for ad-hoc) ou ao Passo 7.
+Se `briefing_path` presente: leia o arquivo apontado e extraia `Formato`, `Estilo`, `Tema`, `Ângulo central`, `Pilar`, `Objetivo`, `Recorte de público`, `Slug do post`, `Narrativa` (campo `narrativa: <slug|neutro>` do briefing — gravado pelo `/planejar-pauta-semanal`). Quando `Narrativa` presente, guarde como `narrativa_servida = <slug|neutro>`; quando ausente, `narrativa_servida = neutro`. Esses valores substituem qualquer tema/estilo vindo do input textual. Marque `modo_briefing = "pre-pronto"`. Pule os Passos 3, 3.⏸, 4 e 4.⏸ e vá direto ao Passo 5 (se estilo for ad-hoc) ou ao Passo 7.
 
 ### 2. Frescor da inteligência de mercado
 
@@ -205,7 +205,7 @@ Se vier ajuste, edite os arquivos em `_rascunho/` inline conforme o pedido. Repi
 
 ### 6. Briefing estratégico (inline)
 
-**Quando `modo_briefing = "pre-pronto"`:** pule este passo. Os campos já foram extraídos no Passo 1.
+**Quando `modo_briefing = "pre-pronto"`:** pule este passo. Os campos já foram extraídos no Passo 1 (incluindo `narrativa_servida`).
 
 **Caso contrário:** leia os seguintes arquivos e decida inline:
 - `brand/brand-book.md`
@@ -213,6 +213,7 @@ Se vier ajuste, edite os arquivos em `_rascunho/` inline conforme o pedido. Repi
 - `memory/ramon/contexto.md`
 - `memory/performance/angulos-queimados.md`
 - `memory/mercado/tendencias/<YYYY-MM>.md`
+- `memory/narrativas/ativas.md`
 - `estilo.md` do estilo escolhido (campos `## Conceito` e `#### editorial` de cada bloco)
 
 Com base nessas leituras e no tema/candidatos escolhidos, fixe:
@@ -221,9 +222,10 @@ Com base nessas leituras e no tema/candidatos escolhidos, fixe:
 - **Objetivo** — 1 frase específica do que o post deve fazer no leitor.
 - **Recorte de público** — 1-2 frases do segmento específico dentro do público-alvo.
 - **Slug do post** — kebab-case (2-5 palavras capturando o ângulo, não o tema bruto).
+- **Narrativa servida** — slug do arco ativo (de `memory/narrativas/ativas.md`) que este ângulo avança; `neutro` se nenhum arco for servido. Espelha o critério do `/planejar-pauta-semanal` Passo 4. Se `memory/narrativas/ativas.md` não tiver arco `ativa`, use `neutro` e emita aviso de uma linha. Guarde como `narrativa_servida`.
 - **Sinalizações para o pipeline** — pesquisa necessária? tom específico? restrições/tabus?
 
-**Guarde esses campos na memória da skill** — serão usados nos Passos 10 (copy) e 13 (gate + briefing.md).
+**Guarde esses campos na memória da skill** — serão usados nos Passos 10 (copy), 13 (gate + briefing.md) e 15.6 (write-back livro-razão).
 
 ### 7. Criar pasta do post
 
