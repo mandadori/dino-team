@@ -52,11 +52,14 @@ Data de hoje: `DATA=$(date +%F)`.
 
 ### 2. Pesquisa profunda (deep research)
 
+Resolver o perfil do pilar (ver `## Perfis de fonte por pilar`): pilar ausente/desconhecido → default **Mentalidade** + aviso de 1 linha.
+
 Acionar `pesquisador-mercado`:
 
 ```
 Tarefa: levantar matéria-prima profunda para a copy.
-Profundidade: deep research (WebFetch nas fontes promissoras).
+Profundidade: <profundidade do perfil do pilar — rasa | média | profunda>
+Fontes: <fontes prioritárias do perfil do pilar>
 
 Inputs:
 - Formato/Estilo/Tema: — / — / <tema>
@@ -93,6 +96,20 @@ Para usar em um post:
 - **Sem write-back de livro-razão** — esta skill não produz peça.
 - **Sem Fase B** — seleção de candidatos permanece inline no `/novo-post` (acoplada à produção).
 - **Parte do contexto de mercado acumulado:** a pesquisa parte de `memory/mercado/` já mapeado, não redescobre tendências do zero.
+
+## Perfis de fonte por pilar
+
+A skill resolve o perfil a partir de `--pilar` (de `brand/pilares-conteudo.md`) e o passa ao `pesquisador-mercado` nos campos `Fontes` e `Profundidade`. O perfil respeita o `## Off-limits` dos pilares (sem motivação vazia, sem promessa irreal).
+
+| Pilar | Fontes prioritárias | Profundidade | Foco criativo |
+|---|---|---|---|
+| **Mentalidade** | Livros/autores (estoicismo, filosofia aplicada), correntes de pensamento, debates culturais sobre disciplina/processo | média | Frases/autores/frameworks pra copy riffar; ângulos contraintuitivos. Filosofia conectada à prática, nunca motivação vazia. |
+| **Método** | Estudos de hipertrofia/periodização, autoridades técnico-científicas do nicho, métodos consagrados | profunda | Dado verificável + mito a quebrar + a lógica por trás |
+| **Prova viva** | Fatos técnicos de fisiculturismo de elite + `memory/ramon/contexto.md`; análises técnicas | média | Princípio universal (não biografia 1ª pessoa); o que separa elite de amador |
+| **Transformação** | Interno: `memory/performance/provas-de-aluno.md` + `memory/publico/`; externo leve | rasa (quase interna) | Prova social real, mecânica da consultoria. Sem promessa irreal. |
+
+- Pilar ausente/desconhecido → perfil default **Mentalidade** (média, criativo) + aviso de 1 linha.
+- "Rasa (interna)" = priorizar `memory/`, no máximo 1 WebFetch leve; **não** varredura cara.
 
 ## Critério de conclusão
 
