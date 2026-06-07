@@ -19,7 +19,7 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 4 | ⚙ recomendar estilo (inline, condic.) | tema, estilos disponíveis | 3.⏸ | recomendação |
 | 4.⏸ | ⏸ usuário | recomendação ← 4 + plano | 4 | confirmação do plano |
 | 5 | ⚙ estilo ad-hoc inline (condic.) + ⏸ | descrição/refs | 4.⏸ | _rascunho/ |
-| 6 | ⚙ briefing inline (ou briefing pré-pronto) | contexto ← 2, tema, estilo | 5 | ângulo/pilar/objetivo/slug/narrativa_servida |
+| 6 | ⚙ briefing inline (ou briefing pré-pronto) | contexto ← 2, tema, estilo | 5 | ângulo/pilar/objetivo/slug/verdade_servida |
 | 7 | ⚙ criar pasta | slug ← 6 | 6 | pasta |
 | 8 | ⚙ resolver inputs externos do estilo (condic.) | estilo.md | 7 | treino.md |
 | 8t | treinador (condic.) | exercícios, objetivo | 8 | prescrição |
@@ -34,7 +34,7 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 14.5 | ⚙ adaptar stories (condic., carrossel) + ⏸ | copy, estilo | 14 | frames |
 | 15 | ⚙ salvar/descartar _rascunho/ (condic.) + ⏸ | — | 14.5 | slug permanente ou remoção |
 | 15.5 | analista-performance — registrar ângulo | ângulo/pilar/slug ← 6 | 13 | entrada em angulos-queimados |
-| 15.6 | ⚙ write-back livro-razão | ângulo+narrativa_servida+slug ← 6 | 14 | linha no livro-razão |
+| 15.6 | ⚙ write-back livro-razão | ângulo+verdade_servida+slug ← 6 | 14 | linha no livro-razão |
 | 16 | ⚙ publicação (opcional, gated) | pasta ← 13 | 15 | publicado/pendente |
 
 ## Sintaxe
@@ -58,10 +58,10 @@ Se `revisor-brand` devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e orie
 
 ## Princípio central
 
-**A skill executa produção inline e dispara skills de pesquisa.** Não há subagentes para briefing, copy ou design — a skill lê os arquivos necessários diretamente e produz. A pesquisa de mercado (Fase A) e a pesquisa de tema (deep research) são delegadas às skills `/pesquisar-mercado` e `/pesquisar-tema` respectivamente — o `/novo-post` dispara essas skills quando necessário, mas não possui o pipeline de pesquisa. A Fase B (seleção de candidatos) permanece inline, pois é decisória e acoplada à produção. Agentes externos (treinador, revisor-brand, arquivista, analista-performance) são acionados quando têm função geral no sistema. Ao finalizar (APROVADO), escreve de volta no cérebro: ângulo em `angulos-queimados.md` (Passo 15.5) e mensagem em `livro-razao.md` (Passo 15.6).
+**A skill executa produção inline e dispara skills de pesquisa.** Não há subagentes para briefing, copy ou design — a skill lê os arquivos necessários diretamente e produz. A pesquisa de mercado (Fase A) e a pesquisa de tema (deep research) são delegadas às skills `/pesquisar-mercado` e `/pesquisar-tema` respectivamente — o `/novo-post` dispara essas skills quando necessário, mas não possui o pipeline de pesquisa. A Fase B (seleção de candidatos) permanece inline, pois é decisória e acoplada à produção. Agentes externos (treinador, revisor-brand, arquivista, analista-performance) são acionados quando têm função geral no sistema. Ao finalizar (APROVADO), escreve de volta no cérebro: ângulo em `angulos-queimados.md` (Passo 15.5) e verdade_servida em `livro-razao.md` (Passo 15.6).
 
 **Contexto de leitura por passo:**
-- **Briefing (Passo 6):** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `memory/ramon/contexto.md` + `memory/performance/angulos-queimados.md` + `memory/mercado/tendencias/<mês>.md` + `estilo.md` do estilo escolhido.
+- **Briefing (Passo 6):** `brand/brand-book.md` (inclui `## Verdades`) + `brand/pilares-conteudo.md` + `memory/ramon/contexto.md` + `memory/performance/angulos-queimados.md` + `memory/mercado/tendencias/<mês>.md` + `estilo.md` do estilo escolhido.
 - **Copy (Passo 10):** `estilo.md` (campos `#### editorial` de cada bloco) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa gravada.
 - **Design (Passo 11):** `estilo.md` (campos `#### visual` de cada bloco) + `slide.html` do estilo + `brand/referencias-visuais.md` + `brand/social-media.md` + copy.md.
 
@@ -75,7 +75,7 @@ Se `revisor-brand` devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e orie
 
 Liste `templates/social-media/` e `templates/social-media/<formato>/estilos/`. Tokenize a entrada: match com slug de estilo → estilo; `--briefing <caminho>` → `briefing_path`; resto → tema. Se formato ausente/inválido, pergunte ao usuário oferecendo a lista descoberta. Siga sempre para o Passo 2.
 
-Se `briefing_path` presente: leia o arquivo apontado e extraia `Formato`, `Estilo`, `Tema`, `Ângulo central`, `Pilar`, `Objetivo`, `Recorte de público`, `Slug do post`, `Narrativa` (campo `narrativa: <slug|neutro>` do briefing — gravado pelo `/planejar-pauta-semanal`). Quando `Narrativa` presente, guarde como `narrativa_servida = <slug|neutro>`; quando ausente, `narrativa_servida = neutro`. Esses valores substituem qualquer tema/estilo vindo do input textual. Marque `modo_briefing = "pre-pronto"`. Pule os Passos 3, 3.⏸, 4 e 4.⏸ e vá direto ao Passo 5 (se estilo for ad-hoc) ou ao Passo 7.
+Se `briefing_path` presente: leia o arquivo apontado e extraia `Formato`, `Estilo`, `Tema`, `Ângulo central`, `Pilar`, `Objetivo`, `Recorte de público`, `Slug do post`, `Verdade` (campo `verdade: <slug>` do briefing — gravado pelo `/planejar-pauta-semanal`). Quando `Verdade` presente, guarde como `verdade_servida = <slug>`; quando ausente, `verdade_servida = neutro`. Esses valores substituem qualquer tema/estilo vindo do input textual. Marque `modo_briefing = "pre-pronto"`. Pule os Passos 3, 3.⏸, 4 e 4.⏸ e vá direto ao Passo 5 (se estilo for ad-hoc) ou ao Passo 7.
 
 ### 2. Frescor da inteligência de mercado
 
@@ -202,15 +202,14 @@ Se vier ajuste, edite os arquivos em `_rascunho/` inline conforme o pedido. Repi
 
 ### 6. Briefing estratégico (inline)
 
-**Quando `modo_briefing = "pre-pronto"`:** pule este passo. Os campos já foram extraídos no Passo 1 (incluindo `narrativa_servida`).
+**Quando `modo_briefing = "pre-pronto"`:** pule este passo. Os campos já foram extraídos no Passo 1 (incluindo `verdade_servida`).
 
 **Caso contrário:** leia os seguintes arquivos e decida inline:
-- `brand/brand-book.md`
+- `brand/brand-book.md` — inclui o conjunto canônico de `## Verdades`.
 - `brand/pilares-conteudo.md`
 - `memory/ramon/contexto.md`
 - `memory/performance/angulos-queimados.md`
 - `memory/mercado/tendencias/<YYYY-MM>.md`
-- `memory/narrativas/ativas.md`
 - `estilo.md` do estilo escolhido (campos `## Conceito` e `#### editorial` de cada bloco)
 
 Com base nessas leituras e no tema/candidatos escolhidos, fixe:
@@ -219,7 +218,7 @@ Com base nessas leituras e no tema/candidatos escolhidos, fixe:
 - **Objetivo** — 1 frase específica do que o post deve fazer no leitor.
 - **Recorte de público** — 1-2 frases do segmento específico dentro do público-alvo.
 - **Slug do post** — kebab-case (2-5 palavras capturando o ângulo, não o tema bruto).
-- **Narrativa servida** — slug do arco ativo (de `memory/narrativas/ativas.md`) que este ângulo avança; `neutro` se nenhum arco for servido. Espelha o critério do `/planejar-pauta-semanal` Passo 4. Se `memory/narrativas/ativas.md` não tiver arco `ativa`, use `neutro` e emita aviso de uma linha. Guarde como `narrativa_servida`.
+- **Verdade servida** — slug do `## Verdades` (brand/brand-book.md) que este ângulo acende; `neutro` se nenhuma. Guarde como `verdade_servida`.
 - **Sinalizações para o pipeline** — pesquisa necessária? tom específico? restrições/tabus?
 
 **Guarde esses campos na memória da skill** — serão usados nos Passos 10 (copy), 13 (gate + briefing.md) e 15.6 (write-back livro-razão).
@@ -550,16 +549,18 @@ O `analista-performance` define a janela de descanso por bom senso editorial (â
 
 ### 15.6. Registrar mensagem no livro-razão
 
-Após APROVADO (Passo 13) e entregue (Passo 14), registre a mensagem deste post no livro-razão de narrativas — assim o cérebro sabe o que já foi dito e a direção detecta saturação. Determinístico (script; o `estrategista-narrativa` é o leitor da saturação, não escreve aqui):
+Após APROVADO (Passo 13) e entregue (Passo 14), registre a mensagem deste post no livro-razão de narrativas — assim o cérebro sabe o que já foi dito e o estrategista detecta saturação. Determinístico (script; o `estrategista-mercado` é o leitor da saturação, não escreve aqui):
 
 ```bash
 node scripts/memory/append_livro_razao.js \
   --data "$(date +%F)" \
   --mensagem "<ângulo central do Passo 6>" \
-  --narrativa "<narrativa_servida do Passo 6 — slug ou neutro>" \
+  --narrativa "<verdade_servida do Passo 6 — slug ou neutro>" \
   --canal instagram \
   --peca "<slug do Passo 6>"
 ```
+
+> Nota: a flag `--narrativa` registra a **verdade** acionada (rename para `--verdade` na Peça 4).
 
 Reporte a linha anexada inline. Se o script falhar (`LIVRO_RAZAO_AUSENTE`), avise o usuário e siga — o post já está entregue; o write-back não bloqueia entrega.
 
