@@ -1,50 +1,23 @@
 ---
 slice: narrativas
-owner: estrategista-narrativa
-ultima_atualizacao: 2026-06-06
-versao: 1
+owner: estrategista-mercado
+ultima_atualizacao: 2026-06-07
+versao: 2
 ---
 
 # Formato do slice `narrativas/`
 
-## `ativas.md` — arcos de narrativa em construção
+Após o redesign de 2 velocidades, o slice contém **apenas o livro-razão**. Não há mais arcos (`ativas.md`) nem roadmap de crença — a camada lenta é o conjunto de `## Verdades` em `brand/brand-book.md`.
 
-Cada arco:
+## `livro-razao.md` — o que já foi dito (responde "qual verdade, quantas vezes?")
 
-```
-### <nome-do-arco>
-- **estado:** ativa | saturando | aposentada
-- **crença-alvo:** <a crença que este arco instala no público>
-- **horizonte:** <YYYY-MM a YYYY-MM>
-- **pilares:** <pilares de brand/pilares-conteudo.md que serve>
-- **canais:** <ig | blog | email | comunidade | site>
-- **contra (narrativa de mercado):** <o que este arco reframa do discurso do nicho>
-- **mensagens-âncora:** <2-4 frases-semente, no tom>
-- **última-atividade:** YYYY-MM-DD
-```
-
-## `roadmap-crenca.md` — o que o público deve crer
-
-Três horizontes; cada um lista crenças-alvo:
-
-```
-## 3 meses
-- <crença>
-## 6 meses
-- <crença>
-## 12 meses
-- <crença>
-```
-
-## `livro-razao.md` — o que já foi dito (responde "dito 40 vezes?")
-
-Tabela append-only, escrita pelo write-back (Onda 3):
+Tabela append-only, escrita pelo write-back das skills de produção.
 
 ```
 | data | mensagem/ângulo | narrativa | canal | peça |
 |------|-----------------|-----------|-------|------|
 ```
 
-Contagem de saturação = nº de linhas por mensagem/narrativa numa janela.
+> **Semântica (redesign 2 velocidades):** a coluna `narrativa` registra a **verdade** (slug do `## Verdades` do brand-book) que a peça acendeu. O header ainda se chama `narrativa` porque o script `append_livro_razao.js` mantém a flag `--narrativa` nesta fase; o rename para `verdade` é da Peça 4.
 
-Append feito pelo script `scripts/memory/append_livro_razao.js`, disparado no write-back das skills de produção (Onda 3). O owner `estrategista-narrativa` **lê** para detectar saturação; não escreve aqui.
+Contagem de saturação = nº de linhas por **verdade** numa janela. Append feito pelo script `scripts/memory/append_livro_razao.js`. O owner `estrategista-mercado` **lê** para equilíbrio/saturação; não escreve aqui.
