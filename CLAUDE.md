@@ -70,6 +70,9 @@ _Marca e site:_
 - [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — atualizar o slice `memory/ramon/` (fase atual + cronograma + outras vertentes).
 - [`/novo-site`](.claude/skills/novo-site/SKILL.md) — criar ou alterar o site (dual-mode); aciona os agentes de Engenharia + gate `revisor-brand`.
 
+_Produto — integração pelo cérebro:_
+- [`/sinal-consultoria`](.claude/skills/sinal-consultoria/SKILL.md) — roteia um sinal real da consultoria ao cérebro: aluno travou (dor) → `publico/dores.md`; pergunta recorrente (objeção) → `publico/objecoes.md`; resultado de aluno (prova) → `performance/provas-de-aluno.md`. A skill classifica, pausa para confirmação humana e aciona o owner do slice — Marketing e Produto se afinam pelo cérebro, sem acoplamento direto.
+
 ### 3. Agentes — especialistas por função (`.claude/agents/`)
 
 Cada agente domina **uma função** e organiza-se em **setor × papel** apenas textualmente — os arquivos físicos ficam todos achatados em `.claude/agents/<nome>.md` porque o loader do Claude Code só enxerga arquivos flat nessa pasta (subpastas são ignoradas). O agrupamento abaixo é a fonte de verdade humana da divisão setorial; o nome do agente carrega a função.
@@ -106,11 +109,13 @@ Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-0
 
 **Slices:**
 - `memory/narrativas/` — narrativas ativas, roadmap de crença, livro-razão de mensagens (owner: `estrategista-narrativa`).
-- `memory/publico/` — dores e objeções com a fala do público embutida (owner: `pesquisador-mercado`; Produto alimenta).
+- `memory/publico/` — dores e objeções com a fala do público embutida (owner: `pesquisador-mercado`; Produto alimenta via `/sinal-consultoria`).
 - `memory/mercado/` — `narrativa-de-mercado.md` (discurso do nicho), `tendencias/`, `concorrentes/` (owner: `pesquisador-mercado`).
 - `memory/ramon/contexto.md` — contexto temporal e biográfico do Ramon (owner: `arquivista`).
-- `memory/performance/` — `angulos-queimados.md` + métricas por canal (futuro) (owner: `analista-performance`).
+- `memory/performance/` — `angulos-queimados.md` + `provas-de-aluno.md` (Onda 6+) + métricas por canal (futuro) (owner: `analista-performance`).
 - `memory/pesquisa/` — pesquisa bruta (insumo cumulativo, não-verdade).
+
+**Setor Produto — integrado pelo cérebro:** a consultoria (`treinador` hoje; anamnese/nutri depois) consome `memory/publico/` + `memory/performance/` para decisões de produto e os alimenta de volta com sinais reais via `/sinal-consultoria`. Produto não tem slice próprio — escreve nos slices existentes pelos owners declarados (dono único preservado). Marketing e Produto se afinam pelo cérebro, nunca por acoplamento direto.
 
 ### 5. Site (`site/`)
 
