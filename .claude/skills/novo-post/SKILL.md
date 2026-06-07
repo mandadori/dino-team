@@ -254,15 +254,17 @@ Inputs:
 Saída: inline no formato canônico do treinador.
 ```
 
-### 9. Pesquisa profunda (condicional)
+### 9. Pesquisa profunda
 
-Execute quando o ângulo for informacional (dados, mitos, técnica). Pule em post puramente narrativo (história pessoal, motivação sem dados).
+Execute **para todo post**. A profundidade e as fontes vêm do **perfil do pilar** do briefing (Passo 6), resolvido pela `/pesquisar-tema`. A pesquisa é fonte de criatividade, não só de fato — inclusive em posts de Mentalidade.
 
 Invoque `/pesquisar-tema`:
 
 ```
 /pesquisar-tema <tema> --pilar <pilar do briefing> --recorte <recorte do briefing>
 ```
+
+A `/pesquisar-tema` resolve o perfil de fonte/profundidade pelo `--pilar` (ver `## Perfis de fonte por pilar` na skill). O cache de `memory/pesquisa/` continua valendo: se a slug já existe, pula.
 
 A skill `/pesquisar-tema` aciona o `pesquisador-mercado` (deep research) partindo do contexto de mercado acumulado em `memory/mercado/` e grava o resultado em `memory/pesquisa/<data>-tendencias-<slug>.md`. O prompt completo do agente, o template e a metodologia de pesquisa profunda vivem em `/pesquisar-tema` (fonte única). A **Fase B (Passo 3, seleção de candidatos) permanece inline** — é decisória e acoplada à produção.
 
