@@ -1,0 +1,13 @@
+# Config do banco de imagens da marca — Dino Team
+# Lida por: /novo-post (Passo 11m/16) e scripts/editor/banco-config.js
+# Gravada por: /configurar-banco (campo pasta_raiz_id) e o usuário
+# Versão: 1
+
+drive:
+  pasta_raiz_id: ""        # ID da pasta-raiz do Drive; vazio = seleção de imagem desligada
+
+descanso_por_canal:        # dias que a imagem descansa no PRÓPRIO canal após uso; 0 = sem descanso
+  instagram: 60
+  email: 30                # declarado, ainda não consumido
+  blog: 30                 # declarado, ainda não consumido
+  ads: 0                   # 0 = sem descanso (sempre disponível)
