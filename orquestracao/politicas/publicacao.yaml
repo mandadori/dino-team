@@ -8,13 +8,18 @@ publicacao:
   defaults:
     modo: aprovacao_humana       # default conservador — qualquer post precisa de OK humano antes de publicar
 
+  # ORDEM IMPORTA: a semântica é "primeira regra que casa decide" (first-match;
+  # ver /novo-post Passo 16). Por isso as regras MAIS restritivas vêm primeiro —
+  # um post que case com várias é barrado pela mais conservadora. termos-sensiveis
+  # precede instagram-educacional-automatico para garantir o "sempre" do compliance:
+  # um post educacional que mencione um termo sensível NÃO vira automático.
   regras:
-    # Posts educacionais/descritivos no Instagram com baixo risco viram automáticos
-    # (mas janela de aborto permite cancelar nos primeiros 30 min)
-    - id: instagram-educacional-automatico
-      condicao: "artefato.canal == 'instagram' AND briefing.pilar in ['educacional', 'descritivo']"
-      modo: automatico
-      janela_aborto_minutos: 30
+    # Termos sensíveis SEMPRE exigem aprovação humana (defesa em profundidade
+    # depois do revisor-brand). Precede as regras de automação por design.
+    - id: termos-sensiveis
+      condicao: "artefato.contem_termo('suplemento') OR artefato.contem_termo('emagrecer') OR artefato.contem_termo('cura')"
+      modo: aprovacao_humana
+      motivo: compliance
 
     # Qualquer Meta Ads acima de R$500 exige aprovação explícita
     - id: meta-ads-acima-500
@@ -22,12 +27,12 @@ publicacao:
       modo: aprovacao_humana
       escala: usuario-via-dashboard
 
-    # Termos sensíveis sempre exigem aprovação humana (defesa em profundidade
-    # depois do revisor-compliance)
-    - id: termos-sensiveis
-      condicao: "artefato.contem_termo('suplemento') OR artefato.contem_termo('emagrecer') OR artefato.contem_termo('cura')"
-      modo: aprovacao_humana
-      motivo: compliance
+    # Posts educacionais/descritivos no Instagram com baixo risco viram automáticos
+    # (mas janela de aborto permite cancelar nos primeiros 30 min)
+    - id: instagram-educacional-automatico
+      condicao: "artefato.canal == 'instagram' AND briefing.pilar in ['educacional', 'descritivo']"
+      modo: automatico
+      janela_aborto_minutos: 30
 
   iteracao:
     limite_revisao: 3            # após 3 reprovações, parar e escalar para humano
