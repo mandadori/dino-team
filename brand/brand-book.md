@@ -73,6 +73,21 @@ A comunicação desdobra a tese consistentemente:
 
 ---
 
+## Verdades (conjunto canônico)
+
+> As verdades atemporais que a marca acende. Conjunto **enumerável** — cada peça acende **uma** (registrada no livro-razão como `verdade:`). É a camada lenta do sistema de 2 velocidades; muda raramente (via `/brand-discovery`), nunca por reatividade de mercado.
+
+| slug | verdade |
+|---|---|
+| `direcao-vence-motivacao` | Direção > motivação. Você não precisa de mais motivação, precisa de direção. |
+| `voce-vs-voce` | A única disputa que importa é você vs. você — supere quem era ontem, não os outros. |
+| `disciplina-sem-vontade` | Disciplina é fazer mesmo sem vontade. |
+| `consistencia-vence-intensidade` | Consistência vence intensidade — pequenas ações diárias geram grandes resultados. |
+| `execucao-nao-motivacao` | Resultado não vem de motivação, vem de execução. |
+| `identidade-e-o-premio` | O prêmio real não é chegar; é quem você virou no caminho. |
+
+---
+
 ## O produto (visão geral)
 
 - **Plataforma** com planos personalizados para qualquer objetivo
@@ -103,6 +118,7 @@ Método · Evolução · Resultado · Transformação física · Disciplina · C
 
 ## Última atualização
 
+2026-06-07 — formalização do conjunto canônico de `## Verdades` (camada lenta do sistema de 2 velocidades; consumido pelo `estrategista-mercado`). Ancorado nas mensagens centrais existentes.
 2026-05-31 — giro para o registro **sereno** via `/brand-discovery`: espinha filosófica expandida (direção → caminho → identidade; "o prêmio é ter virado alguém") nas mensagens centrais, registro de voz sereno declarado. Coordenado com a re-autoria de `tom-de-voz.md` e o alinhamento de `publico-alvo.md`.
 2026-05-29 — otimização de marca a partir do estudo do concorrente STNDRD: driver emocional (autorrespeito/identidade, "você vs. você") na essência, sign-off fixo "O topo exige direção." como assinatura, hierarquia das mensagens centrais. Coordenado com `tom-de-voz.md`, `pilares-conteudo.md` e `publico-alvo.md`.
 2026-05-16 — migração de fragmentos únicos do CLAUDE.md (enquadramento Acre/adaptação à realidade; máxima sobre ambiente coletivo).
