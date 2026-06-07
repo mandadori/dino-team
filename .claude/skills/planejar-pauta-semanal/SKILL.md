@@ -187,6 +187,7 @@ tarefas:
     skill: /novo-post   # quem executa quando humano disparar
     estado: pendente
     output: output/posts/1-<slug>.md
+    data_prevista: <YYYY-MM-DD do briefing>
     atualizado_em: <agora>
   - ...
 aprovacoes_pendentes:
