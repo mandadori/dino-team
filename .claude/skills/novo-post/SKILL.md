@@ -26,7 +26,7 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 9 | pesquisador (P9, condic.) | briefing ← 6 | 8 | pesquisa-bruta |
 | 10 | ⚙ copy inline + ⏸ | pesquisa ← 9, contexto-copy | 9 | copy.md |
 | 11 | ⚙ design inline + ⏸ | copy ← 10, estilo.md | 10 | slide-N.html |
-| 11m | arquivista (condic.) | banco, copy, estilo | 11 | suggestions.json |
+| 11m | arquivista (condic.) | canal, drive-raiz, copy, estilo | 11 | suggestions.json |
 | 11.5 | ⚙ loop aprendizado (condic.) + ⏸ | edits.json ← 11 | 11 | estilo.md/slide.html |
 | 12 | ⚙ export-png.js | slide-N.html ← 11 | 11.5 | PNGs |
 | 13 | revisor-brand (gate) | copy.md + pasta | 12 | APROVADO/REPROVADO |
@@ -320,21 +320,24 @@ Saída: `design/slide-1.html`, `design/slide-2.html`, ... (um por bloco).
 
 #### Pré-preenchimento de imagens (condicional)
 
-Se o usuário tiver apontado um banco de imagens (variável de fluxo `banco`), acione `arquivista`:
+Carregue a pasta-raiz do Drive de `orquestracao/banco-imagens.yaml` (campo `drive.pasta_raiz_id`).
+
+- Se `pasta_raiz_id` estiver **vazio** → pule a seleção; o usuário dropa as fotos manualmente no Dino Editor (sem erro).
+- Se o MCP do Drive estiver indisponível → avise ("banco de imagens indisponível; siga dropando manual") e continue o post (a entrega nunca trava).
+- Caso contrário, acione `arquivista`:
 
 ```
-Tarefa: indexar (se houver imagens novas) e depois selecionar.
+Tarefa: indexar (lazy) e depois selecionar.
 
 Inputs:
-- Banco: <caminho do banco>
+- canal: instagram
+- Pasta-raiz do Drive: <pasta_raiz_id de banco-imagens.yaml>
 - copy.md: export/conteudos/<formato>/<data>-<slug>/copy.md
 - estilo.md: <caminho do estilo.md>
 - Pasta do post: export/conteudos/<formato>/<data>-<slug>/
 
-Saída: design/suggestions.json com a melhor imagem disponível por drop zone.
+Saída: design/suggestions.json com a melhor imagem DISPONÍVEL NO CANAL instagram por drop zone.
 ```
-
-Se não houver banco apontado, pule — o usuário dropa as fotos manualmente no estúdio.
 
 #### Pausa para revisão e edição no Dino Editor (⏸)
 
@@ -597,18 +600,21 @@ Para publicar, rode manualmente:
 
 #### Marcação de uso de materiais (condicional)
 
-Se houve pré-preenchimento via banco, marque as imagens efetivamente presentes no preview final acionando `arquivista`:
+Se houve pré-preenchimento via banco, marque as imagens efetivamente presentes no preview final
+(não as meramente sugeridas — uma foto trocada no Editor não deve queimar) acionando `arquivista`:
 
 ```
 Tarefa: marcar.
 
 Inputs:
-- Banco: <caminho do banco>
-- Imagens usadas: <lista dos arquivos efetivamente aplicados nas drop zones>
+- canal: instagram
+- Pasta-raiz do Drive: <pasta_raiz_id de banco-imagens.yaml>
+- drive_file_id usados: <lista dos IDs efetivamente aplicados nas drop zones>
 - Post: <data>-<slug>
 ```
 
-Isso registra `used_in` + `rest_until` no índice — evita repetir a mesma foto cedo demais.
+Isso registra `used_in` (com `canal`) + `rest_until.instagram` no índice — a foto descansa só no
+Instagram (60 dias, da config) e permanece livre nos demais canais.
 
 ---
 
