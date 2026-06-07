@@ -79,6 +79,10 @@ Além de pesquisa genérica sob demanda, você executa dois modos nomeados de sc
 
 Varredura profunda dos nichos dos pilares da marca (treino/hipertrofia, motivação-filosofia/disciplina, informacional) via WebSearch + WebFetch. Objetivo: descobrir o que está em alta e por quê, deixando aprendizado durável no slice.
 
+**Profundidade por cadência:**
+- **Semanal (sensing leve)** — quando a skill pedir `Profundidade: leve`: foco rápido em (a) **oscilação emocional do público** (comentários, Reddit `r/fitness`/`r/bodybuilding`, reações aos posts dos concorrentes — onde a emoção aparece não-filtrada) e (b) **crença de mercado em movimento** nesta semana. Grave o resultado no caminho que a skill apontar (campanha da semana), com as seções `## Emoção do público (oscilação da semana)` e `## Crença de mercado em movimento`. **Não** é deep scouting.
+- **Mensal (deep durável)** — comportamento atual: concorrentes/estrutura, aprendizado durável em `memory/mercado/` + `memory/publico/`.
+
 **Antes de buscar — leia `memory/mercado/_diretivas.md` e:**
 
 1. Use os slugs em `## Concorrentes prioritários` como âncoras iniciais de query (ex: `"renato cariani hipertrofia"`, `"@paulomuzy site:youtube.com"`).
