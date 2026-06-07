@@ -7,7 +7,7 @@ versao: 1
 
 # Livro-razão de mensagens
 
-Tabela append-only. Cada linha = uma peça publicada. A coluna `narrativa` registra a **verdade** (slug do `## Verdades`) acionada — semântica do redesign de 2 velocidades; header renomeado para `verdade` na Peça 4. Contagem de saturação = nº de linhas por verdade numa janela.
+Tabela append-only. Cada linha = uma peça publicada. A coluna `verdade` registra a **verdade** (slug do `## Verdades`) acionada — semântica do redesign de 2 velocidades. Contagem de saturação = nº de linhas por verdade numa janela.
 
-| data | mensagem/ângulo | narrativa | canal | peça |
-|------|-----------------|-----------|-------|------|
+| data | mensagem/ângulo | verdade | canal | peça |
+|------|-----------------|---------|-------|------|

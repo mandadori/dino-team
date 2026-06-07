@@ -14,10 +14,10 @@ Após o redesign de 2 velocidades, o slice contém **apenas o livro-razão**. N�
 Tabela append-only, escrita pelo write-back das skills de produção.
 
 ```
-| data | mensagem/ângulo | narrativa | canal | peça |
-|------|-----------------|-----------|-------|------|
+| data | mensagem/ângulo | verdade | canal | peça |
+|------|-----------------|---------|-------|------|
 ```
 
-> **Semântica (redesign 2 velocidades):** a coluna `narrativa` registra a **verdade** (slug do `## Verdades` do brand-book) que a peça acendeu. O header ainda se chama `narrativa` porque o script `append_livro_razao.js` mantém a flag `--narrativa` nesta fase; o rename para `verdade` é da Peça 4.
+> **Semântica (redesign 2 velocidades):** a coluna `verdade` registra a **verdade** (slug do `## Verdades` do brand-book) que a peça acendeu. A flag do script é `--verdade`.
 
 Contagem de saturação = nº de linhas por **verdade** numa janela. Append feito pelo script `scripts/memory/append_livro_razao.js`. O owner `estrategista-mercado` **lê** para equilíbrio/saturação; não escreve aqui.

@@ -6,7 +6,7 @@
  *   node scripts/memory/append_livro_razao.js \
  *     --data <YYYY-MM-DD> \
  *     --mensagem "<ângulo/mensagem>" \
- *     --narrativa <slug|neutro> \
+ *     --verdade <slug|neutro> \
  *     --canal <instagram|email|blog|comunidade> \
  *     --peca <slug>
  *
@@ -31,7 +31,7 @@ function usage() {
   console.error(`Uso: node scripts/memory/append_livro_razao.js \\
   --data <YYYY-MM-DD> \\
   --mensagem "<ângulo/mensagem>" \\
-  --narrativa <slug|neutro> \\
+  --verdade <slug|neutro> \\
   --canal <instagram|email|blog|comunidade> \\
   --peca <slug>`);
   process.exit(1);
@@ -75,8 +75,8 @@ function updateFrontmatter(content, today) {
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 
-const REQUIRED = ['data', 'mensagem', 'narrativa', 'canal', 'peca'];
-const HEADER_PATTERN = /\|\s*data\s*\|\s*mensagem\/ângulo\s*\|\s*narrativa\s*\|\s*canal\s*\|\s*peça\s*\|/i;
+const REQUIRED = ['data', 'mensagem', 'verdade', 'canal', 'peca'];
+const HEADER_PATTERN = /\|\s*data\s*\|\s*mensagem\/ângulo\s*\|\s*verdade\s*\|\s*canal\s*\|\s*peça\s*\|/i;
 
 const args = parseArgs(process.argv.slice(2));
 
@@ -108,7 +108,7 @@ if (!HEADER_PATTERN.test(original)) {
 }
 
 // Construir nova linha
-const newLine = `| ${args.data} | ${escapeCell(args.mensagem)} | ${args.narrativa} | ${args.canal} | ${args.peca} |`;
+const newLine = `| ${args.data} | ${escapeCell(args.mensagem)} | ${args.verdade} | ${args.canal} | ${args.peca} |`;
 
 // Append: localiza o separador da tabela (linha com |---|...) que segue o cabeçalho
 // e insere depois da última linha de dados, ou logo após o separador se não houver dados.

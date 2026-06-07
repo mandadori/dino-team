@@ -171,7 +171,7 @@ Write-back no livro-razão (somente quando APROVADO):
 node scripts/memory/append_livro_razao.js \
   --data "$(date +%F)" \
   --mensagem "<ângulo central do Passo 3>" \
-  --narrativa "<verdade_servida do Passo 2>" \
+  --verdade "<verdade_servida do Passo 2>" \
   --canal blog \
   --peca "<slug do Passo 3>"
 ```

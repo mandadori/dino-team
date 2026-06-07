@@ -581,12 +581,10 @@ Após APROVADO (Passo 13) e entregue (Passo 14), registre a mensagem deste post 
 node scripts/memory/append_livro_razao.js \
   --data "$(date +%F)" \
   --mensagem "<ângulo central do Passo 6>" \
-  --narrativa "<verdade_servida do Passo 6 — slug ou neutro>" \
+  --verdade "<verdade_servida do Passo 6 — slug ou neutro>" \
   --canal instagram \
   --peca "<slug do Passo 6>"
 ```
-
-> Nota: a flag `--narrativa` registra a **verdade** acionada (rename para `--verdade` na Peça 4).
 
 Reporte a linha anexada inline. Se o script falhar (`LIVRO_RAZAO_AUSENTE`), avise o usuário e siga — o post já está entregue; o write-back não bloqueia entrega.
 

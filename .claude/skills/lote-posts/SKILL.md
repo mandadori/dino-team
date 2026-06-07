@@ -297,7 +297,7 @@ Posts pulados (erro de export) ou reprovados no gate **não** registram ângulo.
 node scripts/memory/append_livro_razao.js \
   --data "$(date +%F)" \
   --mensagem "<ângulo central do post, fixado no Passo 5>" \
-  --narrativa "<verdade_servida do Passo 5 — slug ou neutro>" \
+  --verdade "<verdade_servida do Passo 5 — slug ou neutro>" \
   --canal instagram \
   --peca "<slug do post>"
 ```
