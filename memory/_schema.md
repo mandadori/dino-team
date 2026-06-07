@@ -19,7 +19,7 @@ Memória viva compartilhada do sistema Dino Team. **"A memória é a integraçã
 
 | Slice | Owner único | Conteúdo | Estado |
 |---|---|---|---|
-| `narrativas/` | `estrategista-narrativa` | arcos ativos, roadmap de crença, livro-razão de mensagens | criado (Onda 1); populado (Onda 2); write-back multicanal (Onda 4) |
+| `narrativas/` | `estrategista-mercado` | livro-razão de verdades acionadas (camada lenta = `## Verdades` do brand-book) | redesign 2 velocidades (2026-06) |
 | `publico/` | `pesquisador-mercado` (Produto alimenta) | dores, objeções (com a fala do público embutida) | criado (Onda 1) |
 | `mercado/` | `pesquisador-mercado` | `narrativa-de-mercado.md`, `tendencias/`, `concorrentes/` | ativo |
 | `ramon/` | `arquivista` | contexto temporal/biográfico | ativo |
