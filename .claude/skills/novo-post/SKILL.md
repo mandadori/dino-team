@@ -67,6 +67,20 @@ Se `revisor-brand` devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e orie
 
 **Estrutura de copy é propriedade do estilo, não do formato.** Cada `estilo.md` carrega `## Estrutura` com blocos declarativos. Em modo ad-hoc, cria-se um estilo temporário em `_rascunho/` **antes** da copy, para que o pipeline inteiro rode sobre um estilo concreto.
 
+## Modo autônomo (`--auto`)
+
+Quando `modo_auto = true` (sempre com `--briefing` pré-pronto, então Passos 3/3.⏸/4/4.⏸ já são pulados), o pipeline roda **sem nenhuma pausa humana** e **nunca publica**:
+
+- **Passo 10 (copy):** gera a copy e segue **sem** a pausa de revisão.
+- **Passo 11 (Dino Editor):** **não sobe o editor**; usa os `slide-N.html` gerados direto → export. Fotos: se a campanha apontar banco, o Passo 11m (`arquivista`) pré-preenche; sem banco, segue com placeholders do estilo.
+- **Passo 11.5 (aprendizado de estilo):** **pulado** (sem `edits.json`).
+- **Passo 13 (gate `revisor-brand`):** **permanece**. Se REPROVADO: 1 retry; 2º fracasso → marca a tarefa como `falhou-gate` no `status.yaml` da campanha e **encerra sem entregar** (não publica lixo).
+- **Passo 14.5 (stories):** **pulado**.
+- **Passo 15 (rascunho):** N/A (estilo definido).
+- **Passo 16 (publicação):** **nunca executa**. Ao concluir o gate APROVADO, atualiza a tarefa no `status.yaml` da campanha para `aguardando-publicacao` (+ entrada em `aprovacoes_pendentes` canal `dashboard`) e encerra. A publicação é sempre aprovação humana no dashboard.
+
+Erro de execução em qualquer passo `--auto` → marca a tarefa como `falhou-auto` e encerra. Modo interativo (sem `--auto`) é inalterado.
+
 ---
 
 ## Pipeline
@@ -74,6 +88,8 @@ Se `revisor-brand` devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e orie
 ### 1. Parsear input
 
 Liste `templates/social-media/` e `templates/social-media/<formato>/estilos/`. Tokenize a entrada: match com slug de estilo → estilo; `--briefing <caminho>` → `briefing_path`; resto → tema. Se formato ausente/inválido, pergunte ao usuário oferecendo a lista descoberta. Siga sempre para o Passo 2.
+
+- `--auto` → `modo_auto = true`. Só válido junto de `--briefing` (execução autônoma por routine). Sem `--briefing`, ignore `--auto` e siga interativo.
 
 Se `briefing_path` presente: leia o arquivo apontado e extraia `Formato`, `Estilo`, `Tema`, `Ângulo central`, `Pilar`, `Objetivo`, `Recorte de público`, `Slug do post`, `Verdade` (campo `verdade: <slug>` do briefing — gravado pelo `/planejar-pauta-semanal`). Quando `Verdade` presente, guarde como `verdade_servida = <slug>`; quando ausente, `verdade_servida = neutro`. Esses valores substituem qualquer tema/estilo vindo do input textual. Marque `modo_briefing = "pre-pronto"`. Pule os Passos 3, 3.⏸, 4 e 4.⏸ e vá direto ao Passo 5 (se estilo for ad-hoc) ou ao Passo 7.
 
@@ -285,6 +301,8 @@ Grave em `export/conteudos/<formato>/<data>-<slug>/copy.md`.
 
 #### Pausa para revisão da copy (⏸)
 
+**Em `--auto`: pular esta pausa (ver "Modo autônomo").**
+
 ```
 Copy gerada em export/conteudos/<formato>/<data>-<slug>/copy.md
 
@@ -339,6 +357,8 @@ Se não houver banco apontado, pule — o usuário dropa as fotos manualmente no
 
 #### Pausa para revisão e edição no Dino Editor (⏸)
 
+**Em `--auto`: pular esta pausa (ver "Modo autônomo").**
+
 **A skill sobe o backend do editor automaticamente** — o usuário nunca roda o backend. Antes de apresentar a pausa, execute:
 
 ```bash
@@ -367,6 +387,8 @@ Opções de resposta:
 **Aguarde resposta.** Edições visuais são feitas pelo usuário no Dino Editor (zero token). Se o usuário pedir explicitamente um ajuste inline, edite o slide apontado. Quando confirmar, siga para o Passo 11.5.
 
 ### 11.5. Loop de aprendizado de estilo (condicional)
+
+**Em `--auto`: pular esta pausa (ver "Modo autônomo").**
 
 Após o usuário salvar no estúdio (Passo 11), leia `export/conteudos/<formato>/<data>-<slug>/design/edits.json` se existir e rode a extração:
 
@@ -478,6 +500,8 @@ Briefing institucional: export/conteudos/<formato>/<data>-<slug>/briefing.md
 
 ### 14.5. Adaptar para stories (pausa)
 
+**Em `--auto`: pular esta pausa (ver "Modo autônomo").**
+
 **Só executa quando `<formato> = carrossel`.** Em outros formatos, pule para o Passo 15.
 
 ```
@@ -567,6 +591,8 @@ node scripts/memory/append_livro_razao.js \
 Reporte a linha anexada inline. Se o script falhar (`LIVRO_RAZAO_AUSENTE`), avise o usuário e siga — o post já está entregue; o write-back não bloqueia entrega.
 
 ### 16. Publicação (opcional, gated por política)
+
+**Em `--auto`: não publicar; marcar `aguardando-publicacao`.**
 
 Carregar `orquestracao/politicas/publicacao.yaml`. Avaliar as regras com as variáveis disponíveis:
 - `artefato.canal = 'instagram'`
