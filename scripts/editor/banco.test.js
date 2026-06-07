@@ -69,3 +69,31 @@ test("markUsed: drive_file_id inexistente devolve null", () => {
   const idx = normalizeIndex({ images: [{ drive_file_id: "1", name: "x.jpg" }] });
   assert.equal(markUsed(idx, "999", "p", "2026-06-07", "instagram", 60), null);
 });
+
+import { scanNew, upsertCaption } from "./banco.js";
+
+test("scanNew: filtra por extensão de imagem e por drive_file_id desconhecido", () => {
+  const idx = normalizeIndex({ images: [{ drive_file_id: "1", name: "ja.jpg" }] });
+  const driveFiles = [
+    { drive_file_id: "1", name: "ja.jpg" },     // já indexada
+    { drive_file_id: "2", name: "nova.png" },   // nova
+    { drive_file_id: "3", name: "doc.pdf" },    // não-imagem
+  ];
+  const novos = scanNew(driveFiles, idx);
+  assert.deepEqual(novos.map((f) => f.drive_file_id), ["2"]);
+});
+
+test("upsertCaption: cria entrada v2 por drive_file_id e atualiza legenda/tags", () => {
+  const idx = { images: [] };
+  upsertCaption(idx, "9", "palco.jpg", "Ramon no palco", ["palco"]);
+  const e = idx.images[0];
+  assert.equal(e.drive_file_id, "9");
+  assert.equal(e.name, "palco.jpg");
+  assert.equal(e.caption, "Ramon no palco");
+  assert.deepEqual(e.tags, ["palco"]);
+  assert.deepEqual(e.rest_until, {});
+  // re-upsert atualiza sem duplicar
+  upsertCaption(idx, "9", "palco.jpg", "Nova legenda", ["palco", "luz"]);
+  assert.equal(idx.images.length, 1);
+  assert.equal(idx.images[0].caption, "Nova legenda");
+});
