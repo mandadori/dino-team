@@ -1,5 +1,6 @@
 # Rotas declarativas — Dino Team
-# Lida por: roteador de orquestração (implementado em site/app/api/cron/*)
+# AGENDAMENTO: executado por routines /schedule (ver docs/automacao/routines.md).
+# Este arquivo é a documentação declarativa que as routines espelham.
 # Versão: 1
 
 rotas:

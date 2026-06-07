@@ -1,12 +1,1 @@
-{
-  "crons": [
-    {
-      "path": "/api/cron/planejar-pauta-semanal",
-      "schedule": "0 12 * * 1"
-    },
-    {
-      "path": "/api/cron/pesquisar-mercado",
-      "schedule": "0 8 1 * *"
-    }
-  ]
-}
+{}
