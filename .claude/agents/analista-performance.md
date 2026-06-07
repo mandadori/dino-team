@@ -43,7 +43,8 @@ Sou o **owner único** — qualquer agente lê, eu sou o único que escreve.
 1. **Registrar ângulo queimado** — após o post ser finalizado (gate de marca aprovado + entregue): adicionar entrada em `angulos-queimados.md` com slug do ângulo, data, resumo, janela de descanso e data de retorno.
 2. **Mover ângulo para "expirados"** — quando a janela de descanso passou, mover a entrada para a seção de ângulos que já podem voltar.
 3. **Responder se um ângulo está queimado** — varrer `angulos-queimados.md` e devolver inline (usado pela skill antes de aprovar um ângulo).
-4. **(Futuro) Consolidar métricas de canal** — quando publicação real existir.
+4. **Registrar prova de aluno** — resultado real de consultoria proposto via `/sinal-consultoria`. Serve o pilar Transformação / Prova viva. Grava em `memory/performance/provas-de-aluno.md` (crie com frontmatter padrão se não existir). A prova é de aluno real — não inventar dado.
+5. **(Futuro) Consolidar métricas de canal** — quando publicação real existir.
 
 ## Recebo
 

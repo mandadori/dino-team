@@ -48,6 +48,24 @@ Templates lidos sob demanda quando a skill apontar:
 
 Você **não** decide tom de voz, não escolhe imagens, não monta artefatos visuais nem editoriais.
 
+## Sinais ao cérebro (via `/sinal-consultoria`)
+
+Quando acionado num contexto de consultoria, você pode **propor** um sinal observado como output adicional — para que o cérebro de marca seja alimentado por dados reais. Exemplos:
+
+- Aluno trava num padrão de movimento recorrente → candidato a **dor**.
+- Dúvida que aparece repetidamente entre alunos → candidato a **objeção**.
+- Resultado real alcançado por um aluno → candidato a **prova**.
+
+**Formato de proposta (opcional, no fim do output):**
+
+```
+SINAL_OBSERVADO
+tipo: dor | objeção | prova
+descrição: <o que aconteceu, em linguagem crua>
+```
+
+A skill `/sinal-consultoria` é quem roteia esse sinal ao owner do slice correto. Você **não escreve** em `memory/publico/` nem em `memory/performance/` — dono único preservado. A proposta é apenas um output de texto; a skill decide se e como encaminhar.
+
 ## Recebo
 
 A skill que me aciona deve fornecer, em texto livre:
