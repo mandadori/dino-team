@@ -185,19 +185,13 @@ Se `estilo.md` declarar `## Inputs obrigatórios externos`:
 
 #### 5d. Pesquisa profunda
 
-Acione `pesquisador-mercado` por post (pesquisa profunda individual):
+Acione `pesquisador-mercado` por post, **sempre**, com o perfil do pilar do post (ver `## Perfis de fonte por pilar` em `/pesquisar-tema`):
 
 ```
-Tarefa: levantar matéria-prima profunda para a copy.
-Profundidade: deep research.
-
-Inputs:
-- Formato/Estilo/Tema: <formato> / <slug> / <subtema>
-- Pilar / Recorte / Sinalizações: <do briefing inline deste post>
-- Contexto de mercado: memory/mercado/tendencias/<YYYY-MM>.md + memory/mercado/concorrentes/*.md
-
-Saída: gravar em memory/pesquisa/<data>-tendencias-<slug>.md.
+/pesquisar-tema <tema do post> --pilar <pilar do post> --recorte <recorte do post>
 ```
+
+A profundidade vem do perfil (rasa p/ Transformação; média p/ Mentalidade/Prova viva; profunda p/ Método). Posts que compartilham pilar/tema reaproveitam o cache de `memory/pesquisa/` — uma pesquisa serve vários.
 
 #### 5e. Copy inline
 
