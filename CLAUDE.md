@@ -22,16 +22,15 @@ Entrega ao público comum o método validado por Ramon, que saiu do zero absolut
 
 ## Princípios centrais
 
-- **Direção > esforço.**
-- **Disciplina é fazer mesmo sem vontade.**
-- **Consistência vence intensidade.**
-- **Resultado vem de execução, não de motivação.**
+As verdades atemporais que a marca acende são o conjunto canônico **`## Verdades`** em [`brand/brand-book.md`](brand/brand-book.md) — enumerável, consumido pelo `estrategista-mercado`, registrado no `registro-angulos`. **Fonte única; não duplicar a lista aqui** (foi a cópia divergente que gerou drift). Em síntese, a marca vende **direção, não motivação**; **consistência, não intensidade**; **execução, não vontade** — e trata o processo, não a chegada, como o prêmio (**identidade**).
 
 ---
 
 ## Como o sistema é organizado
 
 Este repositório é o **sistema operacional de marca completo** do Dino Team.
+
+> Nota: o repositório também hospeda um **projeto standalone não relacionado** ao brand OS — um mundo de agentes IA estilo Habbo (`docs/superpowers/specs/2026-06-05-metaverso-ia-agentes-design.md`). Não faz parte do pipeline Dino Team.
 
 ### 1. Branding da marca (`brand/`)
 
@@ -57,7 +56,7 @@ _Produção multicanal — todas ancoram numa verdade do `## Verdades` (brand-bo
 - [`/novo-comunidade`](.claude/skills/novo-comunidade/SKILL.md) — mensagem para a comunidade (WhatsApp) em `export/conteudos/comunidade/<slug>/mensagem.md`. Tom de conversa, não broadcast. Write-back `--canal comunidade`. Disparo real é etapa futura.
 
 _Estratégia e direção:_
-- [`/planejar-pauta-semanal`](.claude/skills/planejar-pauta-semanal/SKILL.md) — L2: produz N briefings da semana (sem executar) passando pelo `estrategista-mercado` (lê o momento, escolhe a verdade). Agendável (default: 2ª 9h via cron).
+- [`/planejar-pauta-semanal`](.claude/skills/planejar-pauta-semanal/SKILL.md) — L2: produz N briefings da semana (sem executar) passando pelo `estrategista-mercado` (lê o momento, aproveita-o e escolhe a verdade). Agendável (default: 2ª 9h via routine `/schedule`).
 
 _Pesquisa e inteligência:_
 - [`/pesquisar-mercado`](.claude/skills/pesquisar-mercado/SKILL.md) — Fase A standalone: captura inteligência de mercado durável (tendências, concorrentes, fala do público) em `memory/mercado/` + `memory/publico/`. Disparável manual ou pela produção quando stale.
@@ -65,7 +64,10 @@ _Pesquisa e inteligência:_
 
 _Marca e site:_
 - [`/brand-discovery`](.claude/skills/brand-discovery/SKILL.md) — entrevista para construir/atualizar o brand book.
-- [`/novo-estilo`](.claude/skills/novo-estilo/SKILL.md) — criar um novo estilo visual para carrossel ou stories.
+- [`/afinar-tom-de-voz`](.claude/skills/afinar-tom-de-voz/SKILL.md) — refino profundo do `brand/tom-de-voz.md` por exemplos concretos; vai além do brand-discovery.
+- [`/novo-estilo`](.claude/skills/novo-estilo/SKILL.md) — criar ou editar um estilo visual (template) para qualquer formato; gate `revisor-brand` valida a identidade visual.
+- [`/editar-post`](.claude/skills/editar-post/SKILL.md) — reabre um post já criado no Dino Editor para edição visual (resolve o estilo pelo `briefing.md` do post).
+- [`/configurar-banco`](.claude/skills/configurar-banco/SKILL.md) — define qual pasta do Google Drive é o banco de imagens da marca (via Drive MCP).
 - [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — atualizar o slice `memory/ramon/` (fase atual + cronograma + outras vertentes).
 - [`/novo-site`](.claude/skills/novo-site/SKILL.md) — criar ou alterar o site (dual-mode); aciona os agentes de Engenharia + gate `revisor-brand`.
 
@@ -81,7 +83,7 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 **Agentes atuais (11):**
 
 - **Marketing / Estratégia**
-  - [`estrategista-mercado`](.claude/agents/estrategista-mercado.md) — lê o momento (emoção do público + crença de mercado) e escolhe a verdade da marca que responde; lê o `registro-angulos` para saturação/equilíbrio (não tem slice durável); propõe as jogadas da pauta.
+  - [`estrategista-mercado`](.claude/agents/estrategista-mercado.md) — lê o momento (emoção do público + crença de mercado) e escolhe a verdade da marca que **aproveita** esse momento (mostra o caminho, não reage); lê o `registro-angulos` para saturação/equilíbrio (não tem slice durável); propõe as jogadas da pauta.
 - **Marketing / Pesquisa**
   - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `memory/mercado/`.
 - **Produto / Consultoria / Execução**
@@ -100,7 +102,7 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 - **Engenharia / Revisão**
   - [`curador-web`](.claude/agents/curador-web.md) — build, lint, types, Lighthouse, preview deploy.
 
-Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-05-22-arquitetura-multi-setor-design.md) para o destino completo (3 setores produtivos + 3 transversais + orquestração).
+A arquitetura viva é a **G3 "2 velocidades"**: verdade atemporal (lenta, em `brand/`) + leitura do momento (rápida, `estrategista-mercado`). Specs canônicas: [`2026-06-07-estrategista-mercado-design.md`](docs/specs/2026-06-07-estrategista-mercado-design.md) (modelo vigente) e [`2026-06-06-arquitetura-360-cerebro-de-marca-design.md`](docs/specs/2026-06-06-arquitetura-360-cerebro-de-marca-design.md) (fundação do cérebro); a reconciliação está em [`2026-06-08-reconciliacao-arquitetura-g3-design.md`](docs/specs/2026-06-08-reconciliacao-arquitetura-g3-design.md). A spec `2026-05-22-arquitetura-multi-setor` é **histórica (G1)** — superada.
 
 ### 4. Cérebro de marca (`memory/`)
 
@@ -117,23 +119,30 @@ Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-0
 
 **Setor Produto — integrado pelo cérebro:** a consultoria (`treinador` hoje; anamnese/nutri depois) consome `memory/publico/` + `memory/performance/` para decisões de produto e os alimenta de volta com sinais reais via `/sinal-consultoria`. Produto não tem slice próprio — escreve nos slices existentes pelos owners declarados (dono único preservado). Marketing e Produto se afinam pelo cérebro, nunca por acoplamento direto.
 
-### 5. Site (`site/`)
+### 5. Produção visual — Dino Editor + banco de imagens
+
+Ferramental que toda peça de Instagram atravessa, separado do site.
+
+- **Dino Editor** (`scripts/editor/`) — editor visual Figma-like servido localmente: abre os slides de um post (`design/slide-N.html`), permite edição direta (mover, redimensionar, texto), grava `edits.json` e re-exporta PNG (`scripts/export-png.js`). Usado pelo passo de design do `/novo-post`, por `/novo-estilo` (criar/editar templates) e por `/editar-post` (reabrir post pronto). Testado headless. Para testar, suba o servidor e abra no browser — **nunca** via agent-browser.
+- **Banco de imagens por canal** — as fotos da marca vivem no Google Drive (MCP oficial em `.mcp.json`); `/configurar-banco` aponta a pasta-raiz, gravada em [`orquestracao/banco-imagens.yaml`](orquestracao/banco-imagens.yaml). O `arquivista` é owner: legenda, seleciona e marca fotos por slide, com **descanso por canal** (uma foto usada no Instagram descansa antes de reaparecer). O `/novo-post` seleciona/marca a imagem do banco no passo de design.
+
+### 6. Site (`site/`)
 
 Site institucional + comercial do Dino Team — Next.js 16 + Tailwind 4 + Framer Motion + Lucide + MDX. Construído e mantido pelo setor de Engenharia. Identidade monocromática (preto/branco/cinza) fiel ao brand book.
 
 - [`/novo-site`](.claude/skills/novo-site/SKILL.md) — skill dual-mode (criação vs. alteração). Produz briefing institucional inline e exige aprovação de `revisor-brand` antes de cada deploy.
 - MVP: home da consultoria com 7 seções (Hero, ParaQuemE, Método, Resultados, SobreRamon, FAQ, CtaFinal). Briefing em `site/docs/home-briefing.md`.
 
-### 6. Orquestração + Dashboard
+### 7. Orquestração + Dashboard
 
-Camada que torna o sistema reativo. Triggers (cron, futuramente webhook/threshold) disparam skills sem slash command. Políticas declarativas decidem quando humano entra. Dashboard mostra estado e permite gatilho manual.
+Camada que torna o sistema reativo. Triggers (**routines `/schedule`**, futuramente webhook/threshold) disparam skills sem slash command. Políticas declarativas decidem quando humano entra. Dashboard mostra estado e permite gatilho manual.
 
 - **Governança:** [`orquestracao/governanca.yaml`](orquestracao/governanca.yaml) — mapa de autonomia por decisão: consolida os flags `automatico / humano / automatico_com_revisao` de cada função do roster. Para publicação, aponta para `politicas/publicacao.yaml`.
-- **Rotas:** [`orquestracao/rotas.yaml`](orquestracao/rotas.yaml) — tabela declarativa de trigger → skill. v1 com 2 rotas cron: pauta semanal (toda 2ª-feira) e pesquisa de mercado (dia 1/mês).
+- **Rotas:** [`orquestracao/rotas.yaml`](orquestracao/rotas.yaml) — **documentação declarativa** de trigger → skill que as routines `/schedule` espelham (pauta semanal, pesquisa mensal, poll diário do novo-post).
 - **Políticas:** [`orquestracao/politicas/publicacao.yaml`](orquestracao/politicas/publicacao.yaml) — regras de quando publicação é automática e quando exige aprovação humana. Referenciada por `governanca.yaml`; lida por `/novo-post`, `/lote-posts` e pelo dashboard.
 - **Validador de política:** [`scripts/orquestracao/avaliar_politica.js`](scripts/orquestracao/avaliar_politica.js) — valida deterministicamente se um artefato passa pela política de publicação (`--canal`, `--pilar`, `--texto`, `--orcamento`). Prova que a política barra publicações com termos sensíveis.
 - **Dashboard:** rota `/admin/dashboard` no site (auth por token). Mostra campanhas em curso, aprovações pendentes, frescor do banco, e dispara skills via Route Handler.
-- **Cron:** Vercel Cron + Route Handler em `site/app/api/cron/<id>/route.ts`. Handlers validam autenticação e registram o trigger; execução real delegada a runner com acesso de escrita ao repo (pós-Onda 5).
+- **Agendamento:** routines `/schedule` que **executam de fato** (ver [`docs/automacao/routines.md`](docs/automacao/routines.md)) — pauta semanal (2ª), pesquisa de mercado (mensal) e poll diário do `/novo-post --auto` (gera posts vencidos → `aguardando-publicacao`). Os antigos handlers Vercel de cron foram removidos; a Vercel hospeda só o dashboard. **Publicação nunca é automática** (gate humano no dashboard).
 - **Tools de publicação:** scripts em [`scripts/integrations/`](scripts/integrations/), mantidos por `integrador-apis`. v1: `publish_instagram.js`.
 - **Campanhas:** estado vivo em [`campanhas/`](campanhas/) (schema em `campanhas/_schema.md`), escrito por skills L2/L3, lido pelo dashboard.
 
@@ -150,6 +159,7 @@ Camada que torna o sistema reativo. Triggers (cron, futuramente webhook/threshol
 - **Toda skill abre com `## Fluxo`** (tabela: Passo | Agente/Ação | Recebe | Depende | Entrega).
 - **Brand é o eixo comum.** Cada agente lê o recorte de `brand/` que sua função exige — declarado em "Contexto que carrego" do próprio contrato.
 - **Erros estruturais voltam pra skill** (ex: `BRAND_BOOK_INCOMPLETO`, `ESTILO_INVALIDO`).
+- **Função primeiro, corpo depois (anti-diluição).** Decisão durável e cara → **agente**; passo contextual barato → **inline na skill**; ação determinística → **script**. Foi instanciar agente fino pra tudo que diluiu o roster antes — só vira agente o que decide e é caro.
 
 Padrão de contratos e skills detalhado em [docs/specs/2026-05-26-redesign-contexto-agentes-skills-design.md](docs/specs/2026-05-26-redesign-contexto-agentes-skills-design.md).
 
@@ -165,4 +175,18 @@ Cada função é executada por skills. Outputs ficam em `export/`, organizados p
 - **Criação de conteúdo — Comunidade** — Mensagem curta para grupo WhatsApp. Skill: `/novo-comunidade`.
 - **Criação de estilos** — criar novos templates visuais para uso nos posts. Skill: `/novo-estilo`.
 - **Descoberta de marca** — entrevista estruturada para preencher ou atualizar o brand book. Skill: `/brand-discovery`.
+
+---
+
+## Horizonte declarado (não construído)
+
+Capacidades do brand OS 360 conscientemente **adiadas** (YAGNI) — declaradas para não virarem amnésia. Cada uma tem um gatilho que a destrava:
+
+| Capacidade | O que é | Gatilho |
+|---|---|---|
+| Narrativa/campanha proativa | construir uma crença ao longo de semanas (não só aproveitar o momento) | existir um evento datado a construir (lançamento de produto, fase de competição do Ramon) |
+| Loop de resultado (outcome) | `scripts/integrations/fetch_*.js` popula `memory/performance/metricas.md`, cruzado por `slug` — "qual verdade/ângulo converte" | conta Instagram/API conectada |
+| Setor Produto vivo | roadmap de produto como ativo; consultoria alimentando o cérebro em volume via `/sinal-consultoria` | consultoria operando com alunos reais |
+
+Até o gatilho disparar, **não construir** — o sistema se equilibra por saturação (cobertura), não por resultado. A automação progressiva é **throughput-primeiro**: alargar produção/publicação gated antes de fechar o loop de resultado.
 

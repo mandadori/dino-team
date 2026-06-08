@@ -1,6 +1,6 @@
 ---
 name: novo-email
-description: Produz um e-mail (assunto + preheader + corpo + CTA) lendo a narrativa ativa e o brand. Output em `export/conteudos/email/<slug>/email.md`. Gate `revisor-brand`; write-back (canal=email). Envio real (Resend) é etapa futura — esta skill entrega o conteúdo aprovado.
+description: Produz um e-mail (assunto + preheader + corpo + CTA) ancorado numa verdade da marca (`## Verdades`) e no brand. Output em `export/conteudos/email/<slug>/email.md`. Gate `revisor-brand`; write-back (canal=email). Envio real (Resend) é etapa futura — esta skill entrega o conteúdo aprovado.
 ---
 
 # /novo-email

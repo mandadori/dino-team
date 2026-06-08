@@ -1,6 +1,6 @@
 # Convenções de Social Media — Dino Team
 
-> Lido por `designer`, `curador-export`, `revisor-brand`.
+> Lido pelo `revisor-brand` e pelas skills de produção visual (`/novo-estilo`, `/novo-post`).
 > Identidade visual universal (paleta, tipografia, mood) está em `brand/referencias-visuais.md`.
 > Este arquivo contém: chrome canônico, aspect-ratios, safe-areas, margens e convenções de overlay.
 

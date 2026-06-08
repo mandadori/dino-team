@@ -86,6 +86,10 @@ A comunicação desdobra a tese consistentemente:
 | `execucao-nao-motivacao` | Resultado não vem de motivação, vem de execução. |
 | `identidade-e-o-premio` | O prêmio real não é chegar; é quem você virou no caminho. |
 
+### Postura editorial — a marca não reage, mostra o caminho
+
+A Dino Team não persegue tendência nem entrega o que o público pede. Ela **aproveita o momento** (movimento do mercado, emoção do público) como abertura de atenção para **mostrar o caminho** — não o atalho que as pessoas querem, mas a direção que precisam, mesmo sem saber que precisam. O momento é o **veículo**; a **verdade** (acima) é a âncora fixa; o **pilar** é variável livre (educacional, estratégia, mindset). O `estrategista-mercado` opera por essa postura.
+
 ---
 
 ## O produto (visão geral)

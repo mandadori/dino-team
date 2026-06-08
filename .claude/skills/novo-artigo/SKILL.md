@@ -1,6 +1,6 @@
 ---
 name: novo-artigo
-description: Produz um artigo de blog (MDX draft) a partir de um tema/ângulo, lendo a narrativa ativa e o brand. Output em `export/conteudos/blog/<slug>/artigo.mdx`. Pesquisa via `/pesquisar-tema`; gate `revisor-brand`; write-back no registro-angulos (canal=blog). A publicação no site é trabalho do GSD do site (não desta skill).
+description: Produz um artigo de blog (MDX draft) a partir de um tema/ângulo, ancorado numa verdade da marca (`## Verdades`) e no brand. Output em `export/conteudos/blog/<slug>/artigo.mdx`. Pesquisa via `/pesquisar-tema`; gate `revisor-brand`; write-back no registro-angulos (canal=blog). A publicação no site é trabalho do GSD do site (não desta skill).
 ---
 
 # /novo-artigo

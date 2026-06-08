@@ -1,6 +1,6 @@
 ---
 name: novo-comunidade
-description: Produz uma mensagem para a comunidade (WhatsApp) lendo a narrativa ativa — conversa, não broadcast de marketing. Output em `export/conteudos/comunidade/<slug>/mensagem.md`. Gate `revisor-brand`; write-back (canal=comunidade). Disparo real é etapa futura.
+description: Produz uma mensagem para a comunidade (WhatsApp) ancorada numa verdade da marca — conversa, não broadcast de marketing. Output em `export/conteudos/comunidade/<slug>/mensagem.md`. Gate `revisor-brand`; write-back (canal=comunidade). Disparo real é etapa futura.
 ---
 
 # /novo-comunidade
@@ -127,7 +127,7 @@ Reporte a linha anexada inline. Se o script falhar (`REGISTRO_ANGULOS_AUSENTE`),
 
 ## Princípio central
 
-**Copy é função única, canal via parâmetro.** A skill é a mais leve: produz a mensagem inline, adaptando ao formato de comunidade (WhatsApp — curta, gancho + corpo + convite), sem pesquisa e sem agente de copy separado. Não há briefing separado — o tema e a narrativa ativa são suficientes. `revisor-brand` valida copy + compliance antes da entrega. Write-back via `scripts/memory/append_registro_angulos.js` (sem `--pilar`/`--descanso`: caem nos defaults `neutro`/`21d`).
+**Copy é função única, canal via parâmetro.** A skill é a mais leve: produz a mensagem inline, adaptando ao formato de comunidade (WhatsApp — curta, gancho + corpo + convite), sem pesquisa e sem agente de copy separado. Não há briefing separado — o tema e a verdade da marca são suficientes. `revisor-brand` valida copy + compliance antes da entrega. Write-back via `scripts/memory/append_registro_angulos.js` (sem `--pilar`/`--descanso`: caem nos defaults `neutro`/`21d`).
 
 **Disparo real é diferido.** Esta skill entrega o artefato aprovado em `export/conteudos/comunidade/<slug>/mensagem.md`. O disparo real via WhatsApp é Onda 5+.
 

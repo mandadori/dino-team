@@ -9,7 +9,7 @@ description: Skill L2 (composta). Produz N briefings estratégicos para a semana
 
 Toda semana, planejar **N briefings** que cubram os pilares ativos, evitem ângulos queimados e levem em conta o estado atual de Ramon. **Não executa posts** — gera só a pauta para `/lote-posts` ou `/novo-post` rodarem depois (manual ou disparados pelo dashboard).
 
-A pauta semanal traduz o **momento** (emoção do público + crença de mercado, lidos pelo pesquisador) na **verdade** da marca que responde — via `estrategista-mercado`. A conexão entre semanas **emerge** do conjunto fixo de `## Verdades` (brand-book) + voz, não de campanha prescrita.
+A pauta semanal traduz o **momento** (emoção do público + crença de mercado, lidos pelo pesquisador) na **verdade** da marca que o aproveita — via `estrategista-mercado`. A conexão entre semanas **emerge** do conjunto fixo de `## Verdades` (brand-book) + voz, não de campanha prescrita.
 
 Os briefings são artefatos gravados em `campanhas/.../output/posts/` — são handoff cross-skill, consumidos posteriormente por `/novo-post` ou `/lote-posts` via `--briefing <caminho>`.
 

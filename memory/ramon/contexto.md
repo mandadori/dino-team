@@ -7,7 +7,7 @@ versao: 1
 
 # Contexto do Ramon
 
-Tudo que o sistema sabe sobre o Ramon, num arquivo só — fase atual, cronograma, princípios de treino, falas e conquistas. Lido por `briefing-writer` para situar e calibrar todo conteúdo. Escrito apenas por `arquivista` (owner único), a partir de input do usuário (`/atualizar-ramon`) ou de auto-sync de fontes públicas (sempre com fonte citada e validação).
+Tudo que o sistema sabe sobre o Ramon, num arquivo só — fase atual, cronograma, princípios de treino, falas e conquistas. Lido pelo briefing inline das skills de produção para situar e calibrar todo conteúdo. Escrito apenas por `arquivista` (owner único), a partir de input do usuário (`/atualizar-ramon`) ou de auto-sync de fontes públicas (sempre com fonte citada e validação).
 
 > **Agentes nunca inventam fato do Ramon.** Toda entrada precisa de fonte: "usuário via /atualizar-ramon (data)" ou "URL pública + data".
 
@@ -15,7 +15,7 @@ Tudo que o sistema sabe sobre o Ramon, num arquivo só — fase atual, cronogram
 
 ## Fase atual
 
-_(Preencher via `/atualizar-ramon`. Em v1 ainda não definido — pipeline funciona, mas `briefing-writer` não conta com este sinal.)_
+_(Preencher via `/atualizar-ramon`. Em v1 ainda não definido — pipeline funciona, mas o briefing não conta com este sinal.)_
 
 **Sinalizações para o pipeline (quando fase definida):**
 - **Vocabulário:** termos típicos da fase ("manutenção calórica", "depleção", "peak", etc.).
