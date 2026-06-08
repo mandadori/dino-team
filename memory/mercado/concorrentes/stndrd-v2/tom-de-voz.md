@@ -6,8 +6,8 @@ data: 2026-05-30
 espelha: brand/tom-de-voz.md
 nota: versão DEFINITIVA do tom de voz do STNDRD, calibrada pela leitura slide-a-slide dos 100 carrosséis mais virais (ordem por curtidas). Descreve COMO falam — banco verbatim de referência, não para adoção.
 fontes:
-  - dados/pesquisas-brutas/2026-05-30-stndrd-top100-slide-a-slide.md
-  - dados/pesquisas-brutas/2026-05-30-stndrd-top30-carrosseis-virais.md
+  - memory/pesquisa/2026-05-30-stndrd-top100-slide-a-slide.md
+  - memory/pesquisa/2026-05-30-stndrd-top30-carrosseis-virais.md
 ---
 
 # Tom de Voz (concorrente) — STNDRD · v2

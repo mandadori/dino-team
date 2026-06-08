@@ -4,7 +4,7 @@ slice: mercado
 owner: pesquisador-mercado
 data: 2026-05-30
 espelha: brand/ (sem equivalente — análise nova de branding profundo)
-nota: arquivo-âncora da v2. Articula a MENSAGEM SUBLIMINAR / branding principal do STNDRD — o que a marca repete por baixo do conteúdo, post a post, até virar crença. Base empírica: 100 carrosséis mais virais lidos slide-a-slide (dados/pesquisas-brutas/2026-05-30-stndrd-top100-slide-a-slide.md) + filosofia pública do CBum.
+nota: arquivo-âncora da v2. Articula a MENSAGEM SUBLIMINAR / branding principal do STNDRD — o que a marca repete por baixo do conteúdo, post a post, até virar crença. Base empírica: 100 carrosséis mais virais lidos slide-a-slide (memory/pesquisa/2026-05-30-stndrd-top100-slide-a-slide.md) + filosofia pública do CBum.
 ---
 
 # A Mensagem Subliminar do STNDRD (branding principal)

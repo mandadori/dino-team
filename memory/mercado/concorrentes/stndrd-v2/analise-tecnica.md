@@ -6,11 +6,11 @@ data: 2026-05-31
 espelha: brand/tom-de-voz.md, brand/pilares-conteudo.md, brand/publico-alvo.md
 nota: consolidação das descrições TÉCNICAS (mecânica/linguística/sistêmica) de tom, pilares e público do STNDRD, calibradas pela leitura slide-a-slide dos 100 carrosséis mais virais. Parte I = a mecânica (o COMO). Parte II = o sentido por trás (o PORQUÊ). Descreve o concorrente — não para adoção.
 fontes:
-  - dados/pesquisas-brutas/2026-05-30-stndrd-top100-slide-a-slide.md
-  - dados/pesquisas-brutas/2026-05-30-stndrd-top30-carrosseis-virais.md
-  - dados/mercado/concorrentes/stndrd-v2/tom-de-voz.md
-  - dados/mercado/concorrentes/stndrd-v2/pilares-conteudo.md
-  - dados/mercado/concorrentes/stndrd-v2/publico-alvo.md
+  - memory/pesquisa/2026-05-30-stndrd-top100-slide-a-slide.md
+  - memory/pesquisa/2026-05-30-stndrd-top30-carrosseis-virais.md
+  - memory/mercado/concorrentes/stndrd-v2/tom-de-voz.md
+  - memory/mercado/concorrentes/stndrd-v2/pilares-conteudo.md
+  - memory/mercado/concorrentes/stndrd-v2/publico-alvo.md
 ---
 
 # STNDRD · v2 — Análise técnica

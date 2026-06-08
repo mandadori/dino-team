@@ -30,7 +30,7 @@ Inteligência de quem vende a *mesma coisa* que a Dino Team — consultoria pers
 - Consultorias/coachings de hipertrofia e Classic Physique no Brasil — quem são, oferta, preço, funil, formato de acompanhamento.
 - Prioridade: existe concorrente direto focado em **Classic Physique BR**?
 
-> **Lente de produto:** ao registrar qualquer concorrente, capture além do conteúdo — **oferta, preço, funil de conversão e formato de acompanhamento**. Essa fatia alimenta hoje o posicionamento (marketing); quando o setor de **Produto** existir, ela **gradua para `dados/produto/`** (concorrentes-de-produto, precificação, oferta).
+> **Lente de produto:** ao registrar qualquer concorrente, capture além do conteúdo — **oferta, preço, funil de conversão e formato de acompanhamento**. Essa fatia alimenta hoje o posicionamento (marketing); quando o setor de **Produto** existir, ela **gradua para `memory/produto/`** (concorrentes-de-produto, precificação, oferta).
 
 ---
 
@@ -58,7 +58,7 @@ Comece por aqui antes de expandir para web geral.
 
 Termos saturados que geram resultados genéricos e sem valor. Evite como query principal.
 
-*(vazio na criação — preencher conforme uso e conforme `dados/performance/angulos-queimados.md` indicar)*
+*(vazio na criação — preencher conforme uso e conforme `memory/performance/angulos-queimados.md` indicar)*
 
 ---
 

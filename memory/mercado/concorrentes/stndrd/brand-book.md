@@ -6,10 +6,10 @@ data: 2026-05-30
 espelha: brand/brand-book.md
 nota: dossiê descritivo do concorrente — descreve COMO o STNDRD faz, não prescreve para a Dino Team. Espelha a estrutura de brand/brand-book.md.
 fontes:
-  - dados/pesquisas-brutas/2026-05-30-stndrd-deep-read-instagram.md (@stndrd, 34 carrosséis por recência)
-  - dados/pesquisas-brutas/2026-05-30-stndrd-top30-carrosseis-virais.md (@stndrd, 30 carrosséis ranqueados por VIRALIDADE — tom de voz)
-  - dados/pesquisas-brutas/2026-05-30-stndrdcoaching-deep-read-instagram.md (@stndrdcoaching, 30 posts + sites)
-  - dados/mercado/concorrentes/stndrd.md (dossiê-resumo 2026-05-26)
+  - memory/pesquisa/2026-05-30-stndrd-deep-read-instagram.md (@stndrd, 34 carrosséis por recência)
+  - memory/pesquisa/2026-05-30-stndrd-top30-carrosseis-virais.md (@stndrd, 30 carrosséis ranqueados por VIRALIDADE — tom de voz)
+  - memory/pesquisa/2026-05-30-stndrdcoaching-deep-read-instagram.md (@stndrdcoaching, 30 posts + sites)
+  - memory/mercado/concorrentes/stndrd.md (dossiê-resumo 2026-05-26)
 ---
 
 # Brand Book (concorrente) — STNDRD

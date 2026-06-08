@@ -8,7 +8,7 @@ Regras de governança que o sistema consulta antes de cada ação sensível. For
 
 ## Como uma skill consulta a política
 
-1. Antes de chamar `publish_*.js`, a skill carrega `dados/politicas/publicacao.yaml`.
+1. Antes de chamar `publish_*.js`, a skill carrega `orquestracao/politicas/publicacao.yaml`.
 2. Avalia cada regra em ordem; primeira regra cuja `condicao` casa decide.
 3. Se `modo: automatico` → chama o script imediatamente, mas registra "janela de aborto" — humano pode cancelar nesse prazo.
 4. Se `modo: aprovacao_humana` → pausa o pipeline, escala para o canal declarado em `escala:`.

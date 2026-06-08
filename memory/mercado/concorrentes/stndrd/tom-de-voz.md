@@ -6,8 +6,8 @@ data: 2026-05-30
 espelha: brand/tom-de-voz.md
 nota: descreve COMO o STNDRD fala — banco verbatim para referência, não para adoção. Distingue app (filosófico) vs coaching (clínico).
 fontes:
-  - dados/pesquisas-brutas/2026-05-30-stndrd-deep-read-instagram.md (read por recência, 34 carrosséis)
-  - dados/pesquisas-brutas/2026-05-30-stndrd-top30-carrosseis-virais.md (read por VIRALIDADE, 30 carrosséis ranqueados por curtidas)
+  - memory/pesquisa/2026-05-30-stndrd-deep-read-instagram.md (read por recência, 34 carrosséis)
+  - memory/pesquisa/2026-05-30-stndrd-top30-carrosseis-virais.md (read por VIRALIDADE, 30 carrosséis ranqueados por curtidas)
 ---
 
 # Tom de Voz (concorrente) — STNDRD
@@ -22,7 +22,7 @@ As duas marcas dividem a base disciplinar mas têm registros distintos:
 
 ## ⭐ Registro que MAIS viraliza (ranking por engajamento — correção do read por recência)
 
-> Fonte: top 30 carrosséis ranqueados por curtidas (`dados/pesquisas-brutas/2026-05-30-stndrd-top30-carrosseis-virais.md`). Mediana de curtidas dos carrosséis = 3.420; o #1 fez **40.087**. Este corte corrige a leitura por recência, que superestimava o aforismo de caixa-alta com punch word.
+> Fonte: top 30 carrosséis ranqueados por curtidas (`memory/pesquisa/2026-05-30-stndrd-top30-carrosseis-virais.md`). Mediana de curtidas dos carrosséis = 3.420; o #1 fez **40.087**. Este corte corrige a leitura por recência, que superestimava o aforismo de caixa-alta com punch word.
 
 **O registro vencedor NÃO é o slogan gritado. É prosa calma, falada, em 2ª pessoa, sobre o trabalho invisível e chato.** O carrossel #1 absoluto (40k, ~12x a mediana, ~2x o 2º lugar) é prosa humilde, quase diarística, sem caixa-alta e sem exclamação:
 

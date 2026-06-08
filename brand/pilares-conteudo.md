@@ -1,7 +1,7 @@
 # Pilares de Conteúdo — Dino Team
 
 > Preenchido em 2026-05-14 via `/brand-discovery`.
-> Reestruturado em 2026-05-29 — os pilares passam a **encodar função no funil** (Atrair / Nutrir / Converter), a partir do estudo do concorrente STNDRD ([`dados/mercado/concorrentes/stndrd.md`](../dados/mercado/concorrentes/stndrd.md)). De 5 pilares para 4 (Educacional + Descritivo fundidos em "Método"). Todo conteúdo se conecta a pelo menos um pilar.
+> Reestruturado em 2026-05-29 — os pilares passam a **encodar função no funil** (Atrair / Nutrir / Converter), a partir do estudo do concorrente STNDRD ([`memory/mercado/concorrentes/stndrd.md`](../memory/mercado/concorrentes/stndrd.md)). De 5 pilares para 4 (Educacional + Descritivo fundidos em "Método"). Todo conteúdo se conecta a pelo menos um pilar.
 > Ligado em 2026-06-04 — cada pilar aponta as **dores** que serve (escada em [`publico-alvo.md`](publico-alvo.md)) e o **registro** de formato ([`tom-de-voz.md`](tom-de-voz.md): R1–R3).
 
 ## Como ler estes pilares

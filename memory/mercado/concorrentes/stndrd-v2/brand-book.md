@@ -4,12 +4,12 @@ slice: mercado
 owner: pesquisador-mercado
 data: 2026-05-30
 espelha: brand/brand-book.md
-nota: versão DEFINITIVA (v2) do dossiê de marca do concorrente STNDRD. Descreve COMO o STNDRD se constrói — não prescreve para a Dino Team. Substitui/aprofunda a v1 (dados/mercado/concorrentes/stndrd/) com base na leitura slide-a-slide dos 100 carrosséis mais virais.
+nota: versão DEFINITIVA (v2) do dossiê de marca do concorrente STNDRD. Descreve COMO o STNDRD se constrói — não prescreve para a Dino Team. Substitui/aprofunda a v1 (memory/mercado/concorrentes/stndrd/) com base na leitura slide-a-slide dos 100 carrosséis mais virais.
 fontes:
-  - dados/pesquisas-brutas/2026-05-30-stndrd-top100-slide-a-slide.md (100 carrosséis virais, slide-a-slide)
-  - dados/pesquisas-brutas/2026-05-30-stndrd-top30-carrosseis-virais.md (top 30 por curtidas, captions)
-  - dados/pesquisas-brutas/2026-05-30-stndrd-deep-read-instagram.md (read por recência)
-  - dados/pesquisas-brutas/2026-05-30-stndrdcoaching-deep-read-instagram.md (braço de coaching)
+  - memory/pesquisa/2026-05-30-stndrd-top100-slide-a-slide.md (100 carrosséis virais, slide-a-slide)
+  - memory/pesquisa/2026-05-30-stndrd-top30-carrosseis-virais.md (top 30 por curtidas, captions)
+  - memory/pesquisa/2026-05-30-stndrd-deep-read-instagram.md (read por recência)
+  - memory/pesquisa/2026-05-30-stndrdcoaching-deep-read-instagram.md (braço de coaching)
   - web: stndrd.app, App Store, Modern Wisdom #851 (filosofia CBum), perfil de negócios CBum
 ---
 
