@@ -75,7 +75,7 @@ A comunicação desdobra a tese consistentemente:
 
 ## Verdades (conjunto canônico)
 
-> As verdades atemporais que a marca acende. Conjunto **enumerável** — cada peça acende **uma** (registrada no livro-razão como `verdade:`). É a camada lenta do sistema de 2 velocidades; muda raramente (via `/brand-discovery`), nunca por reatividade de mercado.
+> As verdades atemporais que a marca acende. Conjunto **enumerável** — cada peça acende **uma** (registrada no `registro-angulos` na coluna `verdade`). É a camada lenta do sistema de 2 velocidades; muda raramente (via `/brand-discovery`), nunca por reatividade de mercado.
 
 | slug | verdade |
 |---|---|

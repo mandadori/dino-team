@@ -1,23 +1,31 @@
 #!/usr/bin/env node
 /**
- * append_livro_razao.js — append-only write-back ao livro-razão de mensagens.
+ * append_registro_angulos.js — append-only write-back ao registro de ângulos.
+ *
+ * Funde os antigos write-backs de `angulos-queimados.md` e `livro-razao.md`:
+ * uma única linha por peça finalizada registra o que o conteúdo DISSE
+ * (ângulo + verdade + pilar) num só ledger. A performance (o que GEROU) vive
+ * separada em memory/performance/metricas.md, unida por `slug`.
  *
  * Uso:
- *   node scripts/memory/append_livro_razao.js \
+ *   node scripts/memory/append_registro_angulos.js \
+ *     --slug <slug-do-post> \
  *     --data <YYYY-MM-DD> \
- *     --mensagem "<ângulo/mensagem>" \
+ *     --canal <instagram|blog|email|comunidade> \
+ *     --angulo <slug-do-angulo> \
  *     --verdade <slug|neutro> \
- *     --canal <instagram|email|blog|comunidade> \
- *     --peca <slug>
+ *     [--pilar <slug|neutro>] \
+ *     [--descanso <ex: 21d|6sem>]
  *
  * Override de caminho (para testes):
- *   LIVRO_RAZAO_PATH=/tmp/lr-test.md node scripts/memory/append_livro_razao.js ...
+ *   REGISTRO_ANGULOS_PATH=/tmp/ra-test.md node scripts/memory/append_registro_angulos.js ...
  *
  * Contrato:
  * - Append-only: nunca reescreve linhas existentes.
- * - Escapa `|` no texto da mensagem.
+ * - Escapa `|` no texto das células.
+ * - `--pilar` default `neutro`; `--descanso` default `21d`.
  * - Atualiza `ultima_atualizacao` no frontmatter.
- * - Erro LIVRO_RAZAO_AUSENTE (exit 1) se arquivo ou tabela-cabeçalho não existir.
+ * - Erro REGISTRO_ANGULOS_AUSENTE (exit 1) se arquivo ou tabela-cabeçalho não existir.
  * - Erro com uso se faltar arg obrigatório.
  * - Saída: imprime a linha anexada (1 linha), exit 0.
  */
@@ -28,12 +36,14 @@ import { resolve } from 'node:path';
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function usage() {
-  console.error(`Uso: node scripts/memory/append_livro_razao.js \\
+  console.error(`Uso: node scripts/memory/append_registro_angulos.js \\
+  --slug <slug-do-post> \\
   --data <YYYY-MM-DD> \\
-  --mensagem "<ângulo/mensagem>" \\
+  --canal <instagram|blog|email|comunidade> \\
+  --angulo <slug-do-angulo> \\
   --verdade <slug|neutro> \\
-  --canal <instagram|email|blog|comunidade> \\
-  --peca <slug>`);
+  [--pilar <slug|neutro>] \\
+  [--descanso <ex: 21d|6sem>]`);
   process.exit(1);
 }
 
@@ -56,12 +66,11 @@ function parseArgs(argv) {
 
 /** Escapa pipe (|) dentro do texto para não quebrar a tabela Markdown. */
 function escapeCell(text) {
-  return text.replace(/\|/g, '\\|');
+  return String(text).replace(/\|/g, '\\|');
 }
 
 /** Atualiza ultima_atualizacao no bloco frontmatter YAML (entre os dois ---). */
 function updateFrontmatter(content, today) {
-  // Localiza o bloco frontmatter (primeiros --- ... ---)
   const fmMatch = content.match(/^(---\n)([\s\S]*?)(---\n)/);
   if (!fmMatch) return content;
 
@@ -75,8 +84,8 @@ function updateFrontmatter(content, today) {
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 
-const REQUIRED = ['data', 'mensagem', 'verdade', 'canal', 'peca'];
-const HEADER_PATTERN = /\|\s*data\s*\|\s*mensagem\/ângulo\s*\|\s*verdade\s*\|\s*canal\s*\|\s*peça\s*\|/i;
+const REQUIRED = ['slug', 'data', 'canal', 'angulo', 'verdade'];
+const HEADER_PATTERN = /\|\s*slug\s*\|\s*data\s*\|\s*canal\s*\|\s*ângulo\s*\|\s*verdade\s*\|\s*pilar\s*\|\s*descanso\s*\|/i;
 
 const args = parseArgs(process.argv.slice(2));
 
@@ -88,42 +97,39 @@ for (const key of REQUIRED) {
   }
 }
 
+// Defaults
+const pilar = args.pilar || 'neutro';
+const descanso = args.descanso || '21d';
+
 // Resolver caminho do arquivo
-const livroPath = process.env.LIVRO_RAZAO_PATH
-  ? resolve(process.env.LIVRO_RAZAO_PATH)
-  : resolve('memory/narrativas/livro-razao.md');
+const registroPath = process.env.REGISTRO_ANGULOS_PATH
+  ? resolve(process.env.REGISTRO_ANGULOS_PATH)
+  : resolve('memory/performance/registro-angulos.md');
 
 // Verificar existência do arquivo
-if (!existsSync(livroPath)) {
-  console.error(`LIVRO_RAZAO_AUSENTE — arquivo não encontrado: ${livroPath}`);
+if (!existsSync(registroPath)) {
+  console.error(`REGISTRO_ANGULOS_AUSENTE — arquivo não encontrado: ${registroPath}`);
   process.exit(1);
 }
 
-const original = readFileSync(livroPath, 'utf8');
+const original = readFileSync(registroPath, 'utf8');
 
 // Verificar cabeçalho da tabela
 if (!HEADER_PATTERN.test(original)) {
-  console.error(`LIVRO_RAZAO_AUSENTE — cabeçalho da tabela não encontrado em: ${livroPath}`);
+  console.error(`REGISTRO_ANGULOS_AUSENTE — cabeçalho da tabela não encontrado em: ${registroPath}`);
   process.exit(1);
 }
 
 // Construir nova linha
-const newLine = `| ${args.data} | ${escapeCell(args.mensagem)} | ${args.verdade} | ${args.canal} | ${args.peca} |`;
+const newLine = `| ${escapeCell(args.slug)} | ${args.data} | ${escapeCell(args.canal)} | ${escapeCell(args.angulo)} | ${escapeCell(args.verdade)} | ${escapeCell(pilar)} | ${escapeCell(descanso)} |`;
 
-// Append: localiza o separador da tabela (linha com |---|...) que segue o cabeçalho
-// e insere depois da última linha de dados, ou logo após o separador se não houver dados.
-// Estratégia: adiciona ao fim do arquivo (após última linha não-vazia da tabela)
-// para manter a ordem cronológica.
-
-// Divide em linhas, preserva \n no final se existir
+// Localiza o separador da tabela que segue o cabeçalho e insere após a última linha.
 const endsWithNewline = original.endsWith('\n');
 const lines = original.split('\n');
 
-// Encontra o índice da linha do separador (| --- | --- | ... |)
 let sepIdx = -1;
 for (let i = 0; i < lines.length; i++) {
   if (/^\|[-| ]+\|$/.test(lines[i].trim())) {
-    // Confirmar que a linha anterior é o cabeçalho
     if (i > 0 && HEADER_PATTERN.test(lines[i - 1])) {
       sepIdx = i;
       break;
@@ -132,7 +138,7 @@ for (let i = 0; i < lines.length; i++) {
 }
 
 if (sepIdx === -1) {
-  console.error(`LIVRO_RAZAO_AUSENTE — separador da tabela não encontrado em: ${livroPath}`);
+  console.error(`REGISTRO_ANGULOS_AUSENTE — separador da tabela não encontrado em: ${registroPath}`);
   process.exit(1);
 }
 
@@ -142,12 +148,10 @@ for (let i = sepIdx + 1; i < lines.length; i++) {
   if (lines[i].trim().startsWith('|')) {
     lastTableLineIdx = i;
   } else if (lines[i].trim() !== '') {
-    // Linha não-vazia que não é tabela — tabela terminou
     break;
   }
 }
 
-// Insere newLine logo após a última linha da tabela
 const updatedLines = [
   ...lines.slice(0, lastTableLineIdx + 1),
   newLine,
@@ -156,15 +160,13 @@ const updatedLines = [
 
 let updated = updatedLines.join('\n');
 
-// Garantir que termina com \n se o original terminava
 if (endsWithNewline && !updated.endsWith('\n')) {
   updated += '\n';
 }
 
-// Atualizar frontmatter
 updated = updateFrontmatter(updated, args.data);
 
-writeFileSync(livroPath, updated, 'utf8');
+writeFileSync(registroPath, updated, 'utf8');
 
 // Saída: apenas a linha anexada
 console.log(newLine);

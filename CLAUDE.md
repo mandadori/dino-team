@@ -49,9 +49,9 @@ Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestr
 
 **Skills disponíveis:**
 
-_Produção multicanal — todas ancoram numa verdade do `## Verdades` (brand-book) e dão write-back ao livro-razão:_
-- [`/novo-post`](.claude/skills/novo-post/SKILL.md) — post Instagram completo (carrossel ou stories). Dispara `/pesquisar-mercado` (Fase A, quando stale) e `/pesquisar-tema` (deep research, quando informacional). Write-back: `angulos-queimados.md` + `livro-razao.md` (`--canal instagram`).
-- [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — N posts Instagram em sequência, agendável. Write-back ao `livro-razao.md` por post aprovado.
+_Produção multicanal — todas ancoram numa verdade do `## Verdades` (brand-book) e dão write-back ao registro de ângulos:_
+- [`/novo-post`](.claude/skills/novo-post/SKILL.md) — post Instagram completo (carrossel ou stories). Dispara `/pesquisar-mercado` (Fase A, quando stale) e `/pesquisar-tema` (deep research, quando informacional). Write-back: uma linha em `registro-angulos.md` (`--canal instagram`).
+- [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — N posts Instagram em sequência, agendável. Write-back ao `registro-angulos.md` por post aprovado.
 - [`/novo-artigo`](.claude/skills/novo-artigo/SKILL.md) — artigo de blog (MDX draft) em `export/conteudos/blog/<slug>/artigo.mdx`. Pesquisa via `/pesquisar-tema` quando informacional. Write-back `--canal blog`. A publicação no site é trabalho do GSD do site.
 - [`/novo-email`](.claude/skills/novo-email/SKILL.md) — e-mail (assunto + preheader + corpo + CTA) em `export/conteudos/email/<slug>/email.md`. Tom de carta de mentor 1:1. Write-back `--canal email`. Envio real (Resend) é etapa futura.
 - [`/novo-comunidade`](.claude/skills/novo-comunidade/SKILL.md) — mensagem para a comunidade (WhatsApp) em `export/conteudos/comunidade/<slug>/mensagem.md`. Tom de conversa, não broadcast. Write-back `--canal comunidade`. Disparo real é etapa futura.
@@ -81,7 +81,7 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 **Agentes atuais (11):**
 
 - **Marketing / Estratégia**
-  - [`estrategista-mercado`](.claude/agents/estrategista-mercado.md) — lê o momento (emoção do público + crença de mercado) e escolhe a verdade da marca que responde; owner do livro-razão; propõe as jogadas da pauta.
+  - [`estrategista-mercado`](.claude/agents/estrategista-mercado.md) — lê o momento (emoção do público + crença de mercado) e escolhe a verdade da marca que responde; lê o `registro-angulos` para saturação/equilíbrio (não tem slice durável); propõe as jogadas da pauta.
 - **Marketing / Pesquisa**
   - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `memory/mercado/`.
 - **Produto / Consultoria / Execução**
@@ -90,7 +90,7 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
   - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca e compliance; gate em 2 momentos (identidade visual em criação de estilo; copy + compliance em criação de post).
 - **Transversais / Dados**
   - [`arquivista`](.claude/agents/arquivista.md) — owner único do slice `memory/ramon/` e do banco de imagens; consolida contexto do Ramon (input do usuário + auto-sync de fontes públicas) e gerencia legenda/seleção/marcação de fotos por slide.
-  - [`analista-performance`](.claude/agents/analista-performance.md) — owner único do slice `memory/performance/`; registra ângulos queimados e (futuro) métricas de canais.
+  - [`analista-performance`](.claude/agents/analista-performance.md) — owner único do slice `memory/performance/`; dono de `registro-angulos.md` (o que cada peça disse, escrito por script) e `metricas.md` (o que gerou — futuro); responde ângulo queimado e saturação.
 - **Engenharia / Execução / Web**
   - [`arquiteto-web`](.claude/agents/arquiteto-web.md) — scaffold, organização, libs, config do site.
   - [`designer-web`](.claude/agents/designer-web.md) — componentes React + Tailwind + Framer Motion.
@@ -107,12 +107,13 @@ Veja [docs/specs/2026-05-22-arquitetura-multi-setor-design.md](docs/specs/2026-0
 **A memória é a integração.** As funções não se coordenam entre si — leem e escrevem o mesmo estado (blackboard). Markdown + frontmatter YAML, versionado em git, dono único por slice. Ver [`memory/_schema.md`](memory/_schema.md) para slices e ownership.
 
 **Slices:**
-- `memory/narrativas/` — livro-razão de verdades acionadas (camada lenta = `## Verdades` do brand-book) (owner: `estrategista-mercado`).
 - `memory/publico/` — dores e objeções com a fala do público embutida (owner: `pesquisador-mercado`; Produto alimenta via `/sinal-consultoria`).
 - `memory/mercado/` — `narrativa-de-mercado.md` (discurso do nicho), `tendencias/`, `concorrentes/` (owner: `pesquisador-mercado`).
 - `memory/ramon/contexto.md` — contexto temporal e biográfico do Ramon (owner: `arquivista`).
-- `memory/performance/` — `angulos-queimados.md` + `provas-de-aluno.md` (Onda 6+) + métricas por canal (futuro) (owner: `analista-performance`).
+- `memory/performance/` — `registro-angulos.md` (ledger único do que cada peça **disse**: ângulo + verdade + pilar + descanso; funde os antigos `angulos-queimados.md` e `livro-razao.md`) + `metricas.md` (o que cada peça **gerou** — criado, alimentado por `fetch_*` no futuro, joinado por `slug`) + `provas-de-aluno.md` (owner: `analista-performance`).
 - `memory/pesquisa/` — pesquisa bruta (insumo cumulativo, não-verdade).
+
+> O slice `narrativas/` foi dissolvido em 2026-06: ângulo e verdade viraram um dado só (o que a peça disse) em `performance/registro-angulos.md`. O `estrategista-mercado` virou leitor (não tem mais slice durável).
 
 **Setor Produto — integrado pelo cérebro:** a consultoria (`treinador` hoje; anamnese/nutri depois) consome `memory/publico/` + `memory/performance/` para decisões de produto e os alimenta de volta com sinais reais via `/sinal-consultoria`. Produto não tem slice próprio — escreve nos slices existentes pelos owners declarados (dono único preservado). Marketing e Produto se afinam pelo cérebro, nunca por acoplamento direto.
 
@@ -156,7 +157,7 @@ Padrão de contratos e skills detalhado em [docs/specs/2026-05-26-redesign-conte
 
 ## Funções do sistema
 
-Cada função é executada por skills. Outputs ficam em `export/`, organizados por canal e data. **Produção é multicanal:** todas as skills de conteúdo ancoram numa verdade do `## Verdades` (brand-book) e escrevem de volta no mesmo livro-razão — uma verdade acionada em múltiplos canais sem coordenação manual. A coerência entre semanas emerge do conjunto fixo de verdades + voz, não de campanha prescrita.
+Cada função é executada por skills. Outputs ficam em `export/`, organizados por canal e data. **Produção é multicanal:** todas as skills de conteúdo ancoram numa verdade do `## Verdades` (brand-book) e escrevem de volta no mesmo `registro-angulos` — uma verdade acionada em múltiplos canais sem coordenação manual. A coerência entre semanas emerge do conjunto fixo de verdades + voz, não de campanha prescrita.
 
 - **Criação de conteúdo — Instagram** — Skills: `/novo-post` (individual), `/lote-posts` (em lote).
 - **Criação de conteúdo — Blog** — Artigo MDX draft pronto para integração no site. Skill: `/novo-artigo`.

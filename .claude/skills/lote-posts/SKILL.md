@@ -21,8 +21,7 @@ Gerar N posts em um mesmo formato, com variação de estilos e temas dentro do l
 | 6 | ⏸ usuário | copies ← 5 | 5 | ok/ajuste em lote |
 | 7 | ⚙ design inline (×posts) | copy ← 5 | 6 | assets por post |
 | 8 | export-png.js + revisor-brand (×posts) | slide-N.html ← 7 | 7 | PNGs + validação por post |
-| 8.5 | analista-performance — registrar ângulo (×posts) | ângulo ← 5 | 8 | entradas em angulos-queimados |
-| 8.6 | ⚙ write-back livro-razão (×posts aprovados) | ângulo+verdade_servida+slug ← 5 | 8 | linhas no livro-razão |
+| 8.5 | ⚙ write-back registro-angulos (×posts aprovados) | ângulo+verdade+pilar+slug ← 5 | 8 | linhas no registro-angulos |
 | 9 | ⚙ relatório do lote | — | 8 | relatório |
 | 10 | ⚙ política publish (×posts) | pasta ← 8 | 8 | publicado/pendente |
 
@@ -54,7 +53,7 @@ Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou 
 **Cada post é um contexto independente.** A skill produz briefing, copy e design inline por post — sem subagentes de produção. A variação de tema/estilo dentro do lote é garantida pelo planejamento do Passo 3-4, não por anti-repetição automática entre posts.
 
 **Contexto de leitura por post (Passo 5):**
-- **Briefing:** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `memory/ramon/contexto.md` + `memory/performance/angulos-queimados.md` + `memory/mercado/tendencias/<mês>.md` + `estilo.md` do estilo atribuído.
+- **Briefing:** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `memory/ramon/contexto.md` + `memory/performance/registro-angulos.md` + `memory/mercado/tendencias/<mês>.md` + `estilo.md` do estilo atribuído.
 - **Copy:** `estilo.md` (campos `#### editorial`) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa do post.
 - **Design (Passo 7):** `estilo.md` (campos `#### visual`) + `slide.html` do estilo + `brand/referencias-visuais.md` + `brand/social-media.md` + `copy.md` do post.
 
@@ -127,7 +126,7 @@ Inputs:
 - Formato: <formato>
 - Distribuição: <slug:K | slug:K | ...>
 - Tema-base: <texto livre ou "nenhum — distribuir entre pilares">
-- Ângulos queimados: memory/performance/angulos-queimados.md (não repetir)
+- Ângulos queimados: memory/performance/registro-angulos.md (ângulo com data+descanso ainda futuro = não repetir)
 
 Regras:
 - Cada subtema deve combinar com o estilo a que é atribuído.
@@ -166,12 +165,12 @@ Para cada par `(subtema, estilo)` da lista confirmada, execute inline e **sem pa
 
 Leia (uma vez por lote, reutilize nos demais posts):
 - `memory/ramon/contexto.md`
-- `memory/performance/angulos-queimados.md`
+- `memory/performance/registro-angulos.md` — ângulos em descanso + saturação de verdade
 - `memory/mercado/tendencias/<YYYY-MM>.md`
 
 #### 5b. Briefing inline
 
-Leia `brand/brand-book.md` (inclui `## Verdades`) + `brand/pilares-conteudo.md` + `estilo.md` do estilo atribuído (campos `## Conceito` e `#### editorial`). Fixe: ângulo central, pilar, objetivo, recorte de público, slug do post (kebab-case), **verdade servida** (slug do `## Verdades` do brand-book que este ângulo acende; `neutro` se nenhuma). Guarde como `verdade_servida` do post (usado no Passo 8.6).
+Leia `brand/brand-book.md` (inclui `## Verdades`) + `brand/pilares-conteudo.md` + `estilo.md` do estilo atribuído (campos `## Conceito` e `#### editorial`). Fixe: ângulo central, pilar, objetivo, recorte de público, slug do post (kebab-case), **verdade servida** (slug do `## Verdades` do brand-book que este ângulo acende; `neutro` se nenhuma). Guarde como `verdade_servida` do post (usado no Passo 8.5).
 
 Quando briefing pré-pronto (modo `--pauta`): extrair `verdade:` do briefing — se ausente, `neutro`.
 
@@ -281,28 +280,20 @@ NÃO re-julgar identidade visual.
 
 Erros técnicos (`EXPORT_FALHOU`, `VALIDACAO_TECNICA_FALHOU`) → registre e siga ao próximo.
 
-**Registrar ângulo queimado (por post aprovado):** para cada post que passou no gate, acione `analista-performance`:
-```
-Tarefa: registrar ângulo queimado.
-Ângulo central: <ângulo central do post, fixado no Passo 5>
-Pilar: <pilar do post>
-Slug: <slug do post>
-Data da publicação: <data de hoje>
-```
-Posts pulados (erro de export) ou reprovados no gate **não** registram ângulo. O `analista-performance` atualiza a data se o ângulo já existir.
-
-**Registrar mensagem no livro-razão (por post aprovado — Passo 8.6):** para cada post que passou no gate, execute o write-back de mensagem (mesmo mecanismo do `/novo-post` Passo 15.6):
+**Write-back no registro de ângulos (por post aprovado — Passo 8.5):** para cada post que passou no gate, registre uma linha (mesmo mecanismo do `/novo-post` Passo 15.5). Determinístico (script; ninguém escreve à mão):
 
 ```bash
-node scripts/memory/append_livro_razao.js \
+node scripts/memory/append_registro_angulos.js \
+  --slug "<slug do post>" \
   --data "$(date +%F)" \
-  --mensagem "<ângulo central do post, fixado no Passo 5>" \
-  --verdade "<verdade_servida do Passo 5 — slug ou neutro>" \
   --canal instagram \
-  --peca "<slug do post>"
+  --angulo "<slug-kebab do ângulo central do post, fixado no Passo 5>" \
+  --verdade "<verdade_servida do Passo 5 — slug ou neutro>" \
+  --pilar "<pilar do post>" \
+  --descanso "<21d default; ângulo muito específico → maior, ex 6sem>"
 ```
 
-Reporte a linha anexada inline por post. Se o script falhar (`LIVRO_RAZAO_AUSENTE`), registre o erro e siga — o post já está aprovado; o write-back não bloqueia entrega.
+Posts pulados (erro de export) ou reprovados no gate **não** registram linha. Reporte a linha anexada inline por post. Se o script falhar (`REGISTRO_ANGULOS_AUSENTE`), registre o erro e siga — o post já está aprovado; o write-back não bloqueia entrega.
 
 ### 9. Reportar entrega do lote
 

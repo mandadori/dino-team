@@ -1,6 +1,6 @@
 ---
-versao: 2
-ultima_atualizacao: 2026-06-06
+versao: 3
+ultima_atualizacao: 2026-06-08
 ---
 
 # Cérebro de Marca — Schema (`memory/`)
@@ -12,21 +12,22 @@ Memória viva compartilhada do sistema Dino Team. **"A memória é a integraçã
 - **Dono único por slice.** Só o owner escreve; outros propõem via output e o owner consolida.
 - **Cérebro ≠ insumo.** `memory/pesquisa/` é pesquisa bruta (insumo transitório). O resto é a "verdade" durável.
 - **YAGNI de slice.** Uma fatia só nasce quando uma função a lê de verdade. Este schema **declara** a estrutura completa; declarar ≠ construir.
-- **Write-back é de 1ª classe.** Produzir uma peça atualiza o cérebro (livro-razão de mensagens, ângulos). O livro-razão recebe write-back de **múltiplos canais** (`instagram`, `blog`, `email`, `comunidade`) via `node scripts/memory/append_livro_razao.js --canal <canal>`. É a demonstração direta de "a memória é a integração".
+- **Write-back é de 1ª classe.** Produzir uma peça atualiza o cérebro: uma linha no `registro-angulos.md` (ângulo + verdade + pilar + descanso). Recebe write-back de **múltiplos canais** (`instagram`, `blog`, `email`, `comunidade`) via `node scripts/memory/append_registro_angulos.js --canal <canal> ...`. É a demonstração direta de "a memória é a integração". A performance (`metricas.md`) é joinada por `slug` quando os coletores `fetch_*` existirem.
 - **Versionado em git.** Toda mudança é commit.
 
 ## Slices
 
 | Slice | Owner único | Conteúdo | Estado |
 |---|---|---|---|
-| `narrativas/` | `estrategista-mercado` | livro-razão de verdades acionadas (camada lenta = `## Verdades` do brand-book) | redesign 2 velocidades (2026-06) |
 | `publico/` | `pesquisador-mercado` (Produto alimenta) | dores, objeções (com a fala do público embutida) | criado (Onda 1) |
 | `mercado/` | `pesquisador-mercado` | `narrativa-de-mercado.md`, `tendencias/`, `concorrentes/` | ativo |
 | `ramon/` | `arquivista` | contexto temporal/biográfico | ativo |
-| `performance/` | `analista-performance` | `angulos-queimados.md`; métricas por canal (futuro) | ativo (parcial) |
+| `performance/` | `analista-performance` | `registro-angulos.md` (o que cada peça disse: ângulo + verdade + pilar + descanso), `metricas.md` (o que gerou — criado, alimentado por `fetch_*` no futuro), `provas-de-aluno.md` | ativo |
 | `pesquisa/` | `pesquisador-mercado` | pesquisa bruta datada (insumo) | ativo |
 
-**Não é cérebro:** `orquestracao/politicas/` (governança/config), `memory/mercado/_diretivas.md` → config de pesquisa (mover pra junto da skill `/pesquisar-mercado` na Onda 3).
+> O slice `narrativas/` (livro-razão de verdades) foi **dissolvido em 2026-06**: ângulo e verdade são o mesmo tipo de dado (o que a peça disse) e passaram a viver juntos em `performance/registro-angulos.md`, sob `analista-performance`. O `estrategista-mercado` deixou de ter slice durável — virou leitor (lê o registro para saturação/equilíbrio).
+
+**Não é cérebro:** `orquestracao/politicas/` (governança/config), `memory/mercado/_diretivas.md` → config de pesquisa.
 
 ## Integração Produto pelo cérebro (Onda 6)
 
@@ -38,7 +39,7 @@ Memória viva compartilhada do sistema Dino Team. **"A memória é a integraçã
 | `publico/objecoes.md` | `pesquisador-mercado` | `/sinal-consultoria` | objeções reais ouvidas na consultoria |
 | `performance/provas-de-aluno.md` | `analista-performance` | `/sinal-consultoria` | resultados reais de aluno (prova/Transformação) |
 
-**Produto lê** `publico/` + `performance/` + `memory/narrativas/` para priorizar o roadmap de produto — sem acoplar com Marketing. A memória é a integração.
+**Produto lê** `publico/` + `performance/` para priorizar o roadmap de produto — sem acoplar com Marketing. A memória é a integração.
 
 **Roadmap de produto** — declarado, build depois (YAGNI): nasce como arquivo quando o Produto for efetivamente priorizado no sistema. Não criar arquivo vazio agora.
 
@@ -46,13 +47,13 @@ Memória viva compartilhada do sistema Dino Team. **"A memória é a integraçã
 
 ## Slices declarados, build depois (canais de performance)
 
-- `performance/{social-media,ads,email,funil-site}/` quando publicação real gerar métrica (Onda 5+).
+- `performance/metricas.md` já existe (vazio) como ponto único de concentração. Os recortes `performance/{social-media,ads,email,funil-site}/` nascem só quando o volume de métrica real de cada canal justificar.
 
 ## Frontmatter padrão dos arquivos do cérebro
 
 ```yaml
 ---
-slice: <narrativas | publico | mercado | ramon | performance | pesquisa>
+slice: <publico | mercado | ramon | performance | pesquisa>
 owner: <agente owner>
 ultima_atualizacao: YYYY-MM-DD
 versao: 1

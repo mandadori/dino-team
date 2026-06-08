@@ -1,6 +1,6 @@
 ---
 name: novo-artigo
-description: Produz um artigo de blog (MDX draft) a partir de um tema/ângulo, lendo a narrativa ativa e o brand. Output em `export/conteudos/blog/<slug>/artigo.mdx`. Pesquisa via `/pesquisar-tema`; gate `revisor-brand`; write-back no livro-razão (canal=blog). A publicação no site é trabalho do GSD do site (não desta skill).
+description: Produz um artigo de blog (MDX draft) a partir de um tema/ângulo, lendo a narrativa ativa e o brand. Output em `export/conteudos/blog/<slug>/artigo.mdx`. Pesquisa via `/pesquisar-tema`; gate `revisor-brand`; write-back no registro-angulos (canal=blog). A publicação no site é trabalho do GSD do site (não desta skill).
 ---
 
 # /novo-artigo
@@ -18,7 +18,7 @@ Cria um artigo de blog completo, do briefing ao artefato MDX draft aprovado pelo
 | 4 | `/pesquisar-tema` (condic., ângulo informacional) | tema, pilar, recorte ← 3 | 3.⏸ | `memory/pesquisa/<data>-tendencias-<slug>.md` |
 | 5 | ⚙ escrever artigo inline (MDX) + ⏸ | pesquisa ← 4, brand, `templates/artigo.md` | 4 | `export/conteudos/blog/<slug>/artigo.mdx` |
 | 6 | `revisor-brand` (gate, criação de post) | `artigo.mdx` ← 5 | 5 | APROVADO/REPROVADO |
-| 7 | ⚙ entregar + write-back | tudo ← 6 | 6 (APROVADO) | entrega ao usuário + linha no livro-razão |
+| 7 | ⚙ entregar + write-back | tudo ← 6 | 6 (APROVADO) | entrega ao usuário + linha no registro-angulos |
 
 ## Sintaxe
 
@@ -45,7 +45,7 @@ Leia os seguintes arquivos:
 - `brand/brand-book.md` (inclui `## Verdades`)
 - `brand/pilares-conteudo.md`
 - `brand/publico-alvo.md`
-- `memory/performance/angulos-queimados.md`
+- `memory/performance/registro-angulos.md` — ângulos em descanso + saturação de verdade
 
 Com base nessas leituras, fixe:
 - **Ângulo central** — ponto de vista específico que diferencia (não o tema bruto).
@@ -165,22 +165,23 @@ Destaques do gate de marca:
 Próximo passo: integração no site é trabalho do GSD do site (fora desta skill).
 ```
 
-Write-back no livro-razão (somente quando APROVADO):
+Write-back no registro de ângulos (somente quando APROVADO):
 
 ```bash
-node scripts/memory/append_livro_razao.js \
+node scripts/memory/append_registro_angulos.js \
+  --slug "<slug do Passo 3>" \
   --data "$(date +%F)" \
-  --mensagem "<ângulo central do Passo 3>" \
-  --verdade "<verdade_servida do Passo 2>" \
   --canal blog \
-  --peca "<slug do Passo 3>"
+  --angulo "<slug-kebab do ângulo central do Passo 3>" \
+  --verdade "<verdade_servida do Passo 2>" \
+  --pilar "<pilar do Passo 3>"
 ```
 
-Reporte a linha anexada inline. Se o script falhar (`LIVRO_RAZAO_AUSENTE`), avise o usuário e siga — o artigo já está entregue; o write-back não bloqueia a entrega.
+Reporte a linha anexada inline. Se o script falhar (`REGISTRO_ANGULOS_AUSENTE`), avise o usuário e siga — o artigo já está entregue; o write-back não bloqueia a entrega.
 
 ## Princípio central
 
-**Copy é função única, canal via parâmetro.** A skill produz o artigo inline, adaptando o formato para blog (MDX, SEO, H2/H3), sem agente de copy separado. Pesquisa profunda é delegada a `/pesquisar-tema` quando o ângulo for informacional. `revisor-brand` valida copy + compliance antes da entrega. Write-back reusa `scripts/memory/append_livro_razao.js` da Onda 3.
+**Copy é função única, canal via parâmetro.** A skill produz o artigo inline, adaptando o formato para blog (MDX, SEO, H2/H3), sem agente de copy separado. Pesquisa profunda é delegada a `/pesquisar-tema` quando o ângulo for informacional. `revisor-brand` valida copy + compliance antes da entrega. Write-back via `scripts/memory/append_registro_angulos.js`.
 
 **A publicação no site é fora de escopo.** Esta skill entrega o artefato MDX draft em `export/conteudos/blog/<slug>/artigo.mdx`. A integração do MDX no site Next.js é fase do GSD do site (`.planning/`).
 
@@ -195,5 +196,5 @@ export/conteudos/blog/<slug>/
 
 - `export/conteudos/blog/<slug>/artigo.mdx` existe com frontmatter preenchido e status `draft`.
 - Gate `revisor-brand` retornou APROVADO.
-- Write-back executado: linha registrada em `memory/narrativas/livro-razao.md` com `--canal blog`.
+- Write-back executado: linha registrada em `memory/performance/registro-angulos.md` com `--canal blog`.
 - Usuário recebeu a mensagem final com o caminho do artefato.

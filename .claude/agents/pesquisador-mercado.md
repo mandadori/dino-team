@@ -119,7 +119,7 @@ Fonte no v1: apenas WebSearch + WebFetch (web pública). Quando existir `scripts
 
 ### Modo `seleção de candidatos` (ranqueamento rápido — Fase B)
 
-Leitura do slice `memory/mercado/` acumulado + `memory/performance/angulos-queimados.md` (para não repetir ângulo recente) + pilares. Devolve **N candidatos ranqueados** (default 3-5) por potencial de engajamento, **inline, sem escrever no slice**.
+Leitura do slice `memory/mercado/` acumulado + `memory/performance/registro-angulos.md` (ângulos com `data + descanso` ainda futuro = em descanso, não repetir) + pilares. Devolve **N candidatos ranqueados** (default 3-5) por potencial de engajamento, **inline, sem escrever no slice**.
 
 Formato de cada candidato:
 

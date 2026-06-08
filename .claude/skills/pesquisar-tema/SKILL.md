@@ -93,7 +93,7 @@ Para usar em um post:
 ## Notas operacionais
 
 - **Reusável:** o arquivo gravado em `memory/pesquisa/` é consumido pelo `/novo-post` Passo 10 e `/lote-posts` Passo 5d quando a slug bater. Pré-pesquisar antes de um lote evita N chamadas ao agente de pesquisa.
-- **Sem write-back de livro-razão** — esta skill não produz peça.
+- **Sem write-back de registro-angulos** — esta skill não produz peça.
 - **Sem Fase B** — seleção de candidatos permanece inline no `/novo-post` (acoplada à produção).
 - **Parte do contexto de mercado acumulado:** a pesquisa parte de `memory/mercado/` já mapeado, não redescobre tendências do zero.
 

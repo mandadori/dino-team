@@ -15,7 +15,7 @@ Cria uma mensagem de comunidade (WhatsApp) completa, do briefing ao artefato apr
 | 2 | ⚙ escolher verdade servida | `brand/brand-book.md` (`## Verdades`) | 1 | `verdade_servida` (slug\|neutro) |
 | 3 | ⚙ mensagem inline + ⏸ | contexto ← 2, tema/brand, `templates/comunidade.md` | 2 | `export/conteudos/comunidade/<slug>/mensagem.md` |
 | 4 | `revisor-brand` (gate, criação de post) | `mensagem.md` ← 3 | 3 | APROVADO/REPROVADO |
-| 5 | ⚙ entregar + write-back | tudo ← 4 | 4 (APROVADO) | entrega ao usuário + linha no livro-razão |
+| 5 | ⚙ entregar + write-back | tudo ← 4 | 4 (APROVADO) | entrega ao usuário + linha no registro-angulos |
 
 ## Sintaxe
 
@@ -112,22 +112,22 @@ Destaques do gate de marca:
 Próximo passo: disparo real via WhatsApp é etapa futura (fora desta skill).
 ```
 
-Write-back no livro-razão (somente quando APROVADO):
+Write-back no registro de ângulos (somente quando APROVADO):
 
 ```bash
-node scripts/memory/append_livro_razao.js \
+node scripts/memory/append_registro_angulos.js \
+  --slug "<slug do Passo 3>" \
   --data "$(date +%F)" \
-  --mensagem "<gancho + tema>" \
-  --verdade "<verdade_servida do Passo 2>" \
   --canal comunidade \
-  --peca "<slug do Passo 3>"
+  --angulo "<slug-kebab do gancho/tema>" \
+  --verdade "<verdade_servida do Passo 2>"
 ```
 
-Reporte a linha anexada inline. Se o script falhar (`LIVRO_RAZAO_AUSENTE`), avise o usuário e siga — a mensagem já está entregue; o write-back não bloqueia a entrega.
+Reporte a linha anexada inline. Se o script falhar (`REGISTRO_ANGULOS_AUSENTE`), avise o usuário e siga — a mensagem já está entregue; o write-back não bloqueia a entrega.
 
 ## Princípio central
 
-**Copy é função única, canal via parâmetro.** A skill é a mais leve: produz a mensagem inline, adaptando ao formato de comunidade (WhatsApp — curta, gancho + corpo + convite), sem pesquisa e sem agente de copy separado. Não há briefing separado — o tema e a narrativa ativa são suficientes. `revisor-brand` valida copy + compliance antes da entrega. Write-back reusa `scripts/memory/append_livro_razao.js` da Onda 3.
+**Copy é função única, canal via parâmetro.** A skill é a mais leve: produz a mensagem inline, adaptando ao formato de comunidade (WhatsApp — curta, gancho + corpo + convite), sem pesquisa e sem agente de copy separado. Não há briefing separado — o tema e a narrativa ativa são suficientes. `revisor-brand` valida copy + compliance antes da entrega. Write-back via `scripts/memory/append_registro_angulos.js` (sem `--pilar`/`--descanso`: caem nos defaults `neutro`/`21d`).
 
 **Disparo real é diferido.** Esta skill entrega o artefato aprovado em `export/conteudos/comunidade/<slug>/mensagem.md`. O disparo real via WhatsApp é Onda 5+.
 
@@ -142,5 +142,5 @@ export/conteudos/comunidade/<slug>/
 
 - `export/conteudos/comunidade/<slug>/mensagem.md` existe com gancho, corpo e convite preenchidos.
 - Gate `revisor-brand` retornou APROVADO.
-- Write-back executado: linha registrada em `memory/narrativas/livro-razao.md` com `--canal comunidade`.
+- Write-back executado: linha registrada em `memory/performance/registro-angulos.md` com `--canal comunidade`.
 - Usuário recebeu a mensagem final com o caminho do artefato.

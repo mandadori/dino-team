@@ -88,7 +88,7 @@ Próximo passo sugerido: /planejar-pauta-semanal ou /novo-post para usar a intel
 
 ## Notas operacionais
 
-- **Sem write-back de livro-razão** — esta skill não produz peça; write-back só acontece em `/novo-post` (Passo 15.6) e `/lote-posts` (Passo 8.6).
+- **Sem write-back de registro-angulos** — esta skill não produz peça; write-back só acontece em `/novo-post` (Passo 15.5) e `/lote-posts` (Passo 8.5).
 - **Agendável (Onda 5):** entrada em `orquestracao/rotas.yaml` prevista para ligar cron mensal. Por ora, disparo manual.
 - **Idempotente:** rodar duas vezes no mesmo mês **adiciona** entradas de scouting (não sobrescreve — o agente segue o protocolo append do slice).
 - **Stale check:** o `/novo-post` decide quando acionar esta skill (arquivo `memory/mercado/tendencias/<YYYY-MM>.md` ausente ou com mais de 14 dias).

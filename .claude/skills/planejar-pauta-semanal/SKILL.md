@@ -27,7 +27,7 @@ Os briefings são artefatos gravados em `campanhas/.../output/posts/` — são h
 |---|---|---|---|---|
 | 1 | ⚙ semana ativa | data | — | YYYY-Www |
 | 2 | pesquisador (sensing leve) | semana, N | 1 | `pesquisa-tendencias.md` enriquecido (emoção + crença de mercado) |
-| 3 | `estrategista-mercado` (`jogadas-da-semana`) | sensing ← 2, ângulos-queimados, livro-razão | 2 | N jogadas (ângulo+verdade+pilar+formato/canal) equilibradas |
+| 3 | `estrategista-mercado` (`jogadas-da-semana`) | sensing ← 2, registro-angulos (descanso + saturação) | 2 | N jogadas (ângulo+verdade+pilar+formato/canal) equilibradas |
 | 3.⏸ | ⏸ usuário (só modo manual) | jogadas ← 3 | 3 | jogadas confirmadas/ajustadas |
 | 4 | ⚙ briefings inline (×N) | jogadas ← 3.⏸ | 3.⏸ | N briefings com campo `verdade:` |
 | 5 | `estrategista-mercado` (`coerencia-verdade`) | ângulos ← 4 | 4 | serve/off-brand/contradiz por briefing |
@@ -93,7 +93,7 @@ Inputs:
 - Janela: <YYYY-Www>
 ```
 
-O agente devolve N jogadas (ângulo + verdade + pilar + formato/canal + sustentação) equilibradas pelo livro-razão.
+O agente devolve N jogadas (ângulo + verdade + pilar + formato/canal + sustentação) equilibradas pelo registro-angulos.
 
 ### 3.⏸ Ajuste humano (só modo manual)
 
@@ -116,7 +116,7 @@ Para cada jogada do Passo 3.⏸, escreva o briefing **inline**, lendo:
 - `brand/brand-book.md` — essência, propósito, mensagens centrais e `## Verdades`.
 - `brand/pilares-conteudo.md` — eixos temáticos válidos.
 - `memory/ramon/contexto.md` — fase atual, cronograma, vertentes.
-- `memory/performance/angulos-queimados.md` — ângulos a evitar.
+- `memory/performance/registro-angulos.md` — ângulos em descanso a evitar (`data + descanso` futuro).
 - `campanhas/<YYYY-Www>-pauta-semanal/pesquisa-tendencias.md` — sensing da semana (Passo 2).
 - Lista de estilos disponíveis: `templates/social-media/<formato>/estilos/*/estilo.md` — `## Quando usar` / `## Quando NÃO usar` para recomendar o estilo.
 

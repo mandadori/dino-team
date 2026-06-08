@@ -18,7 +18,7 @@ Cria um e-mail completo de marca, do briefing ao artefato aprovado pelo gate de 
 | 4 | `/pesquisar-tema` (condic., ângulo informacional) | tema, pilar, recorte ← 3 | 3.⏸ | `memory/pesquisa/<data>-tendencias-<slug>.md` |
 | 5 | ⚙ escrever e-mail inline + ⏸ | pesquisa ← 4, brand, `templates/email.md` | 4 | `export/conteudos/email/<slug>/email.md` |
 | 6 | `revisor-brand` (gate, criação de post) | `email.md` ← 5 | 5 | APROVADO/REPROVADO |
-| 7 | ⚙ entregar + write-back | tudo ← 6 | 6 (APROVADO) | entrega ao usuário + linha no livro-razão |
+| 7 | ⚙ entregar + write-back | tudo ← 6 | 6 (APROVADO) | entrega ao usuário + linha no registro-angulos |
 
 ## Sintaxe
 
@@ -164,22 +164,23 @@ Destaques do gate de marca:
 Próximo passo: envio real via Resend é etapa futura (fora desta skill).
 ```
 
-Write-back no livro-razão (somente quando APROVADO):
+Write-back no registro de ângulos (somente quando APROVADO):
 
 ```bash
-node scripts/memory/append_livro_razao.js \
+node scripts/memory/append_registro_angulos.js \
+  --slug "<slug do Passo 3>" \
   --data "$(date +%F)" \
-  --mensagem "<ângulo central do Passo 3>" \
-  --verdade "<verdade_servida do Passo 2>" \
   --canal email \
-  --peca "<slug do Passo 3>"
+  --angulo "<slug-kebab do ângulo central do Passo 3>" \
+  --verdade "<verdade_servida do Passo 2>" \
+  --pilar "<pilar do Passo 3>"
 ```
 
-Reporte a linha anexada inline. Se o script falhar (`LIVRO_RAZAO_AUSENTE`), avise o usuário e siga — o e-mail já está entregue; o write-back não bloqueia a entrega.
+Reporte a linha anexada inline. Se o script falhar (`REGISTRO_ANGULOS_AUSENTE`), avise o usuário e siga — o e-mail já está entregue; o write-back não bloqueia a entrega.
 
 ## Princípio central
 
-**Copy é função única, canal via parâmetro.** A skill produz o e-mail inline, adaptando o formato para correspondência (assunto + preheader + corpo corrido em tom de carta de mentor), sem agente de copy separado. E-mail é relacional por natureza — pesquisa profunda é opcional e só ativada quando o ângulo for informacional. `revisor-brand` valida copy + compliance antes da entrega. Write-back reusa `scripts/memory/append_livro_razao.js` da Onda 3.
+**Copy é função única, canal via parâmetro.** A skill produz o e-mail inline, adaptando o formato para correspondência (assunto + preheader + corpo corrido em tom de carta de mentor), sem agente de copy separado. E-mail é relacional por natureza — pesquisa profunda é opcional e só ativada quando o ângulo for informacional. `revisor-brand` valida copy + compliance antes da entrega. Write-back via `scripts/memory/append_registro_angulos.js`.
 
 **Envio real é diferido.** Esta skill entrega o artefato aprovado em `export/conteudos/email/<slug>/email.md`. O disparo real via Resend é Onda 5+.
 
@@ -194,5 +195,5 @@ export/conteudos/email/<slug>/
 
 - `export/conteudos/email/<slug>/email.md` existe com assunto, preheader e corpo preenchidos.
 - Gate `revisor-brand` retornou APROVADO.
-- Write-back executado: linha registrada em `memory/narrativas/livro-razao.md` com `--canal email`.
+- Write-back executado: linha registrada em `memory/performance/registro-angulos.md` com `--canal email`.
 - Usuário recebeu a mensagem final com o caminho do artefato.

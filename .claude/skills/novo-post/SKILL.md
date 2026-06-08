@@ -33,8 +33,7 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 14 | ⚙ entregar | tudo ← 13 | 13 | entrega |
 | 14.5 | ⚙ adaptar stories (condic., carrossel) + ⏸ | copy, estilo | 14 | frames |
 | 15 | ⚙ salvar/descartar _rascunho/ (condic.) + ⏸ | — | 14.5 | slug permanente ou remoção |
-| 15.5 | analista-performance — registrar ângulo | ângulo/pilar/slug ← 6 | 13 | entrada em angulos-queimados |
-| 15.6 | ⚙ write-back livro-razão | ângulo+verdade_servida+slug ← 6 | 14 | linha no livro-razão |
+| 15.5 | ⚙ write-back registro-angulos | ângulo+verdade+pilar+slug ← 6 | 13 | linha no registro-angulos |
 | 16 | ⚙ publicação (opcional, gated) | pasta ← 13 | 15 | publicado/pendente |
 
 ## Sintaxe
@@ -58,10 +57,10 @@ Se `revisor-brand` devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e orie
 
 ## Princípio central
 
-**A skill executa produção inline e dispara skills de pesquisa.** Não há subagentes para briefing, copy ou design — a skill lê os arquivos necessários diretamente e produz. A pesquisa de mercado (Fase A) e a pesquisa de tema (deep research) são delegadas às skills `/pesquisar-mercado` e `/pesquisar-tema` respectivamente — o `/novo-post` dispara essas skills quando necessário, mas não possui o pipeline de pesquisa. A Fase B (seleção de candidatos) permanece inline, pois é decisória e acoplada à produção. Agentes externos (treinador, revisor-brand, arquivista, analista-performance) são acionados quando têm função geral no sistema. Ao finalizar (APROVADO), escreve de volta no cérebro: ângulo em `angulos-queimados.md` (Passo 15.5) e verdade_servida em `livro-razao.md` (Passo 15.6).
+**A skill executa produção inline e dispara skills de pesquisa.** Não há subagentes para briefing, copy ou design — a skill lê os arquivos necessários diretamente e produz. A pesquisa de mercado (Fase A) e a pesquisa de tema (deep research) são delegadas às skills `/pesquisar-mercado` e `/pesquisar-tema` respectivamente — o `/novo-post` dispara essas skills quando necessário, mas não possui o pipeline de pesquisa. A Fase B (seleção de candidatos) permanece inline, pois é decisória e acoplada à produção. Agentes externos (treinador, revisor-brand, arquivista) são acionados quando têm função geral no sistema. Ao finalizar (APROVADO), escreve de volta no cérebro uma linha em `registro-angulos.md` — ângulo + verdade + pilar (Passo 15.5), via script determinístico.
 
 **Contexto de leitura por passo:**
-- **Briefing (Passo 6):** `brand/brand-book.md` (inclui `## Verdades`) + `brand/pilares-conteudo.md` + `memory/ramon/contexto.md` + `memory/performance/angulos-queimados.md` + `memory/mercado/tendencias/<mês>.md` + `estilo.md` do estilo escolhido.
+- **Briefing (Passo 6):** `brand/brand-book.md` (inclui `## Verdades`) + `brand/pilares-conteudo.md` + `memory/ramon/contexto.md` + `memory/performance/registro-angulos.md` + `memory/mercado/tendencias/<mês>.md` + `estilo.md` do estilo escolhido.
 - **Copy (Passo 10):** `estilo.md` (campos `#### editorial` de cada bloco) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa gravada.
 - **Design (Passo 11):** `estilo.md` (campos `#### visual` de cada bloco) + `slide.html` do estilo + `brand/referencias-visuais.md` + `brand/social-media.md` + copy.md.
 
@@ -95,7 +94,7 @@ Se `briefing_path` presente: leia o arquivo apontado e extraia `Formato`, `Estil
 
 ### 2. Frescor da inteligência de mercado
 
-A skill **não lê contexto aqui**. Ramon, mercado e ângulos-queimados são consumidos onde de fato decidem: o `pesquisador-mercado` os lê no Passo 3 (recebe os caminhos) para ranquear o tema, e o briefing inline os lê no Passo 6. Este passo só garante que a inteligência de mercado esteja fresca antes do scouting.
+A skill **não lê contexto aqui**. Ramon, mercado e registro-angulos são consumidos onde de fato decidem: o `pesquisador-mercado` os lê no Passo 3 (recebe os caminhos) para ranquear o tema, e o briefing inline os lê no Passo 6. Este passo só garante que a inteligência de mercado esteja fresca antes do scouting.
 
 #### 2a. Checar frescor
 
@@ -127,7 +126,7 @@ Inputs:
 - Formato: <formato>
 - Estilo: <slug se veio no input, senão "ainda não definido">
 - Contexto Ramon: memory/ramon/contexto.md (leia — considere fase atual e cronograma)
-- Ângulos queimados: memory/performance/angulos-queimados.md (não repetir)
+- Ângulos queimados: memory/performance/registro-angulos.md (ângulo com data+descanso ainda futuro = não repetir)
 - Tendências do mês: memory/mercado/tendencias/<YYYY-MM>.md
 - Quantidade de candidatos: 3-5
 
@@ -224,7 +223,7 @@ Se vier ajuste, edite os arquivos em `_rascunho/` inline conforme o pedido. Repi
 - `brand/brand-book.md` — inclui o conjunto canônico de `## Verdades`.
 - `brand/pilares-conteudo.md`
 - `memory/ramon/contexto.md`
-- `memory/performance/angulos-queimados.md`
+- `memory/performance/registro-angulos.md` — ângulos em descanso + saturação de verdade
 - `memory/mercado/tendencias/<YYYY-MM>.md`
 - `estilo.md` do estilo escolhido (campos `## Conceito` e `#### editorial` de cada bloco)
 
@@ -237,7 +236,7 @@ Com base nessas leituras e no tema/candidatos escolhidos, fixe:
 - **Verdade servida** — slug do `## Verdades` (brand/brand-book.md) que este ângulo acende; `neutro` se nenhuma. Guarde como `verdade_servida`.
 - **Sinalizações para o pipeline** — pesquisa necessária? tom específico? restrições/tabus?
 
-**Guarde esses campos na memória da skill** — serão usados nos Passos 10 (copy), 13 (gate + briefing.md) e 15.6 (write-back livro-razão).
+**Guarde esses campos na memória da skill** — serão usados nos Passos 10 (copy), 13 (gate + briefing.md) e 15.5 (write-back registro-angulos).
 
 ### 7. Criar pasta do post
 
@@ -562,34 +561,24 @@ Quer salvar como estilo permanente?
 - **Salvar:** valide kebab-case (`^[a-z0-9-]+$`). Se já existir `templates/social-media/<formato>/estilos/<slug>/`, peça outro slug. Então `mv templates/social-media/<formato>/estilos/_rascunho/ templates/social-media/<formato>/estilos/<slug>/`. O estilo é salvo somente em `templates/social-media/carrossel/estilos/<slug>/` — nenhum estilo é criado em `templates/social-media/stories/`.
 - **Descartar:** `rm -rf templates/social-media/<formato>/estilos/_rascunho/`.
 
-### 15.5. Registrar ângulo queimado
+### 15.5. Write-back no registro de ângulos
 
-Após o post ser **APROVADO** no gate de marca (Passo 13) e entregue (Passo 14), acione `analista-performance` para gravar o ângulo usado — assim os próximos posts não o repetem. **Não depende de publicação via API; o post finalizado é o gatilho.** Se o post foi REPROVADO sem recuperação ou descartado, **não** registre.
+Após o post ser **APROVADO** no gate de marca (Passo 13) e entregue (Passo 14), registre a peça no `registro-angulos.md` — uma linha que grava o que o post **disse** (ângulo + verdade + pilar + descanso). Assim o scouting (Passo 3) sabe que o ângulo está em descanso e o `estrategista-mercado` detecta saturação de verdade. **Não depende de publicação via API; o post finalizado é o gatilho.** Se REPROVADO sem recuperação ou descartado, **não** registre.
 
-Acione `analista-performance`:
-```
-Tarefa: registrar ângulo queimado.
-Ângulo central: <ângulo definido no Passo 6>
-Pilar: <pilar do Passo 6>
-Slug: <slug do Passo 6>
-Data da publicação: <data de hoje>
-```
-O `analista-performance` define a janela de descanso por bom senso editorial (ângulo específico descansa mais; amplo, menos) e grava a entrada em `memory/performance/angulos-queimados.md`. Se o mesmo ângulo já existir, ele atualiza a data em vez de duplicar.
-
-### 15.6. Registrar mensagem no livro-razão
-
-Após APROVADO (Passo 13) e entregue (Passo 14), registre a mensagem deste post no livro-razão de narrativas — assim o cérebro sabe o que já foi dito e o estrategista detecta saturação. Determinístico (script; o `estrategista-mercado` é o leitor da saturação, não escreve aqui):
+Determinístico — o script escreve a linha completa; ninguém (nem o `analista-performance`, owner do slice) anexa à mão:
 
 ```bash
-node scripts/memory/append_livro_razao.js \
+node scripts/memory/append_registro_angulos.js \
+  --slug "<slug do Passo 6>" \
   --data "$(date +%F)" \
-  --mensagem "<ângulo central do Passo 6>" \
-  --verdade "<verdade_servida do Passo 6 — slug ou neutro>" \
   --canal instagram \
-  --peca "<slug do Passo 6>"
+  --angulo "<slug-kebab do ângulo central do Passo 6>" \
+  --verdade "<verdade_servida do Passo 6 — slug ou neutro>" \
+  --pilar "<pilar do Passo 6>" \
+  --descanso "<21d default; ângulo muito específico → maior, ex 6sem>"
 ```
 
-Reporte a linha anexada inline. Se o script falhar (`LIVRO_RAZAO_AUSENTE`), avise o usuário e siga — o post já está entregue; o write-back não bloqueia entrega.
+Reporte a linha anexada inline. Se o script falhar (`REGISTRO_ANGULOS_AUSENTE`), avise o usuário e siga — o post já está entregue; o write-back não bloqueia entrega.
 
 ### 16. Publicação (opcional, gated por política)
 
@@ -672,5 +661,5 @@ export/conteudos/<formato>/<data>-<slug>/
 - `briefing.md` foi gerado com status APROVADO pelo gate `revisor-brand`.
 - Em modo ad-hoc, `_rascunho/` foi salvo com slug definitivo ou removido (não deve sobrar entre execuções) — a decisão ocorre no Passo 15.
 - Usuário recebeu a mensagem final do Passo 14 com lista de PNGs e caminho do briefing.
-- Quando APROVADO: o ângulo foi registrado em `angulos-queimados.md` (Passo 15.5) **e** a mensagem em `livro-razao.md` (Passo 15.6).
+- Quando APROVADO: a peça foi registrada como uma linha em `registro-angulos.md` (ângulo + verdade + pilar + descanso) no Passo 15.5.
 - Quando adaptação stories executada: `stories/design/` contém `frame-N.html`; `stories/export/` contém um PNG por frame; quantidade de PNGs = quantidade de frames HTML; `copy.md` raiz não foi alterado.

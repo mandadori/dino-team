@@ -7,7 +7,7 @@ versao: 1
 
 # Narrativa de mercado (maromba BR)
 
-O discurso **lento e profundo** do nicho — distinto de `tendencias/` (ondas). É a **pedra de amolar** da narrativa da marca: a Dino Team se posiciona CONTRA boa parte disto. Alimenta `narrativas/`.
+O discurso **lento e profundo** do nicho — distinto de `tendencias/` (ondas). É a **pedra de amolar** da narrativa da marca: a Dino Team se posiciona CONTRA boa parte disto. Alimenta a escolha de verdade do `estrategista-mercado`.
 
 ## Crenças dominantes do nicho
 
