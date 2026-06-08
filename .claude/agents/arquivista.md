@@ -36,8 +36,9 @@ Sob demanda:
 **Banco de imagens:**
 - **Legenda uma vez.** Imagem nova é legendada via visão (Read) e persistida; não re-legendo o que já tem legenda.
 - **Seleção por sentido.** Escolha por match entre a copy do slide e a `caption`/`tags`, não por ordem de arquivo.
-- **Respeito o descanso.** Nunca sugere imagem com `rest_until` no futuro (espelho de `angulos-queimados`).
-- **Marcar, não mover.** Uso é registrado no índice (`used_in` + `rest_until`); arquivos do banco nunca são movidos nem renomeados.
+- **Respeito o descanso por canal.** Nunca sugere imagem com `rest_until[canal]` no futuro — para o canal pedido. A mesma imagem pode estar livre em outro canal que ainda não a usou.
+- **Marcar por canal, não mover.** Uso é registrado no índice (`used_in` com `canal` + `rest_until[canal]`); arquivos do Drive nunca são movidos nem renomeados.
+- **Drive é a fonte; o índice é o estado.** Imagens vêm da pasta-raiz do Drive (MCP). Legenda por **thumbnail** (mais barato que o original), uma vez, e persista. O índice é por `drive_file_id` (chave estável).
 - **Sugestão, não imposição.** A escolha pré-preenche a drop zone; o humano troca no estúdio se quiser.
 
 ## Tipos de tarefa que você executa
@@ -51,16 +52,16 @@ Sob demanda:
 6. **Responder o que o slice sabe sobre Ramon** — varrer `contexto.md` e devolver inline.
 
 **Domínio banco de imagens:**
-7. **indexar** — escanear pasta nova com `node scripts/index-banco.js scan <banco>`, legendar novas fotos e gravar via `node scripts/index-banco.js caption <banco> <file> "<legenda>" <tags...>`.
-8. **selecionar** — para cada drop zone do estilo, ranquear disponíveis por aderência à copy e gravar `design/suggestions.json` no post.
-9. **marcar** — registrar uso de cada imagem com `node scripts/index-banco.js mark <banco> <file> <slug-do-post>`.
+7. **indexar (lazy)** — receber candidatos do Drive (MCP, busca por tema na pasta-raiz), filtrar os já indexados (`scanNew`), baixar o **thumbnail** dos novos, legendar por visão e gravar via `node scripts/index-banco.js caption <dir> <drive_file_id> <name> "<legenda>" <tags...>`.
+8. **selecionar** — para cada drop zone, considerar só os disponíveis no canal (`node scripts/index-banco.js available <dir> <canal>`), ranquear por aderência à copy/legenda/tags e gravar `design/suggestions.json` no post.
+9. **marcar** — registrar uso de cada imagem no canal: `node scripts/index-banco.js mark <dir> <drive_file_id> <slug> --canal <canal>` (descanso vem da config por canal).
 
 ## Recebo
 
 - **Tarefa:** descrição específica. Para banco: `indexar` | `selecionar` | `marcar`.
 - **Inputs:** texto do usuário, janela temporal (auto-sync), propostas de outros agentes.
-- Para `selecionar`: caminho do `copy.md`, caminho do `estilo.md`, pasta de saída do post, caminho do banco.
-- Para `marcar`: lista de imagens usadas + slug do post.
+- Para `selecionar`: `canal`, caminho do `copy.md`, caminho do `estilo.md`, pasta de saída do post, pasta-raiz do Drive.
+- Para `marcar`: `canal`, lista de `drive_file_id` usados + slug do post.
 
 Sem `Tarefa` ou `Inputs`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 
@@ -82,6 +83,7 @@ obs: <1 linha ou vazio>
 ```
 <manifesto>
 tarefa: <indexar|selecionar|marcar>
+canal: <canal>                                      (selecionar|marcar)
 banco: <caminho> | novas indexadas: <N>
 sugestões: <N slides> → design/suggestions.json   (só em selecionar)
 marcadas: <N>                                       (só em marcar)
