@@ -51,9 +51,24 @@ decisoes:
     autonomia: automatico
     corpo: "agente analista-performance"
 
-  - funcao: sinais-produto      # Onda 6 — declarado
-    decisao: "o que o aluno trava/pergunta/conquista vira dor/objeção/prova"
-    autonomia: humano
-    corpo: "/sinal-consultoria (Onda 6)"
+  - funcao: desenvolvimento-produto
+    decisao: "descobrir oportunidade no cérebro + arquitetar a oferta"
+    autonomia: automatico_com_revisao   # propor/desenhar = auto; criar de fato passa pelos gates abaixo
+    corpo: "agente estrategista-produto (/criar-produto)"
+
+  - funcao: validacao-produto
+    decisao: "rodar experimento barato dentro do orçamento (G-ideia)"
+    autonomia: automatico_com_revisao   # libera validar = humano no G-ideia; experimento roda na audiência
+    corpo: "/validar-produto"
+
+  - funcao: lancamento-produto
+    decisao: "construir + precificar + distribuir o produto validado (G-lançamento consolidado)"
+    autonomia: humano                    # gate único de lançamento; nada executa sem go/no-go
+    corpo: "/validar-produto (G-lançamento) → handoff p/ marketing"
+
+  - funcao: sunset-produto
+    decisao: "aposentar um produto (G-sunset)"
+    autonomia: humano                    # matar produto exige confirmação; custo afundado ignorado na recomendação
+    corpo: "/evoluir-produto (G-sunset)"
 
 # Regra-mãe (nunca relaxar): publicar como fallback de timeout é PROIBIDO (ver publicacao.yaml).
