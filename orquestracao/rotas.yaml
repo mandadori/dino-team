@@ -29,3 +29,16 @@ rotas:
       sucesso: dashboard
       falha: dashboard
     ativa: true
+
+  - id: evolucao-produto-cron
+    trigger:
+      tipo: cron
+      schedule: "0 9 5 * *"          # dia 5 de cada mês às 9h (TZ: America/Sao_Paulo)
+      timezone: America/Sao_Paulo
+    skill: /evoluir-produto
+    args:
+      escopo: --todos                 # varre todos os produtos ativos; SÓ sinaliza, humano decide
+    notificacao:
+      sucesso: dashboard
+      falha: dashboard
+    ativa: true
