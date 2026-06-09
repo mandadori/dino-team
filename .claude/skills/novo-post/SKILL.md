@@ -32,6 +32,7 @@ Cria um post Instagram completo no formato pedido, do briefing à entrega das im
 | 13 | revisor-brand (gate) | copy.md + pasta | 12 | APROVADO/REPROVADO |
 | 14 | ⚙ entregar | tudo ← 13 | 13 | entrega |
 | 14.5 | ⚙ adaptar stories (condic., carrossel) + ⏸ | copy, estilo | 14 | frames |
+| 14.6 | ⚙ captura de fonte na biblioteca (condic., não-bloqueia) + ⏸ | slugs de fonte ← 10 | 14 | ficha nova (opcional) |
 | 15 | ⚙ salvar/descartar _rascunho/ (condic.) + ⏸ | — | 14.5 | slug permanente ou remoção |
 | 15.5 | ⚙ write-back registro-angulos | ângulo+verdade+pilar+slug ← 6 | 13 | linha no registro-angulos |
 | 16 | ⚙ publicação (opcional, gated) | pasta ← 13 | 15 | publicado/pendente |
@@ -61,7 +62,7 @@ Se `revisor-brand` devolver `BRAND_BOOK_INCOMPLETO`, propague ao usuário e orie
 
 **Contexto de leitura por passo:**
 - **Briefing (Passo 6):** `brand/brand-book.md` (inclui `## Verdades`) + `brand/pilares-conteudo.md` + `memory/ramon/contexto.md` + `memory/performance/registro-angulos.md` + `memory/mercado/tendencias/<mês>.md` + `estilo.md` do estilo escolhido.
-- **Copy (Passo 10):** `estilo.md` (campos `#### editorial` de cada bloco) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa gravada.
+- **Copy (Passo 10):** `estilo.md` (campos `#### editorial` de cada bloco) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa gravada + fichas selecionadas de `memory/biblioteca/` (índice → 1-2 fichas por pilar/tema).
 - **Design (Passo 11):** `estilo.md` (campos `#### visual` de cada bloco) + `slide.html` do estilo + `brand/referencias-visuais.md` + `brand/social-media.md` + copy.md.
 
 **Estrutura de copy é propriedade do estilo, não do formato.** Cada `estilo.md` carrega `## Estrutura` com blocos declarativos. Em modo ad-hoc, cria-se um estilo temporário em `_rascunho/` **antes** da copy, para que o pipeline inteiro rode sobre um estilo concreto.
@@ -292,6 +293,7 @@ Leia os seguintes arquivos:
 - `brand/tom-de-voz.md`
 - `brand/publico-alvo.md`
 - `memory/pesquisa/<data>-tendencias-<slug>.md` (se pesquisa executada no Passo 9)
+- `memory/biblioteca/_indice.md` → filtre por **pilar+tema do briefing**, abra **só 1-2 fichas** (`memory/biblioteca/fontes/<slug>.md`) e use os **trechos curados** como matéria-prima da copy (sem cópia literal; respeite o `Off-limits` da ficha). Nunca leia a biblioteca inteira. Guarde os `slug` das fontes usadas para o Passo 14.6.
 - `export/conteudos/<formato>/<data>-<slug>/treino.md` (se existir)
 
 Com base nessas leituras e no briefing inline do Passo 6, escreva a copy seguindo **exatamente** os campos `#### editorial` de cada bloco do estilo (função, tom, [entregar], [ab]). Um bloco por bloco, respeitando limites de palavras declarados em `[entregar]`.
@@ -545,6 +547,19 @@ node scripts/export-png.js export/conteudos/carrossel/<data>-<slug>/stories/ --f
 O script valida dimensões e contagem automaticamente. Em caso de erro, corrija o frame apontado e re-rode.
 
 **Gate de marca não se repete** — copy e briefing já foram aprovados no Passo 13.
+
+### 14.6. Captura de fonte na biblioteca (condicional, não-bloqueia)
+
+**Em `--auto`: pular (sem humano para confirmar).** Só executa se a copy (Passo 10) se apoiou numa fonte que **não estava** em `memory/biblioteca/_indice.md`.
+
+```
+A copy usou uma fonte que ainda não está na biblioteca: <nome/fonte>.
+Salvar como ficha do pilar <pilar>? Vira matéria-prima para posts futuros.
+- "sim"  → eu coleto os campos mínimos e gravo a ficha
+- "não"  → segue sem salvar
+```
+
+Se "sim", colete o mínimo (nome, tipo, pilar, "use para", 1-2 trechos com página/fonte) e acione `pesquisador-mercado` no modo `manutenção da biblioteca` (`proveniencia: usuario via /novo-post em <data>`, `status: nucleo`). **Nunca bloqueia a entrega** — em qualquer erro, reporte e siga.
 
 ### 15. Salvar/descartar `_rascunho/` (pausa)
 
