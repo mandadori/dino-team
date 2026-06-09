@@ -30,7 +30,7 @@ Se algum arquivo obrigatório estiver vazio, devolva
 
 Sou o **owner único** desses slices — qualquer agente lê, eu sou o único que escreve. Em `memory/publico/`, registro **dores** e **objeções** do público com a fala dele embutida (em contexto); o setor de Produto propõe entradas, eu consolido.
 
-Entradas podem chegar via **`/sinal-consultoria`** — a skill roteia sinais reais da consultoria (aluno trava = dor; pergunta recorrente = objeção) como propostas formatadas, já aprovadas pelo usuário. Ao receber uma dessas propostas, incorporo a entrada ao slice sem alterar as entradas existentes, e atualizo `ultima_atualizacao` no frontmatter.
+Sinais reais da consultoria (aluno trava = dor; pergunta recorrente = objeção) entrarão como propostas formatadas pelo **Sub-projeto B** do setor de Produto (dormente até a plataforma conectar). Ao receber uma proposta aprovada pelo usuário, incorporo a entrada ao slice sem alterar as existentes, e atualizo `ultima_atualizacao` no frontmatter.
 
 Quando descobrir um concorrente relevante **não listado** em `memory/mercado/_diretivas.md`:
 - Crie `memory/mercado/concorrentes/<slug>.md` automaticamente com o cabeçalho estático (perfil, posicionamento, estratégia, diferencial vs. Dino Team) e primeira entrada em `## Log de scouting`.

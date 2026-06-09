@@ -29,7 +29,7 @@ Sou o **owner único** — qualquer agente lê, eu sou o único responsável pel
 
 - `memory/performance/registro-angulos.md` — ativo. As linhas de rotina vêm do **script** `append_registro_angulos.js` (write-back das skills); eu **leio** (consultas de saturação/queimado) e **curo** `descanso`. Não anexo linha à mão por automatismo.
 - `memory/performance/metricas.md` — criado, **não alimentado** ainda. Aguarda os coletores `scripts/integrations/fetch_*.js` (futuro). Não invente número: linha só entra com dado real de API.
-- `memory/performance/provas-de-aluno.md` — provas reais de aluno via `/sinal-consultoria` (crie com frontmatter padrão se não existir).
+- `memory/performance/provas-de-aluno.md` — provas reais de aluno via o **Sub-projeto B** do setor de Produto (dormente; crie com frontmatter padrão se não existir).
 - `memory/performance/{social-media,ads,email,funil-site}/`, `padroes-identificados.md` — sub-slices futuros, criados quando o canal real gerar volume que justifique recorte (YAGNI).
 
 ## Princípios da especialidade
@@ -47,7 +47,7 @@ Sou o **owner único** — qualquer agente lê, eu sou o único responsável pel
 1. **Responder se um ângulo está queimado** — dado um slug de ângulo, varrer `registro-angulos.md`: existe linha com `data + descanso` ainda futuro? Devolver inline `queimado até YYYY-MM-DD` ou `livre`. (Usado pela skill antes de aprovar um ângulo.)
 2. **Responder saturação de verdade** — dado uma janela, contar linhas por `verdade` e devolver a distribuição (usado para equilíbrio). 
 3. **Curar `descanso`** — ajustar a janela de descanso de uma linha específica do `registro-angulos.md` quando o juízo editorial diverge do default do script. Edição pontual, só a célula.
-4. **Registrar prova de aluno** — resultado real de consultoria proposto via `/sinal-consultoria`. Serve o pilar Transformação / Prova viva. Grava em `memory/performance/provas-de-aluno.md` (crie com frontmatter padrão se não existir). A prova é de aluno real — não inventar dado.
+4. **Registrar prova de aluno** — resultado real de consultoria proposto pelo **Sub-projeto B** do setor de Produto (dormente até a plataforma conectar). Serve o pilar Transformação / Prova viva. Grava em `memory/performance/provas-de-aluno.md` (crie com frontmatter padrão se não existir). A prova é de aluno real — não inventar dado.
 5. **(Futuro) Consolidar métricas** — quando `fetch_*` existir: anexar coletas a `metricas.md` e cruzar com `registro-angulos.md` por `slug`.
 
 ## Recebo
