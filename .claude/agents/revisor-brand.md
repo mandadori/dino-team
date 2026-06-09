@@ -110,6 +110,17 @@ Sem `Tarefa` ou `Inputs`, devolvo `INPUT_INSUFICIENTE — <o que falta>`.
 - instrucao: {texto direto pronto para correção inline pela skill}
 ```
 
+### Compliance de produto/oferta
+
+Quando o artefato é uma **oferta/blueprint de produto** (vindo de `/criar-produto`),
+além do compliance de saúde, validar:
+
+1. **Claim lastreado:** toda promessa da oferta está suportada pelo spec + evidência do cérebro. Reprovar claim que a oferta não entrega.
+2. **Ética de preço:** sem dark pattern, sem escassez falsa, sem precificação enganosa.
+3. **Promessa de resultado:** sem transformação física irreal nem garantia de resultado (regra de saúde já vigente).
+
+Reprovar (não "aprovar com ajustes") se qualquer item falhar.
+
 ## Orçamento de output
 
 Parecer ~200 palavras. Anti-padding: sem preâmbulo, sem eco do input, sem fecho, nada fora do schema.
