@@ -1,5 +1,5 @@
 ---
-versao: 3
+versao: 4
 ultima_atualizacao: 2026-06-08
 ---
 
@@ -23,37 +23,52 @@ Memória viva compartilhada do sistema Dino Team. **"A memória é a integraçã
 | `mercado/` | `pesquisador-mercado` | `narrativa-de-mercado.md`, `tendencias/`, `concorrentes/` | ativo |
 | `ramon/` | `arquivista` | contexto temporal/biográfico | ativo |
 | `performance/` | `analista-performance` | `registro-angulos.md` (o que cada peça disse: ângulo + verdade + pilar + descanso), `metricas.md` (o que gerou — criado, alimentado por `fetch_*` no futuro), `provas-de-aluno.md` | ativo |
+| `produto/` | `estrategista-produto` | `catalogo.md` (produtos vivos + status), `oportunidades.md` (hipóteses testáveis), `economia.md` (humano), `funcao-objetivo.md` (humano) | criado (setor Produto — Sub-projeto A) |
 | `pesquisa/` | `pesquisador-mercado` | pesquisa bruta datada (insumo) | ativo |
 
 > O slice `narrativas/` (livro-razão de verdades) foi **dissolvido em 2026-06**: ângulo e verdade são o mesmo tipo de dado (o que a peça disse) e passaram a viver juntos em `performance/registro-angulos.md`, sob `analista-performance`. O `estrategista-mercado` deixou de ter slice durável — virou leitor (lê o registro para saturação/equilíbrio).
 
 **Não é cérebro:** `orquestracao/politicas/` (governança/config), `memory/mercado/_diretivas.md` → config de pesquisa.
 
-## Integração Produto pelo cérebro (Onda 6)
+## Setor Produto — integrado pelo cérebro
 
-**Produto não tem slice próprio** — escreve nos slices existentes via os owners declarados:
+O setor de Produto tem **slice próprio** (`produto/`, owner `estrategista-produto`) e
+**lê** o resto do cérebro para decidir produto (`publico/` dores+objeções, `mercado/`
+tendências, `performance/` saturação, `brand/` verdades). Integra com Marketing e
+Inteligência **pela memória**, nunca por chamada direta:
 
-| Produto escreve em | Owner que consolida | Via | O que escreve |
-|---|---|---|---|
-| `publico/dores.md` | `pesquisador-mercado` | `/sinal-consultoria` | dores reais de aluno (com fala crua) |
-| `publico/objecoes.md` | `pesquisador-mercado` | `/sinal-consultoria` | objeções reais ouvidas na consultoria |
-| `performance/provas-de-aluno.md` | `analista-performance` | `/sinal-consultoria` | resultados reais de aluno (prova/Transformação) |
+| Direção | Como |
+|---|---|
+| Produto → Inteligência | enfileira lacunas em `pesquisa/pedidos.md`; `pesquisador-mercado` atende (loop fechado) |
+| Produto → Marketing | escreve a oferta em `produto/catalogo.md`; `estrategista-mercado` lê para promover |
+| Inteligência → Produto | Produto lê `mercado/` + `publico/` na descoberta |
 
-**Produto lê** `publico/` + `performance/` para priorizar o roadmap de produto — sem acoplar com Marketing. A memória é a integração.
-
-**Roadmap de produto** — declarado, build depois (YAGNI): nasce como arquivo quando o Produto for efetivamente priorizado no sistema. Não criar arquivo vazio agora.
-
-**Fluxo de um sinal real:** consultor (ou `treinador` propõe) → `/sinal-consultoria` classifica + confirma com humano → aciona owner → owner grava no slice → Marketing lê do slice (sem saber da fonte). Dono único preservado; autonomia `humano` conforme `orquestracao/governanca.yaml`.
+> A skill embrionária `/sinal-consultoria` (canal manual de sinais de consultoria) foi
+> **removida** — superada pelo setor de Produto. A **voz direta dos ~400 alunos**
+> (dores/objeções/provas reais da base) entra no **Sub-projeto B**, dormente até a
+> plataforma conectar.
 
 ## Slices declarados, build depois (canais de performance)
 
 - `performance/metricas.md` já existe (vazio) como ponto único de concentração. Os recortes `performance/{social-media,ads,email,funil-site}/` nascem só quando o volume de métrica real de cada canal justificar.
 
+### Sub-projeto B — Experiência do Cliente / loop operacional (declarado, dormente)
+
+Declarado para não virar amnésia; **não construir** até o gatilho.
+
+| Capacidade | O que é | Gatilho |
+|---|---|---|
+| Loop operacional / CX | telemetria de uso, retenção, tempo médio, engajamento, churn, jornada | acesso à plataforma + API |
+| Economia unitária real | custo/margem reais alimentando `produto/economia.md` | receita/custo conectados |
+| Voz direta do cliente | dores/objeções/provas reais dos ~400 alunos na descoberta (inclui `performance/provas-de-aluno.md`) | plataforma conecta / canal estruturado de captura |
+
+Sem coletor, sem agente, sem skill agora — só esta declaração.
+
 ## Frontmatter padrão dos arquivos do cérebro
 
 ```yaml
 ---
-slice: <publico | mercado | ramon | performance | pesquisa>
+slice: <publico | mercado | ramon | performance | pesquisa | produto>
 owner: <agente owner>
 ultima_atualizacao: YYYY-MM-DD
 versao: 1
