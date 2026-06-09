@@ -61,6 +61,7 @@ _Estratégia e direção:_
 _Pesquisa e inteligência:_
 - [`/pesquisar-mercado`](.claude/skills/pesquisar-mercado/SKILL.md) — Fase A standalone: captura inteligência de mercado durável (tendências, concorrentes, fala do público) em `memory/mercado/` + `memory/publico/`. Disparável manual ou pela produção quando stale.
 - [`/pesquisar-tema`](.claude/skills/pesquisar-tema/SKILL.md) — deep research standalone para um ângulo/tema específico. Grava matéria-prima em `memory/pesquisa/`, reusável por `/novo-post`, `/lote-posts` e `/novo-artigo`.
+- [`/curar-fontes`](.claude/skills/curar-fontes/SKILL.md) — ensina a **biblioteca de fontes curadas** (`memory/biblioteca/`) por entrevista: livros/autores/criadores/estudos por pilar, com trechos/páginas que a copy riffa. Semeadura + adicionar + promover candidatas. Owner do slice: `pesquisador-mercado`.
 
 _Marca e site:_
 - [`/brand-discovery`](.claude/skills/brand-discovery/SKILL.md) — entrevista para construir/atualizar o brand book.
@@ -87,7 +88,7 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 - **Marketing / Estratégia**
   - [`estrategista-mercado`](.claude/agents/estrategista-mercado.md) — lê o momento (emoção do público + crença de mercado) e escolhe a verdade da marca que **aproveita** esse momento (mostra o caminho, não reage); lê o `registro-angulos` para saturação/equilíbrio (não tem slice durável); propõe as jogadas da pauta.
 - **Marketing / Pesquisa**
-  - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `memory/mercado/`.
+  - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner dos slices `memory/mercado/` e `memory/biblioteca/` (fontes curadas: lê índice+fichas por pilar/tema; propõe candidatas).
 - **Produto / Desenvolvimento & Evolução**
   - [`estrategista-produto`](.claude/agents/estrategista-produto.md) — descobre oportunidades no cérebro, prioriza por função-objetivo (anti-canibalização), arquiteta oferta, propõe preço, flaga evolução/sunset. Dono único de `memory/produto/`.
 - **Produto / Consultoria / Execução**
@@ -119,6 +120,7 @@ A arquitetura viva é a **G3 "2 velocidades"**: verdade atemporal (lenta, em `br
 - `memory/performance/` — `registro-angulos.md` (ledger único do que cada peça **disse**: ângulo + verdade + pilar + descanso; funde os antigos `angulos-queimados.md` e `livro-razao.md`) + `metricas.md` (o que cada peça **gerou** — criado, alimentado por `fetch_*` no futuro, joinado por `slug`) + `provas-de-aluno.md` (owner: `analista-performance`).
 - `memory/produto/` — `catalogo.md` (produtos vivos + status), `oportunidades.md` (hipóteses testáveis), `economia.md` + `funcao-objetivo.md` (input humano) (owner: `estrategista-produto`).
 - `memory/pesquisa/` — pesquisa bruta (insumo cumulativo, não-verdade).
+- `memory/biblioteca/` — `_indice.md` (índice leve) + `fontes/<slug>.md` (fichas curadas: trechos/páginas por pilar/tema). Ensinada por `/curar-fontes`, enriquecida por proposta no scouting; lida 1ª (antes da web) por `/pesquisar-tema` e na copy do `/novo-post` (owner: `pesquisador-mercado`).
 
 > O slice `narrativas/` foi dissolvido em 2026-06: ângulo e verdade viraram um dado só (o que a peça disse) em `performance/registro-angulos.md`. O `estrategista-mercado` virou leitor (não tem mais slice durável).
 
