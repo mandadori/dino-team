@@ -25,6 +25,7 @@ Memória viva compartilhada do sistema Dino Team. **"A memória é a integraçã
 | `performance/` | `analista-performance` | `registro-angulos.md` (o que cada peça disse: ângulo + verdade + pilar + descanso), `metricas.md` (o que gerou — criado, alimentado por `fetch_*` no futuro), `provas-de-aluno.md` | ativo |
 | `produto/` | `estrategista-produto` | `catalogo.md` (produtos vivos + status), `oportunidades.md` (hipóteses testáveis), `economia.md` (humano), `funcao-objetivo.md` (humano) | criado (setor Produto — Sub-projeto A) |
 | `pesquisa/` | `pesquisador-mercado` | pesquisa bruta datada (insumo) | ativo |
+| `biblioteca/` | `pesquisador-mercado` (usuário ensina; agente propõe) | `_indice.md` (índice leve) + `fontes/<slug>.md` (fichas curadas: trechos/páginas por pilar/tema) | ativo |
 
 > O slice `narrativas/` (livro-razão de verdades) foi **dissolvido em 2026-06**: ângulo e verdade são o mesmo tipo de dado (o que a peça disse) e passaram a viver juntos em `performance/registro-angulos.md`, sob `analista-performance`. O `estrategista-mercado` deixou de ter slice durável — virou leitor (lê o registro para saturação/equilíbrio).
 
@@ -68,7 +69,7 @@ Sem coletor, sem agente, sem skill agora — só esta declaração.
 
 ```yaml
 ---
-slice: <publico | mercado | ramon | performance | pesquisa | produto>
+slice: <publico | mercado | ramon | performance | pesquisa | produto | biblioteca>
 owner: <agente owner>
 ultima_atualizacao: YYYY-MM-DD
 versao: 1
