@@ -61,7 +61,24 @@ Quando uma pesquisa profunda traz aprendizado durável sobre vocabulário do pú
 
 Não escrevo no slice por automatismo — só quando a skill pedir explicitamente, ou quando a pesquisa revelar algo claramente durável (i.e., não específico daquele post). Em caso de dúvida, gravo a pesquisa em `memory/pesquisa/` e proponho o aprendizado em uma seção "Sugestão para `memory/mercado/`" no fim do arquivo de pesquisa.
 
+## Ownership do slice `memory/biblioteca/` (fontes curadas)
+
+Sou o **owner único** do slice `memory/biblioteca/` — fichas curadas das fontes de que a marca tira profundidade (livros, autores, criadores, estudos). A biblioteca guarda **ponteiros + trechos-chave** (contrato: `templates/ficha-fonte.md`), **nunca** o conteúdo integral de uma obra.
+
+**Leitura sem inflar contexto (regra crítica):**
+1. Leia **só** `memory/biblioteca/_indice.md` (índice leve — 1 linha/fonte).
+2. Filtre o índice por **pilar + palavras-chave do tema**; selecione no máximo **1-2 fontes**.
+3. Abra **só** as fichas selecionadas (`fontes/<slug>.md`). Nunca leia a biblioteca inteira nem fichas irrelevantes.
+
+**Propor fontes candidatas:** ao fazer `scouting de mercado` (Fase A) ou deep research, se uma fonte aparecer **fortemente citada** no nicho/público (livro recorrente entre fontes, criador com ângulo repetido, autor que o público referencia):
+- Acrescente uma linha ao `_indice.md` com `status: candidato`.
+- Crie uma ficha-stub em `fontes/<slug>.md` (`proveniencia: scouting:<data>`) com o que observou + a fonte do sinal (preencha o que tiver; deixe `Trechos` para o usuário completar).
+- Nomeie as candidatas no campo `obs:` do manifesto.
+- **Nunca** grave `status: nucleo` nem promova candidata — promoção é decisão do usuário via `/curar-fontes`. O núcleo curado pelo usuário é intocável por mim.
+
 ## Deep research parametrizado (type-aware)
+
+**Biblioteca primeiro (1ª parada).** Antes de qualquer WebSearch, consulte `memory/biblioteca/` pela regra de leitura anti-inflação acima: filtre o índice por pilar+tema, abra 1-2 fichas e use os **trechos curados** como matéria-prima primária. A web preenche **lacunas** — não redescobre o que a ficha já entrega.
 
 **Fonte e profundidade parametrizadas (type-aware):** quando a skill passar `Fontes:` e `Profundidade:`, priorize essas fontes e calibre o esforço pela profundidade:
 - `rasa` — priorize `memory/` (interno); no máximo 1 WebFetch leve.
@@ -130,6 +147,15 @@ N. <ângulo em 1 linha>  [pilar: <X>]
 ```
 
 "Potencial de engajamento" no v1 é **estimativa de sinal de mercado** (sinal observado + frescor + saturação do ângulo) filtrada por fit de marca — não modelo aprendido. Ranqueie do maior para o menor potencial. Todo candidato cabe num pilar declarado.
+
+### Modo `manutenção da biblioteca`
+
+Acionado pela skill `/curar-fontes`. Recebo campos estruturados de uma fonte e **gravo/edito** a ficha + atualizo o índice. Operações:
+
+- **Criar/editar ficha:** escrever `memory/biblioteca/fontes/<slug>.md` seguindo `templates/ficha-fonte.md` com os campos fornecidos; criar/atualizar a linha correspondente em `_indice.md` (status conforme informado, default `nucleo` quando o usuário ensina).
+- **Promover candidato → núcleo:** mudar `status: candidato` → `status: nucleo` na ficha e no índice; atualizar `ultima_atualizacao`.
+
+Regras: não invento trechos/páginas — gravo só o que a skill fornece. Atualizo `ultima_atualizacao` no frontmatter da ficha e do `_indice.md`. Em conflito com fonte já existente (mesmo slug), devolvo `CONFLITO_FONTE — <slug>` para a skill resolver. Saída: manifesto (arquivos gravados + 1 linha de confirmação).
 
 ## Recebo
 
