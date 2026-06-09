@@ -66,6 +66,7 @@ Inputs:
 - Pilar / Recorte / Sinalizações: <pilar ou "nenhum"> / <recorte ou "nenhum"> / <nenhuma>
 - Contexto de mercado acumulado: memory/mercado/tendencias/<YYYY-MM atual>.md + memory/mercado/concorrentes/*.md (parta daqui; não redescubra tendências já mapeadas).
 
+Biblioteca de fontes (1ª parada): consulte memory/biblioteca/_indice.md — filtre por pilar+tema, abra 1-2 fichas e use os trechos curados como matéria-prima primária. A web preenche lacunas.
 Foco: ângulos não-óbvios e contradições dentro do recorte; referências concretas com link; dados/citações verificáveis; mitos a quebrar.
 
 Template: templates/pesquisa.md.
@@ -100,6 +101,8 @@ Para usar em um post:
 ## Perfis de fonte por pilar
 
 A skill resolve o perfil a partir de `--pilar` (de `brand/pilares-conteudo.md`) e o passa ao `pesquisador-mercado` nos campos `Fontes` e `Profundidade`. O perfil respeita o `## Off-limits` dos pilares (sem motivação vazia, sem promessa irreal).
+
+> **A biblioteca curada vem primeiro.** Esta tabela é o **fallback de tipo-de-fonte**: o agente consulta `memory/biblioteca/` (fontes concretas com trechos) como 1ª parada; quando a biblioteca não tem fonte para o pilar/tema, esta tabela orienta o tipo de fonte a buscar na web.
 
 | Pilar | Fontes prioritárias | Profundidade | Foco criativo |
 |---|---|---|---|
