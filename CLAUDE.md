@@ -71,8 +71,10 @@ _Marca e site:_
 - [`/atualizar-ramon`](.claude/skills/atualizar-ramon/SKILL.md) — atualizar o slice `memory/ramon/` (fase atual + cronograma + outras vertentes).
 - [`/novo-site`](.claude/skills/novo-site/SKILL.md) — criar ou alterar o site (dual-mode); aciona os agentes de Engenharia + gate `revisor-brand`.
 
-_Produto — integração pelo cérebro:_
-- [`/sinal-consultoria`](.claude/skills/sinal-consultoria/SKILL.md) — roteia um sinal real da consultoria ao cérebro: aluno travou (dor) → `publico/dores.md`; pergunta recorrente (objeção) → `publico/objecoes.md`; resultado de aluno (prova) → `performance/provas-de-aluno.md`. A skill classifica, pausa para confirmação humana e aciona o owner do slice — Marketing e Produto se afinam pelo cérebro, sem acoplamento direto.
+_Produto — desenvolvimento e evolução (Sub-projeto A):_
+- [`/criar-produto`](.claude/skills/criar-produto/SKILL.md) — entrevista guiada ancorada em evidência → blueprint de oferta no `catalogo.md` (status `em-validação`). Gate `revisor-brand` + G-ideia.
+- [`/validar-produto`](.claude/skills/validar-produto/SKILL.md) — experimento barato (fake-door/landing/concierge) na audiência do Instagram; morte-por-padrão; G-lançamento consolidado.
+- [`/evoluir-produto`](.claude/skills/evoluir-produto/SKILL.md) — melhoria + disciplina de sunset (custo afundado); invocada também pela rotina mensal de evolução.
 
 ### 3. Agentes — especialistas por função (`.claude/agents/`)
 
@@ -80,14 +82,16 @@ Cada agente domina **uma função** e organiza-se em **setor × papel** apenas t
 
 Agentes não conhecem o fluxo nem outros agentes — recebem input num formato declarado, entregam output num formato declarado. Conhecimento específico de um fluxo vive nas skills e templates, não no agente.
 
-**Agentes atuais (11):**
+**Agentes atuais (12):**
 
 - **Marketing / Estratégia**
   - [`estrategista-mercado`](.claude/agents/estrategista-mercado.md) — lê o momento (emoção do público + crença de mercado) e escolhe a verdade da marca que **aproveita** esse momento (mostra o caminho, não reage); lê o `registro-angulos` para saturação/equilíbrio (não tem slice durável); propõe as jogadas da pauta.
 - **Marketing / Pesquisa**
   - [`pesquisador-mercado`](.claude/agents/pesquisador-mercado.md) — pesquisa de mercado/tendências e owner do slice `memory/mercado/`.
+- **Produto / Desenvolvimento & Evolução**
+  - [`estrategista-produto`](.claude/agents/estrategista-produto.md) — descobre oportunidades no cérebro, prioriza por função-objetivo (anti-canibalização), arquiteta oferta, propõe preço, flaga evolução/sunset. Dono único de `memory/produto/`.
 - **Produto / Consultoria / Execução**
-  - [`treinador`](.claude/agents/treinador.md) — decisões técnicas de treino.
+  - [`treinador`](.claude/agents/treinador.md) — decisões técnicas de treino (entrega humanizada).
 - **Transversais / Brand**
   - [`revisor-brand`](.claude/agents/revisor-brand.md) — guardião transversal da identidade da marca e compliance; gate em 2 momentos (identidade visual em criação de estilo; copy + compliance em criação de post).
 - **Transversais / Dados**
@@ -109,15 +113,16 @@ A arquitetura viva é a **G3 "2 velocidades"**: verdade atemporal (lenta, em `br
 **A memória é a integração.** As funções não se coordenam entre si — leem e escrevem o mesmo estado (blackboard). Markdown + frontmatter YAML, versionado em git, dono único por slice. Ver [`memory/_schema.md`](memory/_schema.md) para slices e ownership.
 
 **Slices:**
-- `memory/publico/` — dores e objeções com a fala do público embutida (owner: `pesquisador-mercado`; Produto alimenta via `/sinal-consultoria`).
+- `memory/publico/` — dores e objeções com a fala do público embutida (owner: `pesquisador-mercado`).
 - `memory/mercado/` — `narrativa-de-mercado.md` (discurso do nicho), `tendencias/`, `concorrentes/` (owner: `pesquisador-mercado`).
 - `memory/ramon/contexto.md` — contexto temporal e biográfico do Ramon (owner: `arquivista`).
 - `memory/performance/` — `registro-angulos.md` (ledger único do que cada peça **disse**: ângulo + verdade + pilar + descanso; funde os antigos `angulos-queimados.md` e `livro-razao.md`) + `metricas.md` (o que cada peça **gerou** — criado, alimentado por `fetch_*` no futuro, joinado por `slug`) + `provas-de-aluno.md` (owner: `analista-performance`).
+- `memory/produto/` — `catalogo.md` (produtos vivos + status), `oportunidades.md` (hipóteses testáveis), `economia.md` + `funcao-objetivo.md` (input humano) (owner: `estrategista-produto`).
 - `memory/pesquisa/` — pesquisa bruta (insumo cumulativo, não-verdade).
 
 > O slice `narrativas/` foi dissolvido em 2026-06: ângulo e verdade viraram um dado só (o que a peça disse) em `performance/registro-angulos.md`. O `estrategista-mercado` virou leitor (não tem mais slice durável).
 
-**Setor Produto — integrado pelo cérebro:** a consultoria (`treinador` hoje; anamnese/nutri depois) consome `memory/publico/` + `memory/performance/` para decisões de produto e os alimenta de volta com sinais reais via `/sinal-consultoria`. Produto não tem slice próprio — escreve nos slices existentes pelos owners declarados (dono único preservado). Marketing e Produto se afinam pelo cérebro, nunca por acoplamento direto.
+**Setor Produto — desenvolvimento e evolução (Sub-projeto A):** tem slice próprio `memory/produto/` (owner `estrategista-produto`: `catalogo.md`, `oportunidades.md`, `economia.md` e `funcao-objetivo.md` — os dois últimos mantidos pelo humano). Lê `publico/` + `mercado/` + `performance/` + `brand/` para decidir produto; integra com Inteligência e Marketing **pela memória** (fila `pesquisa/pedidos.md`; oferta lida no `catalogo.md`). O `treinador` segue como entrega técnica humanizada.
 
 ### 5. Produção visual — Dino Editor + banco de imagens
 
@@ -186,7 +191,7 @@ Capacidades do brand OS 360 conscientemente **adiadas** (YAGNI) — declaradas p
 |---|---|---|
 | Narrativa/campanha proativa | construir uma crença ao longo de semanas (não só aproveitar o momento) | existir um evento datado a construir (lançamento de produto, fase de competição do Ramon) |
 | Loop de resultado (outcome) | `scripts/integrations/fetch_*.js` popula `memory/performance/metricas.md`, cruzado por `slug` — "qual verdade/ângulo converte" | conta Instagram/API conectada |
-| Setor Produto vivo | roadmap de produto como ativo; consultoria alimentando o cérebro em volume via `/sinal-consultoria` | consultoria operando com alunos reais |
+| Loop operacional de Produto (Sub-projeto B) | telemetria de uso, retenção, tempo médio, engajamento, churn, CX + economia unitária real + voz direta dos alunos na descoberta | acesso à plataforma da consultoria + API |
 
 Até o gatilho disparar, **não construir** — o sistema se equilibra por saturação (cobertura), não por resultado. A automação progressiva é **throughput-primeiro**: alargar produção/publicação gated antes de fechar o loop de resultado.
 
