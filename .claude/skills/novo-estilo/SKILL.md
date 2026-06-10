@@ -94,14 +94,7 @@ node scripts/editor/scaffold-estilo.js \
 
 O gerador deriva formato/slug do caminho, copia o `<head>`/CSS do estilo e avisa se o formato não for carrossel (editor é carrossel-only). Sem `--out`, o preview vai pra `templates/social-media/{formato}/estilos/_rascunho/preview/` (na pasta do próprio estilo — nunca mais em `export/`).
 
-**Subir o editor:** sobe o Dino Editor como em /novo-post §Subir o Dino Editor (auto-start + health-check + envia `http://localhost:4321`). O scaffold acima deve ser executado antes de subir; o editor é carrossel-only (stories → fallback `export-png.js`). Comando específico para este fluxo:
-
-```bash
-lsof -ti tcp:4321 | xargs kill -9 2>/dev/null; \
-npm run editor -- templates/social-media/{formato}/estilos/_rascunho/preview \
-  --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md \
-  > /tmp/dino-editor.log 2>&1 &
-```
+**Subir o editor:** execute o scaffold acima primeiro, depois suba o Dino Editor como em /novo-post §Subir o Dino Editor (mesmo `lsof` + `npm run editor` + health-check + envia `http://localhost:4321`), com a pasta `templates/social-media/{formato}/estilos/_rascunho/preview` e `--estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md`. O editor é carrossel-only (stories → fallback `export-png.js`).
 
 **⏸ Apresentar ao usuário:**
 
