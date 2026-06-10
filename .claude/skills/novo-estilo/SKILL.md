@@ -13,10 +13,9 @@ description: Cria ou edita um estilo visual para qualquer formato disponível em
 | 2 | ⚙ tratar _rascunho/ | — | 1 | rascunho pronto |
 | 3 | ⏸ usuário | contexto ← 2 | 2 | descrição/alterações |
 | 4 | ⚙ preparar pasta | — | 3 | pasta de trabalho |
-| 5 | ⚙ gerar/editar inline | descrição/refs ← 3, modo | 4 | estilo.md + slide.html |
-| 6 | ⚙ editor auto + ⏸ usuário | _rascunho ← 5 | 5 | confirmar/ajuste |
-| 6.5 | ⚙ promover edits → estilo (editar) | edits.json ← 6 | 6 | estilo.md/slide.html |
-| 7 | revisor-brand (gate visual) | estilo.md + slide.html ← 5/6 | 6 | APROVADO/REPROVADO |
+| 5 | ⚙ gerar/editar inline | descrição ← 3 | 4 | estilo.md + slide.html |
+| 6 | ⚙ Editor + ⏸ | _rascunho ← 5 | 5 | confirmar/ajuste (+ promove edits) |
+| 7 | revisor-brand (gate visual) | estilo.md ← 6 | 6 | APROVADO/REPROVADO |
 | 8 | ⚙ slug (só criar) | — | 7 | slug |
 | 9 | ⚙ salvar | — | 8 | estilo salvo |
 | 10 | ⚙ confirmar | — | 9 | confirmação |
@@ -56,7 +55,7 @@ Se `templates/social-media/{formato}/estilos/_rascunho/` existir, pergunte: cont
 
 ### 3. Mostrar contexto e coletar descrição/alterações
 
-- **Modo editar**: a edição visual acontece no Dino Editor, que abre automaticamente no Passo 6 — **não** peça ao usuário para abrir Live Preview aqui.
+- **Modo editar**: a edição visual acontece no Dino Editor, que abre automaticamente no Passo 6 — **não** peça ao usuário para abrir o editor aqui.
   - Se o usuário já trouxe alterações em texto no input, confirme-as e siga.
   - Se não, avise que o editor abrirá com o estilo atual instanciado para edição visual direta, e siga (sem exigir descrição em texto).
 - **Modo criar**: se `descricao_alteracoes` for menor que uma frase clara, peça detalhes — posicionamento, variantes, uso de foto de fundo, elementos esperados.
@@ -68,17 +67,14 @@ Se `templates/social-media/{formato}/estilos/_rascunho/` existir, pergunte: cont
 
 ### 5. Gerar ou editar estilo inline
 
-Leia os seguintes arquivos antes de produzir:
-- `templates/estilo.md` — contrato canônico (seções obrigatórias e condicionais).
-- `brand/referencias-visuais.md` — tokens de marca (paleta, tipografia, CAIXA ALTA, 80px).
-- `brand/social-media.md` — dimensões, chrome canônico, aspect-ratios.
+Lê: `templates/estilo.md` · `brand/referencias-visuais.md` · `brand/social-media.md`
 
 **Modo criar:** gere do zero, a partir da descrição e refs visuais do usuário:
 - `estilo.md` — seguindo o esqueleto canônico em `templates/estilo.md`: seções obrigatórias (Conceito, Estrutura com `[sequência]`/`[total]`/blocos com `#### visual` e `#### editorial`; `[alternância]` quando bloco N-dinâmico varia layout/fundo, Quando usar, Quando NÃO usar) e condicionais que se apliquem.
 - `slide.html` (carrossel) ou `frame.html` (stories) — HTML standalone com `<body>` contendo as seções de exemplo taggeadas (`data-block`, `data-slot`, `data-bg-drop`).
 - Conteúdo dos blocos é PLACEHOLDER ("TÍTULO DE EXEMPLO", "FRASE — MÁX 12 PALAVRAS", etc.).
 - Backgrounds com intenção fotográfica = sempre drop zone (`data-bg-drop="<nome>"`).
-- **Não gerar `preview.html`** — preview = abrir `slide.html` via Live Preview ou Dino Editor.
+- **Não gerar `preview.html`** — preview = Dino Editor (carrossel); stories → `export-png.js`.
 
 **Modo editar:** leia os arquivos já copiados em `_rascunho/`. Aplique APENAS as alterações pedidas; preserve variantes, tokens, estrutura e documentação não mencionada.
 
@@ -89,37 +85,36 @@ Regras críticas:
 
 ### 6. Revisar no Dino Editor (auto-start + pausa iterativa)
 
-A revisão visual roda no **Dino Editor**, que a skill **sobe automaticamente** — o usuário nunca executa o backend. (O editor suporta `slide-N.html` / carrossel; para formatos baseados em `frame.html` — ex. stories — caia no fallback: render com `export-png.js`.) **Nunca instrua "Live Preview" do VS Code — o usuário não o encontra; passe sempre a URL `http://localhost:4321`.**
+**Gerar scaffold de preview** com o gerador determinístico — instancia cada bloco da `## Estrutura` em `slide-N.html` standalone (corpo flexível repetido `--repeat` vezes; default 2):
 
-1. **Gerar scaffold de preview** com o gerador determinístico — instancia cada bloco da `## Estrutura` em `slide-N.html` standalone (corpo flexível repetido `--repeat` vezes; default 2):
+```bash
+node scripts/editor/scaffold-estilo.js \
+  --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md
+```
 
-   ```bash
-   node scripts/editor/scaffold-estilo.js \
-     --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md
-   ```
+O gerador deriva formato/slug do caminho, copia o `<head>`/CSS do estilo e avisa se o formato não for carrossel (editor é carrossel-only). Sem `--out`, o preview vai pra `templates/social-media/{formato}/estilos/_rascunho/preview/` (na pasta do próprio estilo — nunca mais em `export/`).
 
-   O gerador deriva formato/slug do caminho, copia o `<head>`/CSS do estilo e avisa se o formato não for carrossel (editor é carrossel-only). Sem `--out`, o preview vai pra `templates/social-media/{formato}/estilos/_rascunho/preview/` (na pasta do próprio estilo — nunca mais em `export/`).
-2. **Subir o editor em background** (a skill executa):
+**Subir o editor:** sobe o Dino Editor como em /novo-post §Subir o Dino Editor (auto-start + health-check + envia `http://localhost:4321`). O scaffold acima deve ser executado antes de subir; o editor é carrossel-only (stories → fallback `export-png.js`). Comando específico para este fluxo:
 
-   ```bash
-   lsof -ti tcp:4321 | xargs kill -9 2>/dev/null; \
-   npm run editor -- templates/social-media/{formato}/estilos/_rascunho/preview \
-     --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md \
-     > /tmp/dino-editor.log 2>&1 &
-   ```
+```bash
+lsof -ti tcp:4321 | xargs kill -9 2>/dev/null; \
+npm run editor -- templates/social-media/{formato}/estilos/_rascunho/preview \
+  --estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md \
+  > /tmp/dino-editor.log 2>&1 &
+```
 
-   Aguarde ~3s e confirme saúde: `curl -s -o /dev/null -w "%{http_code}" http://localhost:4321/` → `200`.
-3. **Apresentar (⏸):**
+**⏸ Apresentar ao usuário:**
 
-   ```
-   Dino Editor no ar para o estilo {slug}.
-   Abra no navegador: http://localhost:4321 — edite o visual, clique "Salvar".
+```
+Dino Editor no ar para o estilo {slug}.
+Abra no navegador: http://localhost:4321 — edite o visual, clique "Salvar".
 
-   Responda:
-   - "confirmar"           → promovo as mudanças ao estilo e sigo ao gate
-   - ajuste em texto livre  → aplico inline no estilo
-   ```
-4. **Promover edições estruturais** (modo editar): após o save, leia `templates/social-media/{formato}/estilos/_rascunho/preview/design/edits.json`; se existir, rode `scripts/editor/extract-structural.js` e aplique cada delta em `_rascunho/estilo.md` + `_rascunho/slide.html` atomicamente (mesmo mecanismo do Passo 11.5 de `/novo-post`). Delta não mapeável: reporte ao usuário e siga com os demais.
+Responda:
+- "confirmar"           → promovo as mudanças ao estilo e sigo ao gate
+- ajuste em texto livre  → aplico inline no estilo
+```
+
+- **Promover edições** (modo editar): aplica os deltas estruturais como em /novo-post §Aprendizado de estilo — porém **direto**, sem a pausa de confirmação (aqui editar o estilo É o objetivo).
 
 Ajuste em texto livre → edite `_rascunho/` inline (volta ao Passo 5) e reapresente. Repita até "confirmar". Ao confirmar, derrube o editor e remova o scaffold:
 
