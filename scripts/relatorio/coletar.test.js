@@ -79,3 +79,20 @@ test("sliceStaleness calcula dias desde ultima_atualizacao", () => {
   assert.equal(mercado.diasStale, 8);
   assert.equal(ramon.diasStale, 69);
 });
+
+import { intervaloDoPeriodo } from "./coletar.js";
+
+test("intervaloDoPeriodo resolve mês inteiro", () => {
+  assert.deepEqual(intervaloDoPeriodo("2026-06"), { inicio: "2026-06-01", fim: "2026-06-30" });
+  assert.deepEqual(intervaloDoPeriodo("2026-02"), { inicio: "2026-02-01", fim: "2026-02-28" });
+});
+
+test("intervaloDoPeriodo resolve semana ISO (2ª a dom)", () => {
+  const r = intervaloDoPeriodo("2026-W24");
+  assert.equal(r.inicio, "2026-06-08"); // segunda da W24/2026
+  assert.equal(r.fim, "2026-06-14");
+});
+
+test("intervaloDoPeriodo rejeita formato inválido", () => {
+  assert.throws(() => intervaloDoPeriodo("junho"), /inválido/);
+});
