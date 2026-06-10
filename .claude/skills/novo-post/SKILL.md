@@ -80,7 +80,7 @@ Liste `templates/social-media/` e `templates/social-media/<formato>/estilos/`. T
 
 ### 2. Frescor da inteligência de mercado
 
-Lê: nada aqui — Ramon, mercado e registro-angulos são lidos onde decidem (Passo 3 pelo pesquisador; Passo 5 pelo briefing inline). Este passo só garante que a inteligência esteja fresca antes do scouting.
+Este passo não lê contexto: Ramon, mercado e registro-angulos são lidos onde decidem (Passo 3 pelo pesquisador; Passo 5 pelo briefing). Aqui só se garante que a inteligência de mercado esteja fresca antes do scouting.
 
 ```bash
 f="memory/mercado/tendencias/$(date +%Y-%m).md"
@@ -224,7 +224,7 @@ Se o estilo não declarar `## Inputs obrigatórios externos`, pule.
 
 #### Pesquisa
 
-Lê: contexto de mercado acumulado em `memory/mercado/` (via `/pesquisar-tema`).
+Lê: — (delegado a `/pesquisar-tema`, que lê `memory/mercado/`).
 
 Execute **para todo post** — a pesquisa é fonte de criatividade, não só de fato (inclusive em Mentalidade). Profundidade e fontes vêm do **perfil do pilar** do briefing, resolvido pela `/pesquisar-tema`:
 
@@ -525,6 +525,8 @@ Para publicar, rode manualmente:
   ```
 
   Isso registra `used_in` (com `canal`) + `rest_until.instagram` no índice — a foto descansa só no Instagram (60 dias, da config) e permanece livre nos demais canais.
+
+---
 
 ### Registrar execução (run-ledger)
 
