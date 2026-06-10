@@ -68,6 +68,15 @@ Novas oportunidades: <slugs | nenhuma>.
 - Invocada manualmente **e** pela rotina mensal (`rotas.yaml` → `evolucao-produto-cron`), que **só sinaliza** — humano decide.
 - Sem produto `ativo` → `SEM_PRODUTOS_ATIVOS` (esperado no cold start, antes do 1º lançamento).
 
+## Registrar execução (run-ledger)
+
+Ao concluir, registrar no run-ledger para o relatório do sistema:
+
+`node scripts/orquestracao/registrar_execucao.js --skill evoluir-produto --modo <auto|manual> --resultado <ok|falha> [--slug <slug>] [--nota <motivo se falha>]`
+
+- `--modo auto` quando disparada por routine; `manual` quando pelo usuário.
+- Em falha estrutural, registrar `--resultado falha --nota <erro>` antes de abortar.
+
 ## Critério de conclusão
 - `catalogo.md` reflete as decisões aprovadas; nenhum sunset sem confirmação humana.
 - Novas oportunidades (se houver) registradas em `oportunidades.md`.

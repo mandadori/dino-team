@@ -647,6 +647,16 @@ Inputs:
 Isso registra `used_in` (com `canal`) + `rest_until.instagram` no índice — a foto descansa só no
 Instagram (60 dias, da config) e permanece livre nos demais canais.
 
+### Registrar execução (run-ledger)
+
+Ao concluir, registrar no run-ledger para o relatório do sistema:
+
+`node scripts/orquestracao/registrar_execucao.js --skill novo-post --modo <auto|manual> --resultado <ok|falha> [--slug <slug>] [--nota <motivo se falha>]`
+
+- `--modo auto` quando disparada por routine; `manual` quando pelo usuário.
+- Em falha estrutural, registrar `--resultado falha --nota <erro>` antes de abortar.
+- Registrar em qualquer modo (manual ou `--auto`); no caminho `--auto` o `--modo` é `auto`.
+
 ---
 
 ## Entregável final

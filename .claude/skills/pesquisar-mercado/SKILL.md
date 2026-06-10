@@ -93,6 +93,15 @@ Próximo passo sugerido: /planejar-pauta-semanal ou /novo-post para usar a intel
 - **Idempotente:** rodar duas vezes no mesmo mês **adiciona** entradas de scouting (não sobrescreve — o agente segue o protocolo append do slice).
 - **Stale check:** o `/novo-post` decide quando acionar esta skill (arquivo `memory/mercado/tendencias/<YYYY-MM>.md` ausente ou com mais de 14 dias).
 
+## Registrar execução (run-ledger)
+
+Ao concluir, registrar no run-ledger para o relatório do sistema:
+
+`node scripts/orquestracao/registrar_execucao.js --skill pesquisar-mercado --modo <auto|manual> --resultado <ok|falha> [--slug <slug>] [--nota <motivo se falha>]`
+
+- `--modo auto` quando disparada por routine; `manual` quando pelo usuário.
+- Em falha estrutural, registrar `--resultado falha --nota <erro>` antes de abortar.
+
 ## Critério de conclusão
 
 - `memory/mercado/tendencias/<YYYY-MM>.md` existe e foi atualizado com a varredura do mês.

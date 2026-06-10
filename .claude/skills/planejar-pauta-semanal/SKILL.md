@@ -231,6 +231,15 @@ ou /novo-post <formato> --briefing <caminho-do-briefing>.
 - Tudo igual, mas: ao terminar, registra "aguardando-aprovacao" e **não tenta executar** os posts. Humano abre dashboard e dispara `/lote-posts` quando aprovar.
 - Falha de cron grava entrada em `log.md` da campanha com `estado: falhou`.
 
+## Registrar execução (run-ledger)
+
+Ao concluir, registrar no run-ledger para o relatório do sistema:
+
+`node scripts/orquestracao/registrar_execucao.js --skill planejar-pauta-semanal --modo <auto|manual> --resultado <ok|falha> [--slug <slug>] [--nota <motivo se falha>]`
+
+- `--modo auto` quando disparada por routine; `manual` quando pelo usuário.
+- Em falha estrutural, registrar `--resultado falha --nota <erro>` antes de abortar.
+
 ## Critério de conclusão
 
 - Pasta `campanhas/<YYYY-Www>-pauta-semanal/` existe com briefing-mestre, status, log e N briefings em `output/posts/`.
