@@ -42,3 +42,29 @@ rotas:
       sucesso: dashboard
       falha: dashboard
     ativa: true
+
+  - id: relatorio-mensal-cron
+    trigger:
+      tipo: cron
+      schedule: "0 9 7 * *"          # dia 7 de cada mês às 9h (TZ: America/Sao_Paulo)
+      timezone: America/Sao_Paulo
+    skill: /relatorio-sistema
+    args:
+      mes: anterior
+    notificacao:
+      sucesso: dashboard
+      falha: dashboard
+    ativa: true
+
+  - id: pulso-semanal-cron
+    trigger:
+      tipo: cron
+      schedule: "0 7 * * 1"          # toda 2ª-feira 7h (antes da pauta das 9h)
+      timezone: America/Sao_Paulo
+    skill: /relatorio-sistema
+    args:
+      pulso: true
+    notificacao:
+      sucesso: dashboard
+      falha: dashboard
+    ativa: true

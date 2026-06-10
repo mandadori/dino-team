@@ -77,13 +77,16 @@ _Produto — desenvolvimento e evolução (Sub-projeto A):_
 - [`/validar-produto`](.claude/skills/validar-produto/SKILL.md) — experimento barato (fake-door/landing/concierge) na audiência do Instagram; morte-por-padrão; G-lançamento consolidado.
 - [`/evoluir-produto`](.claude/skills/evoluir-produto/SKILL.md) — melhoria + disciplina de sunset (custo afundado); invocada também pela rotina mensal de evolução.
 
+_Auto-observabilidade:_
+- [`/relatorio-sistema`](.claude/skills/relatorio-sistema/SKILL.md) — relatório periódico onde o sistema narra a si mesmo (prestação de contas + inteligência + direção + autoarquitetura). Pulso semanal (script) + mensal profundo (agentes + `arquiteto-sistema`). Custo e resultado/impacto são seções `💤` deferidas (Horizonte).
+
 ### 3. Agentes — especialistas por função (`.claude/agents/`)
 
 Cada agente domina **uma função** e organiza-se em **setor × papel** apenas textualmente — os arquivos físicos ficam todos achatados em `.claude/agents/<nome>.md` porque o loader do Claude Code só enxerga arquivos flat nessa pasta (subpastas são ignoradas). O agrupamento abaixo é a fonte de verdade humana da divisão setorial; o nome do agente carrega a função.
 
 Agentes não conhecem o fluxo nem outros agentes — recebem input num formato declarado, entregam output num formato declarado. Conhecimento específico de um fluxo vive nas skills e templates, não no agente.
 
-**Agentes atuais (12):**
+**Agentes atuais (13):**
 
 - **Marketing / Estratégia**
   - [`estrategista-mercado`](.claude/agents/estrategista-mercado.md) — lê o momento (emoção do público + crença de mercado) e escolhe a verdade da marca que **aproveita** esse momento (mostra o caminho, não reage); lê o `registro-angulos` para saturação/equilíbrio (não tem slice durável); propõe as jogadas da pauta.
@@ -98,6 +101,8 @@ Agentes não conhecem o fluxo nem outros agentes — recebem input num formato d
 - **Transversais / Dados**
   - [`arquivista`](.claude/agents/arquivista.md) — owner único do slice `memory/ramon/` e do banco de imagens; consolida contexto do Ramon (input do usuário + auto-sync de fontes públicas) e gerencia legenda/seleção/marcação de fotos por slide.
   - [`analista-performance`](.claude/agents/analista-performance.md) — owner único do slice `memory/performance/`; dono de `registro-angulos.md` (o que cada peça disse, escrito por script) e `metricas.md` (o que gerou — futuro); responde ângulo queimado e saturação.
+- **Transversais / Sistema**
+  - [`arquiteto-sistema`](.claude/agents/arquiteto-sistema.md) — meta-arquiteto: julga a arquitetura do próprio brand OS contra a constituição dele e propõe evolução (advisory). Produz a Camada D do relatório mensal. Stateless.
 - **Engenharia / Execução / Web**
   - [`arquiteto-web`](.claude/agents/arquiteto-web.md) — scaffold, organização, libs, config do site.
   - [`designer-web`](.claude/agents/designer-web.md) — componentes React + Tailwind + Framer Motion.
@@ -152,6 +157,8 @@ Camada que torna o sistema reativo. Triggers (**routines `/schedule`**, futurame
 - **Agendamento:** routines `/schedule` que **executam de fato** (ver [`docs/automacao/routines.md`](docs/automacao/routines.md)) — pauta semanal (2ª), pesquisa de mercado (mensal) e poll diário do `/novo-post --auto` (gera posts vencidos → `aguardando-publicacao`). Os antigos handlers Vercel de cron foram removidos; a Vercel hospeda só o dashboard. **Publicação nunca é automática** (gate humano no dashboard).
 - **Tools de publicação:** scripts em [`scripts/integrations/`](scripts/integrations/), mantidos por `integrador-apis`. v1: `publish_instagram.js`.
 - **Campanhas:** estado vivo em [`campanhas/`](campanhas/) (schema em `campanhas/_schema.md`), escrito por skills L2/L3, lido pelo dashboard.
+- **Relatórios:** [`relatorios/`](relatorios/) — saída versionada do `/relatorio-sistema` (`<YYYY-MM>/relatorio.md`, `<YYYY-Www>/pulso.md`). O dashboard renderiza quando a rota existir.
+- **Run-ledger:** [`orquestracao/execucoes.jsonl`](orquestracao/execucoes.jsonl) — telemetria append-only das routines autônomas (`scripts/orquestracao/registrar_execucao.js`); fonte de "tarefas executadas & falhas" do relatório.
 
 ---
 

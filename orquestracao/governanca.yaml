@@ -71,4 +71,9 @@ decisoes:
     autonomia: humano                    # matar produto exige confirmação; custo afundado ignorado na recomendação
     corpo: "/evoluir-produto (G-sunset)"
 
+  - funcao: auto-relato-sistema
+    decisao: "gerar o relatório periódico do próprio sistema (prestação de contas + intel + direção + autoarquitetura)"
+    autonomia: automatico                # gerar = auto; agir nas propostas de arquitetura = humano (advisory)
+    corpo: "/relatorio-sistema + agente arquiteto-sistema"
+
 # Regra-mãe (nunca relaxar): publicar como fallback de timeout é PROIBIDO (ver publicacao.yaml).
