@@ -15,15 +15,14 @@ Gerar N posts em um mesmo formato, com variação de estilos e temas dentro do l
 |---|---|---|---|---|
 | 1 | ⚙ parse input | input | — | N, estilos, tema |
 | 2 | ⚙ distribuição de estilos | — | 1 | estilos por post |
-| 3 | pesquisador (Fase A/B, condic.) | tema, contexto | 2 | distribuição+candidatos |
-| 4 | ⏸ usuário | plano ← 3 | 3 | confirmação |
-| 5 | ⚙ briefing+copy inline (×posts) | plano ← 4 | 4 | copy por post |
-| 6 | ⏸ usuário | copies ← 5 | 5 | ok/ajuste em lote |
-| 7 | ⚙ design inline (×posts) | copy ← 5 | 6 | assets por post |
-| 8 | export-png.js + revisor-brand (×posts) | slide-N.html ← 7 | 7 | PNGs + validação por post |
-| 8.5 | ⚙ write-back registro-angulos (×posts aprovados) | ângulo+verdade+pilar+slug ← 5 | 8 | linhas no registro-angulos |
+| 3 | pesquisador (distribuição, condic.) | tema | 2 | distribuição sugerida |
+| 4 | ⚙ subtemas + confirmar plano + ⏸ | plano ← 3 | 3 | plano confirmado |
+| 5 | ⚙ briefing + copy inline (×posts) | plano ← 4 | 4 | copy por post |
+| 6 | ⏸ revisão de copies em lote | copies ← 5 | 5 | ok/ajuste |
+| 7 | ⚙ design inline + revisão (×posts, ⏸) | copy ← 5 | 6 | assets por post |
+| 8 | ⚙ export + gate + write-back (×posts) | slides ← 7 | 7 | PNGs + validação + registro |
 | 9 | ⚙ relatório do lote | — | 8 | relatório |
-| 10 | ⚙ política publish (×posts) | pasta ← 8 | 8 | publicado/pendente |
+| 10 | ⚙ publicação (×posts, gated) | pasta ← 8 | 8 | publicado/pendente |
 
 ## Sintaxe
 
@@ -50,12 +49,7 @@ Ordem livre. Tokens são interpretados: número solto → N total; slug (com ou 
 
 ## Princípio de produção inline
 
-**Cada post é um contexto independente.** A skill produz briefing, copy e design inline por post — sem subagentes de produção. A variação de tema/estilo dentro do lote é garantida pelo planejamento do Passo 3-4, não por anti-repetição automática entre posts.
-
-**Contexto de leitura por post (Passo 5):**
-- **Briefing:** `brand/brand-book.md` + `brand/pilares-conteudo.md` + `memory/ramon/contexto.md` + `memory/performance/registro-angulos.md` + `memory/mercado/tendencias/<mês>.md` + `estilo.md` do estilo atribuído.
-- **Copy:** `estilo.md` (campos `#### editorial`) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa do post.
-- **Design (Passo 7):** `estilo.md` (campos `#### visual`) + `slide.html` do estilo + `brand/referencias-visuais.md` + `brand/social-media.md` + `copy.md` do post.
+**Cada post é um contexto independente.** A skill produz briefing, copy e design inline por post — sem subagentes de produção. A variação de tema/estilo dentro do lote é garantida pelo planejamento dos Passos 3-4, não por anti-repetição automática entre posts.
 
 Erro `BRAND_BOOK_INCOMPLETO` para o lote inteiro.
 
@@ -114,7 +108,7 @@ Saída inline: "slug:K | slug:K | ..." + 1 linha de justificativa.
 
 Apresente a sugestão e aguarde o usuário confirmar ou ajustar.
 
-### 4. Distribuir subtemas e confirmar plano (pausa)
+### 4. Distribuir subtemas e confirmar plano (⏸)
 
 Acione `pesquisador-mercado`:
 
@@ -161,7 +155,7 @@ Confirma? (sim/ok para começar, ou diga o que ajustar)
 
 Para cada par `(subtema, estilo)` da lista confirmada, execute inline e **sem pausa entre posts**:
 
-#### 5a. Carregar contexto do post
+#### 5a. Carregar contexto do lote
 
 Leia (uma vez por lote, reutilize nos demais posts):
 - `memory/ramon/contexto.md`
@@ -170,7 +164,9 @@ Leia (uma vez por lote, reutilize nos demais posts):
 
 #### 5b. Briefing inline
 
-Leia `brand/brand-book.md` (inclui `## Verdades`) + `brand/pilares-conteudo.md` + `estilo.md` do estilo atribuído (campos `## Conceito` e `#### editorial`). Fixe: ângulo central, pilar, objetivo, recorte de público, slug do post (kebab-case), **verdade servida** (slug do `## Verdades` do brand-book que este ângulo acende; `neutro` se nenhuma). Guarde como `verdade_servida` do post (usado no Passo 8.5).
+Lê: `brand-book (§Verdades)` · `pilares-conteudo` · `ramon/contexto` · `performance/registro-angulos` · `mercado/tendencias/<mês>` · `estilo.md (§Conceito + #### editorial)`.
+
+Fixe: ângulo central, pilar, objetivo, recorte de público, slug do post (kebab-case), **verdade servida** (slug do `## Verdades` do brand-book que este ângulo acende; `neutro` se nenhuma). Guarde como `verdade_servida` do post (usado no Passo 8).
 
 Quando briefing pré-pronto (modo `--pauta`): extrair `verdade:` do briefing — se ausente, `neutro`.
 
@@ -184,7 +180,7 @@ Se `estilo.md` declarar `## Inputs obrigatórios externos`:
 
 #### 5d. Pesquisa profunda
 
-Acione `pesquisador-mercado` por post, **sempre**, com o perfil do pilar do post (ver `## Perfis de fonte por pilar` em `/pesquisar-tema`):
+Acione `pesquisador-mercado` por post, **sempre**, com o perfil do pilar do post (ver `## Perfis de fonte por pilar` em `/pesquisar-tema`). Mirrors /novo-post §Pesquisa:
 
 ```
 /pesquisar-tema <tema do post> --pilar <pilar do post> --recorte <recorte do post>
@@ -194,7 +190,9 @@ A profundidade vem do perfil (rasa p/ Transformação; média p/ Mentalidade/Pro
 
 #### 5e. Copy inline
 
-Leia `estilo.md` (campos `#### editorial`) + `brand/tom-de-voz.md` + `brand/publico-alvo.md` + pesquisa gravada. Escreva a copy seguindo exatamente os campos `#### editorial` por bloco. Grave em `export/conteudos/<formato>/<data>-<slug>/copy.md`.
+Lê: `estilo.md §editorial` · `tom-de-voz` · `publico-alvo` · pesquisa gravada.
+
+Escreva a copy seguindo exatamente os campos `#### editorial` por bloco. Grave em `export/conteudos/<formato>/<data>-<slug>/copy.md`.
 
 **Política de falha:** se um post falhar em qualquer etapa, registre o erro e continue os demais. `BRAND_BOOK_INCOMPLETO` para o lote inteiro.
 
@@ -230,7 +228,9 @@ A pausa só avança ao Passo 7 quando o usuário confirmar que não há mais aju
 
 Para cada post aprovado no Passo 6, execute o design inline:
 
-Leia `estilo.md` (campos `#### visual`) + `slide.html` do estilo + `brand/referencias-visuais.md` + `brand/social-media.md` + `copy.md` do post. Para cada bloco declarado em `## Estrutura`, gere um `slide-N.html` em `design/`, aplicando a copy e respeitando as drop zones e `[alternância]`. Não gerar `preview.html`.
+Lê: `estilo.md §visual` · `slide.html` do estilo · `referencias-visuais` · `social-media` · `copy.md` do post.
+
+Para cada bloco declarado em `## Estrutura`, gere um `slide-N.html` em `design/`, aplicando a copy e respeitando as drop zones e `[alternância]`. Não gerar `preview.html`.
 
 Após o design de todos os posts, apresente **um por um**, na ordem da lista:
 
@@ -239,7 +239,7 @@ Post <n> de <N> — <slug-do-post> (estilo: <slug>)
 Tema: <subtema>
 Slides: export/conteudos/<formato>/<data>-<slug>/design/
 
-Para revisar: abra via Live Preview ou exporte (node scripts/export-png.js <pasta>)
+Para revisar: abra via Dino Editor ou exporte (node scripts/export-png.js <pasta>)
 
 Opções:
 - "ok" / "confirmar" → segue para o próximo
@@ -250,50 +250,19 @@ Aguarde decisão antes de passar ao próximo. Quando todos forem confirmados, si
 
 **Modo agendado:** pule o loop. Siga direto ao Passo 8 com os slides gerados.
 
-### 8. Validação, export e gate de marca
+### 8. Export, gate de marca e write-back (×posts)
 
 Para cada post confirmado:
 
 1. Snapshot da pesquisa em `<pasta>/pesquisa-base.md`.
 2. Executar `node scripts/export-png.js export/conteudos/<formato>/<data>-<slug>/` — renderiza e valida dimensões/contagem automaticamente. Em caso de erro, registre e marque o post como pulado.
-3. Gate de marca: acione `revisor-brand` por post:
+3. **Gate de marca:** aplique o gate como em /novo-post §Gate de marca (mesmo prompt, momento "criação de post"), por post. Especificidades do lote:
+   - **APROVADO** → grava `briefing.md` via `templates/briefing.md`. Post aprovado.
+   - **REPROVADO** → registra e marca o post como pulado (refazer é responsabilidade do `/novo-post`).
 
-```
-Tarefa: validar copy + compliance do post pronto (momento: criação de post).
+   Erros técnicos (`EXPORT_FALHOU`, `VALIDACAO_TECNICA_FALHOU`) → registre e siga ao próximo.
 
-Inputs:
-- Pasta do post: export/conteudos/<formato>/<data>-<slug>/
-  (pesquisa-base.md, copy.md, design/slide-*.html, export/*.png, treino.md quando aplicável)
-- Briefing inline:
-  Pilar: <pilar>
-  Objetivo: <objetivo>
-  Ângulo central: <ângulo>
-  Recorte de público: <recorte>
-  Slug do post: <slug>
-
-Avaliar: tom de voz, pilar, compliance (saúde, jurídico, suplementação, promessas irreais).
-NÃO re-julgar identidade visual.
-```
-
-- **APROVADO** → grava `briefing.md` via `templates/briefing.md`. Post aprovado.
-- **REPROVADO** → registra e marca o post como pulado (refazer é responsabilidade do `/novo-post`).
-
-Erros técnicos (`EXPORT_FALHOU`, `VALIDACAO_TECNICA_FALHOU`) → registre e siga ao próximo.
-
-**Write-back no registro de ângulos (por post aprovado — Passo 8.5):** para cada post que passou no gate, registre uma linha (mesmo mecanismo do `/novo-post` Passo 15.5). Determinístico (script; ninguém escreve à mão):
-
-```bash
-node scripts/memory/append_registro_angulos.js \
-  --slug "<slug do post>" \
-  --data "$(date +%F)" \
-  --canal instagram \
-  --angulo "<slug-kebab do ângulo central do post, fixado no Passo 5>" \
-  --verdade "<verdade_servida do Passo 5 — slug ou neutro>" \
-  --pilar "<pilar do post>" \
-  --descanso "<21d default; ângulo muito específico → maior, ex 6sem>"
-```
-
-Posts pulados (erro de export) ou reprovados no gate **não** registram linha. Reporte a linha anexada inline por post. Se o script falhar (`REGISTRO_ANGULOS_AUSENTE`), registre o erro e siga — o post já está aprovado; o write-back não bloqueia entrega.
+4. **Write-back no registro de ângulos:** por post aprovado, escreva a linha como em /novo-post §Write-back (script `append_registro_angulos.js`). Posts pulados (erro de export) ou reprovados no gate **não** registram linha. Se o script falhar (`REGISTRO_ANGULOS_AUSENTE`), registre o erro e siga — o post já está aprovado; o write-back não bloqueia entrega.
 
 ### 9. Reportar entrega do lote
 
@@ -314,7 +283,7 @@ Pulados/falhos (<N-M>):
 
 ### 10. Publicação por post (opcional, gated por política)
 
-Para cada post aprovado, aplicar o mesmo gate de política do Passo 16 do `/novo-post`: carregar `orquestracao/politicas/publicacao.yaml`, avaliar as regras e só chamar `scripts/integrations/publish_instagram.js` quando a regra que casa diz `modo: automatico`. Em modo cron/agendado, **nunca publicar automaticamente** — apenas listar quais posts ficaram autorizados pela política e quais exigem aprovação humana.
+Para cada post aprovado, aplicar a política como em /novo-post §Publicação: carregar `orquestracao/politicas/publicacao.yaml`, avaliar as regras e só chamar `scripts/integrations/publish_instagram.js` quando a regra que casa diz `modo: automatico`. Em modo cron/agendado, **nunca publicar automaticamente** — apenas listar quais posts ficaram autorizados pela política e quais exigem aprovação humana.
 
 ---
 
