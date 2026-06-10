@@ -2,8 +2,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 import { registrarExecucao, parseArgs } from "./registrar_execucao.js";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
 
 function tmpLedger() {
   return join(mkdtempSync(join(tmpdir(), "exec-")), "execucoes.jsonl");
@@ -47,4 +51,14 @@ test("parseArgs extrai flags --skill --modo --resultado --slug --nota", () => {
   assert.equal(a.skill, "novo-post");
   assert.equal(a.slug, "x-y");
   assert.equal(a.nota, "ok feito");
+});
+
+test("CLI executa main() mesmo com espaço no caminho do projeto (guard pathToFileURL)", () => {
+  const path = tmpLedger();
+  const out = execFileSync("node", [join(HERE, "registrar_execucao.js"), "--skill", "cli-test", "--modo", "manual", "--resultado", "ok"], {
+    encoding: "utf8", env: { ...process.env, EXECUCOES_PATH: path },
+  });
+  assert.match(out, /cli-test/);
+  assert.equal(existsSync(path), true);
+  assert.equal(JSON.parse(readFileSync(path, "utf8").trim()).skill, "cli-test");
 });

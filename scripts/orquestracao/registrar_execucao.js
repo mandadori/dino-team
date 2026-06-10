@@ -20,6 +20,7 @@
  */
 import { appendFileSync, existsSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const LEDGER_DEFAULT = "orquestracao/execucoes.jsonl";
 
@@ -56,4 +57,4 @@ function main() {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) main();
+if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) main();
