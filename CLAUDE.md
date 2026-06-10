@@ -175,6 +175,20 @@ Camada que torna o sistema reativo. Triggers (**routines `/schedule`**, futurame
 - **Erros estruturais voltam pra skill** (ex: `BRAND_BOOK_INCOMPLETO`, `ESTILO_INVALIDO`).
 - **Função primeiro, corpo depois (anti-diluição).** Decisão durável e cara → **agente**; passo contextual barato → **inline na skill**; ação determinística → **script**. Foi instanciar agente fino pra tudo que diluiu o roster antes — só vira agente o que decide e é caro.
 
+### Padrão de escrita de skills
+
+Toda skill criada ou editada segue estas 9 regras (anti-redundância, anti-contexto-repetido):
+
+1. **`## Fluxo` obrigatório, numeração linear `1..N`.** Zero passo fracionado (nada de `2a`, `3.⏸`, `11.5`).
+2. **Cada passo abre com `Lê:`** — uma linha listando o contexto que aquele passo lê (`brand/*`, `memory/*`, `estilo.md`…), **uma vez**. Sem bloco de leitura no topo e sem repetição inline.
+3. **Condicionais = sub-bullets do passo-pai**, não passos próprios. A espinha numerada é só o happy path.
+4. **Pausa (⏸) é parte do passo** que a contém — nunca um sub-passo.
+5. **Modo (`--auto` etc.) num único bloco.** Proibido lembrete inline repetido por passo.
+6. **Referência por nome de seção (`§Design`), nunca por número** — números mudam sob renumeração.
+7. **Lar canônico para bloco longo compartilhado:** a skill mais completa detém o texto integral; as outras apontam por nome (não copiam).
+8. **Fonte única para regra global:** não restated spec de `brand/social-media.md`, drop-zones, "sem `preview.html`", "export valida sozinho" em cada passo — apontar onde mora.
+9. **Edição = Dino Editor por link:** a skill sobe o editor e envia `http://localhost:4321`. Nunca mencionar "Live Preview". Stories (editor é carrossel-only) → preview via `export-png.js` (PNG).
+
 Padrão de contratos e skills detalhado em [docs/specs/2026-05-26-redesign-contexto-agentes-skills-design.md](docs/specs/2026-05-26-redesign-contexto-agentes-skills-design.md).
 
 ---
