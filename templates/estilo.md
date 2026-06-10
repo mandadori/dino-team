@@ -14,7 +14,7 @@
 - **Chrome** (swipe-cue, barra-progresso, tag-tópico, logo, watermark) tem spec visual em `brand/social-media.md`. O estilo declara só presença + posição nos `[slots]`.
 - **`[tokens]`** = somente valores que **desviam** do padrão de marca. Se ficaria vazio — omita o campo.
 - **Papéis, não números.** A quantidade de slides do corpo vem da copy (bloco N-dinâmico). Nunca hardcodar "10 slides" ou qualquer número fixo de instâncias do corpo.
-- **Pasta do estilo contém apenas `estilo.md` + `slide.html`** (ou `frame.html` para stories). `preview.html` não é gerado — preview = abrir `slide.html` no Live Preview do VS Code ou no Dino Editor.
+- **Pasta do estilo contém apenas `estilo.md` + `slide.html`** (ou `frame.html` para stories). `preview.html` não é gerado — preview = abrir `slide.html` no Dino Editor (carrossel); stories → `export-png.js`.
 
 ---
 

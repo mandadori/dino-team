@@ -13,7 +13,7 @@ Reabre um post existente no Dino Editor para edição visual.
 |---|---|---|---|---|
 | 1 | ⚙ resolver post | slug ou caminho | — | pasta do post |
 | 2 | ⚙ resolver estilo | briefing.md ← 1 | 1 | caminho do estilo.md |
-| 3 | ⏸ usuário | editor ← 2 | 2 | ok/salvar/exportar |
+| 3 | ⚙ sobe editor + ⏸ | pasta + estilo ← 2 | 2 | ok/salvar/exportar |
 | 4 | ⚙ re-export (opcional) | — | 3 | PNGs atualizados |
 
 ## Sintaxe
@@ -57,31 +57,26 @@ Use o slug para montar o caminho: `templates/social-media/<formato>/estilos/<slu
 
 Se não conseguir resolver, informe o usuário e pergunte o caminho do `estilo.md`.
 
-### 3. Subir o Dino Editor
+### 3. Subir o Dino Editor e enviar o link (⏸)
 
-Mostre ao usuário:
+A skill **sobe o editor sozinha** — como em /novo-post §Subir o Dino Editor (auto-start + health-check). O usuário nunca roda o backend.
+
+```bash
+lsof -ti tcp:4321 | xargs kill -9 2>/dev/null; \
+npm run editor -- <pasta> --estilo <estilo_path> > /tmp/dino-editor.log 2>&1 &
+```
+
+Aguarde ~3s, confirme saúde (`curl -s -o /dev/null -w "%{http_code}" http://localhost:4321/` → `200`) e apresente:
 
 ```
 Post: <pasta>
 Estilo: <estilo_path>
 Slides: <lista de slide-N.html em design/>
 
-Para editar:
-
-1. Suba o backend (deixe rodando em background):
-
-  npm run editor -- <pasta> --estilo <estilo_path>
-
-2. No VS Code, clique com o botão direito em `scripts/editor/index.html` →
-   **Show Preview** (Live Preview embutido). Alternativa: http://localhost:4321 no navegador.
-- Edite no canvas (arrastar, handles, texto inline, cor, fonte).
-- "Salvar" grava slide-N.html + edits.json.
-- "Exportar" (ou use o comando abaixo) gera PNGs.
-
-Responda:
-- "exportar" → exporto os slides atuais para PNG.
-- "pronto" → encerrar sem re-exportar.
-- "re-exportar" → mesmo que "exportar".
+O Dino Editor está no ar: abra http://localhost:4321 no navegador.
+Edite no canvas, clique "Salvar". Quando pronto:
+- "exportar" / "re-exportar" → re-exporto os PNGs (Passo 4)
+- "pronto" → encerro sem re-exportar
 ```
 
 **Aguarde resposta.**
@@ -102,9 +97,9 @@ Confirme ao usuário:
 Re-export concluído: <N> PNGs em <pasta>/export/
 ```
 
-Se quiser rodar a curadoria editorial novamente após edições substanciais, use `/novo-post` → etapa 11 diretamente, ou rode manualmente os revisores via agentes.
+Se quiser rodar a curadoria editorial novamente após edições substanciais, use `/novo-post §Design` / curadoria diretamente, ou rode manualmente os revisores via agentes.
 
 ## Critério de conclusão
 
-- O editor foi iniciado com a pasta e estilo corretos.
+- O editor foi iniciado automaticamente pela skill com a pasta e estilo corretos, e o link foi enviado ao usuário.
 - Usuário confirmou "pronto" ou o re-export foi executado com sucesso.
