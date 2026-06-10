@@ -149,7 +149,7 @@ Subtemas:
 Confirma? (sim/ok para começar, ou diga o que ajustar)
 ```
 
-**Aguarde confirmação explícita** ou aplique os ajustes pedidos e reapresente. Em modo agendado, pule a confirmação.
+**Aguarde confirmação explícita** ou aplique os ajustes pedidos e reapresente.
 
 ### 5. Briefing + copy inline por post
 
@@ -176,7 +176,6 @@ Criar pasta: `export/conteudos/<formato>/<data>-<slug>/{design,export}`.
 
 Se `estilo.md` declarar `## Inputs obrigatórios externos`:
 - **Modo interativo:** pergunte ao usuário (ex.: lista de exercícios).
-- **Modo agendado:** pule este post (`SKIPPED — input técnico obrigatório`) e siga.
 
 #### 5d. Pesquisa profunda
 
@@ -222,8 +221,6 @@ Responda:
 
 A pausa só avança ao Passo 7 quando o usuário confirmar que não há mais ajustes.
 
-**Modo agendado:** pule a pausa. Siga direto ao Passo 7.
-
 ### 7. Design inline por post + revisão de slides
 
 Para cada post aprovado no Passo 6, execute o design inline:
@@ -247,8 +244,6 @@ Opções:
 ```
 
 Aguarde decisão antes de passar ao próximo. Quando todos forem confirmados, siga ao Passo 8.
-
-**Modo agendado:** pule o loop. Siga direto ao Passo 8 com os slides gerados.
 
 ### 8. Export, gate de marca e write-back (×posts)
 

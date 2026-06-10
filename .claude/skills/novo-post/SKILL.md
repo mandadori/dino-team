@@ -73,6 +73,8 @@ Erro de execução em qualquer passo `--auto` → marca a tarefa como `falhou-au
 
 ### 1. Parsear input
 
+Lê: templates/social-media/ (formatos + estilos disponíveis)
+
 Liste `templates/social-media/` e `templates/social-media/<formato>/estilos/`. Tokenize a entrada: match com slug de estilo → estilo; `--briefing <caminho>` → `briefing_path`; resto → tema. Se formato ausente/inválido, pergunte ao usuário oferecendo a lista descoberta. Siga sempre para o Passo 2.
 
 - `--auto` → `modo_auto = true`. Só válido junto de `--briefing`. Sem `--briefing`, ignore `--auto` e siga interativo.
@@ -80,7 +82,7 @@ Liste `templates/social-media/` e `templates/social-media/<formato>/estilos/`. T
 
 ### 2. Frescor da inteligência de mercado
 
-Este passo não lê contexto: Ramon, mercado e registro-angulos são lidos onde decidem (Passo 3 pelo pesquisador; Passo 5 pelo briefing). Aqui só se garante que a inteligência de mercado esteja fresca antes do scouting.
+Lê: — (Ramon, mercado e registro-angulos são lidos no Passo 3 e no Passo 5; aqui só se garante que a inteligência de mercado esteja fresca antes do scouting).
 
 ```bash
 f="memory/mercado/tendencias/$(date +%Y-%m).md"
@@ -132,6 +134,8 @@ Responda:
 A escolha define `tema`. **Guarde o candidato escolhido + a lista ranqueada** (usados no Passo 5). Se "mais"/ajuste, re-acione o modo seleção e reapresente. **Aguarde escolha explícita** antes do Passo 4.
 
 ### 4. Estilo + plano (⏸)
+
+Lê: estilo.md (## Quando usar / ## Quando NÃO usar) de cada estilo
 
 - **Estilo veio no input** → `modo_estilo = "definido"`, `slug = <escolhido>`. Mostre o plano e pause.
 - **Sem estilo** → leia `## Quando usar` / `## Quando NÃO usar` de cada `estilo.md` em `templates/social-media/<formato>/estilos/` (exceto `_rascunho`) e decida inline qual serve melhor para o tema. Se nenhum couber, recomende "ad-hoc".
