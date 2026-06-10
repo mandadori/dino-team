@@ -13,7 +13,7 @@ Reabre um post existente no Dino Editor para edição visual.
 |---|---|---|---|---|
 | 1 | ⚙ resolver post | slug ou caminho | — | pasta do post |
 | 2 | ⚙ resolver estilo | briefing.md ← 1 | 1 | caminho do estilo.md |
-| 3 | ⚙ sobe editor + ⏸ | pasta + estilo ← 2 | 2 | ok/salvar/exportar |
+| 3 | ⚙ sobe editor + ⏸ | pasta + estilo ← 2 | 2 | exportar/re-exportar/pronto |
 | 4 | ⚙ re-export (opcional) | — | 3 | PNGs atualizados |
 
 ## Sintaxe
