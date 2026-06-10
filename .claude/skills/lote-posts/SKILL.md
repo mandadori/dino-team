@@ -180,7 +180,7 @@ Se `estilo.md` declarar `## Inputs obrigatórios externos`:
 
 #### 5d. Pesquisa profunda
 
-Acione `pesquisador-mercado` por post, **sempre**, com o perfil do pilar do post (ver `## Perfis de fonte por pilar` em `/pesquisar-tema`). Mirrors /novo-post §Pesquisa:
+Acione `/pesquisar-tema` por post, **sempre**, com o perfil do pilar do post (ver `## Perfis de fonte por pilar` na skill) — mesma pesquisa de /novo-post §Pesquisa.
 
 ```
 /pesquisar-tema <tema do post> --pilar <pilar do post> --recorte <recorte do post>
