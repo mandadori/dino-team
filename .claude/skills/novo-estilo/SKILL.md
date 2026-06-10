@@ -15,7 +15,7 @@ description: Cria ou edita um estilo visual para qualquer formato disponível em
 | 4 | ⚙ preparar pasta | — | 3 | pasta de trabalho |
 | 5 | ⚙ gerar/editar inline | descrição ← 3 | 4 | estilo.md + slide.html |
 | 6 | ⚙ Editor + ⏸ | _rascunho ← 5 | 5 | confirmar/ajuste (+ promove edits) |
-| 7 | revisor-brand (gate visual) | estilo.md ← 6 | 6 | APROVADO/REPROVADO |
+| 7 | revisor-brand (gate visual) | estilo.md + slide.html ← 6 | 6 | APROVADO/REPROVADO |
 | 8 | ⚙ slug (só criar) | — | 7 | slug |
 | 9 | ⚙ salvar | — | 8 | estilo salvo |
 | 10 | ⚙ confirmar | — | 9 | confirmação |
@@ -94,7 +94,7 @@ node scripts/editor/scaffold-estilo.js \
 
 O gerador deriva formato/slug do caminho, copia o `<head>`/CSS do estilo e avisa se o formato não for carrossel (editor é carrossel-only). Sem `--out`, o preview vai pra `templates/social-media/{formato}/estilos/_rascunho/preview/` (na pasta do próprio estilo — nunca mais em `export/`).
 
-**Subir o editor:** execute o scaffold acima primeiro, depois suba o Dino Editor como em /novo-post §Subir o Dino Editor (mesmo `lsof` + `npm run editor` + health-check + envia `http://localhost:4321`), com a pasta `templates/social-media/{formato}/estilos/_rascunho/preview` e `--estilo templates/social-media/{formato}/estilos/_rascunho/estilo.md`. O editor é carrossel-only (stories → fallback `export-png.js`).
+**Subir o editor:** execute o scaffold acima primeiro, depois rode o **bloco completo** de /novo-post §Subir o Dino Editor (kill da porta + `npm run editor` em background + espera ~3s + health-check `curl` → `200` + envia `http://localhost:4321`), substituindo a pasta por `templates/social-media/{formato}/estilos/_rascunho/preview` e `--estilo` por `templates/social-media/{formato}/estilos/_rascunho/estilo.md`. O editor é carrossel-only (stories → fallback `export-png.js`).
 
 **⏸ Apresentar ao usuário:**
 
