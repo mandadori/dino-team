@@ -98,7 +98,7 @@ Display = **Anton** (always `uppercase`, weight 400). Body = **Montserrat** (wei
 | MDX `li` | **2 Body** | Montserrat | inherits Body 16/18px | 400 | 1.7 | prose lists |
 | MDX `strong` | **2 Body** | Montserrat | inherits Body | **600** | inherits | inline emphasis |
 | MDX `blockquote` | **2 Body** | Montserrat | `text-base` 16px → `lg:text-lg` 18px (same as Body; `italic` optional, left `border-l-2 border-line`, `pl-6`, `text-muted`) | 400 | 1.6 | prose quotes |
-| MDX inline `code` | **1 Label** | Montserrat/mono | `text-sm` 14px, `bg-surface px-2 py-px rounded-none border border-line` | 400 | — | inline code |
+| MDX inline `code` | **1 Label** | Montserrat/mono | `text-sm` 14px, `bg-surface px-2 py-0 rounded-none border border-line` | 400 | — | inline code |
 | MDX `pre` (code block) | **1 Label** | mono | `text-sm` 14px, `bg-surface border border-line p-6`, horizontal scroll, no syntax color (monochrome) | 400 | 1.5 | code blocks |
 | Eyebrow / kicker (category label, "ARTIGOS") | **1 Label** | Montserrat | `text-sm` 14px, `tracking-[0.3em]`, **uppercase** | 600 | 1.4 | above titles |
 | Meta row (reading time, date) | **1 Label** | Montserrat | `text-sm` 14px (label part 600 uppercase tracking-wide if a label) | 400 | 1.4 | byline row |
@@ -154,7 +154,7 @@ Inherited monochrome system — **no new color tokens, no accent hue.** The "10%
 | **`ReadingTime`** | inline (no component needed) | RSC | `text-sm text-muted`, e.g. `6 min de leitura`. Computed at build (D-05 / `reading-time` lib). Sits in the meta row. |
 | **`Toc`** (table of contents) | custom (new) | **client island** | Sticky right rail on `lg` (`sticky top-24`), collapsible `<details>` on mobile (closed by default, summary "Neste artigo"). Active heading via scroll-spy (`IntersectionObserver`), gated by `prefers-reduced-motion` (no smooth-scroll/highlight animation when reduced). Links: `text-sm text-muted`, active = `text-fg` + left `border-l-2 border-fg -ml-px`. Renders only when article has ≥ 3 `h2`/`h3` (executor threshold). |
 | **`RelatedPosts`** | custom (new) | RSC | 2–3 same-category `PostCard` (grid variant), under the article body, above/with the end CTA. Section title Anton "CONTINUE LENDO" (or "RELACIONADOS"). Empty fallback below. |
-| **`ShareBar`** | custom (new) | **client island** | Copy-link (primary, with "Link copiado" confirmation, role=status, `aria-live=polite`) + Web Share API trigger when available + bare share intents (no third-party widget). Buttons: outline style, inline SVG icons monochrome `currentColor`, ≥44px target. Default / hover (`border-fg`) / copied (label swaps for ~2s) / no-Web-Share (copy-link still works). |
+| **`ShareBar`** | custom (new) | **client island** | Copy-link (primary, with "Link copiado" confirmation, role=status, `aria-live=polite`) + Web Share API trigger when available + bare share intents (no third-party widget). The Web Share trigger renders with a **visible text label `Compartilhar` (Montserrat, Label tier) alongside its inline SVG icon — never icon-only.** All buttons: outline style, inline SVG icons monochrome `currentColor`, visible text label, ≥44px target. Default / hover (`border-fg`) / copied (label swaps for ~2s) / no-Web-Share (copy-link still works). |
 | **End CTA** | reuse `CTAButton` (`ui/CTAButton.tsx`) | RSC | Single uniform WhatsApp CTA at article end (D-11). `variant="primary"` (solid white), `href={WHATSAPP_URL}` from `lib/site.ts`. On-brand sign-off above it. Does NOT vary by category. |
 | **Category nav** (on `/blog` + category pages) | custom (new) | RSC (Links) | 4 category links + "Todos" → real routes `/blog/categoria/[slug]` + `/blog` (D-08, server-rendered Links, NOT client pills). Current = `text-fg`, others = `text-muted`, `text-sm uppercase tracking-[0.2em]`. |
 | **`Reveal`** | reuse (`Reveal.tsx`) | client island (existing) | Optional entrance fade for cards/sections; reduced-motion gate already established (Phase 1). Use sparingly — listing and article are content, not a show. |
@@ -181,7 +181,7 @@ Inherited monochrome system — **no new color tokens, no accent hue.** The "10%
 **Per interactive state:**
 - **PostCard** — default: `border border-line` card or borderless with cover. Hover: `border-fg/40` + title `underline underline-offset-4`. Focus-visible: monochrome ring (inherited). Entire card is one link target (≥44px). Reduced-motion: no transform, color/underline only.
 - **Toc link** — default `text-muted`; active (in-view heading) `text-fg` + left rule. Click: anchor jump (respect `scroll-mt-24` offset under fixed header). Reduced-motion: instant jump, no smooth scroll, no animated highlight.
-- **ShareBar / copy-link** — default outline; click copy: label → "Link copiado", `aria-live="polite"` announces, reverts after ~2s. Web Share trigger only rendered when `navigator.share` exists; copy-link is the always-present fallback. Focus-visible ring on every button.
+- **ShareBar / copy-link** — default outline; click copy: label → "Link copiado", `aria-live="polite"` announces, reverts after ~2s. Web Share trigger only rendered when `navigator.share` exists; it carries the visible text label `Compartilhar` (never icon-only) next to its icon. Copy-link is the always-present fallback. Focus-visible ring on every button.
 - **CTAButton (end CTA)** — inherited: solid white / black text, hover `bg-muted` + `scale-[1.04]` (CSS, auto reduced-motion safe), focus-visible monochrome ring.
 - **Category nav link** — current = `text-fg` (no color), others `text-muted hover:text-fg`.
 
@@ -226,6 +226,7 @@ Tom **sereno, íntimo, direto, anti-espetáculo** (`brand/tom-de-voz.md`). Stub 
 | **Meta row labels** | `{N} min de leitura` · date as `DD de mês de AAAA` (pt-BR) · author name links to nothing external (byline). |
 | **Related section heading** | `Continue lendo` (Anton uppercase). |
 | **Author placeholder label (Ramon photo absent, D-05)** | Intentional monochrome slot with Anton uppercase label `Foto do autor` — deliberate, not broken (mirrors `RamonPhoto`). |
+| **Share — Web Share trigger label** | Visible text label `Compartilhar` (Montserrat, Label tier) next to the share icon — never icon-only. Rendered only when `navigator.share` exists. |
 | **Empty state heading** (`/blog` or a category with no posts) | `Ainda não há artigos por aqui.` |
 | **Empty state body + next step** | `O conteúdo está a caminho. Enquanto isso, sua direção pode começar agora —` followed by the same WhatsApp CTA. (No fake "coming soon" hype; sober, points to the real action.) Category page empty state may add: `Nenhum artigo em {Categoria} ainda.` |
 | **Share — copy-link confirmation** | Button label swaps to `Link copiado` (announced via `aria-live`), reverts after ~2s. Default label `Copiar link`. |
