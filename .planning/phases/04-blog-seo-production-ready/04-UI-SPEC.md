@@ -45,59 +45,74 @@ No new **color** tokens. The blog's entire palette is the inherited monochrome s
 
 ## Spacing Scale
 
-Inherited from Phase 1 (4px base, Tailwind default), restricted to: **4, 8, 16, 24, 32, 48, 64, 96, 128**. No new steps.
+Inherited from Phase 1 (4px base, Tailwind default), restricted to: **4, 8, 16, 24, 32, 48, 64, 96, 128**. No new steps. Every value is a multiple of 4 (96 = 24·4, 128 = 32·4). The 96/128 steps are **inherited from Phase 1 and non-negotiable** (they already drive the landing's vertical section padding `py-24`/`py-32`); they are declared here explicitly so the spacing set is unambiguous, not so they can be re-opened.
 
-| Token (Tailwind) | px | Usage in blog |
-|-------|-----|---------------|
-| `gap-1` / `p-1` | 4 | icon ↔ label gap in meta row (reading time, share) |
-| `gap-2` | 8 | kicker ↔ title; category label ↔ date |
-| `mt-4` | 16 | MDX paragraph spacing; card title ↔ excerpt |
-| `gap-6` / `px-6` | 24 | **page gutter (all widths)** — inherited, non-negotiable |
-| `gap-8` / `p-8` | 32 | card inner padding; author block inner padding |
-| `gap-12` | 48 | listing grid gap; related-cards gap |
-| `mt-16` | 64 | article header ↔ MDX body; section title ↔ content |
-| `py-24` | 96 | vertical section padding (mobile) — inherited |
-| `py-32` / `sm:py-32` | 128 | vertical section padding (desktop) — inherited |
+| Token (Tailwind) | px | Multiple of 4 | Usage in blog |
+|-------|-----|-----|---------------|
+| `gap-1` / `p-1` | 4 | 1·4 | icon ↔ label gap in meta row (reading time, share) |
+| `gap-2` | 8 | 2·4 | kicker ↔ title; category label ↔ date |
+| `mt-4` | 16 | 4·4 | MDX paragraph spacing; card title ↔ excerpt |
+| `gap-6` / `px-6` | 24 | 6·4 | **page gutter (all widths)** — inherited, non-negotiable |
+| `gap-8` / `p-8` | 32 | 8·4 | card inner padding; author block inner padding |
+| `gap-12` | 48 | 12·4 | listing grid gap; related-cards gap |
+| `mt-16` | 64 | 16·4 | article header ↔ MDX body; section title ↔ content |
+| `py-24` | 96 | 24·4 | vertical section padding (mobile) — **inherited from Phase 1, non-negotiable** |
+| `py-32` / `sm:py-32` | 128 | 32·4 | vertical section padding (desktop) — **inherited from Phase 1, non-negotiable** |
 
 **Container widths:**
 - **Listing / category pages:** `max-w-6xl` (1152px) — matches landing section grids.
 - **Article reading column (MDX body + author block + meta + TOC inline + end CTA):** `max-w-[68ch]` reading measure (≈ `max-w-2xl`). The featured cover and any full-bleed photo may break out to `max-w-4xl`/full-bleed, then the prose returns to the measure.
 - **Gutter:** `px-6` (24px) at every breakpoint. Header/footer shell inner row uses `max-w-6xl` (matches legal pages).
 
-**Exceptions:** TOC sticky rail on desktop sits in a side column (`lg:` two-column: `[prose] [toc-rail]`) — the rail is `w-56`/`w-64` (224/256px = 56·4 / 64·4, on scale). Touch targets: any interactive target (share button, copy-link, TOC link, card link, category nav) ≥ **44×44px** (inherited a11y floor).
+**Exceptions:** TOC sticky rail on desktop sits in a side column (`lg:` two-column: `[prose] [toc-rail]`) — the rail is `w-56`/`w-64` (224/256px = 56·4 / 64·4, on scale). Touch targets: any interactive target (share button, copy-link, TOC link, card link, category nav) ≥ **44×44px** (inherited a11y floor — fixed accessibility minimum, not a spacing step).
 
 ---
 
 ## Typography
 
-Display = **Anton** (always `uppercase`, weight 400). Body = **Montserrat** (weights **400 / 600 only** — no 500/700). Scale **inherits** Phase 1 and the legal-page precedent; new roles are added only for blog-specific surfaces (post-card title, article H1, MDX prose, meta row, TOC).
+Display = **Anton** (always `uppercase`, weight 400). Body = **Montserrat** (weights **400 / 600 only** — no 500/700). The scale collapses to **exactly 4 distinct semantic sizes** (Tier 1–4 below), inheriting Phase 1 and the legal-page precedent. **Hierarchy beyond 4 sizes is created with font (Anton vs Montserrat), weight, case, and margin/spacing — never with a 5th font size.**
 
-| Role | Font | Size (mobile → desktop) | Weight | Line height | Where |
-|------|------|-------------------------|--------|-------------|-------|
-| Article H1 (post title) | Anton | `text-4xl` 36px → `sm:text-5xl` 48px → `lg:text-6xl` 60px (teto — não 7xl; H1 of an article, not a hero) | 400 | 1.05 (`leading-[1.05]`) |
-| Listing page title (`/blog`, category) | Anton | `text-4xl` 36px → `sm:text-5xl` 48px | 400 | 1.1 |
-| Featured post-card title | Anton | `text-3xl` 30px → `sm:text-4xl` 36px | 400 | 1.1 |
-| Grid post-card title | Anton | `text-xl` 20px → `sm:text-2xl` 24px | 400 | 1.15 |
-| MDX `h2` | Anton | `text-2xl` 24px → `sm:text-3xl` 30px | 400 | 1.2, `scroll-mt-24` (anchor offset under fixed header) |
-| MDX `h3` | Anton | `text-xl` 20px | 400 | 1.25, `scroll-mt-24` |
-| MDX body / `p` | Montserrat | `text-base` 16px → `lg:text-lg` 18px | 400 | **1.7** (`leading-[1.7]`) — long-form reading, looser than the landing's 1.6 |
-| MDX `li` | Montserrat | inherits body 16/18px | 400 | 1.7 |
-| MDX `strong` | Montserrat | inherits | **600** | inherits |
-| MDX `blockquote` | Montserrat | `text-lg` 18px, `italic` optional, left `border-l-2 border-line`, `pl-6`, `text-muted` | 400 | 1.6 |
-| MDX inline `code` | Montserrat/mono | `text-sm` 14px, `bg-surface px-1.5 py-0.5 rounded-none border border-line` | 400 | — |
-| MDX `pre` (code block) | mono | `text-sm` 14px, `bg-surface border border-line p-6`, horizontal scroll, no syntax color (monochrome) | 400 | 1.5 |
-| Eyebrow / kicker (category label, "ARTIGOS") | Montserrat | `text-sm` 14px, `tracking-[0.3em]`, **uppercase** | 600 | 1.4 |
-| Meta row (reading time, date) | Montserrat | `text-sm` 14px | 400 (label part 600 uppercase tracking-wide if a label) | 1.4 |
-| Author name | Anton | `text-xl` 20px, uppercase | 400 | 1.1 |
-| Author credential | Montserrat | `text-sm` 14px, `text-muted` | 400 | 1.4 |
-| TOC heading ("NESTE ARTIGO") | Montserrat | `text-xs` 12px, `tracking-[0.2em]`, uppercase | 600 | 1.4 |
-| TOC link | Montserrat | `text-sm` 14px | 400 (active 600) | 1.5 |
-| Card excerpt / description | Montserrat | `text-sm` 14px → `text-base` 16px | 400 | 1.5, `text-muted` |
+> **Responsive note (read this before counting sizes):** A `sm:`/`lg:` step-up is the **same semantic size at a larger viewport**, not a new size. `text-4xl → sm:text-5xl → lg:text-6xl` is **one** size role (Display), not three. The checker counts the **base** size of each role; there are 4 base sizes total: **14 / 16 / 24 / 36**.
 
-**MDX Prose contract (single source — applied via one wrapper, not per-element):** Wrap rendered MDX in a `prose-dino` container that owns the rhythm so authors write plain markdown. Rhythm: `p` → `mt-6`; `h2` → `mt-12`; `h3` → `mt-8`; `ul/ol` → `mt-6` with `space-y-2` items, `list-disc pl-6`/`list-decimal pl-6` in `--color-muted` markers; `blockquote` → `mt-8`; `pre` → `mt-6`; `img` → `mt-8` full-measure, grayscale + `contrast-125` (brand photo treatment), with caption `text-sm text-muted mt-2`; links → `underline underline-offset-4 decoration-line hover:decoration-fg text-fg` (no color, monochrome). First child has no top margin (`first:mt-0`).
+### The 4 sizes (base size = the size of record)
+
+| Tier | Base size | Responsive step (same role) | Font default | Roles using it |
+|------|-----------|-----------------------------|--------------|----------------|
+| **Tier 1 — Label/meta** | `text-sm` **14px** | — (no step-up) | Montserrat | eyebrow/kicker, meta row, TOC heading + TOC link, author credential, card excerpt, MDX inline `code` + `pre` |
+| **Tier 2 — Body** | `text-base` **16px** | `lg:text-lg` 18px (responsive variant of Body, **not** a new size) | Montserrat | MDX prose `p`/`li`/`strong`, MDX `blockquote` |
+| **Tier 3 — Heading/card-title** | `text-2xl` **24px** | `sm:text-3xl` 30px for grid card titles / MDX h2 (responsive variant) | Anton | grid post-card title, MDX `h2`, MDX `h3`, author name |
+| **Tier 4 — Display** | `text-4xl` **36px** | `sm:text-5xl` 48px, `lg:text-6xl` 60px (responsive variants of Display) | Anton | article H1, listing/category page title, featured post-card title |
+
+### Per-role contract (every row maps to one of the 4 tiers above)
+
+| Role | Tier | Font | Size (base → responsive variants of the **same** size) | Weight | Line height | Where |
+|------|------|------|--------------------------------------------------------|--------|-------------|-------|
+| Article H1 (post title) | **4 Display** | Anton | `text-4xl` 36px → `sm:text-5xl` 48px → `lg:text-6xl` 60px (teto — não 7xl; H1 of an article, not a hero) | 400 | 1.05 (`leading-[1.05]`) | article header |
+| Listing / category page title | **4 Display** | Anton | `text-4xl` 36px → `sm:text-5xl` 48px | 400 | 1.1 | `/blog`, `/blog/categoria/[slug]` |
+| Featured post-card title | **4 Display** | Anton | `text-4xl` 36px → `sm:text-5xl` 48px | 400 | 1.1 | featured card on `/blog` |
+| Grid post-card title | **3 Heading** | Anton | `text-2xl` 24px (no step needed; may use `sm:text-3xl` 30px as same-role responsive step) | 400 | 1.15 | grid cards |
+| MDX `h2` | **3 Heading** | Anton | `text-2xl` 24px → `sm:text-3xl` 30px (responsive variant), `scroll-mt-24` (anchor offset under fixed header) | 400 | 1.2 | prose section heads |
+| MDX `h3` | **3 Heading** | Anton | `text-2xl` 24px, `scroll-mt-24` | 400 | 1.25 | prose sub-heads. **Distinguished from h2 by margin + weight/spacing, NOT a smaller size:** h2 gets `mt-12` and `sm:text-3xl` step; h3 stays at base `text-2xl` with tighter `mt-8`. (Resolves the old h2/h3 size split without a 5th size.) |
+| Author name | **3 Heading** | Anton | `text-2xl` 24px, uppercase | 400 | 1.1 | `AuthorBlock` |
+| MDX body / `p` | **2 Body** | Montserrat | `text-base` 16px → `lg:text-lg` 18px (responsive variant of Body) | 400 | **1.7** (`leading-[1.7]`) — long-form reading, looser than the landing's 1.6 | prose |
+| MDX `li` | **2 Body** | Montserrat | inherits Body 16/18px | 400 | 1.7 | prose lists |
+| MDX `strong` | **2 Body** | Montserrat | inherits Body | **600** | inherits | inline emphasis |
+| MDX `blockquote` | **2 Body** | Montserrat | `text-base` 16px → `lg:text-lg` 18px (same as Body; `italic` optional, left `border-l-2 border-line`, `pl-6`, `text-muted`) | 400 | 1.6 | prose quotes |
+| MDX inline `code` | **1 Label** | Montserrat/mono | `text-sm` 14px, `bg-surface px-2 py-px rounded-none border border-line` | 400 | — | inline code |
+| MDX `pre` (code block) | **1 Label** | mono | `text-sm` 14px, `bg-surface border border-line p-6`, horizontal scroll, no syntax color (monochrome) | 400 | 1.5 | code blocks |
+| Eyebrow / kicker (category label, "ARTIGOS") | **1 Label** | Montserrat | `text-sm` 14px, `tracking-[0.3em]`, **uppercase** | 600 | 1.4 | above titles |
+| Meta row (reading time, date) | **1 Label** | Montserrat | `text-sm` 14px (label part 600 uppercase tracking-wide if a label) | 400 | 1.4 | byline row |
+| Author credential | **1 Label** | Montserrat | `text-sm` 14px, `text-muted` | 400 | 1.4 | `AuthorBlock` |
+| TOC heading ("NESTE ARTIGO") | **1 Label** | Montserrat | `text-sm` 14px, `tracking-[0.3em]`, uppercase (distinguished from TOC links by tracking + weight, not size) | 600 | 1.4 | TOC rail head |
+| TOC link | **1 Label** | Montserrat | `text-sm` 14px | 400 (active 600) | 1.5 | TOC rail |
+| Card excerpt / description | **1 Label** | Montserrat | `text-sm` 14px | 400 | 1.5, `text-muted` | post cards |
+
+**Distinct base sizes declared: exactly 4 → 14px (Label) · 16px (Body) · 24px (Heading) · 36px (Display).** All `sm:`/`lg:` modifiers above are responsive variants of those same four roles, not additional sizes.
+
+**MDX Prose contract (single source — applied via one wrapper, not per-element):** Wrap rendered MDX in a `prose-dino` container that owns the rhythm so authors write plain markdown. Rhythm: `p` → `mt-6`; `h2` → `mt-12`; `h3` → `mt-8`; `ul/ol` → `mt-6` with `space-y-2` items, `list-disc pl-6`/`list-decimal pl-6` in `--color-muted` markers; `blockquote` → `mt-8`; `pre` → `mt-6`; `img` → `mt-8` full-measure, grayscale + `contrast-125` (brand photo treatment), with caption `text-sm text-muted mt-2`; links → `underline underline-offset-4 decoration-line hover:decoration-fg text-fg` (no color, monochrome). First child has no top margin (`first:mt-0`). h2 vs h3 differ by **margin step (`mt-12` vs `mt-8`) and the h2 `sm:text-3xl` responsive step** — both share the Tier-3 base size.
 
 **Weights:** exactly **2** — Montserrat 400 + 600. Anton ignores weight. No 500/700/800.
-**Caixa:** Anton (all display: H1, card titles, MDX h2/h3, author name, eyebrows, TOC heading) always `uppercase`. **MDX body paragraphs are caixa livre** (lowercase as written) — long-form readability prevails, identical to the landing's body rule. Never force `uppercase` on prose.
+**Caixa:** Anton (all display: H1, card titles, MDX h2/h3, author name) always `uppercase`; Montserrat labels that are uppercased (eyebrow, TOC heading) are intentional kickers, not new sizes. **MDX body paragraphs are caixa livre** (lowercase as written) — long-form readability prevails, identical to the landing's body rule. Never force `uppercase` on prose.
 
 ---
 
@@ -133,9 +148,9 @@ Inherited monochrome system — **no new color tokens, no accent hue.** The "10%
 | Component | Source | Client/RSC | Variant / States |
 |-----------|--------|-----------|------------------|
 | **Blog shell** (inline header + footer) | reuse legal-page pattern (`/privacidade`) | RSC | Fixed header (`border-b border-line/60 bg-bg/80 backdrop-blur`), wordmark "Dino Team" link → `/`, single CTAButton. Footer = landing footer with legal links + a `/blog` link added. Identical to the legal-page shell — do **not** invent a new chrome. |
-| **`PostCard` (featured)** | custom (new) | RSC | Large: full-width cover (P&B, `RamonPhoto`-style grayscale+scrim) + Anton title (text-3xl→4xl) + category label + date + reading time + excerpt. One per `/blog` (D-07). Hover: subtle `border-line → border-fg/40` + title underline; reduced-motion safe (CSS only). |
-| **`PostCard` (grid)** | custom (new) | RSC | Compact: cover thumbnail (P&B) + Anton title (text-xl→2xl) + category label + date + reading time. Grid below featured. Hover same as featured. |
-| **`AuthorBlock`** | custom (new) | RSC | Photo (P&B circle or square, grayscale+contrast-125) + Anton name (uppercase) + Montserrat credential (`text-muted`) + optional short bio. Photo absent (Ramon) → reuse `RamonPhoto` placeholder pattern (intentional monochrome slot, label "Foto do autor", **not** an error). |
+| **`PostCard` (featured)** | custom (new) | RSC | Large: full-width cover (P&B, `RamonPhoto`-style grayscale+scrim) + Anton title (Display tier, `text-4xl→5xl`) + category label + date + reading time + excerpt. One per `/blog` (D-07). Hover: subtle `border-line → border-fg/40` + title underline; reduced-motion safe (CSS only). |
+| **`PostCard` (grid)** | custom (new) | RSC | Compact: cover thumbnail (P&B) + Anton title (Heading tier, `text-2xl`, optional `sm:text-3xl`) + category label + date + reading time. Grid below featured. Hover same as featured. |
+| **`AuthorBlock`** | custom (new) | RSC | Photo (P&B circle or square, grayscale+contrast-125) + Anton name (Heading tier, uppercase) + Montserrat credential (Label tier, `text-muted`) + optional short bio. Photo absent (Ramon) → reuse `RamonPhoto` placeholder pattern (intentional monochrome slot, label "Foto do autor", **not** an error). |
 | **`ReadingTime`** | inline (no component needed) | RSC | `text-sm text-muted`, e.g. `6 min de leitura`. Computed at build (D-05 / `reading-time` lib). Sits in the meta row. |
 | **`Toc`** (table of contents) | custom (new) | **client island** | Sticky right rail on `lg` (`sticky top-24`), collapsible `<details>` on mobile (closed by default, summary "Neste artigo"). Active heading via scroll-spy (`IntersectionObserver`), gated by `prefers-reduced-motion` (no smooth-scroll/highlight animation when reduced). Links: `text-sm text-muted`, active = `text-fg` + left `border-l-2 border-fg -ml-px`. Renders only when article has ≥ 3 `h2`/`h3` (executor threshold). |
 | **`RelatedPosts`** | custom (new) | RSC | 2–3 same-category `PostCard` (grid variant), under the article body, above/with the end CTA. Section title Anton "CONTINUE LENDO" (or "RELACIONADOS"). Empty fallback below. |
@@ -190,11 +205,11 @@ Inherited monochrome system — **no new color tokens, no accent hue.** The "10%
 
 | Breakpoint | Layout |
 |------------|--------|
-| mobile (<640, base) | Single column. `/blog`: featured stacked (cover over text), grid 1-col. Article: single column, H1 `text-4xl`, prose `text-base`; **TOC = collapsible `<details>`** above the body (closed by default). Meta row may wrap. Section padding `py-24`, gutter `px-6`. |
-| sm (≥640) | Card titles step up (`sm:text-*`). Grid → `sm:grid-cols-2`. Section padding `sm:py-32`. Featured cover larger. |
-| lg (≥1024) | Article = **two columns**: prose (`max-w-[68ch]`) + **sticky TOC rail** (`sticky top-24`, `w-56`/`w-64`). H1 `lg:text-6xl`, prose `lg:text-lg`. Grid → `lg:grid-cols-3`. Containers `max-w-6xl` (listing) / measure (prose). |
+| mobile (<640, base) | Single column. `/blog`: featured stacked (cover over text), grid 1-col. Article: single column, H1 `text-4xl` (Display base), prose `text-base` (Body base); **TOC = collapsible `<details>`** above the body (closed by default). Meta row may wrap. Section padding `py-24`, gutter `px-6`. |
+| sm (≥640) | Card titles step up to their same-role responsive variant (`sm:text-*`). Grid → `sm:grid-cols-2`. Section padding `sm:py-32`. Featured cover larger. |
+| lg (≥1024) | Article = **two columns**: prose (`max-w-[68ch]`) + **sticky TOC rail** (`sticky top-24`, `w-56`/`w-64`). H1 `lg:text-6xl` (Display, same role), prose `lg:text-lg` (Body, same role). Grid → `lg:grid-cols-3`. Containers `max-w-6xl` (listing) / measure (prose). |
 
-Mobile-first; no dedicated tablet layout beyond `sm`/`lg` jumps. TOC must not cause CLS on either layout (reserve the rail column on `lg`; `<details>` is intrinsic-height on mobile).
+Mobile-first; no dedicated tablet layout beyond `sm`/`lg` jumps. The `sm:`/`lg:` text steps in this table are responsive variants of the 4 declared sizes, not new sizes. TOC must not cause CLS on either layout (reserve the rail column on `lg`; `<details>` is intrinsic-height on mobile).
 
 ---
 
