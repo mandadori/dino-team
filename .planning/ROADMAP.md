@@ -76,7 +76,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Um visitante abre um artigo em `/blog/[slug]` e vê o MDX renderizado com bloco de autor nomeado + credencial, tempo de leitura, TOC (sticky no desktop, colapsável no mobile), 2–3 posts relacionados, compartilhamento nativo e um CTA sóbrio no fim
   3. Um artigo com frontmatter inválido (campo SEO faltando) falha o build em vez de ir ao ar sem `description`/`date`
   4. Cada página e artigo expõe metadata correta (title/description/canonical/OG com `og:image` on-brand), aparece no `sitemap.xml`, respeita o `robots.txt` e emite JSON-LD (Article, Breadcrumb, Person, Organization) com URLs apontando para `NEXT_PUBLIC_SITE_URL`
-**Plans**: TBD
+**Plans**: 5 plans
+- [ ] 04-01-PLAN.md — Wave-0 gate: verificar/instalar 9 deps MDX/SEO (checkpoint) + smoke MDX×Turbopack (dev+build)
+- [ ] 04-02-PLAN.md — Fundação de conteúdo: loader zod build-fail (lib/blog.ts) + registro de autores/categorias + metadataBase→env + JsonLd primitive + 2 artigos-semente
+- [ ] 04-03-PLAN.md — Slice artigo `/blog/[slug]`: render MDX + EEAT (ProseDino, AuthorBlock, TOC, ShareBar, Related, CTA) + generateMetadata + JSON-LD Article/Person/Org/Breadcrumb
+- [ ] 04-04-PLAN.md — Slice descoberta: listagem `/blog` (destaque+grid) + rotas de categoria `/blog/categoria/[slug]` + CategoryNav + Breadcrumb JSON-LD
+- [ ] 04-05-PLAN.md — Superfície SEO + conteúdo: sitemap.ts + robots.ts + og:image estático + 2 artigos (Mentalidade/Bastidores) + link /blog no footer + gate de revisão de marca
 **UI hint**: yes
 
 ### Phase 5: Captura de E-mail
@@ -112,6 +117,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Landing Editorial + Fundação | 3/3 | Complete   | 2026-06-01 |
 | 2. Conversão Completa | 3/3 | Complete   | 2026-06-01 |
 | 3. Conformidade Legal & LGPD | 2/2 | Complete    | 2026-06-02 |
-| 4. Blog SEO Production-Ready | 0/TBD | Not started | - |
+| 4. Blog SEO Production-Ready | 0/5 | Not started | - |
 | 5. Captura de E-mail | 0/TBD | Not started | - |
 | 6. Pipeline de Artigos | 0/TBD | Not started | - |
