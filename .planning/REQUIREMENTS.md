@@ -33,7 +33,7 @@ Requisitos deste milestone. Cada um mapeia para fases do roadmap.
 - [x] **BLOG-03**: Página de artigo `/blog/[slug]` renderizando MDX (build-time SSG, conteúdo em `site/content/blog/`)
 - [x] **BLOG-04**: Bloco de autor nomeado + credencial em cada artigo
 - [x] **BLOG-05**: Tempo de leitura calculado do corpo do artigo
-- [ ] **BLOG-06**: Categorias/pilares + filtro por categoria
+- [x] **BLOG-06**: Categorias/pilares + filtro por categoria
 - [x] **BLOG-07**: Índice (TOC) gerado dos headings em posts longos (sticky desktop, colapsável mobile)
 - [x] **BLOG-08**: Posts relacionados por categoria (2–3 no fim do artigo)
 - [x] **BLOG-09**: Compartilhamento nativo (copiar link + share intents, sem widget de terceiro)
@@ -119,7 +119,7 @@ Mapeado na criação do roadmap (2026-05-31). Cada requisito v1 → exatamente u
 | BLOG-03 | Phase 4 | Complete |
 | BLOG-04 | Phase 4 | Complete |
 | BLOG-05 | Phase 4 | Complete |
-| BLOG-06 | Phase 4 | Pending |
+| BLOG-06 | Phase 4 | Complete |
 | BLOG-07 | Phase 4 | Complete |
 | BLOG-08 | Phase 4 | Complete |
 | BLOG-09 | Phase 4 | Complete |

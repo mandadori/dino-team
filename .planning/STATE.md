@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-06-12T07:06:56.521Z"
+stopped_at: Completed 04-03-PLAN.md
+last_updated: "2026-06-12T07:13:17.068Z"
 last_activity: 2026-06-12
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 13
-  completed_plans: 11
-  percent: 85
+  completed_plans: 12
+  percent: 50
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-31)
 ## Current Position
 
 Phase: 04 (blog-seo-production-ready) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-06-12
 
-Progress: [█████████░] 85%
+Progress: [█████████░] 92%
 
 ## Performance Metrics
 
@@ -62,6 +62,7 @@ Progress: [█████████░] 85%
 | Phase 04 P01 | 10 | 2 tasks | 2 files |
 | Phase 04 P02 | 4 | 3 tasks | 7 files |
 | Phase 04 P03 | 6 | 3 tasks | 7 files |
+| Phase 04 P04 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,8 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 04]: AUTHORS registry (ramon-dino placeholder photo, mauri-rosolen real) + fixed-4 CATEGORIES const + SITE_URL env-fallback in lib/site.ts (D-01/D-04/D-05/D-12)
 - [Phase ?]: [Phase 04]: JsonLd.tsx is the single XSS-scrub chokepoint for all downstream JSON-LD (SEO-05)
 - [Phase ?]: [Phase 04]: /blog/[slug] article route — MDX via next-mdx-remote-client/rsc evaluate + proseComponents; TOC ids via github-slugger (rehype-slug parity); Article/Person/Organization/Breadcrumb JSON-LD absolute via SITE_URL through JsonLd (BLOG-03..10, SEO-02/05)
+- [Phase ?]: [Phase 04]: /blog listing = featured (featured:true, most-recent posts[0] fallback) + sm:grid-cols-2 lg:grid-cols-3 grid (D-07); CategoryNav = RSC server Links (Todos+4), no client pills (D-08)
+- [Phase ?]: [Phase 04]: /blog/categoria/[slug] = 4 indexable SSG routes via generateStaticParams over CATEGORIES; each emits BreadcrumbList JSON-LD absolute via SITE_URL + own canonical; unknown slug -> notFound() (BLOG-02/06, SEO-02/05)
 
 ### Pending Todos
 
@@ -114,6 +117,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-12T07:06:38.322Z
+Last session: 2026-06-12T07:12:57.875Z
 Stopped at: Completed 04-03-PLAN.md
 Resume file: None
