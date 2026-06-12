@@ -24,7 +24,9 @@ export const metadata: Metadata = {
   title: "Dino Team — O método do campeão, aplicado em você",
   description:
     "Consultoria de treino e dieta personalizada com o método validado por Ramon Dino — do zero absoluto ao topo mundial. Direção, não atalho.",
-  metadataBase: new URL("https://dinoteam.vercel.app"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://dinoteam.vercel.app",
+  ),
   openGraph: {
     title: "Dino Team — O método do campeão, aplicado em você",
     description:

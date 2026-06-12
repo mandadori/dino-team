@@ -114,3 +114,51 @@ export const COOKIE_CONSENT_KEY = "dino-consent";
 // Validade da escolha: 6 meses em milissegundos (D-08).
 // 6 × 30 dias × 24h × 60min × 60s × 1000ms.
 export const COOKIE_CONSENT_TTL_MS = 6 * 30 * 24 * 60 * 60 * 1000;
+
+// ---------------------------------------------------------------------------
+// Blog — Fase 4 (BLOG-01 / SEO-01 / SEO-05)
+// ---------------------------------------------------------------------------
+
+// URL base de todas as URLs absolutas (canonical / OG / sitemap / JSON-LD).
+// Espelha o padrão env-com-fallback de WHATSAPP_URL (D-12, SEO-01). Trocar pelo
+// domínio real definindo NEXT_PUBLIC_SITE_URL ao publicar.
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://dinoteam.vercel.app";
+
+// Registro de autores (D-04/D-05, EEAT). A chave é referenciada pelo campo
+// `author` no frontmatter dos artigos (lib/blog.ts). `satisfies` mantém as chaves
+// literais. `photo: undefined` para o Ramon é a MESMA disciplina de placeholder
+// intencional de RamonPhoto/TESTIMONIALS — slot deliberado, nunca estado quebrado;
+// troca trivial quando o acervo P&B chegar.
+export type Author = {
+  name: string;
+  credential: string;
+  photo?: string;
+  bio?: string;
+};
+
+export const AUTHORS = {
+  "ramon-dino": {
+    name: "Ramon Dino",
+    credential: "primeiro brasileiro campeão do Mr. Olympia (Classic Physique)",
+    photo: undefined, // placeholder até o acervo P&B chegar (mesmo bloqueio da Fase 1)
+  },
+  "mauri-rosolen": {
+    name: "Mauri Rosolen",
+    credential: "Treinador",
+    photo: "/autores/mauri-rosolen.webp", // já no repo
+  },
+} satisfies Record<string, Author>;
+
+export type AuthorKey = keyof typeof AUTHORS;
+
+// As 4 categorias fixas do blog (D-01) — taxonomia fechada, espelha o enum de
+// lib/blog.ts. Diferenciadas só pelo rótulo (sem cor/pill/badge — UI-SPEC §Color).
+export const CATEGORIES = [
+  { slug: "treino", label: "Treino" },
+  { slug: "nutricao", label: "Nutrição" },
+  { slug: "mentalidade", label: "Mentalidade" },
+  { slug: "bastidores", label: "Bastidores" },
+] as const;
+
+export type CategorySlug = (typeof CATEGORIES)[number]["slug"];
