@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 04-03-PLAN.md
-last_updated: "2026-06-12T07:13:17.068Z"
+status: verifying
+stopped_at: Phase 5 context gathered
+last_updated: "2026-06-12T22:56:53.031Z"
 last_activity: 2026-06-12
 progress:
   total_phases: 6
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 13
-  completed_plans: 12
-  percent: 50
+  completed_plans: 13
+  percent: 67
 ---
 
 # Project State
@@ -27,10 +27,10 @@ See: .planning/PROJECT.md (updated 2026-05-31)
 
 Phase: 04 (blog-seo-production-ready) — EXECUTING
 Plan: 5 of 5
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-06-12
 
-Progress: [█████████░] 92%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -63,6 +63,7 @@ Progress: [█████████░] 92%
 | Phase 04 P02 | 4 | 3 tasks | 7 files |
 | Phase 04 P03 | 6 | 3 tasks | 7 files |
 | Phase 04 P04 | 3 | 2 tasks | 3 files |
+| Phase 04 P04-05 | 14 | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,8 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 04]: /blog/[slug] article route — MDX via next-mdx-remote-client/rsc evaluate + proseComponents; TOC ids via github-slugger (rehype-slug parity); Article/Person/Organization/Breadcrumb JSON-LD absolute via SITE_URL through JsonLd (BLOG-03..10, SEO-02/05)
 - [Phase ?]: [Phase 04]: /blog listing = featured (featured:true, most-recent posts[0] fallback) + sm:grid-cols-2 lg:grid-cols-3 grid (D-07); CategoryNav = RSC server Links (Todos+4), no client pills (D-08)
 - [Phase ?]: [Phase 04]: /blog/categoria/[slug] = 4 indexable SSG routes via generateStaticParams over CATEGORIES; each emits BreadcrumbList JSON-LD absolute via SITE_URL + own canonical; unknown slug -> notFound() (BLOG-02/06, SEO-02/05)
+- [Phase ?]: [Phase 04]: SEO surface = Next file-convention routes only — sitemap.ts (9 entries: /blog + 4 categories + 4 articles, absolute via SITE_URL, getAllPosts re-asserts BLOG-01), robots.ts allow-all + sitemap pointer, static monochrome opengraph-image.png (1200x630, no Ramon photo) (SEO-03/04/06)
+- [Phase ?]: [Phase 04]: D-09 4 example stubs (one per category) + D-10 brand-review gate human-approved (tom sereno, no promise-of-result, no atalho/fórmula, no empty motivation); all 4 categories populated so related-by-category has real neighbors (BLOG-03/06/08)
 
 ### Pending Todos
 
@@ -101,6 +104,7 @@ None yet.
 - [Phase 1]: Acervo real de fotos P&B do Ramon é bloqueante para o redesign foto-conduzido — solicitar ao usuário no início da fase; usar placeholder monocromático intencional enquanto não chega.
 - [Phase 2]: Preços dos Planos, textos de Depoimentos (com nome real) e dados da Comunidade entregues pelo usuário no chat sob demanda; `NEXT_PUBLIC_WHATSAPP_URL` precisa ser definido.
 - [Phase 4]: `NEXT_PUBLIC_SITE_URL` precisa existir antes de OG/canonical/sitemap funcionarem; smoke test de `next-mdx-remote-client` + Turbopack no início da fase.
+- [Phase 04]: 2 pre-existing react-hooks/set-state-in-effect lint errors (ShareBar.tsx:72 from 04-03, ConsentProvider.tsx:68 from 03-01) — out of scope for 04-05, next build green; cleanup follow-up recommended
 
 ## Deferred Items
 
@@ -117,6 +121,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-12T07:12:57.875Z
-Stopped at: Completed 04-03-PLAN.md
-Resume file: None
+Last session: 2026-06-12T22:56:53.018Z
+Stopped at: Phase 5 context gathered
+Resume file: .planning/phases/05-captura-de-e-mail/05-CONTEXT.md
