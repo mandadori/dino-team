@@ -28,7 +28,7 @@ Requisitos deste milestone. Cada um mapeia para fases do roadmap.
 
 ### Blog
 
-- [ ] **BLOG-01**: Frontmatter schema validado (zod) — title, slug, date, author, category, description, cover — como contrato-raiz
+- [x] **BLOG-01**: Frontmatter schema validado (zod) — title, slug, date, author, category, description, cover — como contrato-raiz
 - [x] **BLOG-02**: Listagem de artigos em `/blog`
 - [x] **BLOG-03**: Página de artigo `/blog/[slug]` renderizando MDX (build-time SSG, conteúdo em `site/content/blog/`)
 - [ ] **BLOG-04**: Bloco de autor nomeado + credencial em cada artigo
@@ -42,11 +42,11 @@ Requisitos deste milestone. Cada um mapeia para fases do roadmap.
 
 ### SEO Técnico
 
-- [ ] **SEO-01**: `metadataBase` / site URL via env (`NEXT_PUBLIC_SITE_URL`) — pré-requisito de OG/canonical/sitemap
+- [x] **SEO-01**: `metadataBase` / site URL via env (`NEXT_PUBLIC_SITE_URL`) — pré-requisito de OG/canonical/sitemap
 - [ ] **SEO-02**: `generateMetadata` por página e por artigo (title/description/canonical/OG)
 - [ ] **SEO-03**: `sitemap.ts` mapeando rotas estáticas + artigos do blog
 - [ ] **SEO-04**: `robots.ts`
-- [ ] **SEO-05**: Structured data JSON-LD (Article, Breadcrumb, Person, Organization) tipado com `schema-dts`
+- [x] **SEO-05**: Structured data JSON-LD (Article, Breadcrumb, Person, Organization) tipado com `schema-dts`
 - [ ] **SEO-06**: `opengraph-image` monocromático on-brand (Anton + P&B), estático único no v1
 
 ### Captura de Lead
@@ -114,7 +114,7 @@ Mapeado na criação do roadmap (2026-05-31). Cada requisito v1 → exatamente u
 | LEGAL-01 | Phase 3 | Complete |
 | LEGAL-02 | Phase 3 | Complete |
 | LEGAL-03 | Phase 3 | Complete |
-| BLOG-01 | Phase 4 | Pending |
+| BLOG-01 | Phase 4 | Complete |
 | BLOG-02 | Phase 4 | Complete |
 | BLOG-03 | Phase 4 | Complete |
 | BLOG-04 | Phase 4 | Pending |
@@ -124,11 +124,11 @@ Mapeado na criação do roadmap (2026-05-31). Cada requisito v1 → exatamente u
 | BLOG-08 | Phase 4 | Pending |
 | BLOG-09 | Phase 4 | Pending |
 | BLOG-10 | Phase 4 | Pending |
-| SEO-01 | Phase 4 | Pending |
+| SEO-01 | Phase 4 | Complete |
 | SEO-02 | Phase 4 | Pending |
 | SEO-03 | Phase 4 | Pending |
 | SEO-04 | Phase 4 | Pending |
-| SEO-05 | Phase 4 | Pending |
+| SEO-05 | Phase 4 | Complete |
 | SEO-06 | Phase 4 | Pending |
 | LEAD-01 | Phase 5 | Pending |
 | LEAD-02 | Phase 5 | Pending |
