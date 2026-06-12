@@ -29,8 +29,8 @@ Requisitos deste milestone. Cada um mapeia para fases do roadmap.
 ### Blog
 
 - [ ] **BLOG-01**: Frontmatter schema validado (zod) — title, slug, date, author, category, description, cover — como contrato-raiz
-- [ ] **BLOG-02**: Listagem de artigos em `/blog`
-- [ ] **BLOG-03**: Página de artigo `/blog/[slug]` renderizando MDX (build-time SSG, conteúdo em `site/content/blog/`)
+- [x] **BLOG-02**: Listagem de artigos em `/blog`
+- [x] **BLOG-03**: Página de artigo `/blog/[slug]` renderizando MDX (build-time SSG, conteúdo em `site/content/blog/`)
 - [ ] **BLOG-04**: Bloco de autor nomeado + credencial em cada artigo
 - [ ] **BLOG-05**: Tempo de leitura calculado do corpo do artigo
 - [ ] **BLOG-06**: Categorias/pilares + filtro por categoria
@@ -115,8 +115,8 @@ Mapeado na criação do roadmap (2026-05-31). Cada requisito v1 → exatamente u
 | LEGAL-02 | Phase 3 | Complete |
 | LEGAL-03 | Phase 3 | Complete |
 | BLOG-01 | Phase 4 | Pending |
-| BLOG-02 | Phase 4 | Pending |
-| BLOG-03 | Phase 4 | Pending |
+| BLOG-02 | Phase 4 | Complete |
+| BLOG-03 | Phase 4 | Complete |
 | BLOG-04 | Phase 4 | Pending |
 | BLOG-05 | Phase 4 | Pending |
 | BLOG-06 | Phase 4 | Pending |

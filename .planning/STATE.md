@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 04 UI-SPEC approved
-last_updated: "2026-06-12T06:15:26.731Z"
-last_activity: 2026-06-12 -- Phase 04 planning complete
+last_updated: "2026-06-12T06:48:20.844Z"
+last_activity: 2026-06-12
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 13
-  completed_plans: 8
+  completed_plans: 9
   percent: 50
 ---
 
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-31)
 
 **Core value:** O site converte o público certo em lead qualificado de consultoria via WhatsApp, carregado pela credibilidade do método de um campeão mundial; o blog sustenta autoridade e tráfego orgânico no topo do funil.
-**Current focus:** Phase 4 — blog seo production ready
+**Current focus:** Phase 04 — blog-seo-production-ready
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
+Phase: 04 (blog-seo-production-ready) — EXECUTING
+Plan: 2 of 5
 Status: Ready to execute
-Last activity: 2026-06-12 -- Phase 04 planning complete
+Last activity: 2026-06-12
 
-Progress: [██████████] 100%
+Progress: [███████░░░] 69%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [██████████] 100%
 | Phase 02-convers-o-completa P03 | 4 | 1 task | 1 file |
 | Phase 03 P01 | 4 | 3 tasks | 5 files |
 | Phase 03 P02 | 3 | 2 tasks | 3 files |
+| Phase 04 P01 | 10 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,8 @@ Recent decisions affecting current work:
 - [Phase ?]: .planning/phases/02-convers-o-completa/02-02-SUMMARY.md
 - [Phase 02]: WA_NUMBER deriva de NEXT_PUBLIC_WHATSAPP_URL via regex, espelhando WHATSAPP_URL; fallback '0000000000' mantido (CONF-01).
 - [Phase ?]: [Phase 03]: Páginas legais inline header/footer (sem SiteShell extraído); identificadores da empresa como placeholders bracketed [RAZÃO SOCIAL]/[CNPJ]/[E-MAIL DO ENCARREGADO DE DADOS]/[COMARCA-UF]/[DATA], swap-in sem tocar código (D-01).
+- [Phase 04]: MDX render path = next-mdx-remote-client/rsc evaluate() — validated empirically under turbopack.root; no transpilePackages fallback needed
+- [Phase 04]: 9 MDX/SEO deps human-verified (T-04-SC) and installed; Wave-0 MDX x Turbopack gate cleared, downstream waves unblocked
 
 ### Pending Todos
 
@@ -105,6 +108,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-11T23:21:05.917Z
+Last session: 2026-06-12T06:44:50.949Z
 Stopped at: Phase 04 UI-SPEC approved
-Resume file: .planning/phases/04-blog-seo-production-ready/04-UI-SPEC.md
+Resume file: None
