@@ -180,6 +180,12 @@ export default function TermosPage() {
           </p>
           <nav className="flex gap-5 font-body text-sm text-muted">
             <Link
+              href="/blog"
+              className="hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-fg focus-visible:ring-offset-bg"
+            >
+              Blog
+            </Link>
+            <Link
               href="/privacidade"
               className="hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-fg focus-visible:ring-offset-bg"
             >
