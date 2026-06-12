@@ -79,7 +79,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 5 plans
 - [x] 04-01-PLAN.md — Wave-0 gate: verificar/instalar 9 deps MDX/SEO (checkpoint) + smoke MDX×Turbopack (dev+build)
 - [x] 04-02-PLAN.md — Fundação de conteúdo: loader zod build-fail (lib/blog.ts) + registro de autores/categorias + metadataBase→env + JsonLd primitive + 2 artigos-semente
-- [ ] 04-03-PLAN.md — Slice artigo `/blog/[slug]`: render MDX + EEAT (ProseDino, AuthorBlock, TOC, ShareBar, Related, CTA) + generateMetadata + JSON-LD Article/Person/Org/Breadcrumb
+- [x] 04-03-PLAN.md — Slice artigo `/blog/[slug]`: render MDX + EEAT (ProseDino, AuthorBlock, TOC, ShareBar, Related, CTA) + generateMetadata + JSON-LD Article/Person/Org/Breadcrumb
 - [ ] 04-04-PLAN.md — Slice descoberta: listagem `/blog` (destaque+grid) + rotas de categoria `/blog/categoria/[slug]` + CategoryNav + Breadcrumb JSON-LD
 - [ ] 04-05-PLAN.md — Superfície SEO + conteúdo: sitemap.ts + robots.ts + og:image estático + 2 artigos (Mentalidade/Bastidores) + link /blog no footer + gate de revisão de marca
 **UI hint**: yes
@@ -117,6 +117,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Landing Editorial + Fundação | 3/3 | Complete   | 2026-06-01 |
 | 2. Conversão Completa | 3/3 | Complete   | 2026-06-01 |
 | 3. Conformidade Legal & LGPD | 2/2 | Complete    | 2026-06-02 |
-| 4. Blog SEO Production-Ready | 2/5 | In Progress|  |
+| 4. Blog SEO Production-Ready | 3/5 | In Progress|  |
 | 5. Captura de E-mail | 0/TBD | Not started | - |
 | 6. Pipeline de Artigos | 0/TBD | Not started | - |

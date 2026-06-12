@@ -31,19 +31,19 @@ Requisitos deste milestone. Cada um mapeia para fases do roadmap.
 - [x] **BLOG-01**: Frontmatter schema validado (zod) — title, slug, date, author, category, description, cover — como contrato-raiz
 - [x] **BLOG-02**: Listagem de artigos em `/blog`
 - [x] **BLOG-03**: Página de artigo `/blog/[slug]` renderizando MDX (build-time SSG, conteúdo em `site/content/blog/`)
-- [ ] **BLOG-04**: Bloco de autor nomeado + credencial em cada artigo
-- [ ] **BLOG-05**: Tempo de leitura calculado do corpo do artigo
+- [x] **BLOG-04**: Bloco de autor nomeado + credencial em cada artigo
+- [x] **BLOG-05**: Tempo de leitura calculado do corpo do artigo
 - [ ] **BLOG-06**: Categorias/pilares + filtro por categoria
-- [ ] **BLOG-07**: Índice (TOC) gerado dos headings em posts longos (sticky desktop, colapsável mobile)
-- [ ] **BLOG-08**: Posts relacionados por categoria (2–3 no fim do artigo)
-- [ ] **BLOG-09**: Compartilhamento nativo (copiar link + share intents, sem widget de terceiro)
-- [ ] **BLOG-10**: CTA inline sóbrio no fim do artigo (não mid-content), com sign-off on-brand
+- [x] **BLOG-07**: Índice (TOC) gerado dos headings em posts longos (sticky desktop, colapsável mobile)
+- [x] **BLOG-08**: Posts relacionados por categoria (2–3 no fim do artigo)
+- [x] **BLOG-09**: Compartilhamento nativo (copiar link + share intents, sem widget de terceiro)
+- [x] **BLOG-10**: CTA inline sóbrio no fim do artigo (não mid-content), com sign-off on-brand
 - [ ] **BLOG-11**: Skill `novo-artigo` — agentes (pesquisa/copy/revisão) produzem MDX versionado no contrato do schema BLOG-01
 
 ### SEO Técnico
 
 - [x] **SEO-01**: `metadataBase` / site URL via env (`NEXT_PUBLIC_SITE_URL`) — pré-requisito de OG/canonical/sitemap
-- [ ] **SEO-02**: `generateMetadata` por página e por artigo (title/description/canonical/OG)
+- [x] **SEO-02**: `generateMetadata` por página e por artigo (title/description/canonical/OG)
 - [ ] **SEO-03**: `sitemap.ts` mapeando rotas estáticas + artigos do blog
 - [ ] **SEO-04**: `robots.ts`
 - [x] **SEO-05**: Structured data JSON-LD (Article, Breadcrumb, Person, Organization) tipado com `schema-dts`
@@ -117,15 +117,15 @@ Mapeado na criação do roadmap (2026-05-31). Cada requisito v1 → exatamente u
 | BLOG-01 | Phase 4 | Complete |
 | BLOG-02 | Phase 4 | Complete |
 | BLOG-03 | Phase 4 | Complete |
-| BLOG-04 | Phase 4 | Pending |
-| BLOG-05 | Phase 4 | Pending |
+| BLOG-04 | Phase 4 | Complete |
+| BLOG-05 | Phase 4 | Complete |
 | BLOG-06 | Phase 4 | Pending |
-| BLOG-07 | Phase 4 | Pending |
-| BLOG-08 | Phase 4 | Pending |
-| BLOG-09 | Phase 4 | Pending |
-| BLOG-10 | Phase 4 | Pending |
+| BLOG-07 | Phase 4 | Complete |
+| BLOG-08 | Phase 4 | Complete |
+| BLOG-09 | Phase 4 | Complete |
+| BLOG-10 | Phase 4 | Complete |
 | SEO-01 | Phase 4 | Complete |
-| SEO-02 | Phase 4 | Pending |
+| SEO-02 | Phase 4 | Complete |
 | SEO-03 | Phase 4 | Pending |
 | SEO-04 | Phase 4 | Pending |
 | SEO-05 | Phase 4 | Complete |
