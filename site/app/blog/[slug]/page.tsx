@@ -21,6 +21,7 @@ import { proseComponents } from "@/components/blog/ProseDino";
 import { AuthorBlock } from "@/components/blog/AuthorBlock";
 import { ShareBar } from "@/components/blog/ShareBar";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
+import { NewsletterForm } from "@/components/blog/NewsletterForm";
 import { Toc, type TocHeading } from "@/components/blog/Toc";
 import {
   getAllPosts,
@@ -135,6 +136,11 @@ export default async function ArticlePage({
 
   const author = AUTHORS[post.author as keyof typeof AUTHORS];
   const headings = extractHeadings(post.body);
+
+  // Env-gate server-only (D-12): a seção do form só renderiza com as duas chaves
+  // do Resend presentes. Segredos lidos só aqui no RSC, nunca vão ao cliente (D-03).
+  const newsletterEnabled =
+    !!process.env.RESEND_API_KEY && !!process.env.RESEND_AUDIENCE_ID;
 
   // MDX -> React (Server). NENHUM rehype-raw: HTML cru não passa (T-04-05).
   const { content } = await evaluate({
@@ -300,6 +306,15 @@ export default async function ArticlePage({
                     </CTAButton>
                   </div>
                 </section>
+
+                {/* Captura de e-mail (LEAD-01) — último bloco do artigo, DEPOIS
+                    do CTA WhatsApp (D-05/D-06). Conversão suave; o WhatsApp acima
+                    segue a primária. Env-gated (D-12): some sem as chaves Resend. */}
+                {newsletterEnabled && (
+                  <section className="mt-16 border-t border-line pt-12">
+                    <NewsletterForm />
+                  </section>
+                )}
               </div>
             </div>
 

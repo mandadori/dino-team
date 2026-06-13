@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { CategoryNav } from "@/components/blog/CategoryNav";
 import { PostCard } from "@/components/blog/PostCard";
+import { NewsletterForm } from "@/components/blog/NewsletterForm";
 import { getAllPosts, type Post } from "@/lib/blog";
 import { WHATSAPP_URL } from "@/lib/site";
 
@@ -46,6 +47,11 @@ function selectFeatured(posts: Post[]): Post {
 
 export default function BlogListingPage() {
   const posts = getAllPosts();
+
+  // Env-gate server-only (D-12): a seção do form só renderiza com as duas chaves
+  // do Resend presentes. Segredos lidos só aqui no RSC, nunca vão ao cliente (D-03).
+  const newsletterEnabled =
+    !!process.env.RESEND_API_KEY && !!process.env.RESEND_AUDIENCE_ID;
 
   const featured = posts.length > 0 ? selectFeatured(posts) : null;
   const rest = featured
@@ -117,6 +123,14 @@ export default function BlogListingPage() {
                   ))}
                 </div>
               ) : null}
+
+              {/* Captura de e-mail (LEAD-01) — fim da listagem, max-w-md
+                  centralizado (D-05). Env-gated (D-12): some sem as chaves Resend. */}
+              {newsletterEnabled && (
+                <section className="mt-16 border-t border-line pt-12">
+                  <NewsletterForm />
+                </section>
+              )}
             </>
           )}
         </div>
