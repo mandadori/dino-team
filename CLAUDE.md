@@ -51,7 +51,7 @@ Cada skill é um **fluxo de trabalho ponta a ponta**. A skill é quem **orquestr
 _Produção multicanal — todas ancoram numa verdade do `## Verdades` (brand-book) e dão write-back ao registro de ângulos:_
 - [`/novo-post`](.claude/skills/novo-post/SKILL.md) — post Instagram completo (carrossel ou stories). Dispara `/pesquisar-mercado` (Fase A, quando stale) e `/pesquisar-tema` (deep research, quando informacional). Write-back: uma linha em `registro-angulos.md` (`--canal instagram`).
 - [`/lote-posts`](.claude/skills/lote-posts/SKILL.md) — N posts Instagram em sequência, agendável. Write-back ao `registro-angulos.md` por post aprovado.
-- [`/novo-artigo`](.claude/skills/novo-artigo/SKILL.md) — artigo de blog (MDX draft) em `export/conteudos/blog/<slug>/artigo.mdx`. Pesquisa via `/pesquisar-tema` quando informacional. Write-back `--canal blog`. A publicação no site é trabalho do GSD do site.
+- [`/novo-artigo`](.claude/skills/novo-artigo/SKILL.md) — artigo de blog: escreve o draft em `export/conteudos/blog/<slug>/artigo.mdx` e o promove ao site em `site/content/blog/<slug>.mdx` via `scripts/content/promover_artigo.js`, gated por `next build` e commitado (o draft em `export/` é preservado). Pesquisa via `/pesquisar-tema` quando informacional. Write-back `--canal blog`.
 - [`/novo-email`](.claude/skills/novo-email/SKILL.md) — e-mail (assunto + preheader + corpo + CTA) em `export/conteudos/email/<slug>/email.md`. Tom de carta de mentor 1:1. Write-back `--canal email`. Envio real (Resend) é etapa futura.
 - [`/novo-comunidade`](.claude/skills/novo-comunidade/SKILL.md) — mensagem para a comunidade (WhatsApp) em `export/conteudos/comunidade/<slug>/mensagem.md`. Tom de conversa, não broadcast. Write-back `--canal comunidade`. Disparo real é etapa futura.
 
@@ -198,7 +198,7 @@ Padrão de contratos e skills detalhado em [docs/specs/2026-05-26-redesign-conte
 Cada função é executada por skills. Outputs ficam em `export/`, organizados por canal e data. **Produção é multicanal:** todas as skills de conteúdo ancoram numa verdade do `## Verdades` (brand-book) e escrevem de volta no mesmo `registro-angulos` — uma verdade acionada em múltiplos canais sem coordenação manual. A coerência entre semanas emerge do conjunto fixo de verdades + voz, não de campanha prescrita.
 
 - **Criação de conteúdo — Instagram** — Skills: `/novo-post` (individual), `/lote-posts` (em lote).
-- **Criação de conteúdo — Blog** — Artigo MDX draft pronto para integração no site. Skill: `/novo-artigo`.
+- **Criação de conteúdo — Blog** — Artigo MDX publicado no site (passa `next build`). Skill: `/novo-artigo`.
 - **Criação de conteúdo — E-mail** — Carta de mentor 1:1 com assunto, preheader e corpo. Skill: `/novo-email`.
 - **Criação de conteúdo — Comunidade** — Mensagem curta para grupo WhatsApp. Skill: `/novo-comunidade`.
 - **Criação de estilos** — criar novos templates visuais para uso nos posts. Skill: `/novo-estilo`.
