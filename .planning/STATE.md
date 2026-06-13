@@ -105,6 +105,8 @@ None yet.
 - [Phase 2]: Preços dos Planos, textos de Depoimentos (com nome real) e dados da Comunidade entregues pelo usuário no chat sob demanda; `NEXT_PUBLIC_WHATSAPP_URL` precisa ser definido.
 - [Phase 4]: `NEXT_PUBLIC_SITE_URL` precisa existir antes de OG/canonical/sitemap funcionarem; smoke test de `next-mdx-remote-client` + Turbopack no início da fase.
 - [Phase 04]: 2 pre-existing react-hooks/set-state-in-effect lint errors (ShareBar.tsx:72 from 04-03, ConsentProvider.tsx:68 from 03-01) — out of scope for 04-05, next build green; cleanup follow-up recommended
+- [Phase 05]: Plan-phase decision-coverage gate OVERRIDDEN (user-approved). Heuristic text-matcher flagged 8/13 decisions (D-01,02,03,07,08,09,10,13) as untraceable due to paraphrasing; gsd-plan-checker independently verified all 13 implemented (12/13 cited by id). D-13 (accessibility) is the one untagged-by-id decision — implemented in 05-02 (form a11y wiring) + 05-03 (manual a11y checkpoint). verify-phase should confirm D-13's a11y behaviors land.
+- [Phase 05]: DEPLOY BLOCKER — `RESEND_API_KEY` + `RESEND_AUDIENCE_ID` must be filled (Resend account + audience created) before the form goes live; form is env-gated (hidden until set), so build/preview proceed without them. Post-account smoke (05-03-T3): subscribe twice → both success (verifies idempotent already-subscribed=success).
 
 ## Deferred Items
 
