@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 05 executed (code complete) — a11y sign-off deferred + Resend deploy blocked
-last_updated: "2026-06-13T06:41:15.970Z"
+stopped_at: Phase 6 context gathered
+last_updated: "2026-06-13T07:04:57.109Z"
 last_activity: 2026-06-13 -- Phase 05 execution started
 progress:
   total_phases: 6
@@ -124,6 +124,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-13T06:41:15.964Z
-Stopped at: Phase 05 executed (code complete) — a11y sign-off deferred + Resend deploy blocked
-Resume file: .planning/phases/05-captura-de-e-mail/05-03-SUMMARY.md
+Last session: 2026-06-13T07:04:57.096Z
+Stopped at: Phase 6 context gathered
+Resume file: .planning/phases/06-pipeline-de-artigos/06-CONTEXT.md
