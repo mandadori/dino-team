@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Conversão Completa** - Planos com preço, Comunidade, Depoimentos e WhatsApp real fecham o funil de lead (completed 2026-06-01)
 - [x] **Phase 3: Conformidade Legal & LGPD** - Páginas legais + cookie consent que de fato gateia os scripts de tracking (completed 2026-06-02)
 - [x] **Phase 4: Blog SEO Production-Ready** - Listagem + artigo MDX com EEAT completo e SEO técnico (sitemap, OG, JSON-LD) (completed 2026-06-12)
-- [ ] **Phase 5: Captura de E-mail** - Form inline pós-artigo via Resend com consentimento e estados acessíveis
+- [x] **Phase 5: Captura de E-mail** - Form inline pós-artigo via Resend com consentimento e estados acessíveis (completed 2026-06-13)
 - [ ] **Phase 6: Pipeline de Artigos** - Skill `novo-artigo` que produz MDX versionado no contrato do schema
 
 ## Phase Details
@@ -96,7 +96,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans
 - [x] 05-01-PLAN.md — Wave-0 enabler: gate human-verify + install resend@6.12.4 + .env.example (chaves server-only) + prova build verde com env vazio (D-04/D-12)
 - [x] 05-02-PLAN.md — Slice backend+UI: Server Action subscribe→Resend (single opt-in, consent/email revalidados) + NewsletterForm client island com 7 estados, foco gerenciado e aria-live (LEAD-01/LEAD-02)
-- [ ] 05-03-PLAN.md — Wiring + verificação: mount env-gated em /blog/[slug] e /blog (D-05) + checkpoint a11y manual dos 7 estados + deploy-blocker Audience/smoke pós-conta (D-04/D-11)
+- [x] 05-03-PLAN.md — Wiring + verificação: mount env-gated em /blog/[slug] e /blog (D-05) + checkpoint a11y manual dos 7 estados + deploy-blocker Audience/smoke pós-conta (D-04/D-11)
 **UI hint**: yes
 
 ### Phase 6: Pipeline de Artigos
@@ -121,5 +121,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Conversão Completa | 3/3 | Complete   | 2026-06-01 |
 | 3. Conformidade Legal & LGPD | 2/2 | Complete    | 2026-06-02 |
 | 4. Blog SEO Production-Ready | 5/5 | Complete   | 2026-06-12 |
-| 5. Captura de E-mail | 2/3 | In Progress|  |
+| 5. Captura de E-mail | 3/3 | Complete   | 2026-06-13 |
 | 6. Pipeline de Artigos | 0/TBD | Not started | - |
