@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 6 context gathered
-last_updated: "2026-06-13T10:04:32.537Z"
+stopped_at: Phase 06 executed (engine smoked) — real /novo-artigo run + tone checkpoint carried
+last_updated: "2026-06-13T10:36:55.937Z"
 last_activity: 2026-06-13 -- Phase 06 execution started
 progress:
   total_phases: 6
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 19
-  completed_plans: 16
-  percent: 83
+  completed_plans: 19
+  percent: 100
 ---
 
 # Project State
@@ -126,6 +126,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-13T07:04:57.096Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-pipeline-de-artigos/06-CONTEXT.md
+Last session: 2026-06-13T10:36:55.931Z
+Stopped at: Phase 06 executed (engine smoked) — real /novo-artigo run + tone checkpoint carried
+Resume file: .planning/phases/06-pipeline-de-artigos/06-03-SUMMARY.md
