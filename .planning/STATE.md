@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 6 context gathered
-last_updated: "2026-06-13T10:02:38.069Z"
-last_activity: 2026-06-13 -- Phase 06 planning complete
+last_updated: "2026-06-13T10:04:32.537Z"
+last_activity: 2026-06-13 -- Phase 06 execution started
 progress:
   total_phases: 6
   completed_phases: 5
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-31)
 
 **Core value:** O site converte o público certo em lead qualificado de consultoria via WhatsApp, carregado pela credibilidade do método de um campeão mundial; o blog sustenta autoridade e tráfego orgânico no topo do funil.
-**Current focus:** Phase 05 — captura-de-e-mail
+**Current focus:** Phase 06 — pipeline-de-artigos
 
 ## Current Position
 
-Phase: 05 (captura-de-e-mail) — EXECUTING
+Phase: 06 (pipeline-de-artigos) — EXECUTING
 Plan: 1 of 3
-Status: Ready to execute
-Last activity: 2026-06-13 -- Phase 06 planning complete
+Status: Executing Phase 06
+Last activity: 2026-06-13 -- Phase 06 execution started
 
 Progress: [██████████] 100%
 
