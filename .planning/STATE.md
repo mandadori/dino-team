@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 5 UI-SPEC approved
-last_updated: "2026-06-13T05:15:43.493Z"
-last_activity: 2026-06-13 -- Phase 05 planning complete
+last_updated: "2026-06-13T06:27:01.522Z"
+last_activity: 2026-06-13 -- Phase 05 execution started
 progress:
   total_phases: 6
   completed_phases: 4
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-31)
 
 **Core value:** O site converte o público certo em lead qualificado de consultoria via WhatsApp, carregado pela credibilidade do método de um campeão mundial; o blog sustenta autoridade e tráfego orgânico no topo do funil.
-**Current focus:** Phase 04 — blog-seo-production-ready
+**Current focus:** Phase 05 — captura-de-e-mail
 
 ## Current Position
 
-Phase: 04 (blog-seo-production-ready) — EXECUTING
-Plan: 5 of 5
-Status: Ready to execute
-Last activity: 2026-06-13 -- Phase 05 planning complete
+Phase: 05 (captura-de-e-mail) — EXECUTING
+Plan: 1 of 3
+Status: Executing Phase 05
+Last activity: 2026-06-13 -- Phase 05 execution started
 
 Progress: [██████████] 100%
 

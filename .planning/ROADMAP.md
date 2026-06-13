@@ -94,7 +94,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Após submeter, o visitante vê um estado de sucesso ou de erro acessível (anunciado a leitor de tela, foco visível, WCAG AA)
   3. O e-mail não é enviado sem o checkbox de consentimento marcado
 **Plans**: 3 plans
-- [ ] 05-01-PLAN.md — Wave-0 enabler: gate human-verify + install resend@6.12.4 + .env.example (chaves server-only) + prova build verde com env vazio (D-04/D-12)
+- [x] 05-01-PLAN.md — Wave-0 enabler: gate human-verify + install resend@6.12.4 + .env.example (chaves server-only) + prova build verde com env vazio (D-04/D-12)
 - [ ] 05-02-PLAN.md — Slice backend+UI: Server Action subscribe→Resend (single opt-in, consent/email revalidados) + NewsletterForm client island com 7 estados, foco gerenciado e aria-live (LEAD-01/LEAD-02)
 - [ ] 05-03-PLAN.md — Wiring + verificação: mount env-gated em /blog/[slug] e /blog (D-05) + checkpoint a11y manual dos 7 estados + deploy-blocker Audience/smoke pós-conta (D-04/D-11)
 **UI hint**: yes
@@ -121,5 +121,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 2. Conversão Completa | 3/3 | Complete   | 2026-06-01 |
 | 3. Conformidade Legal & LGPD | 2/2 | Complete    | 2026-06-02 |
 | 4. Blog SEO Production-Ready | 5/5 | Complete   | 2026-06-12 |
-| 5. Captura de E-mail | 0/3 | Not started | - |
+| 5. Captura de E-mail | 1/3 | In Progress|  |
 | 6. Pipeline de Artigos | 0/TBD | Not started | - |
