@@ -110,7 +110,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. O conteúdo gerado respeita o tom de marca (passou por revisão editorial/brand no pipeline antes de versionar)
 **Plans**: 3 plans
 - [x] 06-01-PLAN.md — Wave-1 enabler: script determinístico deps-free `scripts/content/promover_artigo.js` (mirror BLOG-01 + slug-scan + path-guard) + testes `node --test` + glob na raiz + capa default committed
-- [ ] 06-02-PLAN.md — Wave-2 wiring: passo promover + gate `next build` + commit escopado na SKILL.md (briefing resolve category/author/slug) + inversão do princípio declarado (SKILL.md + CLAUDE.md, D-11, 9 regras)
+- [x] 06-02-PLAN.md — Wave-2 wiring: passo promover + gate `next build` + commit escopado na SKILL.md (briefing resolve category/author/slug) + inversão do princípio declarado (SKILL.md + CLAUDE.md, D-11, 9 regras)
 - [ ] 06-03-PLAN.md — Wave-3 validação ponta-a-ponta: rodar `/novo-artigo` real → build verde + checkpoint humano (aparece em /blog, abre em /blog/<slug>, tom on-brand)
 
 ## Progress
@@ -125,4 +125,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Conformidade Legal & LGPD | 2/2 | Complete    | 2026-06-02 |
 | 4. Blog SEO Production-Ready | 5/5 | Complete   | 2026-06-12 |
 | 5. Captura de E-mail | 3/3 | Complete   | 2026-06-13 |
-| 6. Pipeline de Artigos | 1/3 | In Progress|  |
+| 6. Pipeline de Artigos | 2/3 | In Progress|  |
