@@ -115,6 +115,7 @@ Método · Evolução · Resultado · Transformação física · Disciplina · C
 
 - [Público-alvo](publico-alvo.md)
 - [Pilares de conteúdo](pilares-conteudo.md)
+- [Grade editorial semanal](grade-editorial-semanal.md) — modelo de presença constante nos dois perfis (feed + stories)
 - [Tom de voz](tom-de-voz.md)
 - [Identidade visual](referencias-visuais.md) _(parcial — aguardando referências visuais e detalhes adicionais)_
 
